@@ -1,5 +1,7 @@
 package com.vztekoverflow.lospiratos.util;
 
+import javafx.beans.property.ObjectProperty;
+
 /*
  *  Hexagonal grid Axial Coordinate, as defined on https://www.redblobgames.com/grids/hexagons/#coordinates
  */
@@ -77,21 +79,21 @@ public class AxialCoordinate {
         return "(" + Q + "," + R + ")";
     }
 
-    //pre-made vector directions:
+    public boolean equals(AxialCoordinate other){
+        return Q == other.Q && R == other.R;
+    }
+    @Override
+    public boolean equals(Object obj){
+        if (obj == null) {
+            return false;
+        }
+        if (!AxialCoordinate.class.isAssignableFrom(obj.getClass())) {
+            return false;
+        }
+        AxialCoordinate c = (AxialCoordinate) obj;
+        return Q == c.Q && R == c.R;
+    }
 
-    public static AxialCoordinate PointyUpLeft = new AxialCoordinate(0,-1);
-    public static AxialCoordinate PointyUpRight = new AxialCoordinate(+1,-1);
-    public static AxialCoordinate PointyRight = new AxialCoordinate(+1,0);
-    public static AxialCoordinate PointyDownRight = new AxialCoordinate(0,+1);
-    public static AxialCoordinate PointyDownLeft =  new AxialCoordinate(-1,+1);
-    public static AxialCoordinate PointyLeft= new AxialCoordinate(-1,0);
-
-    public static AxialCoordinate FlatUp = new AxialCoordinate(0,-1);
-    public static AxialCoordinate FlatRightUp = new AxialCoordinate(+1,-1);
-    public static AxialCoordinate FlatRightDown =  new AxialCoordinate(+1,0);
-    public static AxialCoordinate FlatDown =  new AxialCoordinate(0,+1);
-    public static AxialCoordinate FlatLeftDown = new AxialCoordinate(-1,+1);
-    public static AxialCoordinate FlatLeftUp =  new AxialCoordinate(-1,0);
 
 
 }

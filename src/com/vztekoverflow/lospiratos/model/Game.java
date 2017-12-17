@@ -2,6 +2,7 @@ package com.vztekoverflow.lospiratos.model;
 
 
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
+import com.vztekoverflow.lospiratos.util.AxialDirection;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 
@@ -70,17 +71,17 @@ public class Game {
         MapHexagon center = new MapHexagon(0, 0, "shipwreck");
         center.customExtensions.set(FXCollections.observableMap(new HashMap<>()));
         center.customExtensions.put("gain","40");
-        MapHexagon port = new MapHexagon(AxialCoordinate.FlatDown, "port");
+        MapHexagon port = new MapHexagon(AxialDirection.FlatDown, "port");
         port.customExtensions.set(FXCollections.observableMap(new HashMap<>()));
         port.customExtensions.put("name","Port Royale");
         m.hexagons.addAll(
                 center,
-                new MapHexagon(AxialCoordinate.FlatUp, "sea"),
-                new MapHexagon(AxialCoordinate.FlatRightUp, "sea"),
-                new MapHexagon(AxialCoordinate.FlatRightDown, "sea"),
+                new MapHexagon(AxialDirection.FlatUp, "sea"),
+                new MapHexagon(AxialDirection.FlatRightUp, "sea"),
+                new MapHexagon(AxialDirection.FlatRightDown, "sea"),
                 port,
-                new MapHexagon(AxialCoordinate.FlatLeftDown, "shore"),
-                new MapHexagon(AxialCoordinate.FlatLeftUp, "shore")
+                new MapHexagon(AxialDirection.FlatLeftDown, "shore"),
+                new MapHexagon(AxialDirection.FlatLeftUp, "shore")
         );
         m.backgroundColor.set("#d6d6d6");
         g.map.setValue(m);
