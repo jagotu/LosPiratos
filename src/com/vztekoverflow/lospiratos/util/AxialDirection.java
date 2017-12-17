@@ -4,24 +4,40 @@ package com.vztekoverflow.lospiratos.util;
  * represents a direction in Axial coordinate system through a unit axial direction.
  * distance between AxialDirection and (0,0) is always 1.
  */
-public class AxialDirection extends AxialCoordinate{
+public final class AxialDirection extends AxialCoordinate{
 
     private  AxialDirection(int P, int Q){
         super(P,Q);
     }
 
-    public int getQ() {
-        return Q;
+    /*
+     * returns degree representation of the direction, as understood by the DirectionFromDegree functions
+     * 0 represents top, 90 represents right etc
+     * returns values that are multiple of 60 plus 15, thus working both for pointy and flat-topped representation
+     */
+    public int toDegrees(){
+        if(this.equals(0,-1))
+            return  15;
+
+        if(this.equals(1,-1))
+            return  75;
+
+        if(this.equals(1,0))
+            return  135;
+
+        if(this.equals(0,1))
+            return  195;
+
+        if(this.equals(-1,1))
+            return  255;
+
+        if(this.equals(-1,0))
+            return  315;
+
+        /* unrecheable code */
+        throw new IllegalStateException("Unrecheable code reached.");
+
     }
-
-    protected int Q;
-
-    public int getR() {
-        return R;
-    }
-
-
-    protected int R;
 
     /*
      * Returns unit AxialCoordinate pointing in the direction defined by @degree
@@ -49,10 +65,10 @@ public class AxialDirection extends AxialCoordinate{
             case 2: return FlatRightDown;
             case 3: return FlatDown;
             case 4: return FlatLeftDown;
-            case 5: return FlatLeftDown;
+            case 5: return FlatLeftUp;
         }
         /* unrecheable */
-        throw new IllegalArgumentException("Invalid operation. Unrecheable code reached.");
+        throw new IllegalStateException("Unrecheable code reached.");
     }
 
     //pre-made unit vector directions:

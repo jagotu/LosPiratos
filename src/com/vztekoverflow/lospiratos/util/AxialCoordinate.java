@@ -78,6 +78,9 @@ public class AxialCoordinate {
     public String toString() {
         return "(" + Q + "," + R + ")";
     }
+    public boolean equals(int q, int r){
+        return this.Q == q && this.R == r;
+    }
 
     public boolean equals(AxialCoordinate other){
         return Q == other.Q && R == other.R;

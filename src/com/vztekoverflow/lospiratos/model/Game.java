@@ -1,7 +1,6 @@
 package com.vztekoverflow.lospiratos.model;
 
 
-import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.util.AxialDirection;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -29,12 +28,21 @@ public class Game {
                 4,
                 0,
                 -1,
-                true,
-                true,
-                false,
-                false,
-                false,
-                true);
+                60,
+                ShipEnhancementStatus.damaged,
+                ShipEnhancementStatus.empty,
+                ShipEnhancementStatus.empty,
+                ShipEnhancementStatus.empty,
+                ShipEnhancementStatus.empty,
+                ShipEnhancementStatus.empty,
+                40,
+                1,
+                0,
+                1,
+                0,
+                2,
+                5
+                );
 
         Ship s2 = new Ship(
                 "Ship2",
@@ -48,13 +56,31 @@ public class Game {
                 2,
                 1,
                 0,
-                false,
-                false,
-                true,
-                true,
-                true,
-                true);
+                150,
+                ShipEnhancementStatus.empty,
+                ShipEnhancementStatus.damaged,
+                ShipEnhancementStatus.active,
+                ShipEnhancementStatus.active,
+                ShipEnhancementStatus.active,
+                ShipEnhancementStatus.active,
+                1000,
+                20,
+                30,
+                40,
+                20,
+                10,
+                10000 );
+        s2.activeMechanics.set(FXCollections.observableArrayList());
+        s2.activeMechanics.add(ShipMechanics.chained);
+        s2.customExtensions.set(FXCollections.observableMap(new HashMap<>()));
+        s2.customExtensions.put("MortarDmg","5");
+        s2.customExtensions.put("MortarRange","2");
+
         g.ships.addAll(s1, s2);
+
+
+
+
         Team t1 = new Team(
                 "SuperTeam",
                 "teamId1",
@@ -66,6 +92,9 @@ public class Game {
                 30,
                 40);
         g.teams.add(t1);
+
+
+
 
         Map m = new Map();
         MapHexagon center = new MapHexagon(0, 0, "shipwreck");
