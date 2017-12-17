@@ -1,26 +1,34 @@
 package com.vztekoverflow.lospiratos.model;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import com.vztekoverflow.lospiratos.util.AxialCoordinate;
+import javafx.beans.property.*;
 
 public class MapHexagon {
 
-    public MapHexagon(IntegerProperty coordinateQ, IntegerProperty coordinateR) {
-        this.coordinateQ = coordinateQ;
-        this.coordinateR = coordinateR;
+    public MapHexagon(int coordinateQ, int coordinateR) {
+        this.coordinateQ.set(coordinateQ);
+        this.coordinateR.set(coordinateR);
+    }
+    public MapHexagon(AxialCoordinate coordinate) {
+        this.coordinateQ.set(coordinate.getQ());
+        this.coordinateR.set(coordinate.getR());
+    }
+    public MapHexagon(AxialCoordinate coordinate, String content) {
+        this.coordinateQ.set(coordinate.getQ());
+        this.coordinateR.set(coordinate.getR());
+        this.content.set(content);
+    }
+    public MapHexagon(int coordinateQ, int coordinateR, String content) {
+        this.coordinateQ.set(coordinateQ);
+        this.coordinateR.set(coordinateR);
+        this.content.set(content);
     }
 
-    public IntegerProperty coordinateQ;
-    public IntegerProperty coordinateR;
+    public IntegerProperty coordinateQ = new SimpleIntegerProperty();
+    public IntegerProperty coordinateR = new SimpleIntegerProperty();
 
     ///e.g. sea, shore, port, treasure etc
     public StringProperty content = new SimpleStringProperty("");
 
-    //empty for sea and shore, used usually for ports
-    public StringProperty contentName = new SimpleStringProperty("");
-
-    //empty for sea and shore, used usually for treasures
-    public IntegerProperty contentIntParam = new SimpleIntegerProperty(0);
+    public MapProperty<String, String> customExtensions = new SimpleMapProperty<>();
 }
