@@ -46,10 +46,13 @@ public class VirtualizingHexGridPane extends Pane {
     private ReadOnlyDoubleWrapper internalWidth = new ReadOnlyDoubleWrapper();
     private ReadOnlyDoubleWrapper internalHeight = new ReadOnlyDoubleWrapper();
 
-    public VirtualizingHexGridPane(@NamedArg(value = "edgeLength", defaultValue = "20") double edgeLength, @NamedArg("pointy") boolean pointy) {
+    //Contents factory
+    private HexTileContentsFactory factory;
+
+    public VirtualizingHexGridPane(double edgeLength, boolean pointy, HexTileContentsFactory factory) {
         this.edgeLength = edgeLength;
         this.pointy = pointy;
-
+        this.factory = factory;
 
         if (pointy) {
             tileWidth = Utils.SQRT_3 * edgeLength;
@@ -80,7 +83,7 @@ public class VirtualizingHexGridPane extends Pane {
             double q, r;
             if (pointy) {
                 double x = XOffset.get() - Utils.SQRT_3 * edgeLength / 2;
-                double y = -YOffset.get() + edgeLength;
+                double y = YOffset.get() - edgeLength;
                 q = (x * Utils.SQRT_3 / 3 - y / 3) / edgeLength;
                 r = y * 2 / 3 / edgeLength;
             } else {
@@ -120,8 +123,8 @@ public class VirtualizingHexGridPane extends Pane {
 
         if (x_diff > y_diff && x_diff > z_diff) {
             rx = -ry - rz;
-        } else if (y_diff > z_diff) {
-            ry = -rx - rz;
+        } else if (y_diff <= z_diff) {
+            rz = -rx-ry;
         }
         return new Point2D(rx, rz);
     }
@@ -182,6 +185,11 @@ public class VirtualizingHexGridPane extends Pane {
             if (pos.getX() - XOffset.get() > internalWidth.get() || pos.getY() - YOffset.get() > internalHeight.get()) {
                 break;
             }
+            HexTileContents contents = factory.getContentsFor(x, tileWidth, tileHeight);
+            if(contents == null)
+            {
+                continue;
+            }
             HexTile t = null;
             if (!usedTiles.containsKey(x)) {
                 while (freeTiles.size() > 0) //Try to get a nonGCed already instantianated tile
@@ -198,7 +206,7 @@ public class VirtualizingHexGridPane extends Pane {
                     t = new HexTile(tileWidth, tileHeight);
                 }
 
-                t.setContent(getNodeFor(x));
+                t.setContent(contents);
                 getChildren().add(t);
                 usedTiles.put(x, t);
 
@@ -256,42 +264,6 @@ public class VirtualizingHexGridPane extends Pane {
 
     }
 
-    //TODO: move to factory
-    private HexTileContents getNodeFor(Point2D coords) {
-        final Label lab = new Label();
-        lab.setText(String.format("tralalalalalallalalalala [%s,%s]", coords.getX(), coords.getY()));
-
-        final Rectangle rect = new Rectangle(tileWidth, tileHeight/2, Color.YELLOW);
-        final StackPane l = new StackPane();
-        l.getChildren().add(rect);
-        l.getChildren().add(lab);
-        final Paint p = coords.getY() % 2 == 0 ? Color.LIGHTBLUE : Color.WHITE;
-        if(coords.getY() < -5 || coords.getY() > 5 || coords.getX() < -5 || coords.getX() > 5)
-        {
-            return null;
-        };
-        return new HexTileContents() {
-            ObjectProperty<Node> contents = new ReadOnlyObjectWrapper<>(l);
-            ObjectProperty<Paint> background = new ReadOnlyObjectWrapper<>(p);
-            BooleanProperty clip = new ReadOnlyBooleanWrapper(true);
-
-            @Override
-            public ObjectProperty<Node> contentsProperty() {
-                return contents;
-            }
-
-            @Override
-            public ObjectProperty<Paint> backgroundProperty() {
-                return background;
-            }
-
-            @Override
-            public BooleanProperty clipProperty() {
-                return clip;
-            }
-        };
-    }
-
     public class HexTile extends Region {
         double width;
         double height;
@@ -300,22 +272,36 @@ public class VirtualizingHexGridPane extends Pane {
         javafx.scene.transform.Scale st = new Scale();
 
         public HexTileContents getContent() {
-            return content.get();
-        }
-
-        public ObjectProperty<HexTileContents> contentProperty() {
             return content;
         }
 
-        public void setContent(HexTileContents content) {
-            if(content == null)
-            {
-                int x = 0;
+        void setContent(HexTileContents content) {
+            contentNode.unbind();
+            background.unbind();
+            clip.unbind();
+            if (content != null) {
+                if (content.contentsProperty() != null) {
+                    contentNode.bind(content.contentsProperty());
+                } else {
+                    contentNode.set(null);
+                }
+
+                if (content.backgroundProperty() != null) {
+                    background.bind(content.backgroundProperty());
+                } else {
+                    background.set(Color.WHITE);
+                }
+
+                if (content.clipProperty() != null) {
+                    clip.bind(content.clipProperty());
+                } else {
+                    clip.set(false);
+                }
             }
-            this.content.set(content);
+            this.content = content;
         }
 
-        ObjectProperty<HexTileContents> content = new ReadOnlyObjectWrapper<>();
+        HexTileContents content;
 
         ObjectProperty<Node> contentNode = new SimpleObjectProperty<>(null);
         ObjectProperty<Paint> background = new SimpleObjectProperty<>(Color.WHITE);
@@ -340,58 +326,30 @@ public class VirtualizingHexGridPane extends Pane {
             tileShape.setStroke(Color.BLACK);
             tileShape.setFill(background.get());
 
-            content.addListener((observable, oldValue, newValue) -> {
-                contentNode.unbind();
-                background.unbind();
-                clip.unbind();
-                if (newValue != null && newValue.contentsProperty() != null) {
-                    contentNode.bind(newValue.contentsProperty());
-                } else {
-                    contentNode.set(null);
-                }
-
-                if (newValue != null && newValue.backgroundProperty() != null) {
-                    background.bind(newValue.backgroundProperty());
-                } else {
-                    background.set(Color.WHITE);
-                }
-
-                if (newValue != null && newValue.clipProperty() != null) {
-                    clip.bind(newValue.clipProperty());
-                } else {
-                    clip.set(false);
-                }
-            });
 
             contentNode.addListener((observable, oldValue, newValue) ->
             {
-                if(oldValue != null)
-                {
+                if (oldValue != null) {
                     this.getChildren().remove(oldValue);
                 }
-                if(newValue != null)
-                {
+                if (newValue != null) {
                     this.getChildren().add(newValue);
                 }
             });
 
-            background.addListener((observable)->
+            background.addListener((observable) ->
             {
                 tileShape.setFill(background.get());
             });
 
             clip.addListener((observable ->
             {
-                if(clip.get())
-                {
+                if (clip.get()) {
                     this.setClip(VirtualizingHexGridPane.this.getHexagon());
                 } else {
                     this.setClip(null);
                 }
             }));
-
-
-
 
 
         }
