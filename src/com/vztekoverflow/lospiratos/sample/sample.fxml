@@ -6,10 +6,10 @@
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.layout.StackPane?>
 
-<StackPane xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vztekoverflow.lospiratos.sample.SampleController">
+<StackPane style="-fx-background-color: magenta;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vztekoverflow.lospiratos.sample.SampleController">
    <children>
 
-      <VirtualizingHexGridPane fx:id="hexPane" edgeLength="40" translateX="30.0" translateY="30.0">
+      <VirtualizingHexGridPane fx:id="hexPane" edgeLength="40">
          <opaqueInsets>
             <Insets />
          </opaqueInsets></VirtualizingHexGridPane>
@@ -25,11 +25,5 @@
          <StackPane.margin>
             <Insets />
          </StackPane.margin></Slider>
-       <Label fx:id="topleftCoords" text="topleft" />
-       <Label fx:id="sizeLabel" text="size">
-         <StackPane.margin>
-            <Insets top="30.0" />
-         </StackPane.margin>
-      </Label>
    </children>
 </StackPane>

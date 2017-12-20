@@ -20,9 +20,6 @@ public class SampleController {
         XSlider.valueProperty().bindBidirectional(hexPane.XOffsetProperty());
         YSlider.valueProperty().bindBidirectional(hexPane.YOffsetProperty());
         ScaleSlider.valueProperty().bindBidirectional(hexPane.scaleProperty());
-        topleftCoords.textProperty().bind(hexPane.topLeftProperty().asString());
-
-        sizeLabel.textProperty().bind(Bindings.format("%f x %f", hexPane.internalWidthProperty(), hexPane.internalHeightProperty()));
     }
 
 }
