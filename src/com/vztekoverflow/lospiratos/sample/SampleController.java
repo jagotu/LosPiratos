@@ -30,8 +30,7 @@ public class SampleController {
 
                 final Label l = new Label();
                 l.setText(String.format("[%s,%s]", coords.getX(), coords.getY()));
-
-
+                final String cssClassName = coords.getY() % 2 == 0 ? "even" : "odd";
                 /*
                 if (coords.getY() < -5 || coords.getY() > 5 || coords.getX() < -5 || coords.getX() > 5) {
                     return null;
@@ -40,8 +39,7 @@ public class SampleController {
                 return new HexTileContents() {
 
                     ObjectProperty<Node> contents = new ReadOnlyObjectWrapper<>(l);
-                    ObjectProperty<Paint> background = new SimpleObjectProperty<>(Color.TRANSPARENT);
-                    BooleanProperty clip = new ReadOnlyBooleanWrapper(true);
+                    StringProperty cssClass = new ReadOnlyStringWrapper(cssClassName);
 
                     @Override
                     public ObjectProperty<Node> contentsProperty() {
@@ -49,14 +47,11 @@ public class SampleController {
                     }
 
                     @Override
-                    public ObjectProperty<Paint> backgroundProperty() {
-                        return background;
+                    public StringProperty cssClassProperty() {
+                        return cssClass;
                     }
 
-                    @Override
-                    public BooleanProperty clipProperty() {
-                        return clip;
-                    }
+
                 };
             }
         });

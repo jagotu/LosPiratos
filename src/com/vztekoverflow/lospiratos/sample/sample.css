@@ -1,0 +1,18 @@
+.hexTile {
+    -fx-fill:white;
+}
+
+.hexParent.odd .hexTile
+{
+    -fx-fill:blue;
+}
+
+.hexParent.odd .label
+{
+    -fx-text-fill: white;
+}
+
+.hexTile:hover {
+    -fx-fill:yellow !important;
+    -fx-stroke:red;
+}

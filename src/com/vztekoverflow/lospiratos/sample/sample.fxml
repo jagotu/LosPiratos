@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.vztekoverflow.lospiratos.view.layout.VirtualizingHexGridPane?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.layout.StackPane?>
 
-<StackPane fx:id="root" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vztekoverflow.lospiratos.sample.SampleController">
+<StackPane fx:id="root" style="-fx-background-color: white;" stylesheets="@sample.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vztekoverflow.lospiratos.sample.SampleController">
    <children>
       <Slider fx:id="XSlider" max="100000" min="-100000.0" StackPane.alignment="BOTTOM_CENTER">
          <StackPane.margin>

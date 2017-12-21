@@ -1,24 +1,18 @@
 package com.vztekoverflow.lospiratos.view.layout;
 
-import javafx.beans.NamedArg;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.geometry.HPos;
 import javafx.geometry.Point2D;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.transform.Scale;
-import org.w3c.dom.css.Rect;
 
 import java.lang.ref.SoftReference;
-import java.lang.ref.WeakReference;
 import java.util.*;
 
 
@@ -124,7 +118,7 @@ public class VirtualizingHexGridPane extends Pane {
         if (x_diff > y_diff && x_diff > z_diff) {
             rx = -ry - rz;
         } else if (y_diff <= z_diff) {
-            rz = -rx-ry;
+            rz = -rx - ry;
         }
         return new Point2D(rx, rz);
     }
@@ -186,8 +180,7 @@ public class VirtualizingHexGridPane extends Pane {
                 break;
             }
             HexTileContents contents = factory.getContentsFor(x, tileWidth, tileHeight);
-            if(contents == null)
-            {
+            if (contents == null) {
                 continue;
             }
             HexTile t = null;
@@ -270,48 +263,15 @@ public class VirtualizingHexGridPane extends Pane {
 
 
         javafx.scene.transform.Scale st = new Scale();
-
-        public HexTileContents getContent() {
-            return content;
-        }
-
-        void setContent(HexTileContents content) {
-            contentNode.unbind();
-            background.unbind();
-            clip.unbind();
-            if (content != null) {
-                if (content.contentsProperty() != null) {
-                    contentNode.bind(content.contentsProperty());
-                } else {
-                    contentNode.set(null);
-                }
-
-                if (content.backgroundProperty() != null) {
-                    background.bind(content.backgroundProperty());
-                } else {
-                    background.set(Color.WHITE);
-                }
-
-                if (content.clipProperty() != null) {
-                    clip.bind(content.clipProperty());
-                } else {
-                    clip.set(false);
-                }
-            }
-            this.content = content;
-        }
-
         HexTileContents content;
-
         ObjectProperty<Node> contentNode = new SimpleObjectProperty<>(null);
-        ObjectProperty<Paint> background = new SimpleObjectProperty<>(Color.WHITE);
-        BooleanProperty clip = new SimpleBooleanProperty(false);
-
+        StringProperty cssClassName = new SimpleStringProperty("");
 
         Shape tileShape;
 
-
         HexTile(double width, double height) {
+
+
             this.getTransforms().add(st);
             st.setPivotX(0);
             st.setPivotY(0);
@@ -323,9 +283,8 @@ public class VirtualizingHexGridPane extends Pane {
             getChildren().add(tileShape);
             layoutInArea(tileShape, 0, 0, width, height, 0, HPos.LEFT, VPos.TOP);
 
-            tileShape.setStroke(Color.BLACK);
-            tileShape.setFill(background.get());
-
+            tileShape.getStyleClass().add("hexTile");
+            this.getStyleClass().add("hexParent");
 
             contentNode.addListener((observable, oldValue, newValue) ->
             {
@@ -337,21 +296,51 @@ public class VirtualizingHexGridPane extends Pane {
                 }
             });
 
-            background.addListener((observable) ->
-            {
-                tileShape.setFill(background.get());
+            cssClassName.addListener((observable, oldValue, newValue) -> {
+                if(oldValue != null && !oldValue.equals(""))
+                {
+                    this.getStyleClass().remove(oldValue);
+                }
+                if(newValue != null && !newValue.equals(""))
+                {
+                    this.getStyleClass().add(newValue);
+                }
             });
 
-            clip.addListener((observable ->
+            /*clip.addListener((observable ->
             {
                 if (clip.get()) {
                     this.setClip(VirtualizingHexGridPane.this.getHexagon());
                 } else {
                     this.setClip(null);
                 }
-            }));
+            }));*/
 
 
+        }
+
+        public HexTileContents getContent() {
+            return content;
+        }
+
+        void setContent(HexTileContents content) {
+            contentNode.unbind();
+            cssClassName.unbind();
+            if (content != null) {
+                if (content.contentsProperty() != null) {
+                    contentNode.bind(content.contentsProperty());
+                } else {
+                    contentNode.set(null);
+                }
+
+                if(content.cssClassProperty() != null)
+                {
+                    cssClassName.bind(content.cssClassProperty());
+                } else {
+                    cssClassName.set("");
+                }
+            }
+            this.content = content;
         }
 
         final void setScale(double scale) {
