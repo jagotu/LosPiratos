@@ -1,8 +1,8 @@
 package com.vztekoverflow.lospiratos.view.layout;
 
-import javafx.geometry.Point2D;
+import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 
 public interface HexTileContentsFactory {
 
-    HexTileContents getContentsFor(Point2D coords, double tileWidth, double tileHeight);
+    HexTileContents getContentsFor(AxialCoordinate coords, double tileWidth, double tileHeight);
 }

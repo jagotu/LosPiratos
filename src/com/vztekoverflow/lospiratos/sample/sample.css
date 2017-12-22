@@ -14,5 +14,4 @@
 
 .hexTile:hover {
     -fx-fill:yellow !important;
-    -fx-stroke:red;
 }

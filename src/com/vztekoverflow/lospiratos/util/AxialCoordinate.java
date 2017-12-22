@@ -1,6 +1,7 @@
 package com.vztekoverflow.lospiratos.util;
 
 import javafx.beans.property.ObjectProperty;
+import javafx.geometry.Point2D;
 
 /*
  *  Hexagonal grid Axial Coordinate, as defined on https://www.redblobgames.com/grids/hexagons/#coordinates
@@ -95,6 +96,52 @@ public class AxialCoordinate {
         }
         AxialCoordinate c = (AxialCoordinate) obj;
         return Q == c.Q && R == c.R;
+    }
+
+    public static Point2D hexToPixel(AxialCoordinate hexCoords, boolean pointy, double edgeLength) {
+        double x, y;
+        if (pointy) {
+            x = edgeLength * Constants.SQRT_3 * (hexCoords.getQ() + hexCoords.getR() / 2.0);
+            y = edgeLength * 3.0 / 2 * hexCoords.getR();
+        } else {
+            x = edgeLength * 3.0 / 2 * hexCoords.getQ();
+            y = edgeLength * Constants.SQRT_3 * (hexCoords.getR() + hexCoords.getQ() / 2.0);
+        }
+        return new Point2D(x, y);
+    }
+
+
+    public static AxialCoordinate pixelToHex(Point2D coords, boolean pointy, double edgeLength)
+    {
+        double q, r;
+        if (pointy) {
+            q = (coords.getX() * Constants.SQRT_3 / 3 - coords.getY() / 3) / edgeLength;
+            r = coords.getY() * 2 / 3 / edgeLength;
+        } else {
+            q = coords.getX() * 2 / 3 / edgeLength;
+            r = (-coords.getX() / 3 + Constants.SQRT_3 / 3 * coords.getY()) / edgeLength;
+        }
+        return hexRound(q, r);
+    }
+
+    //TODO: Move calculation to a different class after merge
+    private static AxialCoordinate hexRound(double x, double z) {
+        double y = -x - z;
+
+        int rx = (int) Math.round(x);
+        int rz = (int) Math.round(y);
+        int ry = (int) Math.round(y);
+
+        double x_diff = Math.abs(rx - x);
+        double y_diff = Math.abs(ry - y);
+        double z_diff = Math.abs(rz - z);
+
+        if (x_diff > y_diff && x_diff > z_diff) {
+            rx = -ry - rz;
+        } else if (y_diff <= z_diff) {
+            rz = -rx - ry;
+        }
+        return new AxialCoordinate(rx, rz);
     }
 
 
