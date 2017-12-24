@@ -1,17 +1,24 @@
+
+.hexTile:hover {
+    -fx-fill:derive(background, 60%);
+}
+
 .hexTile {
-    -fx-fill:white;
+    -fx-fill:background;
+    -fx-stroke:black;
 }
 
 .hexParent.odd .hexTile
 {
-    -fx-fill:blue;
+    background:blue;
+}
+
+.hexParent.even .hexTile
+{
+    background:yellow;
 }
 
 .hexParent.odd .label
 {
     -fx-text-fill: white;
-}
-
-.hexTile:hover {
-    -fx-fill:yellow !important;
 }

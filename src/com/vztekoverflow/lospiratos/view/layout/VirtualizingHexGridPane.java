@@ -1,6 +1,7 @@
 package com.vztekoverflow.lospiratos.view.layout;
 
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
+import com.vztekoverflow.lospiratos.util.AxialDirection;
 import com.vztekoverflow.lospiratos.util.Constants;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
@@ -8,7 +9,8 @@ import javafx.geometry.HPos;
 import javafx.geometry.Point2D;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
 import javafx.scene.transform.Scale;
@@ -73,9 +75,9 @@ public class VirtualizingHexGridPane extends Pane {
 
         topLeft.bind(Bindings.createObjectBinding(() -> {
             if (pointy) {
-                return AxialCoordinate.pixelToHex(new Point2D(XOffset.get() - Constants.SQRT_3 * edgeLength / 2, YOffset.get() - edgeLength), pointy, edgeLength);
+                return AxialCoordinate.pixelToHex(new Point2D(XOffset.get() - Constants.SQRT_3 * edgeLength / 2, YOffset.get() - edgeLength), true, edgeLength).plus(AxialDirection.PointyUpLeft);
             } else {
-                return AxialCoordinate.pixelToHex(new Point2D(XOffset.get() - edgeLength, -YOffset.get() + Constants.SQRT_3 * edgeLength / 2), pointy, edgeLength);
+                return AxialCoordinate.pixelToHex(new Point2D(XOffset.get() - edgeLength, YOffset.get() - Constants.SQRT_3 * edgeLength / 2), false, edgeLength).plus(AxialDirection.FlatUp);
             }
         }, XOffset, YOffset));
 
@@ -88,9 +90,9 @@ public class VirtualizingHexGridPane extends Pane {
     }
 
     private Shape getHexagon() {
-        Polygon croppingPolygon = new Polygon();
-        croppingPolygon.getPoints().addAll(hexagonPoints);
-        return croppingPolygon;
+        Polygon hexagon = new Polygon();
+        hexagon.getPoints().addAll(hexagonPoints);
+        return hexagon;
     }
 
 
@@ -130,8 +132,7 @@ public class VirtualizingHexGridPane extends Pane {
         return Scale;
     }
 
-    //TODO: Better naming?
-    private void innerLoop(AxialCoordinate origin, AxialCoordinate vector) {
+    private void innerLoop(AxialCoordinate origin, AxialCoordinate vector, HashMap<String, List<HexTile>> localFreeTiles) {
         for (AxialCoordinate x = origin; ; x = x.plus(vector)) {
             Point2D pos = AxialCoordinate.hexToPixel(x, pointy, edgeLength);
             if (pos.getX() - XOffset.get() > internalWidth.get() || pos.getY() - YOffset.get() > internalHeight.get()) {
@@ -141,24 +142,41 @@ public class VirtualizingHexGridPane extends Pane {
             if (contents == null) {
                 continue;
             }
+            String cssClass = (contents.cssClassProperty() == null) ? "" : contents.cssClassProperty().get();
             HexTile t = null;
-            if (!usedTiles.containsKey(x)) {
-                while (freeTiles.size() > 0) //Try to get a nonGCed already instantianated tile
+            boolean shouldAdd = true;
+            if (!usedTiles.containsKey(x))
+            {
+                if(localFreeTiles.containsKey(cssClass)) //Try to get a tile that's still a child and has the same CSS style
+                {                                        //This recyclation is the fastest of all, as the CSS doesn't have to be reapplied at all
+                    List<HexTile> l = localFreeTiles.get(cssClass);
+                    if(l.size() > 0) {
+                        t = l.iterator().next();
+                        l.remove(t);
+                        shouldAdd = false;
+                    }
+
+                }
+                if(t == null)
                 {
-                    SoftReference<HexTile> ref = freeTiles.iterator().next();
-                    freeTiles.remove(ref);
-                    t = ref.get();
-                    if (t != null) {
-                        break;
+                    while (freeTiles.size() > 0) //Try to get a nonGCed already instantianated tile
+                    {
+                        SoftReference<HexTile> ref = freeTiles.iterator().next();
+                        freeTiles.remove(ref);
+                        t = ref.get();
+                        if (t != null) {
+                            break;
+                        }
                     }
                 }
+
 
                 if (t == null) {
                     t = new HexTile(tileWidth, tileHeight);
                 }
 
                 t.setContent(contents);
-                getChildren().add(t);
+                if(shouldAdd) getChildren().add(t);
                 usedTiles.put(x, t);
 
             } else {
@@ -172,37 +190,37 @@ public class VirtualizingHexGridPane extends Pane {
     @Override
     protected void layoutChildren() {
 
-        //Get coords of the hexagon we start drawing from. We move one tile northwest from the tile being in the topleft corner.
-        AxialCoordinate origin;
-        if (pointy) {
-            origin = topLeft.get().plus(new AxialCoordinate(0, -1));
-        } else {
-            origin = topLeft.get().plus(new AxialCoordinate(-1, 0));
-        }
+        AxialCoordinate origin = topLeft.get();
         Point2D originpos = AxialCoordinate.hexToPixel(origin, pointy, edgeLength);
 
-        //Recycle tiles that were visible but now aren't
+        HashMap<String, List<HexTile>> localFreeTiles = new HashMap<>();
+
+        //Mark tiles that were visible but now aren't as free
         for (Iterator<Map.Entry<AxialCoordinate, HexTile>> it = usedTiles.entrySet().iterator(); it.hasNext(); ) {
             Map.Entry<AxialCoordinate, HexTile> entry = it.next();
             Point2D pos = AxialCoordinate.hexToPixel(entry.getKey(), pointy, edgeLength);
             if (pos.getX() - XOffset.get() > internalWidth.get() || pos.getY() - YOffset.get() > internalHeight.get() || pos.getX() < originpos.getX() || pos.getY() < originpos.getY()) {
                 entry.getValue().setContent(null);
-                freeTiles.add(new SoftReference<HexTile>(entry.getValue()));
-                getChildren().remove(entry.getValue());
+                String cssClass = entry.getValue().cssClassName.get();
+                if(!localFreeTiles.containsKey(cssClass))
+                {
+                    localFreeTiles.put(cssClass, new LinkedList<>());
+                }
+                localFreeTiles.get(cssClass).add(entry.getValue());
                 it.remove();
             }
         }
 
         //Create all visible children
-        AxialCoordinate inner = pointy ? new AxialCoordinate(0, 1) : new AxialCoordinate(1, 0);
-        AxialCoordinate outer1 = pointy ? new AxialCoordinate(1, 0) : new AxialCoordinate(0, 1);
+        AxialCoordinate inner = pointy ? AxialDirection.PointyDownRight : AxialDirection.FlatRightDown;
+        AxialCoordinate outer1 = pointy ? AxialDirection.PointyRight : AxialDirection.FlatDown;
         AxialCoordinate outer2 = pointy ? new AxialCoordinate(-1, 2) : new AxialCoordinate(2, -1);
         for (AxialCoordinate x = origin; ; x = x.plus(outer1)) {
             Point2D pos = AxialCoordinate.hexToPixel(x, pointy, edgeLength);
             if (pos.getX() - XOffset.get() > internalWidth.get() || pos.getY() - YOffset.get() > internalHeight.get()) {
                 break;
             }
-            innerLoop(x, inner);
+            innerLoop(x, inner, localFreeTiles);
         }
 
         for (AxialCoordinate x = origin; ; x = x.plus(outer2)) {
@@ -210,9 +228,20 @@ public class VirtualizingHexGridPane extends Pane {
             if (pos.getX() - XOffset.get() > internalWidth.get() || pos.getY() - YOffset.get() > internalHeight.get()) {
                 break;
             }
-            innerLoop(x, inner);
+            innerLoop(x, inner, localFreeTiles);
         }
 
+        //Remove all extra children
+        for(List<HexTile> k : localFreeTiles.values())
+        {
+            for(HexTile h : k)
+            {
+                freeTiles.add(new SoftReference<>(h));
+                h.setContent(null);
+                getChildren().remove(h);
+            }
+        }
+        localFreeTiles.clear();
     }
 
     public class HexTile extends Region {
@@ -336,12 +365,9 @@ public class VirtualizingHexGridPane extends Pane {
         @Override
         protected void layoutChildren() {
             super.layoutChildren();
-            for (Node child : getChildren()) {
-                if (contentNode.get() != null) {
-                    layoutInArea(contentNode.get(), 0, 0, width, height, 0, HPos.CENTER, VPos.CENTER);
-                }
+            if (contentNode.get() != null) {
+                layoutInArea(contentNode.get(), 0, 0, width, height, 0, HPos.CENTER, VPos.CENTER);
             }
-
         }
     }
 }

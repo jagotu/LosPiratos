@@ -4,15 +4,15 @@ import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.view.layout.HexTileContents;
 import com.vztekoverflow.lospiratos.view.layout.HexTileContentsFactory;
 import com.vztekoverflow.lospiratos.view.layout.VirtualizingHexGridPane;
-import javafx.beans.property.*;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
-import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 
 public class SampleController {
 
@@ -25,7 +25,7 @@ public class SampleController {
     @FXML
     public void initialize() {
 
-        hexPane = new VirtualizingHexGridPane(40, false, new HexTileContentsFactory() {
+        hexPane = new VirtualizingHexGridPane(40, true, new HexTileContentsFactory() {
 
             public HexTileContents getContentsFor(AxialCoordinate coords, double tileWidth, double tileHeight) {
 

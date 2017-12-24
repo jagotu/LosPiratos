@@ -1,6 +1,5 @@
 package com.vztekoverflow.lospiratos.util;
 
-import javafx.beans.property.ObjectProperty;
 import javafx.geometry.Point2D;
 
 /*
@@ -97,6 +96,9 @@ public class AxialCoordinate {
         AxialCoordinate c = (AxialCoordinate) obj;
         return Q == c.Q && R == c.R;
     }
+
+    @Override
+    public int hashCode() {return Integer.hashCode(Q) + Integer.hashCode(R);}
 
     public static Point2D hexToPixel(AxialCoordinate hexCoords, boolean pointy, double edgeLength) {
         double x, y;
