@@ -28,23 +28,23 @@ public class VirtualizingHexGridPane extends Pane {
     private final DoubleProperty Scale = new SimpleDoubleProperty(1);
 
     //Private values calculated by constructor
-    private double edgeLength;
-    private boolean pointy;
-    private double tileWidth;
-    private double tileHeight;
-    private ArrayList<Double> hexagonPoints;
+    private final double edgeLength;
+    private final boolean pointy;
+    private final double tileWidth;
+    private final double tileHeight;
+    private final ArrayList<Double> hexagonPoints;
 
     //Virtualization helpers
-    private HashMap<AxialCoordinate, HexTile> usedTiles = new HashMap<>();
-    private HashSet<SoftReference<HexTile>> freeTiles = new HashSet<>();
+    private final HashMap<AxialCoordinate, HexTile> usedTiles = new HashMap<>();
+    private final HashSet<SoftReference<HexTile>> freeTiles = new HashSet<>();
 
     //Internal dynamic calculations
-    private SimpleObjectProperty<AxialCoordinate> topLeft = new SimpleObjectProperty<>();
-    private ReadOnlyDoubleWrapper internalWidth = new ReadOnlyDoubleWrapper();
-    private ReadOnlyDoubleWrapper internalHeight = new ReadOnlyDoubleWrapper();
+    private final SimpleObjectProperty<AxialCoordinate> topLeft = new SimpleObjectProperty<>();
+    private final ReadOnlyDoubleWrapper internalWidth = new ReadOnlyDoubleWrapper();
+    private final ReadOnlyDoubleWrapper internalHeight = new ReadOnlyDoubleWrapper();
 
     //Contents factory
-    private HexTileContentsFactory factory;
+    private final HexTileContentsFactory factory;
 
     public VirtualizingHexGridPane(double edgeLength, boolean pointy, HexTileContentsFactory factory) {
         this.edgeLength = edgeLength;
@@ -245,15 +245,15 @@ public class VirtualizingHexGridPane extends Pane {
         localFreeTiles.clear();
     }
 
-    static public class HexTile extends Region {
+    static private class HexTile extends Region {
         private double width;
         private double height;
 
 
-        private javafx.scene.transform.Scale st = new Scale();
+        private final javafx.scene.transform.Scale st = new Scale();
         private HexTileContents content;
-        private ObjectProperty<Node> contentNode = new SimpleObjectProperty<>(null);
-        private StringProperty cssClassName = new SimpleStringProperty("");
+        private final ObjectProperty<Node> contentNode = new SimpleObjectProperty<>(null);
+        private final StringProperty cssClassName = new SimpleStringProperty("");
 
         private Shape tileShape;
 
@@ -269,11 +269,11 @@ public class VirtualizingHexGridPane extends Pane {
             }
         };
 
-        private StyleableBooleanProperty clip = new SimpleStyleableBooleanProperty(CLIP);
+        private final StyleableBooleanProperty clip = new SimpleStyleableBooleanProperty(CLIP);
 
         private static final List<CssMetaData<? extends Styleable, ?>> CSS_META_DATA;
         static {
-            final List<CssMetaData<? extends Styleable, ?>> metaData = new ArrayList<CssMetaData<? extends Styleable, ?>>(Region.getClassCssMetaData());
+            final List<CssMetaData<? extends Styleable, ?>> metaData = new ArrayList<>(Region.getClassCssMetaData());
             metaData.add(CLIP);
             CSS_META_DATA = Collections.unmodifiableList(metaData);
 
@@ -287,8 +287,6 @@ public class VirtualizingHexGridPane extends Pane {
             return getClassCssMetaData();
         }
 
-        private VirtualizingHexGridPane parent;
-
         private HexTile(double width, double height, VirtualizingHexGridPane parent) {
             setPickOnBounds(false);
 
@@ -298,7 +296,6 @@ public class VirtualizingHexGridPane extends Pane {
 
             this.width = width;
             this.height = height;
-            this.parent = parent;
 
             tileShape = parent.getHexagon();
             getChildren().add(tileShape);

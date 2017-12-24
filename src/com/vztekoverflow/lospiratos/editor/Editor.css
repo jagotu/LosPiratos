@@ -1,0 +1,14 @@
+.hexTile {
+    -fx-fill:white;
+    -fx-stroke:black;
+}
+
+.hexTile:hover
+{
+    -fx-fill: LemonChiffon;
+}
+
+.hexParent.origin .hexTile
+{
+    -fx-fill: black;
+}
