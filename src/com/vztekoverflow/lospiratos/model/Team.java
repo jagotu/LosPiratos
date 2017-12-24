@@ -1,15 +1,15 @@
 package com.vztekoverflow.lospiratos.model;
 
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 public class Team {
     public Team() {
 
     }
+
 
     public Team(String name, String id, String color, int money, int ownedMetal, int ownedWood, int ownedCloth, int ownedRum, int ownedTobacco) {
 
@@ -35,4 +35,5 @@ public class Team {
     public IntegerProperty ownedRum = new SimpleIntegerProperty(0);
     public IntegerProperty ownedTobacco = new SimpleIntegerProperty(0);
 
+    public ListProperty<Ship> ships = new SimpleListProperty<>(FXCollections.observableArrayList());
 }

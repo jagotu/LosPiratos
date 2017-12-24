@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 
 public class Game {
-    public ListProperty<Ship> ships = new SimpleListProperty<>(FXCollections.observableArrayList());
+
     public ListProperty<Team> teams = new SimpleListProperty<>(FXCollections.observableArrayList());
     public ObjectProperty<Map> map = new SimpleObjectProperty<>();
 
@@ -76,10 +76,6 @@ public class Game {
         s2.customExtensions.put("MortarDmg","5");
         s2.customExtensions.put("MortarRange","2");
 
-        g.ships.addAll(s1, s2);
-
-
-
 
         Team t1 = new Team(
                 "SuperTeam",
@@ -91,6 +87,9 @@ public class Game {
                 0,
                 30,
                 40);
+
+        t1.ships.addAll(s1, s2);
+
         g.teams.add(t1);
 
 

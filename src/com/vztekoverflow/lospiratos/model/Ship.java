@@ -6,7 +6,7 @@ import javafx.beans.property.*;
 
 public class Ship {
     public Ship(String name, String id, String teamId, String captain, String type,
-                int HP, int HPmax, int cannonCount, int speed, int positionP, int positionQ, int orientationDeg,
+                int HP, int additionalHPmax, int additionalCannons, int additionalSpeed, int positionP, int positionQ, int orientationDeg,
                 ShipEnhancementStatus upgradeCannon,
                 ShipEnhancementStatus upgradeHull,
                 ShipEnhancementStatus enhMortar,
@@ -23,19 +23,21 @@ public class Ship {
         this.type.set(type);
 
         this.HP.set(HP);
-        this.HPmax.set(HPmax);
-        this.cannonCount.set(cannonCount);
-        this.speed.set(speed);
         this.positionP.set(positionP);
         this.positionQ.set(positionQ);
         this.orientationDeg.set(orientationDeg);
 
-        this.upgradeCannon.set(upgradeCannon);
-        this.upgradeHull.set(upgradeHull);
-        this.enhMortar.set(enhMortar);
-        this.enhChainShot.set(enhChainShot);
-        this.enhHeavyShot.set(enhHeavyShot);
-        this.enhRam.set(enhRam);
+        this.customAdditionalHPmax.set(additionalHPmax);
+        this.customAdditionalCannons.set(additionalCannons);
+        this.customAdditionalSpeed.set(additionalSpeed);
+
+        //todo those strings are here for testing only.
+        this.enhancements.put("upgCannon", upgradeCannon);
+        this.enhancements.put("upgHull", upgradeHull);
+        this.enhancements.put("chainShot", enhChainShot);
+        this.enhancements.put("heavyShot", enhHeavyShot);
+        this.enhancements.put("ram", enhRam);
+        this.enhancements.put("mortar", enhMortar);
 
         this.capacityLeft.setValue(capacityLeft);
         this.carriesMetalUnits.setValue(carriesMetalUnits);
@@ -58,12 +60,13 @@ public class Ship {
     public StringProperty type = new SimpleStringProperty("");
 
     public IntegerProperty HP = new SimpleIntegerProperty(0);
-    public IntegerProperty HPmax = new SimpleIntegerProperty(0);
-    public IntegerProperty cannonCount = new SimpleIntegerProperty(0);
-    public IntegerProperty speed = new SimpleIntegerProperty(0);
     public IntegerProperty positionP = new SimpleIntegerProperty(0);
     public IntegerProperty positionQ = new SimpleIntegerProperty(0);
     public IntegerProperty orientationDeg = new SimpleIntegerProperty(0);
+
+    public IntegerProperty customAdditionalHPmax = new SimpleIntegerProperty(0);
+    public IntegerProperty customAdditionalCannons = new SimpleIntegerProperty(0);
+    public IntegerProperty customAdditionalSpeed = new SimpleIntegerProperty(0);
 
     public IntegerProperty capacityLeft = new SimpleIntegerProperty(0);
     public IntegerProperty carriesMetalUnits = new SimpleIntegerProperty(0);
@@ -73,12 +76,7 @@ public class Ship {
     public IntegerProperty carriesTobaccoUnits = new SimpleIntegerProperty(0);
     public IntegerProperty carriesMoney = new SimpleIntegerProperty(0);
 
-    public ObjectProperty<ShipEnhancementStatus> upgradeCannon = new SimpleObjectProperty<>(ShipEnhancementStatus.empty);
-    public ObjectProperty<ShipEnhancementStatus> upgradeHull = new SimpleObjectProperty<>(ShipEnhancementStatus.empty);
-    public ObjectProperty<ShipEnhancementStatus> enhMortar = new SimpleObjectProperty<>(ShipEnhancementStatus.empty);
-    public ObjectProperty<ShipEnhancementStatus> enhChainShot = new SimpleObjectProperty<>(ShipEnhancementStatus.empty);
-    public ObjectProperty<ShipEnhancementStatus> enhHeavyShot = new SimpleObjectProperty<>(ShipEnhancementStatus.empty);
-    public ObjectProperty<ShipEnhancementStatus> enhRam = new SimpleObjectProperty<>(ShipEnhancementStatus.empty);
+    public MapProperty<String, ShipEnhancementStatus> enhancements = new SimpleMapProperty<>();
 
     public MapProperty<String, String> customExtensions = new SimpleMapProperty<>();
 
