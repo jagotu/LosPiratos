@@ -258,6 +258,7 @@ public class VirtualizingHexGridPane extends Pane {
 
         HexTile(double width, double height) {
 
+            setPickOnBounds(false);
 
             this.getTransforms().add(st);
             st.setPivotX(0);
