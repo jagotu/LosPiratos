@@ -10,6 +10,7 @@ import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.StackPane;
@@ -31,11 +32,11 @@ public class SampleController {
 
                 final Label l = new Label();
                 l.setText(String.format("[%s,%s]", coords.getQ(), coords.getR()));
+                l.setOnMouseClicked((MouseEvent) -> {
+                    new Alert(Alert.AlertType.INFORMATION, "Clicked on " + coords.toString()).showAndWait();
+                });
+
                 final String cssClassName = coords.getR() % 2 == 0 ? "even" : "odd";
-                /*
-                if (coords.getY() < -5 || coords.getY() > 5 || coords.getX() < -5 || coords.getX() > 5) {
-                    return null;
-                }*/
 
                 return new HexTileContents() {
 

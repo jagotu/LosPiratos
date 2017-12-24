@@ -278,10 +278,12 @@ public class VirtualizingHexGridPane extends Pane {
             {
                 if (oldValue != null) {
                     this.getChildren().remove(oldValue);
+                    this.onMouseClickedProperty().unbind();
                 }
                 if (newValue != null) {
                     newValue.setMouseTransparent(true);
                     this.getChildren().add(newValue);
+                    this.onMouseClickedProperty().bind(contentNode.get().onMouseClickedProperty());
                 }
             });
 
@@ -293,6 +295,8 @@ public class VirtualizingHexGridPane extends Pane {
                     this.getStyleClass().add(newValue);
                 }
             });
+
+
 
             /*clip.addListener((observable ->
             {
