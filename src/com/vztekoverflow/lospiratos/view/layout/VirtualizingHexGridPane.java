@@ -279,6 +279,7 @@ public class VirtualizingHexGridPane extends Pane {
                     this.getChildren().remove(oldValue);
                 }
                 if (newValue != null) {
+                    newValue.setMouseTransparent(true);
                     this.getChildren().add(newValue);
                 }
             });
