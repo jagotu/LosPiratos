@@ -5,6 +5,7 @@ import com.vztekoverflow.lospiratos.util.AxialDirection;
 import com.vztekoverflow.lospiratos.util.Constants;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
+import javafx.css.*;
 import javafx.geometry.HPos;
 import javafx.geometry.Point2D;
 import javafx.geometry.VPos;
@@ -172,7 +173,7 @@ public class VirtualizingHexGridPane extends Pane {
 
 
                 if (t == null) {
-                    t = new HexTile(tileWidth, tileHeight);
+                    t = new HexTile(tileWidth, tileHeight, this);
                 }
 
                 t.setContent(contents);
@@ -244,20 +245,51 @@ public class VirtualizingHexGridPane extends Pane {
         localFreeTiles.clear();
     }
 
-    public class HexTile extends Region {
-        double width;
-        double height;
+    static public class HexTile extends Region {
+        private double width;
+        private double height;
 
 
-        javafx.scene.transform.Scale st = new Scale();
-        HexTileContents content;
-        ObjectProperty<Node> contentNode = new SimpleObjectProperty<>(null);
-        StringProperty cssClassName = new SimpleStringProperty("");
+        private javafx.scene.transform.Scale st = new Scale();
+        private HexTileContents content;
+        private ObjectProperty<Node> contentNode = new SimpleObjectProperty<>(null);
+        private StringProperty cssClassName = new SimpleStringProperty("");
 
-        Shape tileShape;
+        private Shape tileShape;
 
-        HexTile(double width, double height) {
+        private static final CssMetaData<HexTile, Boolean> CLIP = new CssMetaData<HexTile, Boolean>("-hex-clip", StyleConverter.getBooleanConverter(), false) {
+            @Override
+            public boolean isSettable(HexTile styleable) {
+                return styleable.clip == null || !styleable.clip.isBound();
+            }
 
+            @Override
+            public StyleableProperty<Boolean> getStyleableProperty(HexTile styleable) {
+                return styleable.clip;
+            }
+        };
+
+        private StyleableBooleanProperty clip = new SimpleStyleableBooleanProperty(CLIP);
+
+        private static final List<CssMetaData<? extends Styleable, ?>> CSS_META_DATA;
+        static {
+            final List<CssMetaData<? extends Styleable, ?>> metaData = new ArrayList<CssMetaData<? extends Styleable, ?>>(Region.getClassCssMetaData());
+            metaData.add(CLIP);
+            CSS_META_DATA = Collections.unmodifiableList(metaData);
+
+        }
+
+        public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {
+            return CSS_META_DATA;
+        }
+
+        @Override public List<CssMetaData<? extends Styleable, ?>> getCssMetaData() {
+            return getClassCssMetaData();
+        }
+
+        private VirtualizingHexGridPane parent;
+
+        private HexTile(double width, double height, VirtualizingHexGridPane parent) {
             setPickOnBounds(false);
 
             this.getTransforms().add(st);
@@ -266,8 +298,9 @@ public class VirtualizingHexGridPane extends Pane {
 
             this.width = width;
             this.height = height;
+            this.parent = parent;
 
-            tileShape = VirtualizingHexGridPane.this.getHexagon();
+            tileShape = parent.getHexagon();
             getChildren().add(tileShape);
             layoutInArea(tileShape, 0, 0, width, height, 0, HPos.LEFT, VPos.TOP);
 
@@ -298,14 +331,14 @@ public class VirtualizingHexGridPane extends Pane {
 
 
 
-            /*clip.addListener((observable ->
+            clip.addListener((observable ->
             {
                 if (clip.get()) {
-                    this.setClip(VirtualizingHexGridPane.this.getHexagon());
+                    this.setClip(parent.getHexagon());
                 } else {
                     this.setClip(null);
                 }
-            }));*/
+            }));
 
 
         }
