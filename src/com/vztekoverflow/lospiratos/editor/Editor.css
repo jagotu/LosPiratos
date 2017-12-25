@@ -1,6 +1,6 @@
 .hexTile {
-    -fx-fill:white;
-    -fx-stroke:black;
+    -fx-stroke: black;
+    -fx-fill: transparent;
 }
 
 .hexTile:hover
@@ -11,4 +11,15 @@
 .hexParent.origin .hexTile
 {
     -fx-fill: black;
+}
+
+.hexParent.selected .hexTile
+{
+    -fx-fill: yellow;
+    -fx-effect: dropshadow(gaussian, yellow, 20, 0.2, 0, 0);
+}
+
+.hexParent.clipped
+{
+    -hex-clip: true;
 }

@@ -319,10 +319,10 @@ public class VirtualizingHexGridPane extends Pane {
 
             cssClassName.addListener((observable, oldValue, newValue) -> {
                 if (oldValue != null && !oldValue.equals("")) {
-                    this.getStyleClass().remove(oldValue);
+                    this.getStyleClass().removeAll(oldValue.split(" "));
                 }
                 if (newValue != null && !newValue.equals("")) {
-                    this.getStyleClass().add(newValue);
+                    this.getStyleClass().addAll(newValue.split(" "));
                 }
             });
 
