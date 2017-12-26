@@ -266,7 +266,7 @@ public class Editor extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(Editor.class.getResource("editor.fxml"));
+        Parent root = FXMLLoader.load(Editor.class.getResource("Editor.fxml"));
         parentStage = primaryStage;
         primaryStage.setTitle("Editor");
         primaryStage.setScene(new Scene(root, root.prefWidth(-1), root.prefHeight(-1)));
