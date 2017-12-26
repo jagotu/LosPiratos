@@ -25,7 +25,7 @@ public class CannonUpgrade extends ShipEnhancement {
             bonusCannons = 7;
         }
         else{
-            Warnings.makeWarning("CannonUpgrade: Unknown ship type: " + ship.getShipType());
+            Warnings.makeWarning("CannonUpgrade:","Unknown ship type: " + ship.getShipType());
         }
     }
 

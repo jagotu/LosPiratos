@@ -25,7 +25,7 @@ public class HullUpgrade extends ShipEnhancement {
             return 20;
         }
         else{
-            Warnings.makeWarning("CannonUpgrade: Unknown ship type: " + ship.getShipType());
+            Warnings.makeWarning("CannonUpgrade", " Unknown ship type: " + ship.getShipType());
             return 0;
         }
     }

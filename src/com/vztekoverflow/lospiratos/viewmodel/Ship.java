@@ -8,15 +8,13 @@ import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEntity;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipMechanics;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipType;
+import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Brig;
 import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import javax.xml.crypto.dsig.keyinfo.KeyValue;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+
 import java.util.Map;
 
 
@@ -24,25 +22,36 @@ public class Ship {
 
     //initializers:
 
-    public Ship(ShipType shipType, com.vztekoverflow.lospiratos.model.Ship shipModel) {
-        this.shipType = shipType;
+    public Ship(com.vztekoverflow.lospiratos.model.Ship shipModel) {
         this.shipModel = shipModel;
-        name.bindBidirectional(shipModel.name);
-        captainName.bindBidirectional(shipModel.captain);
-        shipModel.type.set(ShipType.class.toString());
-        shipModel.type.addListener((observable, oldValue, newValue) -> {
-            try{
-                Ship.this.shipType = ShipType.getInstaceFromString(newValue);
-            }catch (IllegalArgumentException e){
-                Warnings.makeWarning("Invalid ship type description: " + newValue);
-            }
-        });
-        shipModel.enhancements.addListener((observable, oldValue, newValue) -> {
+        name.bindBidirectional(shipModel.nameProperty());
+        captainName.bindBidirectional(shipModel.captainProperty());
+
+        shipModel.typeProperty().addListener((observable, oldValue, newValue) -> trySettingType(newValue) );
+        trySettingType(shipModel.getType());
+        if(shipType == null){
+            Warnings.makeWarning(toString(), "ShipType not set (or invalid). Fallbacking to Brig.");
+            shipType = new Brig(); //to make sure that some type is always set
+        }
+
+        addEnhancements(shipModel.enhancementsProperty().get());
+        shipModel.enhancementsProperty().addListener((observable, oldValue, newValue) -> {
             //simple O(N) implementations: simply load all enhancements again
-            Ship.this.enhancements = new ArrayList<>();
+            //todo rewrite to something smarter
+            Ship.this.enhancements.set(FXCollections.observableArrayList()); //makes the list empty
             addEnhancements(newValue);
         });
-        addEnhancements(shipModel.enhancements.get());
+
+        destroyed.bindBidirectional(shipModel.destroyedProperty());
+
+    }
+
+    private void trySettingType(String type){
+        try{
+            Ship.this.shipType = ShipType.getInstaceFromString(type);
+        }catch (IllegalArgumentException e){
+            Warnings.makeWarning(toString(),"Invalid ship type description: " + type);
+        }
     }
 
     private void addEnhancements(Map<String, ShipEnhancementStatus> map){
@@ -54,7 +63,7 @@ public class Ship {
                 e.onAddedToShip(this);
                 enhancements.add(e);
             }catch(IllegalArgumentException e){
-                Warnings.makeWarning("Unknown ship enhancement name: "+ entry.getKey());
+                Warnings.makeWarning(toString(),"Unknown ship enhancement name: "+ entry.getKey());
             }
 
 
@@ -63,10 +72,16 @@ public class Ship {
 
     //properties:
 
+
+
     private ShipType shipType;
     public ShipType getShipType() {
         return shipType;
     }
+    public void setShipType(ShipType shipType) {
+        shipModel.typeProperty().set(shipType.toString());
+    }
+
 
     private com.vztekoverflow.lospiratos.model.Ship shipModel;
 
@@ -104,28 +119,14 @@ public class Ship {
     }
 
 
-    private List<ShipEnhancement> enhancements;
-    public List<ShipEnhancement> getEnhancements() {
+    private ListProperty<ShipEnhancement> enhancements = new SimpleListProperty<>(FXCollections.observableArrayList());
+    public ObservableList<ShipEnhancement> getEnhancements() {
         return enhancements;
     }
-    public void addEnhancement(ShipEnhancement item){
-//        item.onAddedToShip(this);
-//        enhancements.add(item);
-//        addToCurrentHP(item.getBonusMaxHP());
-        //in current version, it deletes the old ShipEnhancement and then the Notify callback creates a new one:
-        item.onAddedToShip(this);  //this is actually useless, because item will be destroyed anyway
-        ShipEnhancementStatus status = ShipEnhancementStatus.active;
-        if(item.isDestroyed()) status = ShipEnhancementStatus.damaged;
-        shipModel.enhancements.put(item.getClass().toString(), status);
-    }
-    private List<ShipMechanics> mechanics;
-    public List<ShipMechanics> getMechanics() {
-        return mechanics;
-    }
-    public void addEnhancement(ShipMechanics item){
-        item.onAddedToShip(this);
-        mechanics.add(item);
-    }
+
+    //todo to be implemented:
+    private ListProperty<ShipMechanics> mechanics = new SimpleListProperty<>(FXCollections.observableArrayList());
+
 
     //getters of non-properties:
 
@@ -138,13 +139,47 @@ public class Ship {
         return val;
     }
 
+
+    // enhnacements:
+
+    public <Enhancement extends ShipEnhancement> void addNewEnhancement(Class<Enhancement> enhancementClass){
+        shipModel.enhancementsProperty().put(enhancementClass.toString(), ShipEnhancementStatus.active);
+    }
+
+    /*
+     * @returns null if Ship does not contain any enhancement of given type
+     */
+    public <Enhancement extends ShipEnhancement> Enhancement getEnhancement(Class<Enhancement> enhancementClass){
+        //todo rewrite to faster implementation where enhancemetns is Map<Type, ShipEnhancement>.
+        for(ShipEnhancement e : enhancements){
+            if(enhancementClass.isInstance(e)) return (Enhancement) e;
+        }
+        return null;
+    }
+
+    public <Enhancement extends ShipEnhancement> boolean hasEnhancement(Class<Enhancement> enhancementClass){
+        //todo rewrite to faster implementation where enhancemetns is Map<Type, ShipEnhancement>.
+        for(ShipEnhancement e : enhancements){
+            if(enhancementClass.isInstance(e)) return true;
+        }
+        return false;
+    }
+
     //functions:
+
+    @Override
+    public String toString() {
+        String name = this.name.get();
+        if(name == null || name.equals("")) name = "<empty>";
+        return "Ship \"" + name + "\"";
+    }
 
 
     //static:
 
     public static Ship LoadFromModel(com.vztekoverflow.lospiratos.model.Ship model){
         throw new NotImplementedException();
+        //todo tohle mozna vubec neni potreba, protoze to cele zvladne konstruktor
     }
 
 }
