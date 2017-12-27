@@ -10,6 +10,7 @@ import javafx.scene.paint.Color;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -66,13 +67,13 @@ public class Team {
     private void loadShipsFromModel(List<com.vztekoverflow.lospiratos.model.Ship> ships){
         for(com.vztekoverflow.lospiratos.model.Ship modelShip: ships){
             Ship s = new Ship(modelShip);
-            this.ships.add(s);
+            this.ships.put(s.getName(),s);
         }
     }
 
     //properties:
 
-    private ListProperty<Ship> ships = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private MapProperty<String,Ship> ships = new SimpleMapProperty<>(FXCollections.observableHashMap());
     private StringProperty name = new SimpleStringProperty("");
     private ObjectProperty<Color> color = new SimpleObjectProperty<>();
 
@@ -83,11 +84,11 @@ public class Team {
     private IntegerProperty ownedRum = new SimpleIntegerProperty(0);
     private IntegerProperty ownedTobacco = new SimpleIntegerProperty(0);
 
-    public ObservableList<Ship> getShips() {
-        return ships.get();
+    public Collection<Ship> getShips() {
+        return ships.get().values();
     }
 
-    public ListProperty<Ship> shipsProperty() {
+    public MapProperty<String, Ship> shipsProperty() {
         return ships;
     }
 
@@ -190,11 +191,27 @@ public class Team {
 
     //public methods:
 
+    /* Creates a new ship owned by the team and adds it to its list of ships
+     * @param name If a ship with this name already exists, returns null
+     * @param name if is empty or null, returns null
+     * @returns null if a ship with the same name already exists
+     */
     public <T extends ShipType> Ship createAndAddNewShip(Class<T> shipType, String shipName, String captainName) {
+        if(shipName == null || shipName.isEmpty()){
+            Warnings.makeWarning(toString(), "Ship's name is empty or null.");
+            return null;
+        }
+
+        if(! game.mayCreateShipWithName(shipName)){
+            Warnings.makeWarning(toString(), "Ship with this name already exists: " + shipName);
+            return null;
+        }
+
         com.vztekoverflow.lospiratos.model.Ship modelShip = new com.vztekoverflow.lospiratos.model.Ship();
         Ship s = new Ship(shipType, shipName, this, modelShip);
         s.setCaptainName(captainName);
         teamModel.shipsProperty().add(modelShip);
+        game.registerShip(s);
         return s;
     }
 
@@ -209,16 +226,11 @@ public class Team {
      * @returns null when no team with the name has been found
      */
     public Ship findShipByName(String shipName) {
-        //todo this is a O(N) implementation. Here, faster impl should be used
-        //todo Github issue #8
-        List<Ship> result = ships.stream().filter(t -> t.getName().equals(shipName)).collect(Collectors.toList());
-        int size = result.size();
-        if(size == 0){
-            Warnings.makeWarning(toString(), "No ship with this name found: " + shipName);
-            return  null;
+        if(ships.containsKey(shipName)){
+            return ships.get(shipName);
         }
-        if(size > 1) Warnings.panic(toString(), "More ships (" + size+ ") with the same name in one team: " + shipName);
-        return result.get(0);
+        Warnings.makeWarning(toString(), "No ship with this name found: " + shipName);
+        return null;
     }
 
     //private methods:

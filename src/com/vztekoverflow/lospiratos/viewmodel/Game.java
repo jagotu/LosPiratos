@@ -2,13 +2,17 @@ package com.vztekoverflow.lospiratos.viewmodel;
 
 import com.vztekoverflow.lospiratos.util.Warnings;
 import javafx.beans.property.ListProperty;
+import javafx.beans.property.MapProperty;
 import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleMapProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import javafx.scene.paint.Color;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,18 +43,35 @@ public class Game {
 
 
     private ListProperty<Team> teams = new SimpleListProperty<>(FXCollections.observableArrayList());
-
     public ObservableList<Team> getTeams() {
         return teams.get();
     }
-
     public ListProperty<Team> teamsProperty() {
         return teams;
     }
 
+    private MapProperty<String, Ship> allShips = new SimpleMapProperty<>(FXCollections.observableHashMap());
+    public Collection<Ship> getAllShips() {
+        return allShips.get().values();
+    }
+    public MapProperty<String, Ship> allShipsProperty() {
+        return allShips;
+    }
+
+    public boolean mayCreateShipWithName(String name){
+        return ! allShips.containsKey(name);
+    }
+    public void registerShip(Ship ship){
+        if(allShips.containsKey(ship.getName())){
+            Warnings.makeStrongWarning(toString(), "allShips already contains a ship with this name: " + ship.getName());
+            return;
+        }
+        allShips.put(ship.getName(), ship);
+    }
+
     /*
-     * @returns null when no team with the name has been found
-     */
+         * @returns null when no team with the name has been found
+         */
     public Team findTeamByName(String teamName) {
         //this is a O(N) implementation. But there are just up to 10 teams in our game anyway...
         List<Team> result = getTeams().stream().filter(t -> t.getName().equals(teamName)).collect(Collectors.toList());
