@@ -120,7 +120,7 @@
                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
             </VBox.margin>
          </Button>
-         <Label text="Drag to move, use scrollwheel to zoom." wrapText="true">
+         <Label text="Drag to move, use scrollwheel to zoom. Also try clicking the right mouse button." wrapText="true">
             <VBox.margin>
                <Insets top="20.0" />
             </VBox.margin></Label>

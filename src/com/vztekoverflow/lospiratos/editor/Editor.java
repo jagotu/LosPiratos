@@ -62,8 +62,7 @@ public class Editor extends Application {
         rotateTxt.textProperty().bindBidirectional(rotateSlide.valueProperty(), new NumberStringConverter());
 
         selected.addListener((observable, oldValue, newValue) -> {
-            if(oldValue != null)
-            {
+            if (oldValue != null) {
                 oldValue.removeClass("selected");
                 scaleSlide.valueProperty().unbindBidirectional(oldValue.iv.scaleXProperty());
                 scaleSlide.valueProperty().unbindBidirectional(oldValue.iv.scaleYProperty());
@@ -72,8 +71,7 @@ public class Editor extends Application {
                 rotateSlide.valueProperty().unbindBidirectional(oldValue.iv.rotateProperty());
                 clipped.selectedProperty().unbindBidirectional(oldValue.clip);
             }
-            if(newValue != null)
-            {
+            if (newValue != null) {
                 newValue.addClass("selected");
                 imageURL.setText(newValue.imgURL.get());
                 scaleSlide.valueProperty().bindBidirectional(newValue.iv.scaleXProperty());
@@ -92,8 +90,7 @@ public class Editor extends Application {
 
             public HexTileContents getContentsFor(AxialCoordinate coords, double tileWidth, double tileHeight) {
 
-                if(mapStorage.containsKey(coords))
-                {
+                if (mapStorage.containsKey(coords)) {
                     return mapStorage.get(coords);
                 }
                 final String css = (coords.getR() == 0 && coords.getQ() == 0) ? "origin" : "";
@@ -115,21 +112,19 @@ public class Editor extends Application {
         });
 
         hexPane.setOnMouseDragged(MouseEvent -> {
-            hexPane.setXOffset(Math.min(Math.max(hexPane.getXOffset() + (lastMouse.getX() - MouseEvent.getX())*hexPane.getScale(), -1000), 1000));
-            hexPane.setYOffset(Math.min(Math.max(hexPane.getYOffset() + (lastMouse.getY() - MouseEvent.getY())*hexPane.getScale(), -1000), 1000));
+            hexPane.setXOffset(Math.min(Math.max(hexPane.getXOffset() + (lastMouse.getX() - MouseEvent.getX()) * hexPane.getScale(), -1000), 1000));
+            hexPane.setYOffset(Math.min(Math.max(hexPane.getYOffset() + (lastMouse.getY() - MouseEvent.getY()) * hexPane.getScale(), -1000), 1000));
             lastMouse = new Point2D(MouseEvent.getX(), MouseEvent.getY());
         });
 
         hexPane.setOnScroll(ScrollEvent -> {
             double scale = Math.pow(1.005, -ScrollEvent.getDeltaY());
-            double newScale = scale*hexPane.getScale();
-            if(newScale > 2)
-            {
+            double newScale = scale * hexPane.getScale();
+            if (newScale > 2) {
                 newScale = 2;
                 scale = 2 / hexPane.getScale();
             }
-            if(newScale < 0.1)
-            {
+            if (newScale < 0.1) {
                 newScale = 0.1;
                 scale = 0.1 / hexPane.getScale();
             }
@@ -146,6 +141,7 @@ public class Editor extends Application {
 
     class EditorHexTileContents implements HexTileContents {
 
+        int premadeShipIdx = 0;
         StringProperty imgURL = new SimpleStringProperty();
         StringProperty cssClass = new SimpleStringProperty();
         ArrayList<String> cssClasses = new ArrayList<>();
@@ -158,22 +154,43 @@ public class Editor extends Application {
             iv.setFitHeight(tileHeight);
             iv.setPreserveRatio(true);
             imgURL.addListener(Observable -> {
-                if(imgURL.get() == null)
-                {
+                if (imgURL.get() == null) {
                     iv.setImage(null);
                     return;
                 }
                 iv.setImage(new Image(imgURL.get()));
             });
             iv.setOnMouseClicked(MouseEvent -> {
-                if(MouseEvent.isStillSincePress())
-                {
-                    if(MouseEvent.getButton().equals(MouseButton.PRIMARY))
-                    {
+                if (MouseEvent.isStillSincePress()) {
+                    if (MouseEvent.getButton().equals(MouseButton.PRIMARY)) {
                         selected.set(this);
-                    } else if (MouseEvent.getButton().equals(MouseButton.SECONDARY))
-                    {
-                        imgURL.set("lod.png");
+                    } else if (MouseEvent.getButton().equals(MouseButton.SECONDARY)) {
+                        this.iv.scaleXProperty().bindBidirectional(this.iv.scaleYProperty());
+                        switch (premadeShipIdx) {
+                            case 0:
+                                imgURL.set("img/schooner.png");
+                                this.iv.scaleXProperty().setValue(1);
+                                break;
+                            case 1:
+                                imgURL.set("img/brig.png");
+                                this.iv.scaleXProperty().setValue(1.1);
+                                break;
+                            case 2:
+                                imgURL.set("img/frigate.png");
+                                this.iv.scaleXProperty().setValue(0.9);
+                                break;
+                            case 3:
+                                imgURL.set("img/galleon.png");
+                                this.iv.scaleXProperty().setValue(1.39);
+                                break;
+                            case 4:
+                                imgURL.set("lod.png");
+                                this.iv.scaleXProperty().setValue(1);
+                                break;
+                        }
+                        premadeShipIdx++;
+                        premadeShipIdx %= 5;
+
                     }
 
                 }
@@ -181,8 +198,7 @@ public class Editor extends Application {
             cssClasses.add(css);
             cssClass.set(String.join(" ", cssClasses));
             clip.addListener((Observable) -> {
-                if(clip.get())
-                {
+                if (clip.get()) {
                     addClass("clipped");
                 } else {
                     removeClass("clipped");
@@ -191,15 +207,12 @@ public class Editor extends Application {
         }
 
 
-
-        public void removeClass(String toRemove)
-        {
+        public void removeClass(String toRemove) {
             cssClasses.remove(toRemove);
             cssClass.set(String.join(" ", cssClasses));
         }
 
-        public void addClass(String newClass)
-        {
+        public void addClass(String newClass) {
             cssClasses.add(newClass);
             cssClass.set(String.join(" ", cssClasses));
         }
@@ -214,58 +227,54 @@ public class Editor extends Application {
         public StringProperty cssClassProperty() {
             return cssClass;
         }
-    };
+    }
+
+    ;
 
     @FXML
-    public void returnToOrigin()
-    {
+    public void returnToOrigin() {
         hexPane.setXOffset(0);
         hexPane.setYOffset(0);
     }
 
     @FXML
-    public void setImageButton()
-    {
-        if(selected.get() != null)
-        {
+    public void setImageButton() {
+        if (selected.get() != null) {
             selected.get().imgURL.set(imageURL.getText());
         }
     }
 
     private Stage parentStage;
     FileChooser fileChooser;
+
     @FXML
-    public void loadFileUrl()
-    {
+    public void loadFileUrl() {
 
         File file = fileChooser.showOpenDialog(parentStage);
-        if(file != null)
-        {
+        if (file != null) {
             fileChooser.setInitialDirectory(file.getParentFile());
             imageURL.setText(file.toURI().toString());
         }
     }
 
     @FXML
-    void scaleReset(){
+    void scaleReset() {
         scaleSlide.setValue(1);
     }
 
     @FXML
-    void translateReset()
-    {
+    void translateReset() {
         translateXSlide.setValue(0);
         translateYSlide.setValue(0);
     }
 
     @FXML
-    void rotateReset()
-    {
+    void rotateReset() {
         rotateSlide.setValue(0);
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(Editor.class.getResource("Editor.fxml"));
         parentStage = primaryStage;
         primaryStage.setTitle("Editor");
