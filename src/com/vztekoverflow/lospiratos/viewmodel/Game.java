@@ -1,5 +1,6 @@
 package com.vztekoverflow.lospiratos.viewmodel;
 
+import com.vztekoverflow.lospiratos.util.Warnings;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
@@ -9,6 +10,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Game {
 
@@ -44,6 +46,20 @@ public class Game {
 
     public ListProperty<Team> teamsProperty() {
         return teams;
+    }
+
+    /*
+     * @returns null when no team with the name has been found
+     */
+    public Team findTeamByName(String teamName) {
+        List<Team> result = getTeams().stream().filter(t -> t.getName().equals(teamName)).collect(Collectors.toList());
+        int size = result.size();
+        if(size == 0){
+            Warnings.makeWarning(toString(), "No team with this name found: " + teamName);
+            return  null;
+        }
+        if(size > 1) Warnings.makeWarning(toString(), "!!! More teams (" + size+ ") with the same name: " + teamName);
+        return result.get(0);
     }
 
 

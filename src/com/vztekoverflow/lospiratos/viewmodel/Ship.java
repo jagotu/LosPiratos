@@ -43,6 +43,7 @@ public class Ship {
         });
 
         destroyed.bindBidirectional(shipModel.destroyedProperty());
+        currentHP.bindBidirectional(shipModel.HPProperty());
 
     }
 
@@ -58,8 +59,9 @@ public class Ship {
         for(Map.Entry<String, ShipEnhancementStatus> entry : map.entrySet()){
             try{
                 ShipEnhancement e = ShipEnhancement.getInstaceFromString(entry.getKey());
-                if(entry.getValue() == ShipEnhancementStatus.damaged);
-                e.setDestroyed(true);
+                if(entry.getValue() == ShipEnhancementStatus.damaged){
+                    e.setDestroyed(true);
+                }
                 e.onAddedToShip(this);
                 enhancements.add(e);
             }catch(IllegalArgumentException e){
@@ -78,7 +80,7 @@ public class Ship {
     public ShipType getShipType() {
         return shipType;
     }
-    public void setShipType(ShipType shipType) {
+    public <T extends ShipType> void setShipType(Class<T> shipType) {
         shipModel.typeProperty().set(shipType.toString());
     }
 
@@ -87,7 +89,7 @@ public class Ship {
 
     private IntegerProperty currentHP = new SimpleIntegerProperty();
     public void addToCurrentHP(int value) {
-        this.currentHP.add(currentHP);
+        currentHP.set(currentHP.get() + value);
     }
     public int getCurrentHP() {
         return currentHP.getValue();
@@ -157,10 +159,10 @@ public class Ship {
         return null;
     }
 
-    public <Enhancement extends ShipEnhancement> boolean hasEnhancement(Class<Enhancement> enhancementClass){
+    public <Enhancement extends ShipEnhancement> boolean hasActiveEnhancement(Class<Enhancement> enhancementClass){
         //todo rewrite to faster implementation where enhancemetns is Map<Type, ShipEnhancement>.
         for(ShipEnhancement e : enhancements){
-            if(enhancementClass.isInstance(e)) return true;
+            if(enhancementClass.isInstance(e)) return e.isDestroyed() ? false : true;
         }
         return false;
     }

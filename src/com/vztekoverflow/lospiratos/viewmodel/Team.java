@@ -39,6 +39,7 @@ public class Team {
             //todo how to make this? I want add new ships or remove removed ships, but do not change currently existing ship object (don't want to recreate them)
             Warnings.makeWarning(toString(), "NotImplemented: Team.shipsProperty.changedListener.");
         });
+        loadShipsFromModel(teamModel.getShips());
 
     }
     private void loadShipsFromModel(List<com.vztekoverflow.lospiratos.model.Ship> ships){
@@ -168,12 +169,13 @@ public class Team {
 
     //public methods:
 
-    public Ship createAndAddNewShip(ShipType shipType, String shipName, String captainName) {
+    public <T extends ShipType> Ship createAndAddNewShip(Class<T> shipType, String shipName, String captainName) {
         com.vztekoverflow.lospiratos.model.Ship modelShip = new com.vztekoverflow.lospiratos.model.Ship();
         Ship s = new Ship(modelShip);
         s.setShipType(shipType);
         s.setName(shipName);
         s.setCaptainName(captainName);
+        s.addToCurrentHP(s.getMaxHP());
         teamModel.shipsProperty().add(modelShip);
         return s;
     }
