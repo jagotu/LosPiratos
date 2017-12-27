@@ -20,17 +20,17 @@ public class Game {
 
     public Game() {
         this.gameModel = new com.vztekoverflow.lospiratos.model.Game();
+        //todo proper binding of teams ListProperty missing (Github issue #7)
     }
 
     public Team createAndAddNewTeam(String teamName, Color teamColor){
         com.vztekoverflow.lospiratos.model.Team teamModel = new com.vztekoverflow.lospiratos.model.Team();
-        Team t = new Team(this, teamModel);
-        t.setColor(teamColor);
-        t.setName(teamName);
-        t.moneyProperty().set(Team.INITIAL_MONEY);
+        Team t = new Team(this, teamName, teamColor, teamModel);
+
         gameModel.teamsProperty().add(teamModel);
-        teams.add(t);
+        teams.add(t); //todo this should be done via a callback from model (Github issue #7)
         return t;
+
     }
     public com.vztekoverflow.lospiratos.model.Game getGameModel() {
         return gameModel;
@@ -52,17 +52,16 @@ public class Game {
      * @returns null when no team with the name has been found
      */
     public Team findTeamByName(String teamName) {
+        //this is a O(N) implementation. But there are just up to 10 teams in our game anyway...
         List<Team> result = getTeams().stream().filter(t -> t.getName().equals(teamName)).collect(Collectors.toList());
         int size = result.size();
         if(size == 0){
             Warnings.makeWarning(toString(), "No team with this name found: " + teamName);
             return  null;
         }
-        if(size > 1) Warnings.makeWarning(toString(), "!!! More teams (" + size+ ") with the same name: " + teamName);
+        if(size > 1) Warnings.panic(toString(), "More teams (" + size+ ") with the same name: " + teamName);
         return result.get(0);
     }
-
-
 
     public static Game LoadFromModel(com.vztekoverflow.lospiratos.model.Game gameModel){
         Game g = new Game();

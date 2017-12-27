@@ -12,7 +12,6 @@ import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Brig;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 
 import java.util.Map;
@@ -22,15 +21,37 @@ public class Ship {
 
     //initializers:
 
+    /* Creates a new ship and binds it to a shipModel.
+     * @param emptyShipModel a ship model with no values set. If values as name or shipType are set in the model, they will be overwritten by parameters.
+     * @param owner is not bound to any property in model. It must correspond to the owner as represented in model. If you set a team that is not an owner according to the model, behaviour is not defined.
+     */
+    public <T extends ShipType> Ship(Class<T> shipType, String name, Team owner, com.vztekoverflow.lospiratos.model.Ship emptyShipModel ){
+        this.shipModel = emptyShipModel;
+        this.owner = owner;
+        emptyShipModel.nameProperty().set(name);
+        emptyShipModel.typeProperty().set(shipType.toString());
+        bindToModel();
+
+        //default values:
+        currentHP.set(getMaxHP());
+    }
+
+    /*
+     * Creates a new ship object with values as defined in the @shipModel.
+     */
     public Ship(com.vztekoverflow.lospiratos.model.Ship shipModel) {
         this.shipModel = shipModel;
+        bindToModel();
+    }
+
+    private void bindToModel(){
         name.bindBidirectional(shipModel.nameProperty());
         captainName.bindBidirectional(shipModel.captainProperty());
 
         shipModel.typeProperty().addListener((observable, oldValue, newValue) -> trySettingType(newValue) );
-        trySettingType(shipModel.getType());
-        if(shipType == null){
-            Warnings.makeWarning(toString(), "ShipType not set (or invalid). Fallbacking to Brig.");
+        boolean typeSet = trySettingType(shipModel.getType());
+        if(!typeSet){
+            Warnings.makeWarning(toString(), "Fallbacking to Brig.");
             shipType = new Brig(); //to make sure that some type is always set
         }
 
@@ -44,14 +65,19 @@ public class Ship {
 
         destroyed.bindBidirectional(shipModel.destroyedProperty());
         currentHP.bindBidirectional(shipModel.HPProperty());
-
     }
 
-    private void trySettingType(String type){
+    private boolean trySettingType(String type){
+        if(type == null || type.isEmpty()){
+            Warnings.makeWarning(toString(), "Invalid ship type description (null or empty).");
+            return false;
+        }
         try{
             Ship.this.shipType = ShipType.getInstaceFromString(type);
+            return true;
         }catch (IllegalArgumentException e){
             Warnings.makeWarning(toString(),"Invalid ship type description: " + type);
+            return  false;
         }
     }
 
@@ -75,7 +101,6 @@ public class Ship {
     //properties:
 
 
-
     private ShipType shipType;
     public ShipType getShipType() {
         return shipType;
@@ -83,7 +108,13 @@ public class Ship {
     public <T extends ShipType> void setShipType(Class<T> shipType) {
         shipModel.typeProperty().set(shipType.toString());
     }
-
+    private Team owner;
+    public Team getOwner() {
+        return owner;
+    }
+    public void setOwner(Team owner) {
+        this.owner = owner;
+    }
 
     private com.vztekoverflow.lospiratos.model.Ship shipModel;
 
@@ -176,12 +207,5 @@ public class Ship {
         return "Ship \"" + name + "\"";
     }
 
-
-    //static:
-
-    public static Ship LoadFromModel(com.vztekoverflow.lospiratos.model.Ship model){
-        throw new NotImplementedException();
-        //todo tohle mozna vubec neni potreba, protoze to cele zvladne konstruktor
-    }
 
 }
