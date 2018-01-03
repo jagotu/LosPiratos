@@ -4,6 +4,7 @@ import com.vztekoverflow.lospiratos.model.GameSerializer;
 import com.vztekoverflow.lospiratos.viewmodel.Game;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
 import com.vztekoverflow.lospiratos.viewmodel.Team;
+import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.CannonUpgrade;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.HullUpgrade;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Frigate;
@@ -16,11 +17,9 @@ public class GameManagementExample {
         // Try first running the program with Store, then with Load
         // You can even manually change the JSON file before loading it.
 
-        //The first function will produce some game warnings.
-        //    For load-store testing, those are not relevant.
-
         ViewModelStoreTest();
         //ViewModelLoadTest();
+
     }
     private static void ViewModelStoreTest(){
         Game g = new Game();
@@ -35,7 +34,7 @@ public class GameManagementExample {
         perla.addToCurrentHP(-10);
 
         Ship eliminace = pirraten.createAndAddNewShip(Galleon.class, "Eliminace", "Gauß");
-        eliminace.setDestroyed(true);
+        eliminace.destroyShipAndEnhancements();
 
         Team losBratros = g.createAndAddNewTeam("Los Bratros în trikos", Color.BLANCHEDALMOND);
         losBratros.addOwnedRum(255);

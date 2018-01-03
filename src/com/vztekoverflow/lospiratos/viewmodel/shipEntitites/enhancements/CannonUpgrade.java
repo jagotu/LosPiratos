@@ -7,11 +7,12 @@ import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Frigate;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Galleon;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Schooner;
 
-public class CannonUpgrade extends ShipEnhancement {
+public final class CannonUpgrade extends ShipEnhancement {
 
+    //todo pouzivat u rozsireni pattern jako u CannonUpgrade nebo pattern jako u HullUpgrade?
     private int bonusCannons = 0;
 
-    private void recomupteBonusCannons(){
+    private void recomputeBonusCannons(){
         if(ship.getShipType() instanceof Schooner){
             bonusCannons = 2;
         }
@@ -32,17 +33,17 @@ public class CannonUpgrade extends ShipEnhancement {
     @Override
     protected void onAddedToShipInternal(){
         super.onAddedToShipInternal();
-        recomupteBonusCannons();
+        recomputeBonusCannons();
     }
 
     @Override
     public void onShipTypeJustChanged(){
         super.onShipTypeJustChanged();
-        recomupteBonusCannons();
+        recomputeBonusCannons();
     }
 
     @Override
-    public int getBonusCannons() {
+    public int getBonusCannonsNr() {
         if(this.isDestroyed()) return 0;
         return bonusCannons;
     }

@@ -8,6 +8,14 @@ public class Warnings {
     private static boolean soundEnabled = false;
     private static PrintStream output = System.err;
 
+    private static boolean debug = true;
+    public static boolean isDebug() {
+        return debug;
+    }
+    public static void setDebug(boolean debug) {
+        Warnings.debug = debug;
+    }
+
     public static boolean isEnabled() {
         return enabled;
     }
@@ -48,6 +56,12 @@ public class Warnings {
         if(output != System.err)
             System.err.println("  !!!!! PPH: " + sender + ": " + message + " !!!!! ");
         beep();
+    }
+
+    public static void makeDebugWarning(String sender, String message){
+        if(!debug) return;
+        output.println("Los WARNINGos Debugos: " + sender + ": " + message);
+        if(soundEnabled) beep();
     }
 
     private static void beep(){

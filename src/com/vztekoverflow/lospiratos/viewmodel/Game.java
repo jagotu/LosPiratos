@@ -1,40 +1,76 @@
 package com.vztekoverflow.lospiratos.viewmodel;
 
+import com.vztekoverflow.lospiratos.util.FxUtils;
 import com.vztekoverflow.lospiratos.util.Warnings;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.MapProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleMapProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableMap;
 import javafx.scene.paint.Color;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Game {
 
-
     private com.vztekoverflow.lospiratos.model.Game gameModel;
 
-
-    public Game() {
-        this.gameModel = new com.vztekoverflow.lospiratos.model.Game();
-        //todo proper binding of teams ListProperty missing (Github issue #7)
+    public Game(){
+        this(new com.vztekoverflow.lospiratos.model.Game());
     }
 
+    private Game(com.vztekoverflow.lospiratos.model.Game gameModel) {
+        this.gameModel = gameModel;
+
+        gameModel.teamsProperty().addListener((ListChangeListener<com.vztekoverflow.lospiratos.model.Team>) c -> {
+            while (c.next()) {
+                if (c.wasAdded()) {
+                    for (com.vztekoverflow.lospiratos.model.Team addedItem : c.getAddedSubList()) {
+                        addNewTeamFromModel(addedItem);
+                    }
+                } else if (c.wasRemoved()) {
+                    for (com.vztekoverflow.lospiratos.model.Team removedItem : c.getRemoved()) {
+                        teams.removeIf(t -> t.getName().equalsIgnoreCase(removedItem.getName()));
+                    }
+                }
+            }
+        });
+    }
+    private void addNewTeamFromModel(com.vztekoverflow.lospiratos.model.Team teamModel){
+        if(teams.stream().filter(p -> p.getName().equalsIgnoreCase(teamModel.getName())).count() > 0){
+            Warnings.makeWarning(toString(),"Attempt to create a team with a name that is already used: " + teamModel.getName());
+            return;
+        }
+        Team t = new Team(this, teamModel);
+        teams.add(t);
+    }
+
+    /*
+     * @returns null if team with this name (case insensitive) already exists
+     */
     public Team createAndAddNewTeam(String teamName, Color teamColor){
+        if(teamName == null || teamName.isEmpty()){
+            Warnings.makeWarning(toString(), "Attempt to create a team with null or empty name.");
+            return null;
+        }
+        if(teams.stream().filter(p -> p.getName().equalsIgnoreCase(teamName)).count() > 0){
+            Warnings.makeWarning(toString(),"Attempt to create a team with a name that is already used: " + teamName);
+            return null;
+        }
         com.vztekoverflow.lospiratos.model.Team teamModel = new com.vztekoverflow.lospiratos.model.Team();
-        Team t = new Team(this, teamName, teamColor, teamModel);
-
+        teamModel.nameProperty().set(teamName);
+        teamModel.colorProperty().set(FxUtils.toRGBCode(teamColor));
         gameModel.teamsProperty().add(teamModel);
-        teams.add(t); //todo this should be done via a callback from model (Github issue #7)
+        //at this place, gameModel.teamsProperty's change calls my observer
+        //   which then adds the team to this game's collection (if valid)
+        Team t = findTeamByName(teamName);
+        if(t == null) return null; //this means the model was somehow invalid
+        t.initialize();
         return t;
-
     }
     public com.vztekoverflow.lospiratos.model.Game getGameModel() {
         return gameModel;
@@ -59,6 +95,10 @@ public class Game {
     }
 
     public boolean mayCreateShipWithName(String name){
+        if (name == null || name.isEmpty()) {
+            Warnings.makeDebugWarning(toString(), "Ship's name is empty or null.");
+            return false;
+        }
         return ! allShips.containsKey(name);
     }
     public void registerShip(Ship ship){
@@ -68,10 +108,17 @@ public class Game {
         }
         allShips.put(ship.getName(), ship);
     }
+    public void unregisterShip(String shipName){
+        if(allShips.containsKey(shipName))
+            allShips.remove(shipName);
+        else{
+            Warnings.makeStrongWarning(toString()+".unregisterShip()", "Attempt to remove a ship whose name is unknown: " + shipName);
+        }
+    }
 
     /*
-         * @returns null when no team with the name has been found
-         */
+     * @returns null when no team with the name has been found
+     */
     public Team findTeamByName(String teamName) {
         //this is a O(N) implementation. But there are just up to 10 teams in our game anyway...
         List<Team> result = getTeams().stream().filter(t -> t.getName().equals(teamName)).collect(Collectors.toList());
@@ -85,11 +132,9 @@ public class Game {
     }
 
     public static Game LoadFromModel(com.vztekoverflow.lospiratos.model.Game gameModel){
-        Game g = new Game();
-        g.gameModel = gameModel;
+        Game g = new Game(gameModel);
         for(com.vztekoverflow.lospiratos.model.Team teamModel : gameModel.getTeams()){
-            Team t = new Team(g, teamModel);
-            g.teams.add(t);
+            g.addNewTeamFromModel(teamModel);
         }
         return g;
     }

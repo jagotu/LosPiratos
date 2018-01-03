@@ -1,7 +1,6 @@
 package com.vztekoverflow.lospiratos.viewmodel;
 
 
-
 import com.vztekoverflow.lospiratos.model.ShipEnhancementStatus;
 import com.vztekoverflow.lospiratos.util.Warnings;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
@@ -9,136 +8,172 @@ import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEntity;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipMechanics;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipType;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Brig;
+import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableMap;
 
 
-import java.util.Map;
+import java.util.*;
 
 
 public class Ship {
 
     //initializers:
 
-    /* Creates a new ship and binds it to a shipModel.
-     * @param emptyShipModel a ship model with no values set. If values as name or shipType are set in the model, they will be overwritten by parameters.
-     * @param owner is not bound to any property in model. It must correspond to the owner as represented in model. If you set a team that is not an owner according to the model, behaviour is not defined.
+    /*
+     * Sets properties' values to default.
+     * Should be called only after the object has been created.
      */
-    public <T extends ShipType> Ship(Class<T> shipType, String name, Team owner, com.vztekoverflow.lospiratos.model.Ship emptyShipModel ){
-        this.shipModel = emptyShipModel;
-        this.owner = owner;
-        emptyShipModel.nameProperty().set(name);
-        emptyShipModel.typeProperty().set(shipType.toString());
-        bindToModel();
-
-        //default values:
+    public void initialize(){
         currentHP.set(getMaxHP());
+        this.destroyed.set(false);
     }
 
     /*
      * Creates a new ship object with values as defined in the @shipModel.
+     * @param ownerTeam is not bound to any property in model. It must correspond to the ownerTeam as represented in model. If you set a team that is not an ownerTeam according to the model, behaviour is not defined.
      */
-    public Ship(com.vztekoverflow.lospiratos.model.Ship shipModel) {
+    public Ship(Team owner, com.vztekoverflow.lospiratos.model.Ship shipModel) {
+        this.ownerTeam = owner;
         this.shipModel = shipModel;
         bindToModel();
     }
 
-    private void bindToModel(){
+    private void bindToModel() {
         name.bindBidirectional(shipModel.nameProperty());
         captainName.bindBidirectional(shipModel.captainProperty());
 
-        shipModel.typeProperty().addListener((observable, oldValue, newValue) -> trySettingType(newValue) );
+        shipModel.typeProperty().addListener((observable, oldValue, newValue) -> trySettingType(newValue));
         boolean typeSet = trySettingType(shipModel.getType());
-        if(!typeSet){
-            Warnings.makeWarning(toString(), "Fallbacking to Brig.");
+        if (!typeSet) {
+            Warnings.makeWarning(toString() + ".ctor()", "Fallbacking to Brig.");
             shipType = new Brig(); //to make sure that some type is always set
         }
 
-        addEnhancements(shipModel.enhancementsProperty().get());
-        shipModel.enhancementsProperty().addListener((observable, oldValue, newValue) -> {
-            //simple O(N) implementations: simply load all enhancements again
-            //todo rewrite to something smarter
-            Ship.this.enhancements.set(FXCollections.observableArrayList()); //makes the list empty
-            addEnhancements(newValue);
+        shipModel.enhancementsProperty().addListener((MapChangeListener<String, ShipEnhancementStatus>) c -> {
+            if (c.wasAdded()) {
+                tryAddingEnhancement(c.getKey(), c.getValueAdded());
+            } else if (c.wasRemoved()) {
+                removeEnhancementFromCollection(c.getKey());
+            } else {
+                Warnings.panic("shipModel.enhancementsProperty listener of " + toString(), "unrecheable code?!");
+            }
         });
-
+        for (Map.Entry<String, ShipEnhancementStatus> entry : shipModel.enhancementsProperty().get().entrySet()) {
+            tryAddingEnhancement(entry.getKey(), entry.getValue());
+        }
         destroyed.bindBidirectional(shipModel.destroyedProperty());
         currentHP.bindBidirectional(shipModel.HPProperty());
+        storage = new ResourceStorage(
+                shipModel.carriesClothUnitsProperty(),
+                shipModel.carriesMetalUnitsProperty(),
+                shipModel.carriesRumUnitsProperty(),
+                shipModel.carriesTobaccoUnitsProperty(),
+                shipModel.carriesWoodUnitsProperty(),
+                shipModel.carriesMoneyProperty(),
+                maxCargo
+        );
+
     }
 
-    private boolean trySettingType(String type){
-        if(type == null || type.isEmpty()){
+    private boolean trySettingType(String type) {
+        if (type == null || type.isEmpty()) {
             Warnings.makeWarning(toString(), "Invalid ship type description (null or empty).");
             return false;
         }
-        try{
-            Ship.this.shipType = ShipType.getInstaceFromString(type);
-            return true;
-        }catch (IllegalArgumentException e){
-            Warnings.makeWarning(toString(),"Invalid ship type description: " + type);
-            return  false;
-        }
+        ShipType newType = ShipType.createInstanceFromPersistentName(type);
+        if (newType == null) return false;
+        Ship.this.shipType = newType;
+        applyToEntities(e -> e.onShipTypeJustChanged());
+        onEntityInvalidated();
+        return true;
     }
 
-    private void addEnhancements(Map<String, ShipEnhancementStatus> map){
-        for(Map.Entry<String, ShipEnhancementStatus> entry : map.entrySet()){
-            try{
-                ShipEnhancement e = ShipEnhancement.getInstaceFromString(entry.getKey());
-                if(entry.getValue() == ShipEnhancementStatus.damaged){
-                    e.setDestroyed(true);
-                }
-                e.onAddedToShip(this);
-                enhancements.add(e);
-            }catch(IllegalArgumentException e){
-                Warnings.makeWarning(toString(),"Unknown ship enhancement name: "+ entry.getKey());
-            }
-
-
+    private boolean tryAddingEnhancement(String name, ShipEnhancementStatus status) {
+        ShipEnhancement e = ShipEnhancement.createInstanceFromPersistentName(name);
+        if (e == null) return false;
+        e.onAddedToShip(this);
+        if (status == ShipEnhancementStatus.destroyed) {
+            e.setDestroyed(true);
         }
+        if (status == ShipEnhancementStatus.empty) {
+            Warnings.makeDebugWarning(toString(), "Attempt to try empty enhancement: " + name);
+            return false;
+        }
+        e.destroyedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!oldValue.equals(newValue)) updateEnhancement(name, newValue);
+        });
+        enhancements.put(e.getClass(), e);
+        onEntityInvalidated();
+        return true;
     }
 
-    //properties:
+    private void updateEnhancement(String enhName, boolean isDestroyed) {
+        if (shipModel.enhancementsProperty().containsKey(enhName)) {
+            shipModel.enhancementsProperty().remove(enhName);
+        } else
+            Warnings.makeDebugWarning(toString() + ".destroyShipAndEnhancements()", "Enhancement exist as entity but it is not in the model: " + enhName);
+        ShipEnhancementStatus status = ShipEnhancementStatus.active;
+        if (isDestroyed) status = ShipEnhancementStatus.destroyed;
+        shipModel.enhancementsProperty().put(enhName, status);
+        onEntityInvalidated();
+    }
 
+    private void removeEnhancementFromCollection(String name) {
+        ShipEnhancement anotherInstance = ShipEnhancement.createInstanceFromPersistentName(name);
+        if (anotherInstance == null) return;
+        if (enhancements.containsKey(anotherInstance.getClass())) {
+            enhancements.remove(anotherInstance.getClass());
+        }
+        onEntityInvalidated();
+    }
+
+    //general ship properties:
 
     private ShipType shipType;
+
     public ShipType getShipType() {
         return shipType;
     }
+
     public <T extends ShipType> void setShipType(Class<T> shipType) {
-        shipModel.typeProperty().set(shipType.toString());
+        shipModel.typeProperty().set(ShipType.getPersistentName(shipType));
+        //callback on shipModel's typeProperty changed will do the job
     }
-    private Team owner;
-    public Team getOwner() {
-        return owner;
-    }
-    public void setOwner(Team owner) {
-        this.owner = owner;
+
+    private Team ownerTeam;
+
+    public Team getTeam() {
+        return ownerTeam;
     }
 
     private com.vztekoverflow.lospiratos.model.Ship shipModel;
 
     private IntegerProperty currentHP = new SimpleIntegerProperty();
+
     public void addToCurrentHP(int value) {
         currentHP.set(currentHP.get() + value);
     }
+
     public int getCurrentHP() {
         return currentHP.getValue();
     }
-    //stats to implement: cannons, currentHp, maxHp, cargo, garrison, customAdditionalSpeed
 
     private BooleanProperty destroyed = new SimpleBooleanProperty(true);
+
     public boolean isDestroyed() {
         return destroyed.getValue();
     }
-    public void setDestroyed(boolean destroyed) {
-        this.destroyed.setValue(destroyed);
-    }
+
 
     private StringProperty name = new SimpleStringProperty();
+
     public String getName() {
         return name.getValue();
     }
+
     public void setName(String name) {
         this.name.set(name);
     }
@@ -151,61 +186,249 @@ public class Ship {
         this.captainName.set(captainName);
     }
 
+    private ResourceStorage storage;
 
-    private ListProperty<ShipEnhancement> enhancements = new SimpleListProperty<>(FXCollections.observableArrayList());
-    public ObservableList<ShipEnhancement> getEnhancements() {
+    public ResourceStorage getStorage() {
+        return storage;
+    }
+    //stats:
+
+    private void onEntityInvalidated() {
+        maxHP.invalidate();
+        cannonsNr.invalidate();
+        speed.invalidate();
+        maxCargo.invalidate();
+        garrisonNr.invalidate();
+    }
+
+    private IntegerBinding maxHP = new IntegerBinding() {
+        @Override
+        protected int computeValue() {
+            int val = 0;
+            for (ShipEntity e : getAllEntities()) {
+                val += e.getBonusMaxHP();
+            }
+            return val;
+        }
+    };
+    private IntegerBinding cannonsNr = new IntegerBinding() {
+        @Override
+        protected int computeValue() {
+            int val = 0;
+            for (ShipEntity e : getAllEntities()) {
+                val += e.getBonusCannonsNr();
+            }
+            return val;
+        }
+    };
+    private IntegerBinding speed = new IntegerBinding() {
+        @Override
+        protected int computeValue() {
+            int val = 0;
+            for (ShipEntity e : getAllEntities()) {
+                val += e.getBonusSpeed();
+            }
+            return val;
+        }
+    };
+    private IntegerBinding maxCargo = new IntegerBinding() {
+        @Override
+        protected int computeValue() {
+            int val = 0;
+            for (ShipEntity e : getAllEntities()) {
+                val += e.getBonusCargoSpace();
+            }
+            return val;
+        }
+    };
+    private IntegerBinding garrisonNr = new IntegerBinding() {
+        @Override
+        protected int computeValue() {
+            int val = 0;
+            for (ShipEntity e : getAllEntities()) {
+                val += e.getBonusGarrison();
+            }
+            return val;
+        }
+    };
+
+    public int getMaxHP() {
+        return maxHP.get();
+    }
+
+    public IntegerBinding maxHPProperty() {
+        return maxHP;
+    }
+
+    public int getCannonsNr() {
+        return cannonsNr.get();
+    }
+
+    public IntegerBinding cannonsNrProperty() {
+        return cannonsNr;
+    }
+
+    public int getSpeed() {
+        return speed.get();
+    }
+
+    public IntegerBinding speedProperty() {
+        return speed;
+    }
+
+    public int getMaxCargo() {
+        return maxCargo.get();
+    }
+
+    public IntegerBinding maxCargoProperty() {
+        return maxCargo;
+    }
+
+    public int getGarrisonNr() {
+        return garrisonNr.get();
+    }
+
+    public IntegerBinding garrisonNrProperty() {
+        return garrisonNr;
+    }
+
+
+
+    // enhancements:
+
+    private MapProperty<Class<? extends ShipEnhancement>, ShipEnhancement> enhancements = new SimpleMapProperty<>(FXCollections.observableHashMap());
+
+    public ObservableMap<Class<? extends ShipEnhancement>, ShipEnhancement> getEnhancements() {
         return enhancements;
     }
 
-    //todo to be implemented:
-    private ListProperty<ShipMechanics> mechanics = new SimpleListProperty<>(FXCollections.observableArrayList());
 
+    public <Enhancement extends ShipEnhancement> void addNewEnhancement(Class<Enhancement> enhancement) {
+        shipModel.enhancementsProperty().put(ShipEnhancement.getPersistentName(enhancement), ShipEnhancementStatus.active);
 
-    //getters of non-properties:
-
-    public int getMaxHP(){
-        int val = 0;
-        for(ShipEntity e : enhancements){
-            val += e.getBonusMaxHP();
-        }
-        val += shipType.getBonusMaxHP();
-        return val;
-    }
-
-
-    // enhnacements:
-
-    public <Enhancement extends ShipEnhancement> void addNewEnhancement(Class<Enhancement> enhancementClass){
-        shipModel.enhancementsProperty().put(enhancementClass.toString(), ShipEnhancementStatus.active);
     }
 
     /*
      * @returns null if Ship does not contain any enhancement of given type
      */
-    public <Enhancement extends ShipEnhancement> Enhancement getEnhancement(Class<Enhancement> enhancementClass){
-        //todo rewrite to faster implementation where enhancemetns is Map<Type, ShipEnhancement>.
-        for(ShipEnhancement e : enhancements){
-            if(enhancementClass.isInstance(e)) return (Enhancement) e;
-        }
-        return null;
+    public <SpecificEnh extends ShipEnhancement> SpecificEnh getEnhancement(Class<SpecificEnh> enhancement) {
+        if (!enhancements.containsKey(enhancement)) return null;
+        return (SpecificEnh) enhancements.get(enhancement);
     }
 
-    public <Enhancement extends ShipEnhancement> boolean hasActiveEnhancement(Class<Enhancement> enhancementClass){
-        //todo rewrite to faster implementation where enhancemetns is Map<Type, ShipEnhancement>.
-        for(ShipEnhancement e : enhancements){
-            if(enhancementClass.isInstance(e)) return e.isDestroyed() ? false : true;
-        }
-        return false;
+    public <Enhancement extends ShipEnhancement> boolean hasActiveEnhancement(Class<Enhancement> enhancement) {
+        if (!enhancements.containsKey(enhancement)) return false;
+        return enhancements.get(enhancement).isDestroyed() ? false : true;
     }
 
-    //functions:
+    //mechanics:
+
+    //todo mechanics are to be implemented:
+    private ListProperty<ShipMechanics> mechanics = new SimpleListProperty<>(FXCollections.observableArrayList());
+
+    private void applyToEntities(java.util.function.Consumer<ShipEntity> action){
+        for (ShipEntity e : getAllEntities()){
+            action.accept(e);
+        }
+    }
+
+    private Iterable<ShipEntity> getAllEntities() {
+        return () -> new Iterator<ShipEntity>() {
+            Iterator<ShipEnhancement> enh = enhancements.values().iterator();
+            Iterator<ShipMechanics> mech = mechanics.iterator();
+            int state = 0;
+            boolean hasNext = true;
+            //states:
+            //  0 .. next() not called yet, ie shipType to be returned
+            //  1 .. iterating over enhancements
+            //  2 .. iterating over mechanics
+            //  3 .. iteration has ended, no more elements available
+
+            @Override
+            public boolean hasNext() {
+                return hasNext;
+            }
+
+            @Override
+            public ShipEntity next() {
+                ShipEntity result;
+                switch (state) {
+                    case 0:{
+                        stateAdvance();
+                        return shipType;
+                    }
+                    case 1:{
+                        result = enh.next();
+                        stateAdvance();
+                        return result;
+                    }
+                    case 2:{
+                        result = mech.next();
+                        stateAdvance();
+                        return result;
+                    }
+                    case 3:
+                        throw new NoSuchElementException();
+                    default:
+                        throw new NoSuchElementException();
+                }
+            }
+            private void stateAdvance(){
+                switch (state) {
+                    case 0:
+                        state = 1;
+                        //yes, fall through to case 1:
+                    case 1:
+                        if(enh.hasNext()) break;
+                        state = 2;
+                        //yes, fall through to case 2:
+                    case 2:
+                        if(mech.hasNext()) break;
+                        state = 3;
+                        //yes, fall through to case 3:
+                    case 3:
+                    default:
+                        hasNext = false;
+                }
+            }
+        };
+    }
+
+    //public functions:
 
     @Override
     public String toString() {
         String name = this.name.get();
-        if(name == null || name.equals("")) name = "<empty>";
+        if (name == null || name.equals("")) name = "<empty>";
         return "Ship \"" + name + "\"";
     }
 
+    /*
+     * marks the ship and all its enhancements (e.g. upgrades) as destroyed
+     */
+    public void destroyShipAndEnhancements() {
+        destroyed.setValue(true);
+
+        //do this in 2 steps, because enhancements collection will be changed, thus invalidated, thus couldnt be iterated through
+        List<ShipEnhancement> enhCopy = new ArrayList<>(enhancements.values());
+        for (ShipEnhancement e : enhCopy) {
+            e.setDestroyed(true);
+            //  how this works:
+            //  1) set enh as destroyed
+            //     > property changed > callback to ship's "updateEnh"
+            //       > remove old value from ship model
+            //         > map changed > callback to ship's "removeEnh"
+            //       > add new value to ship model
+            //         > map changed > callback to ship's "addEnh"
+            //  2) this Enhancement instance disappears, the collection contains a new one
+        }
+    }
+
+    /*
+     * marks the ship (BUT NOT its enhancements) as not destroyed
+     */
+    public void repairShip() {
+        destroyed.set(false);
+    }
 
 }

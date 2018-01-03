@@ -7,7 +7,7 @@ import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Frigate;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Galleon;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Schooner;
 
-public class HullUpgrade extends ShipEnhancement {
+public final class HullUpgrade extends ShipEnhancement {
 
     @Override
     public int getBonusMaxHP() {

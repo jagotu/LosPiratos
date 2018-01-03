@@ -8,9 +8,9 @@ public class Schooner extends ShipType {
     @Override
     public int getBonusMaxHP() {return 30;}
     @Override
-    public int getBonusCannons() {return 8;}
+    public int getBonusCannonsNr() {return 8;}
     @Override
-    public int getBonusCargo() {return 250;}
+    public int getBonusCargoSpace() {return 250;}
     @Override
     public int getBonusGarrison() {return 30;}
     @Override

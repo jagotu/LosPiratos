@@ -7,9 +7,9 @@ public class Frigate extends ShipType {
     @Override
     public int getBonusMaxHP() {return 70;}
     @Override
-    public int getBonusCannons() {return 20;}
+    public int getBonusCannonsNr() {return 20;}
     @Override
-    public int getBonusCargo() {return 800;}
+    public int getBonusCargoSpace() {return 800;}
     @Override
     public int getBonusGarrison() {return 100;}
     @Override

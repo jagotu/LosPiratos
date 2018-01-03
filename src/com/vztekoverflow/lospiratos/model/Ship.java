@@ -16,7 +16,7 @@ public class Ship {
                 ShipEnhancementStatus enhChainShot,
                 ShipEnhancementStatus enhHeavyShot,
                 ShipEnhancementStatus enhRam,
-                int capacityLeft, int carriesMetalUnits, int carriesWoodUnits, int carriesClothUnits, int carriesRumUnits,
+                int capacityLeft /*not used, historical reasons*/, int carriesMetalUnits, int carriesWoodUnits, int carriesClothUnits, int carriesRumUnits,
                 int carriesTobaccoUnits, int carriesMoney
     ) {
         this.name.set(name);
@@ -36,7 +36,6 @@ public class Ship {
         this.enhancements.put("com.vztekoverflo.lospiratos.viewmodel.shipEntities.enhancements.CannonUpgrade", upgradeCannon);
         this.enhancements.put("com.vztekoverflo.lospiratos.viewmodel.shipEntities.enhancements.HullUpgrade", upgradeHull);
 
-        this.capacityLeft.setValue(capacityLeft);
         this.carriesMetalUnits.setValue(carriesMetalUnits);
         this.carriesWoodUnits.setValue(carriesWoodUnits);
         this.carriesClothUnits.setValue(carriesClothUnits);
@@ -68,7 +67,6 @@ public class Ship {
     private  IntegerProperty customAdditionalCannons = new SimpleIntegerProperty(0);
     private  IntegerProperty customAdditionalSpeed = new SimpleIntegerProperty(0);
 
-    private  IntegerProperty capacityLeft = new SimpleIntegerProperty(0);
     private  IntegerProperty carriesMetalUnits = new SimpleIntegerProperty(0);
     private  IntegerProperty carriesWoodUnits = new SimpleIntegerProperty(0);
     private  IntegerProperty carriesClothUnits = new SimpleIntegerProperty(0);
@@ -187,14 +185,6 @@ public class Ship {
 
     public IntegerProperty customAdditionalSpeedProperty() {
         return customAdditionalSpeed;
-    }
-
-    public int getCapacityLeft() {
-        return capacityLeft.get();
-    }
-
-    public IntegerProperty capacityLeftProperty() {
-        return capacityLeft;
     }
 
     public int getCarriesMetalUnits() {
