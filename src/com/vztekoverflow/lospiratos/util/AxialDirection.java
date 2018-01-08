@@ -34,8 +34,8 @@ public final class AxialDirection extends AxialCoordinate{
         if(this.equals(-1,0))
             return  315;
 
-        /* unrecheable code */
-        throw new IllegalStateException("Unrecheable code reached.");
+        /* unreachable code */
+        throw new IllegalStateException("Unreachable code reached.");
 
     }
 
@@ -67,8 +67,8 @@ public final class AxialDirection extends AxialCoordinate{
             case 4: return FlatLeftDown;
             case 5: return FlatLeftUp;
         }
-        /* unrecheable */
-        throw new IllegalStateException("Unrecheable code reached.");
+        /* unreachable */
+        throw new IllegalStateException("Unreachable code reached.");
     }
 
     //pre-made unit vector directions:

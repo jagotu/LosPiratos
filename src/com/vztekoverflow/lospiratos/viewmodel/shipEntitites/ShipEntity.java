@@ -19,7 +19,7 @@ public abstract class ShipEntity {
         this.ship = ship;
         onAddedToShipInternal();
     }
-    /* Can be inhereted to add custom implementation.
+    /* Can be inherited to add custom implementation.
      * Overridden implementations should always call super.onAddedToShipInternal() first.
      */
     protected void onAddedToShipInternal(){}

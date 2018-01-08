@@ -33,8 +33,8 @@ public class Ship {
         this.customAdditionalCannons.set(additionalCannons);
         this.customAdditionalSpeed.set(additionalSpeed);
 
-        this.enhancements.put("com.vztekoverflo.lospiratos.viewmodel.shipEntities.enhancements.CannonUpgrade", upgradeCannon);
-        this.enhancements.put("com.vztekoverflo.lospiratos.viewmodel.shipEntities.enhancements.HullUpgrade", upgradeHull);
+        this.enhancements.put("com.vztekoverflow.lospiratos.viewmodel.shipEntities.enhancements.CannonUpgrade", upgradeCannon);
+        this.enhancements.put("com.vztekoverflow.lospiratos.viewmodel.shipEntities.enhancements.HullUpgrade", upgradeHull);
 
         this.carriesMetalUnits.setValue(carriesMetalUnits);
         this.carriesWoodUnits.setValue(carriesWoodUnits);

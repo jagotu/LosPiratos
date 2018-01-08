@@ -53,7 +53,7 @@ public class AxialCoordinate {
     /*
      * @returns AxialCoordinate where each component is the square of its original value
      */
-    public AxialCoordinate squareComponenetwise(){
+    public AxialCoordinate squareComponentwise(){
         return new AxialCoordinate((Q*Q),(R*R));
     }
     /*

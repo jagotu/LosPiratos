@@ -58,7 +58,7 @@ public class Ship {
             } else if (c.wasRemoved()) {
                 removeEnhancementFromCollection(c.getKey());
             } else {
-                Warnings.panic("shipModel.enhancementsProperty listener of " + toString(), "unrecheable code?!");
+                Warnings.panic("shipModel.enhancementsProperty listener of " + toString(), "unreachable code?!");
             }
         });
         for (Map.Entry<String, ShipEnhancementStatus> entry : shipModel.enhancementsProperty().get().entrySet()) {

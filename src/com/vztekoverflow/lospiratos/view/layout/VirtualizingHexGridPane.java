@@ -181,7 +181,7 @@ public class VirtualizingHexGridPane extends Pane {
                 }
                 if(t == null)
                 {
-                    while (freeTiles.size() > 0) //Try to get a nonGCed already instantianated tile
+                    while (freeTiles.size() > 0) //Try to get a nonGCed already instantiated tile
                     {
                         SoftReference<HexTile> ref = freeTiles.iterator().next();
                         freeTiles.remove(ref);

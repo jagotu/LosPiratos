@@ -115,7 +115,7 @@ public class ResourceStorage {
         return true;
     }
 
-    //todo the setters do not chceck whether the capacity has been overflown
+    //todo the setters do not check whether the capacity has been overflown
 
     public int getRoomLeft() {
         return roomLeft.get();
