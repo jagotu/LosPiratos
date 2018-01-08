@@ -104,6 +104,13 @@ public class VirtualizingHexGridPane extends Pane {
 
     }
 
+    public void centerInParent(AxialCoordinate coord) {
+        Point2D location = AxialCoordinate.hexToPixel(coord, pointy, edgeLength);
+        XOffset.setValue(location.getX() - (internalWidth.get() - Scale.get() * tileWidth)/2);
+        YOffset.setValue(location.getY() - (internalHeight.get() - Scale.get() * tileHeight)/2);
+    }
+
+
     private Shape getHexagon() {
         Polygon hexagon = new Polygon();
         hexagon.getPoints().addAll(hexagonPoints);
@@ -328,6 +335,8 @@ public class VirtualizingHexGridPane extends Pane {
             tileShape.getTransforms().add(st);
             st.setPivotX(0);
             st.setPivotY(0);
+
+            tileShape.setOnMouseEntered(e -> toFront());
 
             contentNode.addListener((observable, oldValue, newValue) ->
             {

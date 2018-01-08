@@ -136,7 +136,6 @@ public class Editor extends Application {
             //hexPane.setYOffset(hexPane.getYOffset() + (hexPane.getHeight() * hexPane.getScale()) * (1.0 - 1/scale) / 2);
             hexPane.setScale(newScale);
         });
-
     }
 
     class EditorHexTileContents implements HexTileContents {
@@ -233,8 +232,7 @@ public class Editor extends Application {
 
     @FXML
     public void returnToOrigin() {
-        hexPane.setXOffset(0);
-        hexPane.setYOffset(0);
+        hexPane.centerInParent(new AxialCoordinate(0, 0));
     }
 
     @FXML
