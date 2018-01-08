@@ -8,12 +8,12 @@
     -fx-stroke:black;
 }
 
-.hexParent.odd .hexTile
+.hexTile.odd
 {
     background:blue;
 }
 
-.hexParent.even .hexTile
+.hexTile.even
 {
     background:yellow;
 }

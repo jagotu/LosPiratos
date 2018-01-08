@@ -8,12 +8,12 @@
     -fx-fill: LemonChiffon;
 }
 
-.hexParent.origin .hexTile
+.hexTile.origin
 {
     -fx-fill: black;
 }
 
-.hexParent.selected .hexTile
+.hexTile.selected
 {
     -fx-fill: yellow;
     -fx-effect: dropshadow(gaussian, yellow, 20, 0.2, 0, 0);

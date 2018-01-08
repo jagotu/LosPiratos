@@ -46,7 +46,12 @@ public class VirtualizingHexGridPane extends Pane {
     //Contents factory
     private final HexTileContentsFactory factory;
 
+    //Two planes for proper zIndex
+    private final Pane tilesPlane = new Pane();
+    private final Pane contentPlane = new Pane();
+
     public VirtualizingHexGridPane(double edgeLength, boolean pointy, HexTileContentsFactory factory) {
+
         this.edgeLength = edgeLength;
         this.pointy = pointy;
         this.factory = factory;
@@ -66,6 +71,8 @@ public class VirtualizingHexGridPane extends Pane {
             center = new Point2D(edgeLength, Constants.SQRT_3 * edgeLength / 2);
         }
 
+
+        //Generate points of tileShape
         hexagonPoints = new ArrayList<>(12);
         double a = pointy ? (30 * Math.PI / 180) : 0;
         for (int i = 0; i < 6; i++) {
@@ -74,6 +81,7 @@ public class VirtualizingHexGridPane extends Pane {
             a += 60 * Math.PI / 180;
         }
 
+        //Dynamically recalculates coordinates of top-left hexagon
         topLeft.bind(Bindings.createObjectBinding(() -> {
             if (pointy) {
                 return AxialCoordinate.pixelToHex(new Point2D(XOffset.get() - Constants.SQRT_3 * edgeLength / 2, YOffset.get() - edgeLength), true, edgeLength).plus(AxialDirection.PointyUpLeft);
@@ -82,12 +90,18 @@ public class VirtualizingHexGridPane extends Pane {
             }
         }, XOffset, YOffset));
 
-        Scale.addListener(observable -> requestLayout());
-        XOffset.addListener(observable -> requestLayout());
-        YOffset.addListener(observable -> requestLayout());
+        Scale.addListener(o -> requestLayout());
+        XOffset.addListener(o -> requestLayout());
+        YOffset.addListener(o -> requestLayout());
 
         internalHeight.bind(heightProperty().multiply(Scale));
         internalWidth.bind(widthProperty().multiply(Scale));
+
+        contentPlane.setMouseTransparent(true);
+
+        this.getChildren().add(tilesPlane);
+        this.getChildren().add(contentPlane);
+
     }
 
     private Shape getHexagon() {
@@ -173,11 +187,17 @@ public class VirtualizingHexGridPane extends Pane {
 
 
                 if (t == null) {
-                    t = new HexTile(tileWidth, tileHeight, this);
+                    Shape tileShape = getHexagon();
+                    tileShape.getStyleClass().add("hexTile");
+                    t = new HexTile(tileWidth, tileHeight, this, tileShape);
                 }
 
                 t.setContent(contents);
-                if(shouldAdd) getChildren().add(t);
+                if(shouldAdd)
+                {
+                    contentPlane.getChildren().add(t);
+                    tilesPlane.getChildren().add(t.tileShape);
+                }
                 usedTiles.put(x, t);
 
             } else {
@@ -185,11 +205,15 @@ public class VirtualizingHexGridPane extends Pane {
             }
             t.setScale(1 / Scale.get());
             layoutInArea(t, (pos.getX() - XOffset.get()) / scaleProperty().get(), (pos.getY() - YOffset.get()) / scaleProperty().get(), t.getWidth(), t.getHeight(), 0, HPos.LEFT, VPos.TOP);
+            layoutInArea(t.tileShape, (pos.getX() - XOffset.get()) / scaleProperty().get(), (pos.getY() - YOffset.get()) / scaleProperty().get(), t.getWidth(), t.getHeight(), 0, HPos.LEFT, VPos.TOP);
         }
     }
 
     @Override
     protected void layoutChildren() {
+
+        layoutInArea(contentPlane, 0, 0, getWidth(), getHeight(), 0, HPos.CENTER, VPos.CENTER);
+        layoutInArea(tilesPlane, 0, 0, getWidth(), getHeight(), 0, HPos.CENTER, VPos.CENTER);
 
         AxialCoordinate origin = topLeft.get();
         Point2D originpos = AxialCoordinate.hexToPixel(origin, pointy, edgeLength);
@@ -239,7 +263,8 @@ public class VirtualizingHexGridPane extends Pane {
             {
                 freeTiles.add(new SoftReference<>(h));
                 h.setContent(null);
-                getChildren().remove(h);
+                contentPlane.getChildren().remove(h);
+                tilesPlane.getChildren().remove(h.tileShape);
             }
         }
         localFreeTiles.clear();
@@ -256,6 +281,7 @@ public class VirtualizingHexGridPane extends Pane {
         private final StringProperty cssClassName = new SimpleStringProperty("");
 
         private Shape tileShape;
+        private VirtualizingHexGridPane parent;
 
         private static final CssMetaData<HexTile, Boolean> CLIP = new CssMetaData<HexTile, Boolean>("-hex-clip", StyleConverter.getBooleanConverter(), false) {
             @Override
@@ -287,42 +313,43 @@ public class VirtualizingHexGridPane extends Pane {
             return getClassCssMetaData();
         }
 
-        private HexTile(double width, double height, VirtualizingHexGridPane parent) {
+        private HexTile(double width, double height, VirtualizingHexGridPane parent, Shape tileShapeInstance) {
             setPickOnBounds(false);
-
-            this.getTransforms().add(st);
-            st.setPivotX(0);
-            st.setPivotY(0);
 
             this.width = width;
             this.height = height;
 
-            tileShape = parent.getHexagon();
-            getChildren().add(tileShape);
-            layoutInArea(tileShape, 0, 0, width, height, 0, HPos.LEFT, VPos.TOP);
+            this.tileShape = tileShapeInstance;
+            this.parent = parent;
 
-            tileShape.getStyleClass().add("hexTile");
             this.getStyleClass().add("hexParent");
+
+            this.getTransforms().add(st);
+            tileShape.getTransforms().add(st);
+            st.setPivotX(0);
+            st.setPivotY(0);
 
             contentNode.addListener((observable, oldValue, newValue) ->
             {
                 if (oldValue != null) {
                     this.getChildren().remove(oldValue);
-                    this.onMouseClickedProperty().unbind();
+                    tileShape.onMouseClickedProperty().unbind();
                 }
                 if (newValue != null) {
                     newValue.setMouseTransparent(true);
                     this.getChildren().add(newValue);
-                    this.onMouseClickedProperty().bind(contentNode.get().onMouseClickedProperty());
+                    tileShape.onMouseClickedProperty().bind(contentNode.get().onMouseClickedProperty());
                 }
             });
 
             cssClassName.addListener((observable, oldValue, newValue) -> {
                 if (oldValue != null && !oldValue.equals("")) {
                     this.getStyleClass().removeAll(oldValue.split(" "));
+                    tileShape.getStyleClass().removeAll(oldValue.split(" "));
                 }
                 if (newValue != null && !newValue.equals("")) {
                     this.getStyleClass().addAll(newValue.split(" "));
+                    tileShape.getStyleClass().addAll(newValue.split(" "));
                 }
             });
 
