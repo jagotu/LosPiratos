@@ -65,7 +65,6 @@ public class Editor extends Application {
             if (oldValue != null) {
                 oldValue.removeClass("selected");
                 scaleSlide.valueProperty().unbindBidirectional(oldValue.iv.scaleXProperty());
-                scaleSlide.valueProperty().unbindBidirectional(oldValue.iv.scaleYProperty());
                 translateXSlide.valueProperty().unbindBidirectional(oldValue.iv.translateXProperty());
                 translateYSlide.valueProperty().unbindBidirectional(oldValue.iv.translateYProperty());
                 rotateSlide.valueProperty().unbindBidirectional(oldValue.iv.rotateProperty());
@@ -75,7 +74,6 @@ public class Editor extends Application {
                 newValue.addClass("selected");
                 imageURL.setText(newValue.imgURL.get());
                 scaleSlide.valueProperty().bindBidirectional(newValue.iv.scaleXProperty());
-                scaleSlide.valueProperty().bindBidirectional(newValue.iv.scaleYProperty());
                 translateXSlide.valueProperty().bindBidirectional(newValue.iv.translateXProperty());
                 translateYSlide.valueProperty().bindBidirectional(newValue.iv.translateYProperty());
                 rotateSlide.valueProperty().bindBidirectional(newValue.iv.rotateProperty());
@@ -159,12 +157,15 @@ public class Editor extends Application {
                 }
                 iv.setImage(new Image(imgURL.get()));
             });
+
+            this.iv.scaleXProperty().bindBidirectional(this.iv.scaleYProperty());
+
             iv.setOnMouseClicked(MouseEvent -> {
                 if (MouseEvent.isStillSincePress()) {
                     if (MouseEvent.getButton().equals(MouseButton.PRIMARY)) {
                         selected.set(this);
                     } else if (MouseEvent.getButton().equals(MouseButton.SECONDARY)) {
-                        this.iv.scaleXProperty().bindBidirectional(this.iv.scaleYProperty());
+
                         switch (premadeShipIdx) {
                             case 0:
                                 imgURL.set("img/schooner.png");
