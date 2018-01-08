@@ -68,7 +68,7 @@ public class AxialCoordinate {
     }
 
     public CubeCoordinateMutable toCubeCoordinate(){
-        return new CubeCoordinateMutable(Q, R, (Q+R));
+        return new CubeCoordinateMutable(Q, R, -(Q+R));
     }
     public AxialCoordinateMutable toMutableAxialCoordinate(){
         return new AxialCoordinateMutable(Q, R);
