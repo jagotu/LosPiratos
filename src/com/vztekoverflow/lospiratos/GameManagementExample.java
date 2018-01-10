@@ -4,7 +4,6 @@ import com.vztekoverflow.lospiratos.model.GameSerializer;
 import com.vztekoverflow.lospiratos.viewmodel.Game;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
 import com.vztekoverflow.lospiratos.viewmodel.Team;
-import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.CannonUpgrade;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.HullUpgrade;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Frigate;

@@ -86,7 +86,7 @@ public class Ship {
         ShipType newType = ShipType.createInstanceFromPersistentName(type);
         if (newType == null) return false;
         Ship.this.shipType = newType;
-        applyToEntities(e -> e.onShipTypeJustChanged());
+        applyToEntities(ShipEntity::onShipTypeJustChanged);
         onEntityInvalidated();
         return true;
     }
@@ -317,8 +317,7 @@ public class Ship {
     }
 
     public <Enhancement extends ShipEnhancement> boolean hasActiveEnhancement(Class<Enhancement> enhancement) {
-        if (!enhancements.containsKey(enhancement)) return false;
-        return enhancements.get(enhancement).isDestroyed() ? false : true;
+        return enhancements.containsKey(enhancement) && (!enhancements.get(enhancement).isDestroyed());
     }
 
     //mechanics:

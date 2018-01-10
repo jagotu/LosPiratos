@@ -61,10 +61,9 @@ public class AxialCoordinate {
      */
     public int distanceTo(AxialCoordinate arg){
         //the algorithm is explained here: https://www.redblobgames.com/grids/hexagons/#distances
-        AxialCoordinate b = arg;
         int S = -(Q+R);
-        int bS = -(b.Q+b.R);
-        return  (Math.abs(Q - b.Q) + Math.abs(R - b.R) + Math.abs(S - bS)) / 2;
+        int bS = -(arg.Q+ arg.R);
+        return  (Math.abs(Q - arg.Q) + Math.abs(R - arg.R) + Math.abs(S - bS)) / 2;
     }
 
     public CubeCoordinateMutable toCubeCoordinate(){

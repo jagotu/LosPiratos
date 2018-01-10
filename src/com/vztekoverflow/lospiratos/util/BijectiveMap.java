@@ -7,8 +7,8 @@ import java.util.Map;
 //this code has been copies from StackOverflow, https://stackoverflow.com/questions/1670038/does-java-have-a-hashmap-with-reverse-lookup (with few modifications)
 public class BijectiveMap<KeyType, ValueType> {
 
-    private Map<KeyType, ValueType> keyToValueMap = new HashMap<KeyType, ValueType>();
-    private Map<ValueType, KeyType> valueToKeyMap = new HashMap<ValueType, KeyType>();
+    private Map<KeyType, ValueType> keyToValueMap = new HashMap<>();
+    private Map<ValueType, KeyType> valueToKeyMap = new HashMap<>();
 
     public void put(KeyType key, ValueType value){
         keyToValueMap.put(key, value);

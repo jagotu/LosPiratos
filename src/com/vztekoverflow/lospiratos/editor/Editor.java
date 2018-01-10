@@ -2,7 +2,6 @@ package com.vztekoverflow.lospiratos.editor;
 
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.view.layout.HexTileContents;
-import com.vztekoverflow.lospiratos.view.layout.HexTileContentsFactory;
 import com.vztekoverflow.lospiratos.view.layout.VirtualizingHexGridPane;
 import javafx.application.Application;
 import javafx.beans.property.*;
@@ -84,19 +83,16 @@ public class Editor extends Application {
         });
 
 
-        hexPane = new VirtualizingHexGridPane(40, true, new HexTileContentsFactory() {
+        hexPane = new VirtualizingHexGridPane(40, true, (coords, tileWidth, tileHeight) -> {
 
-            public HexTileContents getContentsFor(AxialCoordinate coords, double tileWidth, double tileHeight) {
-
-                if (mapStorage.containsKey(coords)) {
-                    return mapStorage.get(coords);
-                }
-                final String css = (coords.getR() == 0 && coords.getQ() == 0) ? "origin" : "";
-                EditorHexTileContents e = new EditorHexTileContents(css, tileWidth, tileHeight);
-                mapStorage.put(coords, e);
-                return e;
-
+            if (mapStorage.containsKey(coords)) {
+                return mapStorage.get(coords);
             }
+            final String css = (coords.getR() == 0 && coords.getQ() == 0) ? "origin" : "";
+            EditorHexTileContents e = new EditorHexTileContents(css, tileWidth, tileHeight);
+            mapStorage.put(coords, e);
+            return e;
+
         });
 
         Rectangle clipRect = new Rectangle(hexPane.getWidth(), hexPane.getHeight());
@@ -105,9 +101,7 @@ public class Editor extends Application {
         hexPane.setClip(clipRect);
         root.setCenter(hexPane);
 
-        hexPane.setOnMousePressed(MouseEvent -> {
-            lastMouse = new Point2D(MouseEvent.getX(), MouseEvent.getY());
-        });
+        hexPane.setOnMousePressed(MouseEvent -> lastMouse = new Point2D(MouseEvent.getX(), MouseEvent.getY()));
 
         hexPane.setOnMouseDragged(MouseEvent -> {
             hexPane.setXOffset(Math.min(Math.max(hexPane.getXOffset() + (lastMouse.getX() - MouseEvent.getX()) * hexPane.getScale(), -1000), 1000));
@@ -228,8 +222,6 @@ public class Editor extends Application {
             return cssClass;
         }
     }
-
-    ;
 
     @FXML
     public void returnToOrigin() {

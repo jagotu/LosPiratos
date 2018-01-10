@@ -1,6 +1,5 @@
 package com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships;
 
-import com.vztekoverflow.lospiratos.viewmodel.Ship;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipType;
 
 public class Frigate extends ShipType {

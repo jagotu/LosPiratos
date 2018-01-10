@@ -1,8 +1,6 @@
 package com.vztekoverflow.lospiratos.sample;
 
-import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.view.layout.HexTileContents;
-import com.vztekoverflow.lospiratos.view.layout.HexTileContentsFactory;
 import com.vztekoverflow.lospiratos.view.layout.VirtualizingHexGridPane;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -26,36 +24,31 @@ public class SampleController {
     @FXML
     public void initialize() {
 
-        hexPane = new VirtualizingHexGridPane(40, true, new HexTileContentsFactory() {
+        hexPane = new VirtualizingHexGridPane(40, true, (coords, tileWidth, tileHeight) -> {
 
-            public HexTileContents getContentsFor(AxialCoordinate coords, double tileWidth, double tileHeight) {
+            final Label l = new Label();
+            l.setText(String.format("[%s,%s]", coords.getQ(), coords.getR()));
+            l.setOnMouseClicked((MouseEvent) -> new Alert(Alert.AlertType.INFORMATION, "Clicked on " + coords.toString()).showAndWait());
 
-                final Label l = new Label();
-                l.setText(String.format("[%s,%s]", coords.getQ(), coords.getR()));
-                l.setOnMouseClicked((MouseEvent) -> {
-                    new Alert(Alert.AlertType.INFORMATION, "Clicked on " + coords.toString()).showAndWait();
-                });
+            final String cssClassName = coords.getR() % 2 == 0 ? "even" : "odd";
 
-                final String cssClassName = coords.getR() % 2 == 0 ? "even" : "odd";
+            return new HexTileContents() {
 
-                return new HexTileContents() {
+                ObjectProperty<Node> contents = new ReadOnlyObjectWrapper<>(l);
+                StringProperty cssClass = new ReadOnlyStringWrapper(cssClassName);
 
-                    ObjectProperty<Node> contents = new ReadOnlyObjectWrapper<>(l);
-                    StringProperty cssClass = new ReadOnlyStringWrapper(cssClassName);
+                @Override
+                public ObjectProperty<Node> contentsProperty() {
+                    return contents;
+                }
 
-                    @Override
-                    public ObjectProperty<Node> contentsProperty() {
-                        return contents;
-                    }
-
-                    @Override
-                    public StringProperty cssClassProperty() {
-                        return cssClass;
-                    }
+                @Override
+                public StringProperty cssClassProperty() {
+                    return cssClass;
+                }
 
 
-                };
-            }
+            };
         });
 
         XSlider.valueProperty().bindBidirectional(hexPane.XOffsetProperty());

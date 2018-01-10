@@ -41,7 +41,7 @@ public class Game {
         });
     }
     private void addNewTeamFromModel(com.vztekoverflow.lospiratos.model.Team teamModel){
-        if(teams.stream().filter(p -> p.getName().equalsIgnoreCase(teamModel.getName())).count() > 0){
+        if(teams.stream().anyMatch(p -> p.getName().equalsIgnoreCase(teamModel.getName()))){
             Warnings.makeWarning(toString(),"Attempt to create a team with a name that is already used: " + teamModel.getName());
             return;
         }
@@ -57,7 +57,7 @@ public class Game {
             Warnings.makeWarning(toString(), "Attempt to create a team with null or empty name.");
             return null;
         }
-        if(teams.stream().filter(p -> p.getName().equalsIgnoreCase(teamName)).count() > 0){
+        if(teams.stream().anyMatch(p -> p.getName().equalsIgnoreCase(teamName))){
             Warnings.makeWarning(toString(),"Attempt to create a team with a name that is already used: " + teamName);
             return null;
         }
