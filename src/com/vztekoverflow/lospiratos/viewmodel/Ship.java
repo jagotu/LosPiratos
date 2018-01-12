@@ -430,4 +430,25 @@ public class Ship {
         destroyed.set(false);
     }
 
+    /*
+     * @returns Resource that corresponds to how many Resource had to be paid for obtaining the ship and all its enhancements
+     */
+    public ResourceImmutable computeInitialCost(boolean includeDamagedEnhancements){
+        Resource result = new Resource();
+        for(ShipEnhancement e: enhancements.values()){
+            if(e.isDestroyed() && !includeDamagedEnhancements) continue;
+            try{
+                result.add((Resource) (e.getClass().getMethod("getCost").invoke(null)));
+            }catch (Exception ex){
+                Warnings.makeWarning(toString()+".computeInitialCost()", ex.getMessage());
+            }
+        }
+        try{
+            result.add((Resource) (shipType.getClass().getMethod("getCost").invoke(null)));
+        }catch (Exception ex){
+            Warnings.makeWarning(toString()+".computeInitialCost()", ex.getMessage());
+        }
+        return result;
+    }
+
 }

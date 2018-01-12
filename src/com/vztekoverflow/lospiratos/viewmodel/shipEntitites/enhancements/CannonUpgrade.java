@@ -1,6 +1,7 @@
 package com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements;
 
 import com.vztekoverflow.lospiratos.util.Warnings;
+import com.vztekoverflow.lospiratos.viewmodel.ResourceImmutable;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Brig;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Frigate;
@@ -46,5 +47,9 @@ public final class CannonUpgrade extends ShipEnhancement {
     public int getBonusCannonsNr() {
         if(this.isDestroyed()) return 0;
         return bonusCannons;
+    }
+
+    public static ResourceImmutable getCost(){
+        return new ResourceImmutable();
     }
 }

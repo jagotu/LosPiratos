@@ -1,4 +1,4 @@
 package com.vztekoverflow.lospiratos.viewmodel.shipEntitites;
 
-public class ShipMechanics extends ShipEntity {
+public abstract class ShipMechanics extends ShipEntity {
 }

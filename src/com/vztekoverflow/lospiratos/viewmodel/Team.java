@@ -20,7 +20,7 @@ public class Team {
      * Should be called only after the object has been created.
      */
     public void initialize(){
-        money.set(Team.INITIAL_MONEY);
+        ownedResource.money.set(Team.INITIAL_MONEY);
     }
 
     private com.vztekoverflow.lospiratos.model.Team teamModel;
@@ -36,12 +36,12 @@ public class Team {
     }
 
     private void bindToModel() {
-        ownedTobacco.bindBidirectional(teamModel.ownedTobaccoProperty());
-        ownedRum.bindBidirectional(teamModel.ownedRumProperty());
-        ownedCloth.bindBidirectional(teamModel.ownedClothProperty());
-        ownedWood.bindBidirectional(teamModel.ownedWoodProperty());
-        ownedMetal.bindBidirectional(teamModel.ownedMetalProperty());
-        money.bindBidirectional(teamModel.moneyProperty());
+        ownedResource.moneyProperty().bindBidirectional(teamModel.moneyProperty());
+        ownedResource.clothProperty().bindBidirectional(teamModel.ownedClothProperty());
+        ownedResource.metalProperty().bindBidirectional(teamModel.ownedMetalProperty());
+        ownedResource.rumProperty().bindBidirectional(teamModel.ownedRumProperty());
+        ownedResource.tobaccoProperty().bindBidirectional(teamModel.ownedTobaccoProperty());
+        ownedResource.woodProperty().bindBidirectional(teamModel.ownedWoodProperty());
 
         name.bindBidirectional(teamModel.nameProperty());
 
@@ -95,12 +95,7 @@ public class Team {
     private StringProperty name = new SimpleStringProperty("");
     private ObjectProperty<Color> color = new SimpleObjectProperty<>();
 
-    private IntegerProperty money = new SimpleIntegerProperty(0);
-    private IntegerProperty ownedMetal = new SimpleIntegerProperty(0);
-    private IntegerProperty ownedWood = new SimpleIntegerProperty(0);
-    private IntegerProperty ownedCloth = new SimpleIntegerProperty(0);
-    private IntegerProperty ownedRum = new SimpleIntegerProperty(0);
-    private IntegerProperty ownedTobacco = new SimpleIntegerProperty(0);
+    private Resource ownedResource = new Resource();
 
     public Collection<Ship> getShips() {
         return ships.get().values();
@@ -136,78 +131,13 @@ public class Team {
         return color;
     }
 
-    public int getMoney() {
-        return money.get();
+    public Resource getOwnedResource() {
+        return ownedResource;
     }
-
-    public void addMoney(int value) {
-        money.set(money.get() + value);
-    }
-
-    public IntegerProperty moneyProperty() {
-        return money;
-    }
-
-    public int getOwnedMetal() {
-        return ownedMetal.get();
-    }
-
-    public void addOwnedMetal(int value) {
-        ownedMetal.set(ownedMetal.get() + value);
-    }
-
-    public IntegerProperty ownedMetalProperty() {
-        return ownedMetal;
-    }
-
-    public int getOwnedWood() {
-        return ownedWood.get();
-    }
-
-    public void addOwnedWood(int value) {
-        ownedWood.set(ownedWood.get() + value);
-    }
-
-    public IntegerProperty ownedWoodProperty() {
-        return ownedWood;
-    }
-
-    public int getOwnedCloth() {
-        return ownedCloth.get();
-    }
-
-    public void addOwnedCloth(int value) {
-        ownedCloth.set(ownedCloth.get() + value);
-    }
-
-    public IntegerProperty ownedClothProperty() {
-        return ownedCloth;
-    }
-
-    public int getOwnedRum() {
-        return ownedRum.get();
-    }
-
-    public void addOwnedRum(int value) {
-        ownedRum.set(ownedRum.get() + value);
-    }
-
-    public IntegerProperty ownedRumProperty() {
-        return ownedRum;
-    }
-
-    public int getOwnedTobacco() {
-        return ownedTobacco.get();
-    }
-
-    public void addOwnedTobacco(int value) {
-        ownedTobacco.set(ownedTobacco.get() + value);
-    }
-
-    public IntegerProperty ownedTobaccoProperty() {
-        return ownedTobacco;
-    }
-
+    /*
+     * Syntactic sugar for getOwnedResource()
+     */
+    public Resource ownedResource(){ return ownedResource;}
 
     //public methods:
 

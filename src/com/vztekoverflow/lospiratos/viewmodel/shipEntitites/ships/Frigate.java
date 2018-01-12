@@ -1,5 +1,6 @@
 package com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships;
 
+import com.vztekoverflow.lospiratos.viewmodel.ResourceImmutable;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipType;
 
 public class Frigate extends ShipType {
@@ -13,5 +14,9 @@ public class Frigate extends ShipType {
     public int getBonusGarrison() {return 100;}
     @Override
     public int getBonusSpeed() {return 3;}
+
+    public static ResourceImmutable getCost(){
+        return new ResourceImmutable();
+    }
 }
 

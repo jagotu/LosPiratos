@@ -1,12 +1,13 @@
 package com.vztekoverflow.lospiratos.viewmodel.shipEntitites;
 
 import com.vztekoverflow.lospiratos.util.Warnings;
+import com.vztekoverflow.lospiratos.viewmodel.ResourceImmutable;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.*;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
 
-public class ShipEnhancement extends ShipEntity {
+public abstract class ShipEnhancement extends ShipEntity {
 
     private BooleanProperty destroyed = new SimpleBooleanProperty(false);
 

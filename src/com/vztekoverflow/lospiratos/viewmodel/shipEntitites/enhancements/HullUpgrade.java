@@ -1,6 +1,7 @@
 package com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements;
 
 import com.vztekoverflow.lospiratos.util.Warnings;
+import com.vztekoverflow.lospiratos.viewmodel.ResourceImmutable;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Brig;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Frigate;
@@ -28,5 +29,10 @@ public final class HullUpgrade extends ShipEnhancement {
             Warnings.makeWarning("CannonUpgrade", " Unknown ship type: " + ship.getShipType());
             return 0;
         }
+    }
+
+
+    public static ResourceImmutable getCost(){
+        return new ResourceImmutable();
     }
 }

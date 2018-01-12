@@ -4,7 +4,7 @@ import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
-public class ResourceStorage {
+public class ResourceStorage extends Resource {
 
     private static final int clothCargoUsageCoefficient = 1;
     private static final int metalCargoUsageCoefficient = 1;
@@ -20,28 +20,23 @@ public class ResourceStorage {
 
         this.capacity = capacity;
 
+        this.money.bindBidirectional(money);
         this.cloth.bindBidirectional(cloth);
         this.metal.bindBidirectional(metal);
-        this.rum.bindBidirectional(rum);
-        this.tobacco.bindBidirectional(tobacco);
-        this.wood.bindBidirectional(wood);
+        this.rum__.bindBidirectional(rum);
+        this.tobco.bindBidirectional(tobacco);
+        this.wood_.bindBidirectional(wood);
 
-        this.money.bindBidirectional(money);
 
         this.cloth.addListener(__ -> roomLeft.invalidate());
         this.metal.addListener(__ -> roomLeft.invalidate());
-        this.rum.addListener(__ -> roomLeft.invalidate());
-        this.tobacco.addListener(__ -> roomLeft.invalidate());
-        this.wood.addListener(__ -> roomLeft.invalidate());
+        this.rum__.addListener(__ -> roomLeft.invalidate());
+        this.tobco.addListener(__ -> roomLeft.invalidate());
+        this.wood_.addListener(__ -> roomLeft.invalidate());
+        this.capacity.addListener(__ -> roomLeft.invalidate());
     }
 
     private IntegerBinding capacity;
-    private IntegerProperty cloth = new SimpleIntegerProperty();
-    private IntegerProperty metal = new SimpleIntegerProperty();
-    private IntegerProperty rum = new SimpleIntegerProperty();
-    private IntegerProperty tobacco = new SimpleIntegerProperty();
-    private IntegerProperty wood = new SimpleIntegerProperty();
-    private IntegerProperty money = new SimpleIntegerProperty();
 
     private IntegerBinding roomLeft = new IntegerBinding() {
         @Override
@@ -59,25 +54,25 @@ public class ResourceStorage {
 
 
     public boolean canStoreMoreCloth(int amount){
-        return roomLeft.intValue() < clothCargoUsageCoefficient * getCloth();
+        return roomLeft.get() >= clothCargoUsageCoefficient * amount;
     }
     public boolean canStoreMoreMetal(int amount){
-        return roomLeft.intValue() < metalCargoUsageCoefficient * getMetal();
+        return roomLeft.get() >= metalCargoUsageCoefficient * amount;
     }
     public boolean canStoreMoreRum(int amount){
-        return roomLeft.intValue() < rumCargoUsageCoefficient * getRum();
+        return roomLeft.get() >= rumCargoUsageCoefficient * amount;
     }
     public boolean canStoreMoreTobacco(int amount){
-        return roomLeft.intValue() < tobaccoCargoUsageCoefficient * getTobacco();
+        return roomLeft.get() >= tobaccoCargoUsageCoefficient * amount;
     }
     public boolean canStoreMoreWood(int amount){
-        return roomLeft.intValue() < woodCargoUsageCoefficient * getWood();
+        return roomLeft.get() >= woodCargoUsageCoefficient * amount;
     }
 
     /* adds cloth to the ships storage, if there is enough storage room
      * @returns value indicating whether the amount has been successfully added
      */
-    public boolean addCloth(int amount){
+    public boolean tryAddCloth(int amount){
         if(!canStoreMoreCloth(amount)) return false;
         cloth.set(getCloth()+amount);
         return true;
@@ -85,7 +80,7 @@ public class ResourceStorage {
     /* adds metal to the ships storage, if there is enough storage room
      * @returns value indicating whether the amount has been successfully added
      */
-    public boolean addMetal(int amount){
+    public boolean tryAddMetal(int amount){
         if(!canStoreMoreMetal(amount)) return false;
         metal.set(getMetal()+amount);
         return true;
@@ -93,29 +88,55 @@ public class ResourceStorage {
     /* adds rum to the ships storage, if there is enough storage room
      * @returns value indicating whether the amount has been successfully added
      */
-    public boolean addRum(int amount){
+    public boolean tryAddRum(int amount){
         if(!canStoreMoreRum(amount)) return false;
-        rum.set(getRum()+amount);
+        rum__.set(getRum()+amount);
         return true;
     }
     /* adds tobacco to the ships storage, if there is enough storage room
      * @returns value indicating whether the amount has been successfully added
      */
-    public boolean addTobacco(int amount){
+    public boolean tryAddTobacco(int amount){
         if(!canStoreMoreTobacco(amount)) return false;
-        tobacco.set(getTobacco()+amount);
+        tobco.set(getTobacco()+amount);
         return true;
     }
     /* adds wood to the ships storage, if there is enough storage room
      * @returns value indicating whether the amount has been successfully added
      */
-    public boolean addWood(int amount){
+    public boolean tryAddWood(int amount){
         if(!canStoreMoreWood(amount)) return false;
-        wood.set(getWood()+amount);
+        wood_.set(getWood()+amount);
         return true;
     }
 
+
+    @Override
+    public void addCloth(int value) {
+        tryAddCloth(value);
+    }
+
+    @Override
+    public void addMetal(int value) {
+        tryAddMetal(value);
+    }
+
+    @Override
+    public void addRum(int value) {
+        tryAddRum(value);
+    }
+
+    @Override
+    public void addTobacco(int value) {
+        tryAddTobacco(value);
+    }
+
+    @Override
+    public void addWood(int value) {
+        tryAddWood(value);
+    }
     //todo the setters do not check whether the capacity has been overflown
+    //maybe this could be used as intended? It would allow to overcome storage limit if wanted
 
     public int getRoomLeft() {
         return roomLeft.get();
@@ -123,78 +144,6 @@ public class ResourceStorage {
 
     public IntegerBinding roomLeftProperty() {
         return roomLeft;
-    }
-
-    public int getMetal() {
-        return metal.get();
-    }
-
-    public IntegerProperty metalProperty() {
-        return metal;
-    }
-
-    public void setMetal(int metal) {
-        this.metal.set(metal);
-    }
-
-    public int getWood() {
-        return wood.get();
-    }
-
-    public IntegerProperty woodProperty() {
-        return wood;
-    }
-
-    public void setWood(int wood) {
-        this.wood.set(wood);
-    }
-
-    public int getCloth() {
-        return cloth.get();
-    }
-
-    public IntegerProperty clothProperty() {
-        return cloth;
-    }
-
-    public void setCloth(int cloth) {
-        this.cloth.set(cloth);
-    }
-
-    public int getRum() {
-        return rum.get();
-    }
-
-    public IntegerProperty rumProperty() {
-        return rum;
-    }
-
-    public void setRum(int rum) {
-        this.rum.set(rum);
-    }
-
-    public int getTobacco() {
-        return tobacco.get();
-    }
-
-    public IntegerProperty tobaccoProperty() {
-        return tobacco;
-    }
-
-    public void setTobacco(int tobacco) {
-        this.tobacco.set(tobacco);
-    }
-
-    public int getMoney() {
-        return money.get();
-    }
-
-    public IntegerProperty moneyProperty() {
-        return money;
-    }
-
-    public void setMoney(int money) {
-        this.money.set(money);
     }
 
     public int getCapacity() {

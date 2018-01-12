@@ -25,8 +25,8 @@ public class GameManagementExample {
 
         Team pirraten = g.createAndAddNewTeam("Pirrrrráten mit nem Schwert", Color.ANTIQUEWHITE);
 
-        pirraten.addMoney(100);
-        pirraten.addOwnedCloth(5);
+        pirraten.ownedResource().addMoney(100);
+        pirraten.ownedResource().addCloth(5);
 
         Ship perla = pirraten.createAndAddNewShip(Frigate.class, "Růžová perla", "Jack Daniels");
         perla.addNewEnhancement(CannonUpgrade.class);
@@ -36,7 +36,7 @@ public class GameManagementExample {
         eliminace.destroyShipAndEnhancements();
 
         Team losBratros = g.createAndAddNewTeam("Los Bratros în trikos", Color.BLANCHEDALMOND);
-        losBratros.addOwnedRum(255);
+        losBratros.ownedResource().addRum(255);
 
         GameSerializer.SaveGameToFile("game.json", g.getGameModel(), false);
 
@@ -49,8 +49,8 @@ public class GameManagementExample {
 
         Team pirraten = g.findTeamByName("Pirrrrráten mit nem Schwert");
         System.out.println("pirraten.getColor() = " + pirraten.getColor());
-        System.out.println("pirraten.getMoney() = " + pirraten.getMoney());
-        System.out.println("pirraten.getOwnedCloth() = " + pirraten.getOwnedCloth());
+        System.out.println("pirraten.getMoney() = " + pirraten.ownedResource().getMoney());
+        System.out.println("pirraten.getOwnedCloth() = " + pirraten.ownedResource().getCloth());
         System.out.println();
 
         Ship perla = pirraten.findShipByName("Růžová perla");
@@ -67,7 +67,7 @@ public class GameManagementExample {
         System.out.println();
 
         Team losBratros = g.findTeamByName("Los Bratros în trikos");
-        System.out.println("losBratros.getOwnedRum() = " + losBratros.getOwnedRum());
+        System.out.println("losBratros.getOwnedRum() = " + losBratros.ownedResource().getRum());
         System.out.println();
 
     }
