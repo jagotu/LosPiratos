@@ -1,0 +1,13 @@
+.hexPane {
+    -fx-fill: white;
+}
+
+.hexTile {
+    -fx-stroke: black;
+    -fx-fill: transparent;
+}
+
+.hexTile:hover
+{
+    -fx-fill: LemonChiffon;
+}

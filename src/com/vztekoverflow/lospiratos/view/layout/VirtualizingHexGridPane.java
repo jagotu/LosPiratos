@@ -12,6 +12,7 @@ import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
 import javafx.scene.transform.Scale;
@@ -114,6 +115,7 @@ public class VirtualizingHexGridPane extends Pane {
     private Shape getHexagon() {
         Polygon hexagon = new Polygon();
         hexagon.getPoints().addAll(hexagonPoints);
+        hexagon.setFill(Color.TRANSPARENT);
         return hexagon;
     }
 
