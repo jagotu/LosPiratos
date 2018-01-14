@@ -1,7 +1,6 @@
 package com.vztekoverflow.lospiratos;
 
 import com.vztekoverflow.lospiratos.model.Game;
-import com.vztekoverflow.lospiratos.sample.SampleController;
 import com.vztekoverflow.lospiratos.util.CubeCoordinateMutable;
 import com.vztekoverflow.lospiratos.view.layout.HexTileContents;
 import com.vztekoverflow.lospiratos.view.layout.HexTileContentsFactory;
@@ -24,51 +23,18 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-    private static final int SIZE = 8;
+
 
     private Game g = Game.CreateNewMockGame();
+    private com.vztekoverflow.lospiratos.viewmodel.Game gv = com.vztekoverflow.lospiratos.viewmodel.Game.LoadFromModel(g);
 
-    private HexTileContentsFactory fact = (coords, tileWidth, tileHeight) -> {
-
-        CubeCoordinateMutable cube = coords.toCubeCoordinate();
-        if(cube.getQ() < -SIZE || cube.getQ() > SIZE ||
-                cube.getR() < -SIZE || cube.getR() > SIZE ||
-                cube.getS() < -SIZE || cube.getS() > SIZE)
-        {
-            return null;
-        }
-
-
-
-        final Label l = new Label();
-        l.setText(String.format("[%s,%s]", coords.getQ(), coords.getR()));
-
-        final String cssClassName = coords.getR() % 2 == 0 ? "even" : "odd";
-
-        return new HexTileContents() {
-
-            ObjectProperty<Node> contents = new ReadOnlyObjectWrapper<>(l);
-            StringProperty cssClass = new ReadOnlyStringWrapper(cssClassName);
-
-            @Override
-            public ObjectProperty<Node> contentsProperty() {
-                return contents;
-            }
-
-            @Override
-            public StringProperty cssClassProperty() {
-                return cssClass;
-            }
-
-
-        };
-    };
 
 
     @Override
     public void start(Stage primaryStage) throws Exception{
         FXMLLoader loader = new FXMLLoader(OrgStageController.class.getResource("OrgStage.fxml"));
-        loader.setController(new OrgStageController(fact));
+
+        loader.setController(new OrgStageController(gv));
 
         Parent orgStageParent = loader.load();
         primaryStage.setTitle("OrgStage");

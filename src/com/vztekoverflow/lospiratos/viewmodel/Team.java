@@ -134,10 +134,6 @@ public class Team {
     public Resource getOwnedResource() {
         return ownedResource;
     }
-    /*
-     * Syntactic sugar for getOwnedResource()
-     */
-    public Resource ownedResource(){ return ownedResource;}
 
     //public methods:
 

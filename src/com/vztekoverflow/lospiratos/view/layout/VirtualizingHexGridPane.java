@@ -197,7 +197,7 @@ public class VirtualizingHexGridPane extends Pane {
 
                 if (t == null) {
                     Shape tileShape = getHexagon();
-                    tileShape.getStyleClass().add("hexTile");
+                    tileShape.getStyleClass().add("hex-tile");
                     t = new HexTile(tileWidth, tileHeight, this, tileShape);
                 }
 
@@ -331,7 +331,7 @@ public class VirtualizingHexGridPane extends Pane {
             this.tileShape = tileShapeInstance;
             this.parent = parent;
 
-            this.getStyleClass().add("hexParent");
+            this.getStyleClass().add("hex-parent");
 
             this.getTransforms().add(st);
             tileShape.getTransforms().add(st);

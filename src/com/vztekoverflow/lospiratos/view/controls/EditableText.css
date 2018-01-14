@@ -1,0 +1,19 @@
+
+.button
+{
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0px;
+}
+
+.button:hover
+{
+    -fx-border-color: black;
+}
+
+.text-field
+{
+    -fx-background-color: white;
+    -fx-padding: 0px;
+}
+

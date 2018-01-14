@@ -1,22 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.VBox?>
+<?import org.controlsfx.glyphfont.Glyph?>
 
-<?import javafx.geometry.Insets?>
-<BorderPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0" minWidth="500.0"
-            prefHeight="600.0" prefWidth="700.0" stylesheets="@common.css" xmlns="http://javafx.com/javafx/8.0.121"
-            xmlns:fx="http://javafx.com/fxml/1">
-    <right>
-        <VBox fx:id="rightPanel" prefWidth="200.0">
-            <Label text="TODO">
-                <VBox.margin>
-                    <Insets top="10.0"/>
-                </VBox.margin>
-            </Label>
-        </VBox>
-    </right>
-</BorderPane>
+
+<SplitPane xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:id="root" stylesheets="@common.css">
+    <TabPane prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
+        <Tab text="Týmy">
+            <FlowPane fx:id="teamsBox"/>
+        </Tab>
+        <Tab text="Lodě">
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+        </Tab>
+        <Tab>
+            <graphic>
+                <Glyph fontFamily="FontAwesome" icon="save"/>
+            </graphic>
+            <VBox>
+                <Button maxWidth="1.7976931348623157E308" text="Načíst hru"/>
+                <Button maxWidth="1.7976931348623157E308" text="Uložit hru"/>
+                <Button maxWidth="1.7976931348623157E308" text="Lorem Ipsum" onAction="#loremIpsum"/>
+            </VBox>
+        </Tab>
+    </TabPane>
+</SplitPane>

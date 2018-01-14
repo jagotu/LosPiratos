@@ -107,6 +107,20 @@ public class Game {
 
         g.teams.add(t1);
 
+        for(int i = 0; i<6; i++)
+        {
+            Team t2 = new Team(
+                    "Trolo" + Integer.toString(i),
+                    "#ff00ff",
+                    5000+i,
+                    10*i,
+                    20*i,
+                    0+i,
+                    30*i,
+                    40*i);
+            g.teams.add(t2);
+        }
+
 
 
 

@@ -1,0 +1,42 @@
+#teamName
+{
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+#boxHeader
+{
+    -fx-background-color: -team-color;
+}
+
+#teamName .text, .color-picker-label .text
+{
+    -fx-fill: ladder(-team-color, white 49%, black 50%);
+}
+
+#backRect {
+    -fx-stroke: -team-color;
+}
+
+.team-view
+{
+    -fx-border-color: -team-color;
+    -fx-border-width: 4px;
+    -fx-border-radius: 4px;
+}
+
+.color-picker
+{
+    -fx-color-label-visible: true;
+}
+
+.color-picker-label
+{
+    -fx-alignment: center-right;
+}
+
+.color-picker, .color-picker-label
+{
+    -fx-background-color: transparent;
+    -fx-padding: 0px;
+}
