@@ -1,3 +1,3 @@
 # LosPiratos
 
-The best pirates game since Assasin's Creed: Black Flag!
+The best pirates game since Assassin's Creed: Black Flag!

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.vztekoverflow.lospiratos.view.controls.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.controlsfx.glyphfont.*?>
+<fx:root maxWidth="300.0" prefWidth="300.0" stylesheets="@TeamView.css" type="javafx.scene.layout.FlowPane"
+         xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+    <BorderPane minWidth="40.0">
+        <left>
+            <Label>
+                <graphic>
+                    <Glyph fontFamily="FontAwesome" icon="money"/>
+                </graphic>
+                <BorderPane.margin>
+                    <Insets right="2.0"/>
+                </BorderPane.margin>
+            </Label>
+        </left>
+        <center>
+            <EditableText fx:id="money"/>
+        </center>
+    </BorderPane>
+    <BorderPane minWidth="40.0">
+        <left>
+            <Label>
+                <graphic>
+                    <Glyph fontFamily="FontAwesome" icon="wrench"/>
+                </graphic>
+                <BorderPane.margin>
+                    <Insets right="2.0"/>
+                </BorderPane.margin>
+            </Label>
+
+        </left>
+        <center>
+            <EditableText fx:id="metal"/>
+        </center>
+    </BorderPane>
+    <BorderPane minWidth="40.0">
+        <left>
+            <Label>
+                <graphic>
+                    <Glyph fontFamily="FontAwesome" icon="tree"/>
+                </graphic>
+                <BorderPane.margin>
+                    <Insets right="2.0"/>
+                </BorderPane.margin>
+            </Label>
+        </left>
+        <center>
+            <EditableText fx:id="wood"/>
+        </center>
+    </BorderPane>
+    <BorderPane minWidth="40.0">
+        <left>
+            <Label>
+                <graphic>
+                    <Glyph fontFamily="FontAwesome" icon="tag"/>
+                </graphic>
+                <BorderPane.margin>
+                    <Insets right="2.0"/>
+                </BorderPane.margin>
+            </Label>
+        </left>
+        <center>
+            <EditableText fx:id="cloth"/>
+        </center>
+    </BorderPane>
+    <BorderPane minWidth="40.0">
+        <left>
+            <Label>
+                <graphic>
+                    <Glyph fontFamily="FontAwesome" icon="beer"/>
+                </graphic>
+                <BorderPane.margin>
+                    <Insets right="2.0"/>
+                </BorderPane.margin>
+            </Label>
+        </left>
+        <center>
+            <EditableText fx:id="rum"/>
+        </center>
+    </BorderPane>
+
+</fx:root>

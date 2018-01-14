@@ -7,7 +7,6 @@
     -fx-fill: transparent;
 }
 
-.hex-tile:hover
-{
+.hex-tile:hover {
     -fx-fill: LemonChiffon;
 }

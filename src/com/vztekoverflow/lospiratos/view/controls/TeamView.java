@@ -1,20 +1,21 @@
 package com.vztekoverflow.lospiratos.view.controls;
 
-import com.vztekoverflow.lospiratos.viewmodel.Resource;
+import com.sun.javafx.scene.control.skin.ColorPickerSkin;
 import com.vztekoverflow.lospiratos.viewmodel.Team;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.ColorPicker;
-import javafx.scene.layout.FlowPane;
+import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.util.converter.IntegerStringConverter;
-import javafx.util.converter.NumberStringConverter;
+import org.controlsfx.glyphfont.FontAwesome;
+import org.controlsfx.glyphfont.Glyph;
 
 import java.io.IOException;
-import java.text.NumberFormat;
-import java.util.Locale;
 
 public class TeamView extends StackPane {
 
@@ -25,19 +26,23 @@ public class TeamView extends StackPane {
     @FXML
     private ColorPicker colorPicker;
     @FXML
-    private EditableText money;
-    @FXML
-    private EditableText metal;
-    @FXML
-    private EditableText wood;
-    @FXML
-    private EditableText cloth;
-    @FXML
-    private EditableText rum;
-    @FXML
-    private FlowPane flow;
+    private VBox vbox;
 
     private Team t;
+
+    public interface RequestDeleteListener {
+        void RequestDelete(Team t);
+    }
+
+    public RequestDeleteListener getRequestDeleteListener() {
+        return requestDeleteListener;
+    }
+
+    public void setRequestDeleteListener(RequestDeleteListener requestDeleteListener) {
+        this.requestDeleteListener = requestDeleteListener;
+    }
+
+    RequestDeleteListener requestDeleteListener = null;
 
 
     public TeamView(Team t) {
@@ -56,36 +61,44 @@ public class TeamView extends StackPane {
         }
 
 
-        t.colorProperty().addListener(a -> {
-            updateColor();
-        });
+        t.colorProperty().addListener(a -> updateColor());
 
         updateColor();
 
         teamName.textProperty().bindBidirectional(t.nameProperty());
         colorPicker.valueProperty().bindBidirectional(t.colorProperty());
 
-        Resource r = t.getOwnedResource();
-        NumberStringConverter nsc = new NumberStringConverter();
-        money.textProperty().bindBidirectional(r.moneyProperty(), nsc);
-        metal.textProperty().bindBidirectional(r.metalProperty(), nsc);
-        wood.textProperty().bindBidirectional(r.woodProperty(), nsc);
-        cloth.textProperty().bindBidirectional(r.clothProperty(), nsc);
-        rum.textProperty().bindBidirectional(r.rumProperty(), nsc);
+        colorPicker.setSkin(new ColorPickerSkin(colorPicker) {
+            @Override
+            public Node getDisplayNode() {
+                Label l = new Label();
+                l.setGraphic(new Glyph("FontAwesome", FontAwesome.Glyph.PAINT_BRUSH));
+                l.setPadding(new Insets(0));
+                return l;
+            }
+        });
 
-
+        ResourceView rw = new ResourceView(t.getOwnedResource());
+        VBox.setMargin(rw, new Insets(4));
+        vbox.getChildren().add(rw);
 
 
     }
 
-    private void updateColor()
-    {
+    private void updateColor() {
         Color color = t.getColor();
         String style = String.format("-team-color: rgba(%d, %d, %d, %f);",
-                (int)(color.getRed()*255),
-                (int)(color.getGreen()*255),
-                (int)(color.getBlue()*255),
+                (int) (color.getRed() * 255),
+                (int) (color.getGreen() * 255),
+                (int) (color.getBlue() * 255),
                 color.getOpacity());
         setStyle(style);
+    }
+
+    @FXML
+    private void delete() {
+        if (requestDeleteListener != null) {
+            requestDeleteListener.RequestDelete(t);
+        }
     }
 }

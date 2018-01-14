@@ -9,48 +9,56 @@ import com.vztekoverflow.lospiratos.view.layout.VirtualizingHexGridPane;
 import com.vztekoverflow.lospiratos.viewmodel.Game;
 import com.vztekoverflow.lospiratos.viewmodel.Team;
 import javafx.application.Platform;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
 import javafx.scene.control.SplitPane;
-import javafx.scene.layout.*;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-public class OrgStageController
-{
-    private static final int SIZE = 8;
-    public VirtualizingHexGridPane hexPane;
-    public SplitPane root;
-    private Point2D lastMouse;
-    private Game game;
+import java.util.HashMap;
+
+public class OrgStage {
+    private ObjectProperty<Game> game;
+
+    //Controls
     @FXML
     private FlowPane teamsBox;
+    @FXML
+    private SplitPane root;
+    private VirtualizingHexGridPane hexPane;
 
-
+    //Internal working helpers
+    private Point2D lastMouse;
+    private HashMap<Team, TeamView> teamViews = new HashMap<>();
     private static final int minMove = -3000;
     private static final int maxMove = 500;
 
-    public OrgStageController(Game game) {
-        this.game = game;
+
+    public OrgStage() {
+        this(Game.LoadFromModel(com.vztekoverflow.lospiratos.model.Game.CreateNewMockGame()));
     }
 
+    public OrgStage(Game game) {
+        this.game = new SimpleObjectProperty<>(game);
+        this.game.addListener(c -> connectToGame());
+    }
+
+
+    //TODO: Will be removed once HexTileContentsFactory is outsourced
+    private static final int SIZE = 8;
     private HexTileContentsFactory fact = (coords, tileWidth, tileHeight) -> {
 
         CubeCoordinateMutable cube = coords.toCubeCoordinate();
-        if(cube.getQ() < -SIZE || cube.getQ() > SIZE ||
+        if (cube.getQ() < -SIZE || cube.getQ() > SIZE ||
                 cube.getR() < -SIZE || cube.getR() > SIZE ||
-                cube.getS() < -SIZE || cube.getS() > SIZE)
-        {
+                cube.getS() < -SIZE || cube.getS() > SIZE) {
             return null;
         }
-
 
 
         final Label l = new Label();
@@ -79,10 +87,8 @@ public class OrgStageController
     };
 
     @FXML
-    public void initialize() {
-
+    private void initialize() {
         hexPane = new VirtualizingHexGridPane(40, true, fact);
-
 
         Rectangle clipRect = new Rectangle(hexPane.getWidth(), hexPane.getHeight());
         clipRect.widthProperty().bind(hexPane.widthProperty());
@@ -90,8 +96,67 @@ public class OrgStageController
         hexPane.setClip(clipRect);
         root.getItems().add(0, hexPane);
 
+        setHexPanePanAndZoom();
+        Platform.runLater(() -> hexPane.centerInParent(new AxialCoordinate(0, 0)));
+        root.setDividerPosition(0, 0.75);
 
+        connectToGame();
+    }
 
+    private void connectToGame() {
+        teamsBox.getChildren().clear();
+        teamViews.clear();
+
+        for (Team t : game.get().teamsProperty()) {
+            addTeamView(t);
+        }
+
+        game.get().teamsProperty().addListener((ListChangeListener.Change<? extends Team> c) -> {
+            while (c.next()) {
+                if (!(c.wasPermutated() || c.wasUpdated())) {
+                    for (Team t : c.getAddedSubList()) {
+                        addTeamView(t);
+                    }
+                    for (Team t : c.getRemoved()) {
+                        removeTeamView(t);
+                    }
+                }
+            }
+        });
+    }
+
+    private void addTeamView(Team t) {
+        TeamView tv = new TeamView(t);
+        tv.setRequestDeleteListener(team -> game.get().getTeams().remove(team));
+        teamsBox.getChildren().add(tv);
+        teamViews.put(t, tv);
+    }
+
+    private void removeTeamView(Team t) {
+        teamsBox.getChildren().remove(teamViews.get(t));
+        teamViews.remove(t);
+
+    }
+
+    @FXML
+    private void loremIpsum() {
+        int a = 0;
+    }
+
+    @FXML
+    private void addTeam() {
+        int i = 1;
+        while (true) {
+            final int j = i;
+            if (game.get().getTeams().stream().noneMatch(t -> t.getName().equalsIgnoreCase("Tým #" + j))) break;
+            i++;
+        }
+
+        game.get().createAndAddNewTeam("Tým #" + i, Color.BLACK);
+
+    }
+
+    private void setHexPanePanAndZoom() {
         hexPane.setOnMousePressed(MouseEvent -> lastMouse = new Point2D(MouseEvent.getX(), MouseEvent.getY()));
 
         hexPane.setOnMouseDragged(MouseEvent -> {
@@ -118,24 +183,6 @@ public class OrgStageController
             hexPane.setYOffset(Math.min(Math.max(mouse.getY() - (mouse.getY() - hexPane.getYOffset()) * scale, minMove), maxMove));
             hexPane.setScale(newScale);
         });
-
-
-        Platform.runLater(() -> hexPane.centerInParent(new AxialCoordinate(0, 0)));
-
-        for(Team t : game.teamsProperty())//Todo: bind
-        {
-            teamsBox.getChildren().add(new TeamView(t));
-        }
-
-        root.setDividerPosition(0, 0.75);
-
-
-
-    }
-
-    public void loremIpsum()
-    {
-        int a = 0;
     }
 }
 

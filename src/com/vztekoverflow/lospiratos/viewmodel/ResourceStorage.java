@@ -2,7 +2,6 @@ package com.vztekoverflow.lospiratos.viewmodel;
 
 import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 
 public class ResourceStorage extends Resource {
 

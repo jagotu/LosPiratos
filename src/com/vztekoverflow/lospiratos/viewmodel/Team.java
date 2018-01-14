@@ -95,7 +95,7 @@ public class Team {
     private StringProperty name = new SimpleStringProperty("");
     private ObjectProperty<Color> color = new SimpleObjectProperty<>();
 
-    private Resource ownedResource = new Resource();
+    private final Resource ownedResource = new Resource();
 
     public Collection<Ship> getShips() {
         return ships.get().values();

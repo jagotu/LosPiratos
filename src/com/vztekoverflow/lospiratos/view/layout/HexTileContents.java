@@ -6,5 +6,6 @@ import javafx.scene.Node;
 
 public interface HexTileContents {
     ObjectProperty<Node> contentsProperty();
+
     StringProperty cssClassProperty();
 }

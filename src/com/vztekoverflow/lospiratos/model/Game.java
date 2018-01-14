@@ -111,11 +111,11 @@ public class Game {
         {
             Team t2 = new Team(
                     "Trolo" + Integer.toString(i),
-                    "#ff00ff",
+                    String.format("#%02x%02x%02x", 255 - i*49, 255 - i*49, i*49),
                     5000+i,
                     10*i,
                     20*i,
-                    0+i,
+                    0,
                     30*i,
                     40*i);
             g.teams.add(t2);

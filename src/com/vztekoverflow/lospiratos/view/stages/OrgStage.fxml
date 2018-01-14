@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.FlowPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import org.controlsfx.glyphfont.Glyph?>
-
-
-<SplitPane xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:id="root" stylesheets="@common.css">
+<SplitPane fx:id="root" stylesheets="@common.css" xmlns="http://javafx.com/javafx/8.0.121"
+           xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vztekoverflow.lospiratos.view.stages.OrgStage">
     <TabPane prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
         <Tab text="Týmy">
-            <FlowPane fx:id="teamsBox"/>
+            <BorderPane>
+                <center>
+                    <ScrollPane fitToWidth="true" hbarPolicy="NEVER">
+                        <FlowPane fx:id="teamsBox"/>
+                    </ScrollPane>
+                </center>
+                <bottom>
+                    <Button mnemonicParsing="false" onAction="#addTeam" text="+" BorderPane.alignment="BOTTOM_RIGHT"/>
+                </bottom>
+            </BorderPane>
         </Tab>
         <Tab text="Lodě">
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
@@ -25,7 +28,7 @@
             <VBox>
                 <Button maxWidth="1.7976931348623157E308" text="Načíst hru"/>
                 <Button maxWidth="1.7976931348623157E308" text="Uložit hru"/>
-                <Button maxWidth="1.7976931348623157E308" text="Lorem Ipsum" onAction="#loremIpsum"/>
+                <Button maxWidth="1.7976931348623157E308" onAction="#loremIpsum" text="Lorem Ipsum"/>
             </VBox>
         </Tab>
     </TabPane>
