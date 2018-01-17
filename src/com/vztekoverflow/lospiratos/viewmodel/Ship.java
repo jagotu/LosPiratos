@@ -2,6 +2,7 @@ package com.vztekoverflow.lospiratos.viewmodel;
 
 
 import com.vztekoverflow.lospiratos.model.ShipEnhancementStatus;
+import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.util.Warnings;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEntity;
@@ -18,7 +19,7 @@ import javafx.collections.ObservableMap;
 import java.util.*;
 
 
-public class Ship {
+public class Ship implements MovableFigure {
 
     //initializers:
 
@@ -75,7 +76,7 @@ public class Ship {
                 shipModel.carriesMoneyProperty(),
                 maxCargo
         );
-
+        positionProperty().bindBidirectional(shipModel.positionProperty());
     }
 
     private boolean trySettingType(String type) {
@@ -190,6 +191,24 @@ public class Ship {
 
     public ResourceStorage getStorage() {
         return storage;
+    }
+
+    private ObjectProperty<AxialCoordinate> position = new SimpleObjectProperty<>();
+
+    @Override
+    public AxialCoordinate getPosition() {
+        return position.get();
+    }
+
+    public ObjectProperty<AxialCoordinate> positionProperty() {
+        return position;
+    }
+
+    public void setPosition(AxialCoordinate position) {
+        this.position.set(position);
+    }
+    public void setPosition(int Q, int R) {
+        setPosition(new AxialCoordinate(Q, R));
     }
     //stats:
 
@@ -394,6 +413,7 @@ public class Ship {
     }
 
     //public functions:
+
 
     @Override
     public String toString() {

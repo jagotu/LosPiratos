@@ -1,5 +1,6 @@
 package com.vztekoverflow.lospiratos.viewmodel;
 
+import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.util.FxUtils;
 import com.vztekoverflow.lospiratos.util.Warnings;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipType;
@@ -76,8 +77,8 @@ public class Team {
             return;
         }
         Ship s = new Ship(this, model);
-        game.registerShip(s);
         ships.put(shipName, s);
+        game.registerShip(s);
     }
     private void removeShipFromCollections(String shipName){
         if(ships.containsKey(shipName)){
@@ -146,12 +147,13 @@ public class Team {
      * @param name if is empty or null, returns null
      * @returns null if a ship with the same name already exists
      */
-    public <T extends ShipType> Ship createAndAddNewShip(Class<T> shipType, String shipName, String captainName) {
+    public <T extends ShipType> Ship createAndAddNewShip(Class<T> shipType, String shipName, String captainName, AxialCoordinate position) {
         if(!game.mayCreateShipWithName(shipName)) return null;
         com.vztekoverflow.lospiratos.model.Ship modelShip = new com.vztekoverflow.lospiratos.model.Ship();
         modelShip.nameProperty().set(shipName);
         modelShip.typeProperty().set(ShipType.getPersistentName(shipType));
         modelShip.captainProperty().set(captainName);
+        modelShip.setPosition(position);
         teamModel.shipsProperty().add(modelShip);
         //at this place, teamModel.shipsProperty's change calls my observer
         //   which then adds the ship to this team's collection (if valid)
