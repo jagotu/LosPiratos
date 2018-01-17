@@ -135,7 +135,7 @@ public class Ship implements MovableFigure {
 
     private ShipType shipType;
 
-    public ShipType getShipType() {
+    public ShipType  getShipType() {
         return shipType;
     }
 
@@ -151,6 +151,14 @@ public class Ship implements MovableFigure {
     }
 
     private com.vztekoverflow.lospiratos.model.Ship shipModel;
+
+    public IntegerProperty currentHPProperty() {
+        return currentHP;
+    }
+
+    public void setCurrentHP(int currentHP) {
+        this.currentHP.set(currentHP);
+    }
 
     private IntegerProperty currentHP = new SimpleIntegerProperty();
 
@@ -171,12 +179,20 @@ public class Ship implements MovableFigure {
 
     private StringProperty name = new SimpleStringProperty();
 
+    public StringProperty nameProperty() {
+        return name;
+    }
+
     public String getName() {
         return name.getValue();
     }
 
     public void setName(String name) {
         this.name.set(name);
+    }
+
+    public StringProperty captainNameProperty() {
+        return captainName;
     }
 
     private StringProperty captainName = new SimpleStringProperty();

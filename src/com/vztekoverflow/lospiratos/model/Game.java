@@ -22,5 +22,4 @@ public class Game {
     public final Map getMap() {
         return map;
     }
-
 }

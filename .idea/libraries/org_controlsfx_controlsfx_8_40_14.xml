@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="org.controlsfx:controlsfx:8.40.14" type="repository">
+    <properties maven-id="org.controlsfx:controlsfx:8.40.14" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/controlsfx-8.40.14.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/lib/controlsfx-8.40.14-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES />
+  </library>
+</component>

@@ -32,7 +32,7 @@ public class AxialCoordinate {
         return new AxialCoordinate(Q+arg.Q,R+arg.R);
     }
     /*
-     * classical 2D vector substraction
+     * classical 2D vector subtraction
      */
     public AxialCoordinate minus(AxialCoordinate arg){
         return new AxialCoordinate(Q-arg.Q,R-arg.R);

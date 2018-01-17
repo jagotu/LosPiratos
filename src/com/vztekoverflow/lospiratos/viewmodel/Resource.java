@@ -71,7 +71,7 @@ public class Resource extends ResourceImmutable {
     /*
      * component-wise decreases resource number by value in @value
      */
-    public void substract(ResourceImmutable value){
+    public void subtract(ResourceImmutable value){
         addMoney(-value.money.get());
         addCloth(-value.cloth.get());
         addMetal(-value.metal.get());

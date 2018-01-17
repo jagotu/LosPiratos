@@ -10,7 +10,7 @@ public class ResourceImmutable {
     protected IntegerProperty money = new SimpleIntegerProperty(0);
     protected IntegerProperty cloth = new SimpleIntegerProperty(0);
     protected IntegerProperty metal = new SimpleIntegerProperty(0);
-    //those wierd names for rum, tobacco and wood are so that all resource have same number of characters (better code readibility)
+    //those weird names for rum, tobacco and wood are so that all resource have same number of characters (better code readability)
     protected IntegerProperty rum__ = new SimpleIntegerProperty(0);
     protected IntegerProperty tobco = new SimpleIntegerProperty(0);
     protected IntegerProperty wood_ = new SimpleIntegerProperty(0);

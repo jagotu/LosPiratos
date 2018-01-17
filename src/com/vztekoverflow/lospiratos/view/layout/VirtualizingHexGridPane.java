@@ -3,6 +3,7 @@ package com.vztekoverflow.lospiratos.view.layout;
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.util.AxialDirection;
 import com.vztekoverflow.lospiratos.util.Constants;
+import javafx.animation.FillTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.css.*;
@@ -12,9 +13,11 @@ import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
 import javafx.scene.transform.Scale;
+import javafx.util.Duration;
 
 import java.lang.ref.SoftReference;
 import java.util.*;
@@ -106,14 +109,28 @@ public class VirtualizingHexGridPane extends Pane {
 
     public void centerInParent(AxialCoordinate coord) {
         Point2D location = AxialCoordinate.hexToPixel(coord, pointy, edgeLength);
-        XOffset.setValue(location.getX() - (internalWidth.get() - Scale.get() * tileWidth)/2);
-        YOffset.setValue(location.getY() - (internalHeight.get() - Scale.get() * tileHeight)/2);
+        location = new Point2D(location.getX() + tileWidth / 2, location.getY() + tileHeight / 2);
+        XOffset.setValue(location.getX() - (internalWidth.get() - Scale.get() * tileWidth) / 2);
+        YOffset.setValue(location.getY() - (internalHeight.get() - Scale.get() * tileHeight) / 2);
+    }
+
+    boolean highlightingNOW = false;
+
+    public void highlightTile(AxialCoordinate coord) {
+        if (!highlightingNOW && usedTiles.containsKey(coord)) {
+            highlightingNOW = true;
+            Shape tile = usedTiles.get(coord).tileShape;
+            FillTransition ft = new FillTransition(Duration.millis(1500), tile, Color.YELLOW, (Color) tile.getFill());
+            ft.setOnFinished(e -> highlightingNOW = false);
+            ft.play();
+        }
     }
 
 
     private Shape getHexagon() {
         Polygon hexagon = new Polygon();
         hexagon.getPoints().addAll(hexagonPoints);
+        hexagon.setFill(Color.TRANSPARENT);
         return hexagon;
     }
 
@@ -167,20 +184,18 @@ public class VirtualizingHexGridPane extends Pane {
             String cssClass = (contents.cssClassProperty() == null) ? "" : contents.cssClassProperty().get();
             HexTile t = null;
             boolean shouldAdd = true;
-            if (!usedTiles.containsKey(x))
-            {
-                if(localFreeTiles.containsKey(cssClass)) //Try to get a tile that's still a child and has the same CSS style
+            if (!usedTiles.containsKey(x)) {
+                if (localFreeTiles.containsKey(cssClass)) //Try to get a tile that's still a child and has the same CSS style
                 {                                        //This recyclation is the fastest of all, as the CSS doesn't have to be reapplied at all
                     List<HexTile> l = localFreeTiles.get(cssClass);
-                    if(l.size() > 0) {
+                    if (l.size() > 0) {
                         t = l.iterator().next();
                         l.remove(t);
                         shouldAdd = false;
                     }
 
                 }
-                if(t == null)
-                {
+                if (t == null) {
                     while (freeTiles.size() > 0) //Try to get a nonGCed already instantiated tile
                     {
                         SoftReference<HexTile> ref = freeTiles.iterator().next();
@@ -195,13 +210,12 @@ public class VirtualizingHexGridPane extends Pane {
 
                 if (t == null) {
                     Shape tileShape = getHexagon();
-                    tileShape.getStyleClass().add("hexTile");
+                    tileShape.getStyleClass().add("hex-tile");
                     t = new HexTile(tileWidth, tileHeight, this, tileShape);
                 }
 
                 t.setContent(contents);
-                if(shouldAdd)
-                {
+                if (shouldAdd) {
                     contentPlane.getChildren().add(t);
                     tilesPlane.getChildren().add(t.tileShape);
                 }
@@ -234,8 +248,7 @@ public class VirtualizingHexGridPane extends Pane {
             if (pos.getX() - XOffset.get() > internalWidth.get() || pos.getY() - YOffset.get() > internalHeight.get() || pos.getX() < originpos.getX() || pos.getY() < originpos.getY()) {
                 entry.getValue().setContent(null);
                 String cssClass = entry.getValue().cssClassName.get();
-                if(!localFreeTiles.containsKey(cssClass))
-                {
+                if (!localFreeTiles.containsKey(cssClass)) {
                     localFreeTiles.put(cssClass, new LinkedList<>());
                 }
                 localFreeTiles.get(cssClass).add(entry.getValue());
@@ -256,7 +269,7 @@ public class VirtualizingHexGridPane extends Pane {
         }
 
         for (AxialCoordinate x = origin; ; x = x.plus(outer2)) {
-            Point2D pos = AxialCoordinate.hexToPixel(x,pointy,edgeLength);
+            Point2D pos = AxialCoordinate.hexToPixel(x, pointy, edgeLength);
             if (pos.getX() - XOffset.get() > internalWidth.get() || pos.getY() - YOffset.get() > internalHeight.get()) {
                 break;
             }
@@ -264,10 +277,8 @@ public class VirtualizingHexGridPane extends Pane {
         }
 
         //Remove all extra children
-        for(List<HexTile> k : localFreeTiles.values())
-        {
-            for(HexTile h : k)
-            {
+        for (List<HexTile> k : localFreeTiles.values()) {
+            for (HexTile h : k) {
                 freeTiles.add(new SoftReference<>(h));
                 h.setContent(null);
                 contentPlane.getChildren().remove(h);
@@ -305,6 +316,7 @@ public class VirtualizingHexGridPane extends Pane {
         private final StyleableBooleanProperty clip = new SimpleStyleableBooleanProperty(CLIP);
 
         private static final List<CssMetaData<? extends Styleable, ?>> CSS_META_DATA;
+
         static {
             final List<CssMetaData<? extends Styleable, ?>> metaData = new ArrayList<>(Region.getClassCssMetaData());
             metaData.add(CLIP);
@@ -316,7 +328,8 @@ public class VirtualizingHexGridPane extends Pane {
             return CSS_META_DATA;
         }
 
-        @Override public List<CssMetaData<? extends Styleable, ?>> getCssMetaData() {
+        @Override
+        public List<CssMetaData<? extends Styleable, ?>> getCssMetaData() {
             return getClassCssMetaData();
         }
 
@@ -329,7 +342,7 @@ public class VirtualizingHexGridPane extends Pane {
             this.tileShape = tileShapeInstance;
             this.parent = parent;
 
-            this.getStyleClass().add("hexParent");
+            this.getStyleClass().add("hex-parent");
 
             this.getTransforms().add(st);
             tileShape.getTransforms().add(st);
@@ -361,7 +374,6 @@ public class VirtualizingHexGridPane extends Pane {
                     tileShape.getStyleClass().addAll(newValue.split(" "));
                 }
             });
-
 
 
             clip.addListener((observable ->

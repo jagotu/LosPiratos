@@ -18,5 +18,10 @@ public class Frigate extends ShipType {
     public static ResourceImmutable getCost(){
         return new ResourceImmutable();
     }
+
+    @Override
+    public String getČeskéJméno() {
+        return "Frigata";
+    }
 }
 

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.controlsfx.glyphfont.Glyph?>
+<SplitPane fx:id="root" stylesheets="@common.css" xmlns="http://javafx.com/javafx/8.0.121"
+           xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vztekoverflow.lospiratos.view.stages.OrgStage">
+    <TabPane prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" fx:id="tabPane">
+        <Tab text="Týmy">
+            <BorderPane>
+                <center>
+                    <ScrollPane fitToWidth="true" hbarPolicy="NEVER">
+                        <FlowPane fx:id="teamsBox"/>
+                    </ScrollPane>
+                </center>
+                <bottom>
+                    <Button mnemonicParsing="false" onAction="#addTeam" text="+" BorderPane.alignment="BOTTOM_RIGHT"/>
+                </bottom>
+            </BorderPane>
+        </Tab>
+        <Tab text="Lodě" fx:id="shipsTab">
+            <BorderPane>
+                <center>
+                    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" fx:id="shipsScroll">
+                        <FlowPane fx:id="shipsBox"/>
+                    </ScrollPane>
+                </center>
+                <bottom>
+                    <Button mnemonicParsing="false" onAction="#addTeam" text="+" BorderPane.alignment="BOTTOM_RIGHT"/>
+                </bottom>
+            </BorderPane>
+        </Tab>
+        <Tab>
+            <graphic>
+                <Glyph fontFamily="FontAwesome" icon="save"/>
+            </graphic>
+            <VBox>
+                <Button maxWidth="1.7976931348623157E308" text="Načíst hru"/>
+                <Button maxWidth="1.7976931348623157E308" text="Uložit hru"/>
+                <Button maxWidth="1.7976931348623157E308" onAction="#loremIpsum" text="Lorem Ipsum"/>
+            </VBox>
+        </Tab>
+    </TabPane>
+</SplitPane>

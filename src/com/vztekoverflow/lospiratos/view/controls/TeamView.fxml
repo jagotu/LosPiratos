@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.vztekoverflow.lospiratos.view.controls.EditableStringText?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ColorPicker?>
+<?import javafx.scene.layout.*?>
+<?import org.controlsfx.glyphfont.Glyph?>
+<?import java.lang.String?>
+<fx:root maxWidth="400.0" prefWidth="300.0" type="javafx.scene.layout.StackPane"
+         xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+    <VBox fx:id="vbox">
+        <BorderPane fx:id="boxHeader">
+            <right>
+                <HBox alignment="CENTER_LEFT" BorderPane.alignment="CENTER">
+                    <Button fx:id="delete" onAction="#delete">
+                        <graphic>
+                            <Glyph fontFamily="FontAwesome" icon="trash"/>
+                        </graphic>
+                        <styleClass>
+                            <String fx:value="mini-button"/>
+                            <String fx:value="contrast"/>
+                        </styleClass>
+                    </Button>
+                    <ColorPicker fx:id="colorPicker" editable="true">
+                        <styleClass>
+                            <String fx:value="button"/>
+                            <String fx:value="contrast"/>
+                        </styleClass>
+                    </ColorPicker>
+                </HBox>
+
+            </right>
+            <left>
+
+                <EditableStringText fx:id="teamName" styleClass="contrast" BorderPane.alignment="CENTER"/>
+
+
+            </left>
+        </BorderPane>
+        <VBox fx:id="overflow"/>
+    </VBox>
+</fx:root>

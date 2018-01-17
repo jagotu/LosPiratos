@@ -1,0 +1,78 @@
+.hex-pane {
+    -fx-fill: white;
+}
+
+.hex-tile {
+    -fx-stroke: black;
+    -fx-fill: transparent;
+}
+
+.hex-tile:hover {
+    -fx-fill: LemonChiffon;
+}
+
+.editable-text .text-field {
+    -fx-background-color: white;
+    -fx-padding: 0px;
+}
+
+.editable-text .text-field.invalid {
+    -fx-background-color: red;
+    -fx-text-fill: white;
+}
+
+.mini-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0px;
+    -fx-border-color: transparent;
+}
+
+.mini-button:hover {
+    -fx-border-color: black;
+}
+
+.mini-button.contrast:hover {
+    -fx-border-color: ladder(-team-color, white 49%, black 50%);
+}
+
+.ship-stats-view .progress-bar > .bar {
+    -fx-background-insets: 1 1 2 1;
+    -fx-padding: 0.5em;
+    -fx-accent: -team-color;
+}
+
+#shipName, #teamName {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+#boxHeader {
+    -fx-background-color: -team-color;
+}
+
+.contrast .text {
+    -fx-fill: ladder(-team-color, white 49%, black 50%);
+}
+
+#backRect {
+    -fx-stroke: -team-color;
+}
+
+.ship-view, .team-view {
+    -fx-border-color: -team-color;
+    -fx-border-width: 4px;
+    -fx-border-radius: 4px;
+}
+
+#colorPicker {
+    -fx-background-color: transparent;
+    -fx-padding: 0px;
+}
+
+#colorPicker .glyph-font {
+    -fx-border-color: transparent;
+}
+
+#colorPicker .glyph-font:hover {
+    -fx-border-color: ladder(-team-color, white 49%, black 50%);
+}

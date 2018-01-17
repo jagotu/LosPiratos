@@ -7,6 +7,7 @@ import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipType;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableMap;
 import javafx.scene.paint.Color;
 
 import java.util.Collection;
@@ -92,17 +93,19 @@ public class Team {
 
     //properties:
 
+    public ObservableMap<String, Ship> getShips() {
+        return ships.get();
+    }
+
+    public MapProperty<String, Ship> shipsProperty() {
+        return ships;
+    }
+
     private MapProperty<String, Ship> ships = new SimpleMapProperty<>(FXCollections.observableHashMap());
     private StringProperty name = new SimpleStringProperty("");
     private ObjectProperty<Color> color = new SimpleObjectProperty<>();
 
-    private Resource ownedResource = new Resource();
-
-    public Collection<Ship> getShips() {
-        return ships.get().values();
-    }
-    //shipProperty() is not available, because it does not support modification.
-    //    Team class provides API for ship manipulation instead.
+    private final Resource ownedResource = new Resource();
 
     public String getName() {
         return name.get();
@@ -135,10 +138,6 @@ public class Team {
     public Resource getOwnedResource() {
         return ownedResource;
     }
-    /*
-     * Syntactic sugar for getOwnedResource()
-     */
-    public Resource ownedResource(){ return ownedResource;}
 
     //public methods:
 

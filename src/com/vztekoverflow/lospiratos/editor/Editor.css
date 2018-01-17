@@ -1,25 +1,25 @@
-.hexTile {
+.hex-tile {
     -fx-stroke: black;
     -fx-fill: transparent;
 }
 
-.hexTile:hover
+.hex-tile:hover
 {
     -fx-fill: LemonChiffon;
 }
 
-.hexTile.origin
+.hex-tile.origin
 {
     -fx-fill: black;
 }
 
-.hexTile.selected
+.hex-tile.selected
 {
     -fx-fill: yellow;
     -fx-effect: dropshadow(gaussian, yellow, 20, 0.2, 0, 0);
 }
 
-.hexParent.clipped
+.hex-parent.clipped
 {
     -hex-clip: true;
 }
