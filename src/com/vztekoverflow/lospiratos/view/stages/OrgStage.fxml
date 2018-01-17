@@ -5,7 +5,7 @@
 <?import org.controlsfx.glyphfont.Glyph?>
 <SplitPane fx:id="root" stylesheets="@common.css" xmlns="http://javafx.com/javafx/8.0.121"
            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vztekoverflow.lospiratos.view.stages.OrgStage">
-    <TabPane prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
+    <TabPane prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" fx:id="tabPane">
         <Tab text="Týmy">
             <BorderPane>
                 <center>
@@ -18,8 +18,17 @@
                 </bottom>
             </BorderPane>
         </Tab>
-        <Tab text="Lodě">
-            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+        <Tab text="Lodě" fx:id="shipsTab">
+            <BorderPane>
+                <center>
+                    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" fx:id="shipsScroll">
+                        <FlowPane fx:id="shipsBox"/>
+                    </ScrollPane>
+                </center>
+                <bottom>
+                    <Button mnemonicParsing="false" onAction="#addTeam" text="+" BorderPane.alignment="BOTTOM_RIGHT"/>
+                </bottom>
+            </BorderPane>
         </Tab>
         <Tab>
             <graphic>

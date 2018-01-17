@@ -2,7 +2,6 @@
 
 <?import com.vztekoverflow.lospiratos.view.controls.EditableStringText?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.glyphfont.Glyph?>
 <?import java.lang.String?>
@@ -12,6 +11,15 @@
         <BorderPane fx:id="boxHeader">
             <right>
                 <HBox alignment="CENTER_LEFT" BorderPane.alignment="CENTER">
+                    <Button fx:id="center" onAction="#center">
+                        <graphic>
+                            <Glyph fontFamily="FontAwesome" icon="bullseye"/>
+                        </graphic>
+                        <styleClass>
+                            <String fx:value="mini-button"/>
+                            <String fx:value="contrast"/>
+                        </styleClass>
+                    </Button>
                     <Button fx:id="delete" onAction="#delete">
                         <graphic>
                             <Glyph fontFamily="FontAwesome" icon="trash"/>
@@ -21,18 +29,12 @@
                             <String fx:value="contrast"/>
                         </styleClass>
                     </Button>
-                    <ColorPicker fx:id="colorPicker" editable="true">
-                        <styleClass>
-                            <String fx:value="button"/>
-                            <String fx:value="contrast"/>
-                        </styleClass>
-                    </ColorPicker>
                 </HBox>
 
             </right>
             <left>
 
-                <EditableStringText fx:id="teamName" styleClass="contrast" BorderPane.alignment="CENTER"/>
+                <EditableStringText fx:id="shipName" styleClass="contrast" BorderPane.alignment="CENTER"/>
 
 
             </left>

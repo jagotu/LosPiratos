@@ -60,5 +60,7 @@ public abstract class ShipType extends ShipEntity {
         return null;
 
     }
+
+    abstract public String getČeskéJméno();
 }
 

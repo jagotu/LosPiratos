@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.vztekoverflow.lospiratos.view.controls.EditableIntegerText?>
+<?import com.vztekoverflow.lospiratos.view.controls.EditableStringText?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.controlsfx.glyphfont.*?>
+<fx:root maxWidth="300.0" prefWidth="300.0" type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx/8.0.121"
+         xmlns:fx="http://javafx.com/fxml/1">
+    <BorderPane>
+        <center>
+            <ProgressBar fx:id="HPBar" maxWidth="1.7976931348623157E308">
+                <BorderPane.margin>
+                    <Insets right="2.0"/>
+                </BorderPane.margin>
+            </ProgressBar>
+        </center>
+        <right>
+            <HBox alignment="CENTER_LEFT">
+                <EditableIntegerText fx:id="currentHP" alignment="CENTER_RIGHT" rightToLeft="true"/>
+                <Label>/</Label>
+                <Label fx:id="maxHP"/>
+            </HBox>
+        </right>
+    </BorderPane>
+    <Label fx:id="shipType"/>
+    <HBox>
+        <Label>
+            <graphic>
+                <Glyph fontFamily="FontAwesome" icon="user"/>
+            </graphic>
+            <HBox.margin>
+                <Insets right="2.0"/>
+            </HBox.margin>
+        </Label>
+        <EditableStringText fx:id="captain"/>
+    </HBox>
+    <GridPane>
+        <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0"/>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0"/>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0"/>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0"/>
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
+        </rowConstraints>
+        <Label fx:id="cannonsCount">
+            <graphic>
+                <Glyph fontFamily="FontAwesome" text=""/>
+            </graphic>
+        </Label>
+        <Label fx:id="maxCargo" GridPane.columnIndex="1">
+            <graphic>
+                <Glyph fontFamily="FontAwesome" icon="briefcase"/>
+            </graphic>
+        </Label>
+        <Label fx:id="garrison" GridPane.columnIndex="2">
+            <graphic>
+                <Glyph fontFamily="FontAwesome" icon="users"/>
+            </graphic>
+        </Label>
+        <Label fx:id="speed" GridPane.columnIndex="3">
+            <graphic>
+                <Glyph fontFamily="FontAwesome" icon="flash"/>
+            </graphic>
+        </Label>
+    </GridPane>
+
+
+</fx:root>

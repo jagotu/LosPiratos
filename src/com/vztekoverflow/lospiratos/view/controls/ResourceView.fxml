@@ -5,7 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.glyphfont.*?>
-<fx:root maxWidth="300.0" prefWidth="300.0" stylesheets="@TeamView.css" type="javafx.scene.layout.FlowPane"
+<fx:root maxWidth="300.0" prefWidth="300.0" type="javafx.scene.layout.FlowPane"
          xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
     <BorderPane minWidth="40.0">
         <left>
@@ -19,14 +19,14 @@
             </Label>
         </left>
         <center>
-            <EditableText fx:id="money"/>
+            <EditableIntegerText fx:id="money"/>
         </center>
     </BorderPane>
     <BorderPane minWidth="40.0">
         <left>
             <Label>
                 <graphic>
-                    <Glyph fontFamily="FontAwesome" icon="wrench"/>
+                    <Glyph fontFamily="FontAwesome" icon="cogs"/>
                 </graphic>
                 <BorderPane.margin>
                     <Insets right="2.0"/>
@@ -35,7 +35,7 @@
 
         </left>
         <center>
-            <EditableText fx:id="metal"/>
+            <EditableIntegerText fx:id="metal"/>
         </center>
     </BorderPane>
     <BorderPane minWidth="40.0">
@@ -50,7 +50,7 @@
             </Label>
         </left>
         <center>
-            <EditableText fx:id="wood"/>
+            <EditableIntegerText fx:id="wood"/>
         </center>
     </BorderPane>
     <BorderPane minWidth="40.0">
@@ -65,7 +65,7 @@
             </Label>
         </left>
         <center>
-            <EditableText fx:id="cloth"/>
+            <EditableIntegerText fx:id="cloth"/>
         </center>
     </BorderPane>
     <BorderPane minWidth="40.0">
@@ -80,7 +80,7 @@
             </Label>
         </left>
         <center>
-            <EditableText fx:id="rum"/>
+            <EditableIntegerText fx:id="rum"/>
         </center>
     </BorderPane>
 

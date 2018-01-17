@@ -2,45 +2,65 @@ package com.vztekoverflow.lospiratos.view.stages;
 
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.util.CubeCoordinateMutable;
+import com.vztekoverflow.lospiratos.view.controls.ShipView;
 import com.vztekoverflow.lospiratos.view.controls.TeamView;
 import com.vztekoverflow.lospiratos.view.layout.HexTileContents;
 import com.vztekoverflow.lospiratos.view.layout.HexTileContentsFactory;
 import com.vztekoverflow.lospiratos.view.layout.VirtualizingHexGridPane;
 import com.vztekoverflow.lospiratos.viewmodel.Game;
+import com.vztekoverflow.lospiratos.viewmodel.Ship;
 import com.vztekoverflow.lospiratos.viewmodel.Team;
+import javafx.animation.Animation;
+import javafx.animation.Interpolator;
+import javafx.animation.Transition;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.ListChangeListener;
+import javafx.collections.MapChangeListener;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
-import javafx.scene.control.SplitPane;
+import javafx.scene.control.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
 import java.util.HashMap;
 
 public class OrgStage {
+
     private ObjectProperty<Game> game;
 
     //Controls
     @FXML
     private FlowPane teamsBox;
     @FXML
+    private FlowPane shipsBox;
+    @FXML
     private SplitPane root;
     private VirtualizingHexGridPane hexPane;
+    @FXML
+    private ScrollPane shipsScroll;
+    @FXML
+    private Tab shipsTab;
+    @FXML
+    private TabPane tabPane;
 
     //Internal working helpers
     private Point2D lastMouse;
     private HashMap<Team, TeamView> teamViews = new HashMap<>();
+    private HashMap<Ship, ShipView> shipViews = new HashMap<>();
     private static final int minMove = -3000;
     private static final int maxMove = 500;
 
 
     public OrgStage() {
-        this(Game.LoadFromModel(com.vztekoverflow.lospiratos.model.Game.CreateNewMockGame()));
+        this(Game.CreateNewMockGame());
     }
 
     public OrgStage(Game game) {
@@ -107,6 +127,7 @@ public class OrgStage {
         teamsBox.getChildren().clear();
         teamViews.clear();
 
+
         for (Team t : game.get().teamsProperty()) {
             addTeamView(t);
         }
@@ -123,18 +144,82 @@ public class OrgStage {
                 }
             }
         });
+
+        shipsBox.getChildren().clear();
+        shipViews.clear();
+
+
+        for (Ship s : game.get().getAllShips()) {
+            addShipView(s);
+        }
+
+        game.get().allShipsProperty().addListener((MapChangeListener<? super String, ? super Ship>) change -> {
+            if (change.wasRemoved()) {
+                removeShipView(change.getValueRemoved());
+            }
+            if (change.wasAdded()) {
+                addShipView(change.getValueAdded());
+            }
+
+        });
     }
 
     private void addTeamView(Team t) {
         TeamView tv = new TeamView(t);
         tv.setRequestDeleteListener(team -> game.get().getTeams().remove(team));
         teamsBox.getChildren().add(tv);
+        tv.setOnCenterShip(s -> {
+            hexPane.centerInParent(s.getPosition());
+            hexPane.highlightTile(s.getPosition());
+
+        });
+        tv.setOnShipDetails(s -> {
+            tabPane.getSelectionModel().select(shipsTab);
+            final ShipView sv = shipViews.get(s);
+            ensureVisible(shipsScroll, sv);
+
+            final Animation animation = new Transition() {
+
+                {
+                    setCycleDuration(Duration.millis(3000));
+                    setInterpolator(Interpolator.EASE_OUT);
+                }
+
+                @Override
+                protected void interpolate(double frac) {
+                    Color vColor = new Color(1, 0, 0, 1 - frac);
+                    sv.setBackground(new Background(new BackgroundFill(vColor, CornerRadii.EMPTY, Insets.EMPTY)));
+                }
+            };
+            animation.play();
+        });
+
         teamViews.put(t, tv);
     }
 
     private void removeTeamView(Team t) {
         teamsBox.getChildren().remove(teamViews.get(t));
         teamViews.remove(t);
+
+    }
+
+    private void addShipView(Ship s) {
+        ShipView sv = new ShipView(s);
+        sv.setRequestDeleteListener(ship -> s.getTeam().removeShip(s.getName()));
+
+        shipsBox.getChildren().add(sv);
+        sv.setOnCenterShip(sh -> {
+            hexPane.centerInParent(sh.getPosition());
+            hexPane.highlightTile(sh.getPosition());
+
+        });
+
+        shipViews.put(s, sv);
+    }
+
+    private void removeShipView(Ship s) {
+        shipsBox.getChildren().remove(shipViews.get(s));
+        shipViews.remove(s);
 
     }
 
@@ -183,6 +268,19 @@ public class OrgStage {
             hexPane.setYOffset(Math.min(Math.max(mouse.getY() - (mouse.getY() - hexPane.getYOffset()) * scale, minMove), maxMove));
             hexPane.setScale(newScale);
         });
+    }
+
+    private static void ensureVisible(ScrollPane pane, Node node) {
+        double height = pane.getContent().getBoundsInLocal().getHeight();
+
+
+        double y = node.getBoundsInParent().getMinY();
+
+        if (y / height > 0.5) {
+            y = node.getBoundsInParent().getMaxY();
+        }
+
+        pane.setVvalue(y / height);
     }
 }
 

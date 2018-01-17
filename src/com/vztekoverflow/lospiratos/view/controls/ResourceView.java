@@ -4,27 +4,27 @@ import com.vztekoverflow.lospiratos.viewmodel.Resource;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.FlowPane;
-import javafx.util.converter.NumberStringConverter;
 
 import java.io.IOException;
-import java.util.Locale;
 
 public class ResourceView extends FlowPane {
 
     @FXML
-    private EditableText money;
+    private EditableIntegerText money;
     @FXML
-    private EditableText metal;
+    private EditableIntegerText metal;
     @FXML
-    private EditableText wood;
+    private EditableIntegerText wood;
     @FXML
-    private EditableText cloth;
+    private EditableIntegerText cloth;
     @FXML
-    private EditableText rum;
+    private EditableIntegerText rum;
+
+    static FXMLLoader fxmlLoader = new FXMLLoader(ResourceView.class.getResource(
+            "ResourceView.fxml"));
 
     public ResourceView(Resource r) {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(
-                "ResourceView.fxml"));
+
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
 
@@ -36,11 +36,10 @@ public class ResourceView extends FlowPane {
             throw new RuntimeException(exception);
         }
 
-        NumberStringConverter nsc = new NumberStringConverter(new Locale("cs"));
-        money.textProperty().bindBidirectional(r.moneyProperty(), nsc);
-        metal.textProperty().bindBidirectional(r.metalProperty(), nsc);
-        wood.textProperty().bindBidirectional(r.woodProperty(), nsc);
-        cloth.textProperty().bindBidirectional(r.clothProperty(), nsc);
-        rum.textProperty().bindBidirectional(r.rumProperty(), nsc);
+        money.valueProperty().bindBidirectional(r.moneyProperty());
+        metal.valueProperty().bindBidirectional(r.metalProperty());
+        wood.valueProperty().bindBidirectional(r.woodProperty());
+        cloth.valueProperty().bindBidirectional(r.clothProperty());
+        rum.valueProperty().bindBidirectional(r.rumProperty());
     }
 }

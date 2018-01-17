@@ -16,7 +16,13 @@ public class Schooner extends ShipType {
     @Override
     public int getBonusSpeed() {return 4;}
 
+
     public static ResourceImmutable getCost(){
         return new ResourceImmutable();
+    }
+
+    @Override
+    public String getČeskéJméno() {
+        return "Škuner";
     }
 }

@@ -3,6 +3,7 @@ package com.vztekoverflow.lospiratos.view.layout;
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.util.AxialDirection;
 import com.vztekoverflow.lospiratos.util.Constants;
+import javafx.animation.FillTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.css.*;
@@ -16,6 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
 import javafx.scene.transform.Scale;
+import javafx.util.Duration;
 
 import java.lang.ref.SoftReference;
 import java.util.*;
@@ -107,8 +109,21 @@ public class VirtualizingHexGridPane extends Pane {
 
     public void centerInParent(AxialCoordinate coord) {
         Point2D location = AxialCoordinate.hexToPixel(coord, pointy, edgeLength);
+        location = new Point2D(location.getX() + tileWidth / 2, location.getY() + tileHeight / 2);
         XOffset.setValue(location.getX() - (internalWidth.get() - Scale.get() * tileWidth) / 2);
         YOffset.setValue(location.getY() - (internalHeight.get() - Scale.get() * tileHeight) / 2);
+    }
+
+    boolean highlightingNOW = false;
+
+    public void highlightTile(AxialCoordinate coord) {
+        if (!highlightingNOW && usedTiles.containsKey(coord)) {
+            highlightingNOW = true;
+            Shape tile = usedTiles.get(coord).tileShape;
+            FillTransition ft = new FillTransition(Duration.millis(1500), tile, Color.YELLOW, (Color) tile.getFill());
+            ft.setOnFinished(e -> highlightingNOW = false);
+            ft.play();
+        }
     }
 
 
