@@ -1,6 +1,7 @@
 package com.vztekoverflow.lospiratos;
 
 import com.vztekoverflow.lospiratos.model.GameSerializer;
+import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.viewmodel.Game;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
 import com.vztekoverflow.lospiratos.viewmodel.Team;
@@ -28,11 +29,12 @@ public class GameManagementExample {
         pirraten.getOwnedResource().addMoney(100);
         pirraten.getOwnedResource().addCloth(5);
 
-        Ship perla = pirraten.createAndAddNewShip(Frigate.class, "Růžová perla", "Jack Daniels");
+        AxialCoordinate pos = new AxialCoordinate(0,0);
+        Ship perla = pirraten.createAndAddNewShip(Frigate.class, "Růžová perla", "Jack Daniels", pos);
         perla.addNewEnhancement(CannonUpgrade.class);
         perla.addToCurrentHP(-10);
 
-        Ship eliminace = pirraten.createAndAddNewShip(Galleon.class, "Eliminace", "Gauß");
+        Ship eliminace = pirraten.createAndAddNewShip(Galleon.class, "Eliminace", "Gauß", pos);
         eliminace.destroyShipAndEnhancements();
 
         Team losBratros = g.createAndAddNewTeam("Los Bratros în trikos", Color.BLANCHEDALMOND);

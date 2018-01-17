@@ -162,28 +162,14 @@ public class Editor extends Application {
 
                         switch (premadeShipIdx) {
                             case 0:
-                                imgURL.set("img/schooner.png");
-                                this.iv.scaleXProperty().setValue(1);
+                                imgURL.set("simpleship.png");
                                 break;
                             case 1:
-                                imgURL.set("img/brig.png");
-                                this.iv.scaleXProperty().setValue(1.1);
-                                break;
-                            case 2:
-                                imgURL.set("img/frigate.png");
-                                this.iv.scaleXProperty().setValue(0.9);
-                                break;
-                            case 3:
-                                imgURL.set("img/galleon.png");
-                                this.iv.scaleXProperty().setValue(1.39);
-                                break;
-                            case 4:
                                 imgURL.set("lod.png");
-                                this.iv.scaleXProperty().setValue(1);
                                 break;
                         }
                         premadeShipIdx++;
-                        premadeShipIdx %= 5;
+                        premadeShipIdx %= 2;
 
                     }
 

@@ -1,6 +1,7 @@
 package com.vztekoverflow.lospiratos.model;
 
 
+import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -9,7 +10,7 @@ import javafx.collections.ObservableMap;
 
 public class Ship {
     public Ship(String name, String teamId, String captain, String type,
-                int HP, int additionalHPmax, int additionalCannons, int additionalSpeed, int positionP, int positionQ, int orientationDeg,
+                int HP, int additionalHPmax, int additionalCannons, int additionalSpeed, int positionQ, int positionR, int orientationDeg,
                 ShipEnhancementStatus upgradeCannon,
                 ShipEnhancementStatus upgradeHull,
                 ShipEnhancementStatus enhMortar,
@@ -25,8 +26,7 @@ public class Ship {
         this.type.set(type);
 
         this.HP.set(HP);
-        this.positionP.set(positionP);
-        this.positionQ.set(positionQ);
+        this.position.set( new AxialCoordinate(positionQ, positionR));
         this.orientationDeg.set(orientationDeg);
 
         this.customAdditionalHPmax.set(additionalHPmax);
@@ -52,33 +52,33 @@ public class Ship {
     //properties:
 
     private StringProperty name = new SimpleStringProperty("");
-    private  StringProperty id = new SimpleStringProperty(""); //useless for now
-    private  StringProperty teamId = new SimpleStringProperty("");
-    private  StringProperty captain = new SimpleStringProperty("");
-    private  StringProperty type = new SimpleStringProperty("");
-    private  BooleanProperty destroyed = new SimpleBooleanProperty(false);
+    private StringProperty id = new SimpleStringProperty(""); //useless for now
+    private StringProperty teamId = new SimpleStringProperty("");
+    private StringProperty captain = new SimpleStringProperty("");
+    private StringProperty type = new SimpleStringProperty("");
+    private BooleanProperty destroyed = new SimpleBooleanProperty(false);
 
-    private  IntegerProperty HP = new SimpleIntegerProperty(0);
-    private  IntegerProperty positionP = new SimpleIntegerProperty(0);
-    private  IntegerProperty positionQ = new SimpleIntegerProperty(0);
-    private  IntegerProperty orientationDeg = new SimpleIntegerProperty(0);
+    private IntegerProperty HP = new SimpleIntegerProperty(0);
 
-    private  IntegerProperty customAdditionalHPmax = new SimpleIntegerProperty(0);
-    private  IntegerProperty customAdditionalCannons = new SimpleIntegerProperty(0);
-    private  IntegerProperty customAdditionalSpeed = new SimpleIntegerProperty(0);
+    private IntegerProperty orientationDeg = new SimpleIntegerProperty(0);
+    private ObjectProperty<AxialCoordinate> position = new SimpleObjectProperty<>(new AxialCoordinate(0,0));
 
-    private  IntegerProperty carriesMetalUnits = new SimpleIntegerProperty(0);
-    private  IntegerProperty carriesWoodUnits = new SimpleIntegerProperty(0);
-    private  IntegerProperty carriesClothUnits = new SimpleIntegerProperty(0);
-    private  IntegerProperty carriesRumUnits = new SimpleIntegerProperty(0);
-    private  IntegerProperty carriesTobaccoUnits = new SimpleIntegerProperty(0);
-    private  IntegerProperty carriesMoney = new SimpleIntegerProperty(0);
+    private IntegerProperty customAdditionalHPmax = new SimpleIntegerProperty(0);
+    private IntegerProperty customAdditionalCannons = new SimpleIntegerProperty(0);
+    private IntegerProperty customAdditionalSpeed = new SimpleIntegerProperty(0);
 
-    private  MapProperty<String, ShipEnhancementStatus> enhancements = new SimpleMapProperty<>(FXCollections.observableHashMap());
+    private IntegerProperty carriesMetalUnits = new SimpleIntegerProperty(0);
+    private IntegerProperty carriesWoodUnits = new SimpleIntegerProperty(0);
+    private IntegerProperty carriesClothUnits = new SimpleIntegerProperty(0);
+    private IntegerProperty carriesRumUnits = new SimpleIntegerProperty(0);
+    private IntegerProperty carriesTobaccoUnits = new SimpleIntegerProperty(0);
+    private IntegerProperty carriesMoney = new SimpleIntegerProperty(0);
 
-    private  MapProperty<String, String> customExtensions = new SimpleMapProperty<>(FXCollections.observableHashMap());
+    private MapProperty<String, ShipEnhancementStatus> enhancements = new SimpleMapProperty<>(FXCollections.observableHashMap());
 
-    private  ListProperty<ShipMechanics> activeMechanics = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private MapProperty<String, String> customExtensions = new SimpleMapProperty<>(FXCollections.observableHashMap());
+
+    private ListProperty<ShipMechanics> activeMechanics = new SimpleListProperty<>(FXCollections.observableArrayList());
 
 
     //getters:
@@ -139,28 +139,24 @@ public class Ship {
         return HP;
     }
 
-    public int getPositionP() {
-        return positionP.get();
-    }
-
-    public IntegerProperty positionPProperty() {
-        return positionP;
-    }
-
-    public int getPositionQ() {
-        return positionQ.get();
-    }
-
-    public IntegerProperty positionQProperty() {
-        return positionQ;
-    }
-
     public int getOrientationDeg() {
         return orientationDeg.get();
     }
 
     public IntegerProperty orientationDegProperty() {
         return orientationDeg;
+    }
+
+    public AxialCoordinate getPosition() {
+        return position.get();
+    }
+
+    public ObjectProperty<AxialCoordinate> positionProperty() {
+        return position;
+    }
+
+    public void setPosition(AxialCoordinate position) {
+        this.position.set(position);
     }
 
     public int getCustomAdditionalHPmax() {

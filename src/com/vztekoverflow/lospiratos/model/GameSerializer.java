@@ -1,6 +1,8 @@
 package com.vztekoverflow.lospiratos.model;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
+import com.vztekoverflow.lospiratos.util.Warnings;
 import org.hildan.fxgson.FxGson;
 
 import java.io.*;
@@ -8,28 +10,17 @@ import java.io.*;
 
 public class GameSerializer {
     /*
-     * @throws GsonExceptions
-     * @returns null if the loading was unsuccessful due to IOError
+     * @returns null if the loading was unsuccessful due to IOError or invalid JSON
      */
-    public static Game LoadGameFromFile(String inputFilePath){
+    public static Game LoadGameFromFile(String inputFilePath) {
 
-        //TODO jak reagovat na JsonException? odchytat a vracet null?
-        Game game;
+        Game game = null;
         Gson gson = FxGson.create();
-        Reader reader = null;
-        try {
-            reader = new BufferedReader(new FileReader(inputFilePath));
+
+        try (Reader f = new FileReader(inputFilePath); Reader reader = new BufferedReader(f)) {
             game = gson.fromJson(reader, Game.class);
-        }catch (IOException e){
-            return null;
-        }finally {
-            try{
-                if(reader != null) {
-                    reader.close();
-                }
-            }catch (IOException e){
-                return  null;
-            }
+        } catch (IOException | JsonParseException e) {
+            Warnings.makeWarning("Game.LoadGameFromFile", e.getMessage());
         }
         return game;
     }
@@ -37,48 +28,47 @@ public class GameSerializer {
     /*
      * @returns boolean indicating whether the game has been successfully saved
      */
-    public static boolean SaveGameToFile(String outputFilePath, Game game, boolean append){
+    public static boolean SaveGameToFile(String outputFilePath, Game game, boolean append) {
         Gson gson = FxGson.coreBuilder().setPrettyPrinting().create();
-        String gameInGson = gson.toJson(game);
-
-        BufferedWriter writer = null;
-        try{
-            writer = new BufferedWriter(new FileWriter(outputFilePath, append));
-            writer.write(gameInGson);
-
-        }catch (IOException e){
+        String gameInGson;
+        try {
+            gameInGson = gson.toJson(game);
+        } catch (JsonParseException e) {
             return false;
-        }finally {
-            try{
-                if(writer != null) {
-                    writer.close();
-                }
-            }catch (IOException e){
-                return  false;
-            }
+        }
+
+        try (Writer f = new FileWriter(outputFilePath, append); Writer writer = new BufferedWriter(f)) {
+            writer.write(gameInGson);
+        } catch (IOException e) {
+            return false;
         }
         return true;
     }
 
     /*
-     * @throws GsonExceptions
+     * @returns null if the game could not be loaded
      */
-    public static Game GameFromJson(String inputJson){
-        //TODO jak reagovat na JsonException? odchytat a vracet null?
-        Gson gson = FxGson.create();
-        return gson.fromJson(inputJson, Game.class);
-    }
-    public static String JsonFromGame(Game game){
-        Gson gson = FxGson.coreBuilder().setPrettyPrinting().create();
-        return gson.toJson(game);
-    }
-    public static String JsonFromGame(Game game, boolean allOnOneLine){
-        Gson gson;
-        if(allOnOneLine){
-         gson = FxGson.create();
+    public static Game GameFromJson(String inputJson) {
+        Game g;
+        try {
+            Gson gson = FxGson.create();
+            g = gson.fromJson(inputJson, Game.class);
+        } catch (JsonParseException e) {
+            return null;
         }
-        else{
-         gson = FxGson.coreBuilder().setPrettyPrinting().create();
+        return g;
+    }
+
+    public static String JsonFromGame(Game game) {
+        return JsonFromGame(game, false);
+    }
+
+    public static String JsonFromGame(Game game, boolean allOnOneLine) {
+        Gson gson;
+        if (allOnOneLine) {
+            gson = FxGson.create();
+        } else {
+            gson = FxGson.coreBuilder().setPrettyPrinting().create();
         }
         return gson.toJson(game);
     }

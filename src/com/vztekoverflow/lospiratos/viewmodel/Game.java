@@ -1,5 +1,6 @@
 package com.vztekoverflow.lospiratos.viewmodel;
 
+import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.util.FxUtils;
 import com.vztekoverflow.lospiratos.util.Warnings;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
@@ -219,7 +220,8 @@ public class Game {
                 name = "Tým" + i + "_Loď" + j;
                 String captain = captainNames[captainIdx++];
                 Class<ShipType> type = (Class<ShipType>) shipTypes[j % 4];
-                Ship s = team.createAndAddNewShip(type,name, captain);
+                AxialCoordinate position = new AxialCoordinate(i*2-teamCount,j*2-teamCount);
+                Ship s = team.createAndAddNewShip(type,name, captain,position);
                 s.getStorage().addMoney(500 *i+10*j);
                 s.getStorage().addCloth(10 * i+j);
                 s.getStorage().addMetal(20 * i+j);
