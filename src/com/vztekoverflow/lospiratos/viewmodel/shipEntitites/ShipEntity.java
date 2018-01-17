@@ -30,7 +30,7 @@ public abstract class ShipEntity {
      */
     public void onShipTypeJustChanged(){}
 
-    public int getBonusCannonsNr() {return 0;}
+    public int getBonusCannonsCount() {return 0;}
     public int getBonusMaxHP() {return 0;}
     public int getBonusCargoSpace() {return 0;}
     public int getBonusGarrison() {return 0;}

@@ -214,10 +214,10 @@ public class Ship implements MovableFigure {
 
     private void onEntityInvalidated() {
         maxHP.invalidate();
-        cannonsNr.invalidate();
+        cannonsCount.invalidate();
         speed.invalidate();
         maxCargo.invalidate();
-        garrisonNr.invalidate();
+        garrisonCount.invalidate();
     }
 
     private IntegerBinding maxHP = new IntegerBinding() {
@@ -230,12 +230,12 @@ public class Ship implements MovableFigure {
             return val;
         }
     };
-    private IntegerBinding cannonsNr = new IntegerBinding() {
+    private IntegerBinding cannonsCount = new IntegerBinding() {
         @Override
         protected int computeValue() {
             int val = 0;
             for (ShipEntity e : getAllEntities()) {
-                val += e.getBonusCannonsNr();
+                val += e.getBonusCannonsCount();
             }
             return val;
         }
@@ -260,7 +260,7 @@ public class Ship implements MovableFigure {
             return val;
         }
     };
-    private IntegerBinding garrisonNr = new IntegerBinding() {
+    private IntegerBinding garrisonCount = new IntegerBinding() {
         @Override
         protected int computeValue() {
             int val = 0;
@@ -279,12 +279,12 @@ public class Ship implements MovableFigure {
         return maxHP;
     }
 
-    public int getCannonsNr() {
-        return cannonsNr.get();
+    public int getCannonsCount() {
+        return cannonsCount.get();
     }
 
-    public IntegerBinding cannonsNrProperty() {
-        return cannonsNr;
+    public IntegerBinding cannonsCountProperty() {
+        return cannonsCount;
     }
 
     public int getSpeed() {
@@ -303,12 +303,12 @@ public class Ship implements MovableFigure {
         return maxCargo;
     }
 
-    public int getGarrisonNr() {
-        return garrisonNr.get();
+    public int getGarrisonCount() {
+        return garrisonCount.get();
     }
 
-    public IntegerBinding garrisonNrProperty() {
-        return garrisonNr;
+    public IntegerBinding garrisonCountProperty() {
+        return garrisonCount;
     }
 
 

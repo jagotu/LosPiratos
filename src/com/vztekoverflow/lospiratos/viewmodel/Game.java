@@ -136,11 +136,19 @@ public class Game {
     }
 
     void unregisterShip(String shipName) {
-        if (allShips.containsKey(shipName))
+        if (allShips.containsKey(shipName)){
+            boolean removedFromBoard = board.figuresProperty().remove(allShips.get(shipName));
+            if(!removedFromBoard){
+                Warnings.panic(toString() + ".unregisterShip()","Attempt to remove a ship which is in allShips but not in board.figures: " + shipName);
+            }
             allShips.remove(shipName);
+        }
         else {
             Warnings.makeStrongWarning(toString() + ".unregisterShip()", "Attempt to remove a ship whose name is unknown: " + shipName);
         }
+    }
+    public void deleteShip(Ship s){
+        s.getTeam().removeShip(s.getName());
     }
 
     /*

@@ -8,7 +8,7 @@ public class Brig extends ShipType {
     @Override
     public int getBonusMaxHP() {return 45;}
     @Override
-    public int getBonusCannonsNr() {return 12;}
+    public int getBonusCannonsCount() {return 12;}
     @Override
     public int getBonusCargoSpace() {return 480;}
     @Override

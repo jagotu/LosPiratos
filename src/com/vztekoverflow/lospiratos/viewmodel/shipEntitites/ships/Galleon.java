@@ -8,7 +8,7 @@ public class Galleon extends ShipType {
     @Override
     public int getBonusMaxHP() {return 100;}
     @Override
-    public int getBonusCannonsNr() {return 30;}
+    public int getBonusCannonsCount() {return 30;}
     @Override
     public int getBonusCargoSpace() {return 1200;}
     @Override

@@ -44,7 +44,7 @@ public final class CannonUpgrade extends ShipEnhancement {
     }
 
     @Override
-    public int getBonusCannonsNr() {
+    public int getBonusCannonsCount() {
         if(this.isDestroyed()) return 0;
         return bonusCannons;
     }
