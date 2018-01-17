@@ -11,23 +11,23 @@ import java.util.List;
 
 public class Map {
 
-    public Map(List<MapHexagon> hexagons) {
-        this.hexagons.addAll(hexagons);
+    public Map(List<MapTile> tiles) {
+        this.tiles.addAll(tiles);
     }
     public Map() {
     }
 
-    private ListProperty<MapHexagon> hexagons = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private ListProperty<MapTile> tiles = new SimpleListProperty<>(FXCollections.observableArrayList());
     private StringProperty backgroundColor = new SimpleStringProperty("");
 
     //getters:
 
-    public ObservableList<MapHexagon> getHexagons() {
-        return hexagons.get();
+    public ObservableList<MapTile> getTiles() {
+        return tiles.get();
     }
 
-    public ListProperty<MapHexagon> hexagonsProperty() {
-        return hexagons;
+    public ListProperty<MapTile> tilesProperty() {
+        return tiles;
     }
 
     public String getBackgroundColor() {
@@ -37,8 +37,6 @@ public class Map {
     public StringProperty backgroundColorProperty() {
         return backgroundColor;
     }
-
-
 
 
 }

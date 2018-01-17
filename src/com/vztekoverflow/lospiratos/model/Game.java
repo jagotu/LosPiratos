@@ -9,7 +9,7 @@ import javafx.collections.ObservableList;
 public class Game {
 
     private ListProperty<Team> teams = new SimpleListProperty<>(FXCollections.observableArrayList());
-    private ObjectProperty<Map> map = new SimpleObjectProperty<>();
+    private final Map map = new Map();
 
     public ObservableList<Team> getTeams() {
         return teams.get();
@@ -19,11 +19,7 @@ public class Game {
         return teams;
     }
 
-    public Map getMap() {
-        return map.get();
-    }
-
-    public ObjectProperty<Map> mapProperty() {
+    public final Map getMap() {
         return map;
     }
 

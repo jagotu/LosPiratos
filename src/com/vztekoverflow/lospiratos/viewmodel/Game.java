@@ -3,6 +3,10 @@ package com.vztekoverflow.lospiratos.viewmodel;
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.util.FxUtils;
 import com.vztekoverflow.lospiratos.util.Warnings;
+import com.vztekoverflow.lospiratos.viewmodel.BoardTiles.Port;
+import com.vztekoverflow.lospiratos.viewmodel.BoardTiles.Sea;
+import com.vztekoverflow.lospiratos.viewmodel.BoardTiles.Shipwreck;
+import com.vztekoverflow.lospiratos.viewmodel.BoardTiles.Shore;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipType;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.*;
@@ -47,6 +51,7 @@ public class Game {
                 }
             }
         });
+        board = new Board(this, gameModel.getMap());
     }
 
     private void addNewTeamFromModel(com.vztekoverflow.lospiratos.model.Team teamModel) {
@@ -115,15 +120,22 @@ public class Game {
         return !allShips.containsKey(name);
     }
 
-    public void registerShip(Ship ship) {
+    private final Board board;
+
+    public final Board getBoard() {
+        return board;
+    }
+
+    void registerShip(Ship ship) {
         if (allShips.containsKey(ship.getName())) {
             Warnings.makeStrongWarning(toString(), "allShips already contains a ship with this name: " + ship.getName());
             return;
         }
         allShips.put(ship.getName(), ship);
+        board.figuresProperty().add(ship);
     }
 
-    public void unregisterShip(String shipName) {
+    void unregisterShip(String shipName) {
         if (allShips.containsKey(shipName))
             allShips.remove(shipName);
         else {
@@ -204,11 +216,13 @@ public class Game {
 
     public static Game CreateNewMockGame() {
         final int teamCount = 6; //beter do not make bigger than 6
-        int captainIdx =0;
+        int captainIdx = 0;
         Game g = new Game();
+
+        //teams:
         for (int i = 1; i <= teamCount; i++) {
             String name = "(" + i + ") " + teamNames[i];
-            Color c = Color.color((255 - (i-1) * 49)/255d, (255 - (i-1) * 49)/255d, ((i-1) * 49d)/255d);
+            Color c = Color.color((255 - (i - 1) * 49) / 255d, (255 - (i - 1) * 49) / 255d, ((i - 1) * 49d) / 255d);
             Team team = g.createAndAddNewTeam(name, c);
             team.getOwnedResource().setMoney(5000 + i);
             team.getOwnedResource().setCloth(10 * i);
@@ -220,29 +234,48 @@ public class Game {
                 name = "Tým" + i + "_Loď" + j;
                 String captain = captainNames[captainIdx++];
                 Class<ShipType> type = (Class<ShipType>) shipTypes[j % 4];
-                AxialCoordinate position = new AxialCoordinate(i*2-teamCount,j*2-teamCount);
-                Ship s = team.createAndAddNewShip(type,name, captain,position);
-                s.getStorage().addMoney(500 *i+10*j);
-                s.getStorage().addCloth(10 * i+j);
-                s.getStorage().addMetal(20 * i+j);
-                s.getStorage().addRum(30 * i+j);
-                s.getStorage().addWood(40 * i+j);
-                if(i!=3) //random value
-                    s.addToCurrentHP(-5*j);
+                AxialCoordinate position = new AxialCoordinate(i * 2 - teamCount, j * 2 - teamCount);
+                Ship s = team.createAndAddNewShip(type, name, captain, position);
+                s.getStorage().addMoney(500 * i + 10 * j);
+                s.getStorage().addCloth(10 * i + j);
+                s.getStorage().addMetal(20 * i + j);
+                s.getStorage().addRum(30 * i + j);
+                s.getStorage().addWood(40 * i + j);
+                if (i != 3) //random value
+                    s.addToCurrentHP(-5 * j);
 
                 for (int k = 0; k < j; k++) {
                     Class<ShipEnhancement> enh = (Class<ShipEnhancement>) shipEnhancements[k];
                     s.addNewEnhancement(enh);
                 }
-                if((i == 3 && j ==2) || (i == 5 && j ==4)) { //random values
+                if ((i == 3 && j == 2) || (i == 5 && j == 4)) { //random values
                     s.destroyShipAndEnhancements();
                 }
-                if(i==2){ //random value
+                if (i == 2) { //random value
                     s.destroyShipAndEnhancements();
                     s.repairShip();
                 }
             }
         }
+
+        //board:
+        Board b = g.getBoard();
+        for (int i = -3; i < 3; i++) {
+            for (int j = -3; j < 3; j++) {
+                AxialCoordinate c = new AxialCoordinate(i, j);
+                if (i == 2) {
+                    b.tilesProperty().put(c, new Shore(c));
+                } else if (i == 1 && j == 1) {
+                    b.tilesProperty().put(c, new Shipwreck(c));
+                } else if (i == -2 && j == 1) {
+                    b.tilesProperty().put(c, new Port(c));
+                }else {
+                    b.tilesProperty().put(c, new Sea(c));
+                }
+
+            }
+        }
+
         return g;
     }
 }
