@@ -51,9 +51,9 @@ public class ShipStatsView extends VBox {
             throw new RuntimeException(exception);
         }
 
-        cannonsCount.textProperty().bind(s.cannonsNrProperty().asString());
+        cannonsCount.textProperty().bind(s.cannonsCountProperty().asString());
         maxCargo.textProperty().bind(s.maxCargoProperty().asString());
-        garrison.textProperty().bind(s.garrisonNrProperty().asString());
+        garrison.textProperty().bind(s.garrisonCountProperty().asString());
         speed.textProperty().bind(s.speedProperty().asString());
         currentHP.valueProperty().bindBidirectional(s.currentHPProperty());
         HPBar.progressProperty().bind(s.currentHPProperty().add(0.0).divide(s.maxHPProperty()));
