@@ -41,7 +41,7 @@
     -fx-accent: -team-color;
 }
 
-#shipName, #teamName {
+#shipName #contentShow, #teamName #contentShow {
     -fx-font-size: 14px;
     -fx-font-weight: bold;
 }
