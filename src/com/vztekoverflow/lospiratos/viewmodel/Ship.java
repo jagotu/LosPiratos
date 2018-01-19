@@ -9,13 +9,15 @@ import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEntity;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipMechanics;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipType;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Brig;
+import javafx.beans.binding.Binding;
 import javafx.beans.binding.IntegerBinding;
+import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
 
-
+import java.lang.ref.WeakReference;
 import java.util.*;
 
 
@@ -46,12 +48,13 @@ public class Ship implements MovableFigure {
         name.bindBidirectional(shipModel.nameProperty());
         captainName.bindBidirectional(shipModel.captainProperty());
 
-        shipModel.typeProperty().addListener((observable, oldValue, newValue) -> trySettingType(newValue));
+        shipModel.typeProperty().addListener((observable, oldValue, newValue) -> { if(!oldValue.equals(newValue)) trySettingType(newValue);});
         boolean typeSet = trySettingType(shipModel.getType());
         if (!typeSet) {
             Warnings.makeWarning(toString() + ".ctor()", "Fallbacking to Brig.");
-            shipType = new Brig(); //to make sure that some type is always set
+            shipType.set(new Brig()); //to make sure that some type is always set
         }
+
 
         shipModel.enhancementsProperty().addListener((MapChangeListener<String, ShipEnhancementStatus>) c -> {
             if (c.wasAdded()) {
@@ -86,7 +89,7 @@ public class Ship implements MovableFigure {
         }
         ShipType newType = ShipType.createInstanceFromPersistentName(type);
         if (newType == null) return false;
-        Ship.this.shipType = newType;
+        Ship.this.shipType.set(newType);
         applyToEntities(ShipEntity::onShipTypeJustChanged);
         onEntityInvalidated();
         return true;
@@ -133,15 +136,19 @@ public class Ship implements MovableFigure {
 
     //general ship properties:
 
-    private ShipType shipType;
+    private ObjectProperty<ShipType> shipType = new SimpleObjectProperty<>();
 
     public ShipType  getShipType() {
-        return shipType;
+        return shipType.get();
     }
 
     public <T extends ShipType> void setShipType(Class<T> shipType) {
         shipModel.typeProperty().set(ShipType.getPersistentName(shipType));
         //callback on shipModel's typeProperty changed will do the job
+    }
+
+    public ReadOnlyObjectProperty<ShipType> shipTypeProperty() {
+        return shipType;
     }
 
     private Team ownerTeam;
@@ -228,7 +235,11 @@ public class Ship implements MovableFigure {
     }
     //stats:
 
+    private final List<WeakReference<Binding>> entityInvalidatedListeners = new ArrayList<>();
     private void onEntityInvalidated() {
+        for(WeakReference<Binding> b: entityInvalidatedListeners){
+            b.get().invalidate();
+        }
         maxHP.invalidate();
         cannonsCount.invalidate();
         speed.invalidate();
@@ -340,7 +351,6 @@ public class Ship implements MovableFigure {
 
     public <Enhancement extends ShipEnhancement> void addNewEnhancement(Class<Enhancement> enhancement) {
         shipModel.enhancementsProperty().put(ShipEnhancement.getPersistentName(enhancement), ShipEnhancementStatus.active);
-
     }
 
     /*
@@ -351,9 +361,31 @@ public class Ship implements MovableFigure {
         return (SpecificEnh) enhancements.get(enhancement);
     }
 
+    public <Enhancement extends ShipEnhancement> ShipEnhancementStatus getEnhancementStatus(Class<Enhancement> enhancement) {
+        if(enhancements.containsKey(enhancement)){
+            if((enhancements.get(enhancement).isDestroyed())){
+                return  ShipEnhancementStatus.destroyed;
+            }else
+                return ShipEnhancementStatus.active;
+        }else
+            return ShipEnhancementStatus.empty;
+    }
+
     public <Enhancement extends ShipEnhancement> boolean hasActiveEnhancement(Class<Enhancement> enhancement) {
         return enhancements.containsKey(enhancement) && (!enhancements.get(enhancement).isDestroyed());
     }
+
+    public <Enhancement extends ShipEnhancement> ObjectBinding<ShipEnhancementStatus> hasActiveEnhancementProperty(Class<Enhancement> enhancement){
+        ObjectBinding<ShipEnhancementStatus> b = new ObjectBinding<ShipEnhancementStatus>() {
+            @Override
+            protected ShipEnhancementStatus computeValue() {
+                return getEnhancementStatus(enhancement);
+            }
+        };
+        entityInvalidatedListeners.add(new WeakReference<>(b));
+        return b;
+    }
+
 
     //mechanics:
 
@@ -389,7 +421,7 @@ public class Ship implements MovableFigure {
                 switch (state) {
                     case 0:{
                         stateAdvance();
-                        return shipType;
+                        return shipType.get();
                     }
                     case 1:{
                         result = enh.next();

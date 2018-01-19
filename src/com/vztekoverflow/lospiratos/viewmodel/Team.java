@@ -1,16 +1,15 @@
 package com.vztekoverflow.lospiratos.viewmodel;
 
+import com.sun.javafx.collections.UnmodifiableObservableMap;
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.util.FxUtils;
 import com.vztekoverflow.lospiratos.util.Warnings;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipType;
+import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Schooner;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableMap;
 import javafx.scene.paint.Color;
-
-import java.util.Collection;
 
 public class Team {
 
@@ -93,15 +92,20 @@ public class Team {
 
     //properties:
 
-    public ObservableMap<String, Ship> getShips() {
-        return ships.get();
+    private MapProperty<String, Ship> ships = new SimpleMapProperty<String, Ship>(FXCollections.observableHashMap());
+    private UnmodifiableObservableMap<String, Ship> unmodifiableShips = new UnmodifiableObservableMap<>(ships.get());
+    private ReadOnlyMapProperty<String, Ship> unmodifiableShipsProperty = new SimpleMapProperty<>(unmodifiableShips);
+    public UnmodifiableObservableMap<String, Ship> getShips() {
+        return unmodifiableShips;
+    }
+    /*
+     * The resulting Map is unmodifiable and attempt to add a new ship throws an exception
+     */
+    public ReadOnlyMapProperty<String, Ship> shipsProperty() {
+        return unmodifiableShipsProperty;
     }
 
-    public MapProperty<String, Ship> shipsProperty() {
-        return ships;
-    }
 
-    private MapProperty<String, Ship> ships = new SimpleMapProperty<>(FXCollections.observableHashMap());
     private StringProperty name = new SimpleStringProperty("");
     private ObjectProperty<Color> color = new SimpleObjectProperty<>();
 
@@ -140,6 +144,19 @@ public class Team {
     }
 
     //public methods:
+
+    /*
+     * Is guaranteed to always return a new ship, with some default initial values (including name)
+     */
+    public Ship createAndAddNewDefaultShip(){
+        Ship s = null;
+        int i = 0;
+        while(s == null){
+            String name = "Loď #" + ++i + " týmu " + getName();
+            s = createAndAddNewShip(Schooner.class,name, "kapitán", AxialCoordinate.ZERO);
+        }
+        return  s;
+    }
 
     /* Creates a new ship owned by the team and adds it to its list of ships
      * @param name If a ship with this name already exists, returns null

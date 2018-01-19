@@ -60,10 +60,16 @@ public class AxialCoordinate {
      * @returns minimal number of movements needed to reach @param from @this in an Euclidean geometry
      */
     public int distanceTo(AxialCoordinate arg){
+        return distanceTo(arg.Q, arg.R);
+    }
+    /*
+     * @returns minimal number of movements needed to reach @param from @this in an Euclidean geometry
+     */
+    public int distanceTo(int q, int r){
         //the algorithm is explained here: https://www.redblobgames.com/grids/hexagons/#distances
         int S = -(Q+R);
-        int bS = -(arg.Q+ arg.R);
-        return  (Math.abs(Q - arg.Q) + Math.abs(R - arg.R) + Math.abs(S - bS)) / 2;
+        int bS = -(q+ r);
+        return  (Math.abs(Q - q) + Math.abs(R - r) + Math.abs(S - bS)) / 2;
     }
 
     public CubeCoordinateMutable toCubeCoordinate(){
@@ -144,6 +150,8 @@ public class AxialCoordinate {
         }
         return new AxialCoordinate(rx, rz);
     }
+
+    public static final AxialCoordinate ZERO = new AxialCoordinate(0,0);
 
 
 

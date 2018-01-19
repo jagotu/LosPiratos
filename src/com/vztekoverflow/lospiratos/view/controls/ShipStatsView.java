@@ -59,6 +59,8 @@ public class ShipStatsView extends VBox {
         HPBar.progressProperty().bind(s.currentHPProperty().add(0.0).divide(s.maxHPProperty()));
         maxHP.textProperty().bind(s.maxHPProperty().asString());
         captain.textProperty().bindBidirectional(s.captainNameProperty());
+        s.shipTypeProperty().addListener((observable, oldValue, newValue) ->
+                shipType.setText(newValue.getČeskéJméno()) );
         shipType.setText(s.getShipType().getČeskéJméno());
     }
 }

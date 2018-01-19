@@ -128,11 +128,11 @@ public class OrgStage {
         teamViews.clear();
 
 
-        for (Team t : game.get().teamsProperty()) {
+        for (Team t : game.get().getTeams()) {
             addTeamView(t);
         }
 
-        game.get().teamsProperty().addListener((ListChangeListener.Change<? extends Team> c) -> {
+        game.get().getTeams().addListener((ListChangeListener.Change<? extends Team> c) -> {
             while (c.next()) {
                 if (!(c.wasPermutated() || c.wasUpdated())) {
                     for (Team t : c.getAddedSubList()) {
@@ -149,7 +149,7 @@ public class OrgStage {
         shipViews.clear();
 
 
-        for (Ship s : game.get().getAllShips()) {
+        for (Ship s : game.get().getAllShips().values()) {
             addShipView(s);
         }
 
@@ -227,18 +227,14 @@ public class OrgStage {
     private void loremIpsum() {
         int a = 0;
     }
+    @FXML
+    private void createShip() {
+        game.get().getTeams().get(0).createAndAddNewDefaultShip();
+    }
 
     @FXML
     private void addTeam() {
-        int i = 1;
-        while (true) {
-            final int j = i;
-            if (game.get().getTeams().stream().noneMatch(t -> t.getName().equalsIgnoreCase("Tým #" + j))) break;
-            i++;
-        }
-
-        game.get().createAndAddNewTeam("Tým #" + i, Color.BLACK);
-
+        game.get().createAndAddNewDefaultTeam();
     }
 
     private void setHexPanePanAndZoom() {

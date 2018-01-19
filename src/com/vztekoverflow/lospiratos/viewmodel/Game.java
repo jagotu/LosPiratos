@@ -1,5 +1,6 @@
 package com.vztekoverflow.lospiratos.viewmodel;
 
+import com.sun.javafx.collections.UnmodifiableObservableMap;
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.util.FxUtils;
 import com.vztekoverflow.lospiratos.util.Warnings;
@@ -14,16 +15,12 @@ import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Brig;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Frigate;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Galleon;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Schooner;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.MapProperty;
-import javafx.beans.property.SimpleListProperty;
-import javafx.beans.property.SimpleMapProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.paint.Color;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -63,6 +60,19 @@ public class Game {
         teams.add(t);
     }
 
+    private int createAndAddNewDefaultTeamCounter = 1;
+    /*
+     * Is guaranteed to always return a new team, with some default initial values (including name)
+     */
+    public Team createAndAddNewDefaultTeam(){
+        Team t = null;
+        while (t == null){
+            String name = "Tým #" + ++createAndAddNewDefaultTeamCounter;
+            t = createAndAddNewTeam(name, Color.BLACK);
+        }
+        return  t;
+
+    }
     /*
      * @returns null if team with this name (case insensitive) already exists
      */
@@ -92,24 +102,32 @@ public class Game {
     }
 
 
-    private ListProperty<Team> teams = new SimpleListProperty<>(FXCollections.observableArrayList());
-
+    private final ListProperty<Team> teams = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final ReadOnlyListProperty<Team> unmodifiableTeams = new SimpleListProperty<>(FXCollections.unmodifiableObservableList(teams));
+    /*
+     * resulting list is unmodifiable
+     */
     public ObservableList<Team> getTeams() {
-        return teams.get();
+        return unmodifiableTeams.get();
     }
-
-    public ListProperty<Team> teamsProperty() {
-        return teams;
+    /*
+     * resulting list is unmodifiable
+     */
+    public ReadOnlyListProperty<Team> teamsProperty() {
+        return unmodifiableTeams;
     }
 
     private MapProperty<String, Ship> allShips = new SimpleMapProperty<>(FXCollections.observableHashMap());
-
-    public Collection<Ship> getAllShips() {
-        return allShips.get().values();
+    private UnmodifiableObservableMap<String, Ship> unmodifiableAllShips = new UnmodifiableObservableMap<>(allShips.get());
+    private ReadOnlyMapProperty<String, Ship> unmodifiableAllShipsProperty = new SimpleMapProperty<>(unmodifiableAllShips);
+    public UnmodifiableObservableMap<String,Ship> getAllShips() {
+        return unmodifiableAllShips;
     }
-
-    public MapProperty<String, Ship> allShipsProperty() {
-        return allShips;
+    /*
+     * The resulting Map is unmodifiable and attempt to add a new ship throws an exception
+     */
+    public ReadOnlyMapProperty<String, Ship> allShipsProperty() {
+        return unmodifiableAllShipsProperty;
     }
 
     public boolean mayCreateShipWithName(String name) {
@@ -242,7 +260,7 @@ public class Game {
                 name = "Tým" + i + "_Loď" + j;
                 String captain = captainNames[captainIdx++];
                 Class<ShipType> type = (Class<ShipType>) shipTypes[j % 4];
-                AxialCoordinate position = new AxialCoordinate(i * 2 - teamCount, j * 2 - teamCount);
+                AxialCoordinate position = new AxialCoordinate(i - teamCount/2, j - teamCount/2);
                 Ship s = team.createAndAddNewShip(type, name, captain, position);
                 s.getStorage().addMoney(500 * i + 10 * j);
                 s.getStorage().addCloth(10 * i + j);
@@ -250,8 +268,7 @@ public class Game {
                 s.getStorage().addRum(30 * i + j);
                 s.getStorage().addWood(40 * i + j);
                 if (i != 3) //random value
-                    s.addToCurrentHP(-5 * j);
-
+                    s.addToCurrentHP(-6 * j);
                 for (int k = 0; k < j; k++) {
                     Class<ShipEnhancement> enh = (Class<ShipEnhancement>) shipEnhancements[k];
                     s.addNewEnhancement(enh);
@@ -268,19 +285,22 @@ public class Game {
 
         //board:
         Board b = g.getBoard();
-        for (int i = -3; i < 3; i++) {
-            for (int j = -3; j < 3; j++) {
+        int boardDiameter = 8;
+        for (int i = -boardDiameter; i <= boardDiameter; i++) {
+            for (int j = -boardDiameter; j <= boardDiameter; j++) {
                 AxialCoordinate c = new AxialCoordinate(i, j);
-                if (i == 2) {
-                    b.tilesProperty().put(c, new Shore(c));
-                } else if (i == 1 && j == 1) {
-                    b.tilesProperty().put(c, new Shipwreck(c));
-                } else if (i == -2 && j == 1) {
-                    b.tilesProperty().put(c, new Port(c));
+                if(c.distanceTo(0,0) >= boardDiameter) continue;
+                BoardTile tile;
+                if (c.distanceTo(0,0) >= boardDiameter -1) { //random value
+                    tile = new Shore(c);
+                } else if (i == 1 && j == 1) { //random value
+                    tile = new Shipwreck(c);
+                } else if (i == -6 && j == 0) { //random value
+                    tile = new Port(c);
                 }else {
-                    b.tilesProperty().put(c, new Sea(c));
+                    tile = new Sea(c);
                 }
-
+                b.tilesProperty().put(c, tile);
             }
         }
 
