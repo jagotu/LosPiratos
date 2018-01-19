@@ -17,9 +17,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        InputStream inputStream = getClass().getResourceAsStream("/fontawesome-webfont.ttf");
+        /*InputStream inputStream = getClass().getResourceAsStream("/fontawesome-webfont.ttf");
         FontAwesome fa = new FontAwesome(inputStream);
-        GlyphFontRegistry.register(fa);
+        GlyphFontRegistry.register(fa);*/
 
         Parent root = FXMLLoader.load(OrgStage.class.getResource("OrgStage.fxml"));
         primaryStage.setTitle("OrgStage");

@@ -120,8 +120,6 @@ public abstract class EditableText extends StackPane {
                 e.consume();
             }
         });
-
-
     }
 
     private void updateEditWidth(String newText) {

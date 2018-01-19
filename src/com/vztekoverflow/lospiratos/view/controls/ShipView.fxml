@@ -34,7 +34,7 @@
             </right>
             <left>
 
-                <EditableStringText fx:id="shipName" styleClass="contrast" BorderPane.alignment="CENTER"/>
+                <EditableStringText fx:id="shipName" styleClass="contrast" BorderPane.alignment="CENTER" />
 
 
             </left>

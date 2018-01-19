@@ -31,6 +31,9 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 import java.util.HashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 public class OrgStage {
 
@@ -51,6 +54,12 @@ public class OrgStage {
     @FXML
     private TabPane tabPane;
 
+    private final ExecutorService viewCreator = Executors.newSingleThreadExecutor(r -> {
+        Thread thread = Executors.defaultThreadFactory().newThread(r);
+        thread.setDaemon(true);
+        return thread;
+    });
+
     //Internal working helpers
     private Point2D lastMouse;
     private HashMap<Team, TeamView> teamViews = new HashMap<>();
@@ -66,6 +75,7 @@ public class OrgStage {
     public OrgStage(Game game) {
         this.game = new SimpleObjectProperty<>(game);
         this.game.addListener(c -> connectToGame());
+
     }
 
 
@@ -106,6 +116,11 @@ public class OrgStage {
 
     };
 
+    public void shutdown()
+    {
+        viewCreator.shutdownNow();
+    }
+
     @FXML
     private void initialize() {
         hexPane = new VirtualizingHexGridPane(40, true, fact);
@@ -128,15 +143,15 @@ public class OrgStage {
         teamViews.clear();
 
 
-        for (Team t : game.get().getTeams()) {
-            addTeamView(t);
+        for (final Team t : game.get().getTeams()) {
+           viewCreator.submit(() -> addTeamView(t));
         }
 
         game.get().getTeams().addListener((ListChangeListener.Change<? extends Team> c) -> {
             while (c.next()) {
                 if (!(c.wasPermutated() || c.wasUpdated())) {
                     for (Team t : c.getAddedSubList()) {
-                        addTeamView(t);
+                        viewCreator.submit(() -> addTeamView(t));
                     }
                     for (Team t : c.getRemoved()) {
                         removeTeamView(t);
@@ -148,9 +163,8 @@ public class OrgStage {
         shipsBox.getChildren().clear();
         shipViews.clear();
 
-
-        for (Ship s : game.get().getAllShips().values()) {
-            addShipView(s);
+        for (final Ship s : game.get().getAllShips().values()) {
+            viewCreator.submit(() -> addShipView(s));
         }
 
         game.get().allShipsProperty().addListener((MapChangeListener<? super String, ? super Ship>) change -> {
@@ -158,7 +172,7 @@ public class OrgStage {
                 removeShipView(change.getValueRemoved());
             }
             if (change.wasAdded()) {
-                addShipView(change.getValueAdded());
+                viewCreator.submit(() -> addShipView(change.getValueAdded()));
             }
 
         });
@@ -167,7 +181,6 @@ public class OrgStage {
     private void addTeamView(Team t) {
         TeamView tv = new TeamView(t);
         tv.setRequestDeleteListener(team -> game.get().getTeams().remove(team));
-        teamsBox.getChildren().add(tv);
         tv.setOnCenterShip(s -> {
             hexPane.centerInParent(s.getPosition());
             hexPane.highlightTile(s.getPosition());
@@ -193,6 +206,7 @@ public class OrgStage {
             };
             animation.play();
         });
+        Platform.runLater(() -> teamsBox.getChildren().add(tv));
 
         teamViews.put(t, tv);
     }
@@ -207,7 +221,7 @@ public class OrgStage {
         ShipView sv = new ShipView(s);
         sv.setRequestDeleteListener(ship -> s.getTeam().removeShip(s.getName()));
 
-        shipsBox.getChildren().add(sv);
+        Platform.runLater(() -> shipsBox.getChildren().add(sv));
         sv.setOnCenterShip(sh -> {
             hexPane.centerInParent(sh.getPosition());
             hexPane.highlightTile(sh.getPosition());
