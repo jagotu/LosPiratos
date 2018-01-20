@@ -8,4 +8,8 @@ public final class ChainShot extends ShipEnhancement {
     public static ResourceImmutable getCost(){
         return new ResourceImmutable();
     }
+    @Override
+    public String getČeskéJméno() {
+        return "Řetězová střela";
+    }
 }

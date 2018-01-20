@@ -36,4 +36,6 @@ public abstract class ShipEntity {
     public int getBonusGarrison() {return 0;}
     public int getBonusSpeed() {return 0;}
 
+    abstract public String getČeskéJméno();
+
 }

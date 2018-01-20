@@ -8,4 +8,7 @@ public final class Ram extends ShipEnhancement {
     public static ResourceImmutable getCost(){
         return new ResourceImmutable();
     }
+    public String getČeskéJméno() {
+        return "Kloun";
+    }
 }

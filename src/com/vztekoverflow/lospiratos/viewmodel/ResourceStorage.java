@@ -17,7 +17,7 @@ public class ResourceStorage extends Resource {
      */
     public ResourceStorage(IntegerProperty cloth, IntegerProperty metal, IntegerProperty rum, IntegerProperty tobacco, IntegerProperty wood, IntegerProperty money, IntegerBinding capacity) {
 
-        this.capacity = capacity;
+        this.capacityMaximum = capacity;
 
         this.money.bindBidirectional(money);
         this.cloth.bindBidirectional(cloth);
@@ -27,20 +27,20 @@ public class ResourceStorage extends Resource {
         this.wood_.bindBidirectional(wood);
 
 
-        this.cloth.addListener(__ -> roomLeft.invalidate());
-        this.metal.addListener(__ -> roomLeft.invalidate());
-        this.rum__.addListener(__ -> roomLeft.invalidate());
-        this.tobco.addListener(__ -> roomLeft.invalidate());
-        this.wood_.addListener(__ -> roomLeft.invalidate());
-        this.capacity.addListener(__ -> roomLeft.invalidate());
+        this.cloth.addListener(__ -> capacityLeft.invalidate());
+        this.metal.addListener(__ -> capacityLeft.invalidate());
+        this.rum__.addListener(__ -> capacityLeft.invalidate());
+        this.tobco.addListener(__ -> capacityLeft.invalidate());
+        this.wood_.addListener(__ -> capacityLeft.invalidate());
+        this.capacityMaximum.addListener(__ -> capacityLeft.invalidate());
     }
 
-    private IntegerBinding capacity;
+    private final IntegerBinding capacityMaximum;
 
-    private IntegerBinding roomLeft = new IntegerBinding() {
+    private final IntegerBinding capacityLeft = new IntegerBinding() {
         @Override
         protected int computeValue() {
-            int result = capacity.get();
+            int result = capacityMaximum.get();
             result -= getCloth() * clothCargoUsageCoefficient;
             result -= getMetal() * metalCargoUsageCoefficient;
             result -= getRum() * rumCargoUsageCoefficient;
@@ -53,19 +53,19 @@ public class ResourceStorage extends Resource {
 
 
     public boolean canStoreMoreCloth(int amount){
-        return roomLeft.get() >= clothCargoUsageCoefficient * amount;
+        return capacityLeft.get() >= clothCargoUsageCoefficient * amount;
     }
     public boolean canStoreMoreMetal(int amount){
-        return roomLeft.get() >= metalCargoUsageCoefficient * amount;
+        return capacityLeft.get() >= metalCargoUsageCoefficient * amount;
     }
     public boolean canStoreMoreRum(int amount){
-        return roomLeft.get() >= rumCargoUsageCoefficient * amount;
+        return capacityLeft.get() >= rumCargoUsageCoefficient * amount;
     }
     public boolean canStoreMoreTobacco(int amount){
-        return roomLeft.get() >= tobaccoCargoUsageCoefficient * amount;
+        return capacityLeft.get() >= tobaccoCargoUsageCoefficient * amount;
     }
     public boolean canStoreMoreWood(int amount){
-        return roomLeft.get() >= woodCargoUsageCoefficient * amount;
+        return capacityLeft.get() >= woodCargoUsageCoefficient * amount;
     }
 
     /* adds cloth to the ships storage, if there is enough storage room
@@ -137,19 +137,19 @@ public class ResourceStorage extends Resource {
     //todo the setters do not check whether the capacity has been overflown
     //maybe this could be used as intended? It would allow to overcome storage limit if wanted
 
-    public int getRoomLeft() {
-        return roomLeft.get();
+    public int getCapacityLeft() {
+        return capacityLeft.get();
     }
 
-    public IntegerBinding roomLeftProperty() {
-        return roomLeft;
+    public IntegerBinding capacityLeftProperty() {
+        return capacityLeft;
     }
 
-    public int getCapacity() {
-        return capacity.get();
+    public int getCapacityMaximum() {
+        return capacityMaximum.get();
     }
 
-    public IntegerBinding capacityProperty() {
-        return capacity;
+    public IntegerBinding capacityMaximumProperty() {
+        return capacityMaximum;
     }
 }

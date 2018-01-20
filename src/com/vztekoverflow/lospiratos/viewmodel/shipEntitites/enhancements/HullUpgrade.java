@@ -35,4 +35,8 @@ public final class HullUpgrade extends ShipEnhancement {
     public static ResourceImmutable getCost(){
         return new ResourceImmutable();
     }
+    @Override
+    public String getČeskéJméno() {
+        return "Vyztužení trupu";
+    }
 }

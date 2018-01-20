@@ -52,4 +52,8 @@ public final class CannonUpgrade extends ShipEnhancement {
     public static ResourceImmutable getCost(){
         return new ResourceImmutable();
     }
+    @Override
+    public String getČeskéJméno() {
+        return "Přídavná děla";
+    }
 }

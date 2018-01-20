@@ -2,7 +2,6 @@ package com.vztekoverflow.lospiratos.viewmodel;
 
 
 import com.vztekoverflow.lospiratos.model.ShipEnhancementStatus;
-import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.util.Warnings;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEntity;
@@ -13,9 +12,7 @@ import javafx.beans.binding.Binding;
 import javafx.beans.binding.IntegerBinding;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.*;
-import javafx.collections.FXCollections;
-import javafx.collections.MapChangeListener;
-import javafx.collections.ObservableMap;
+import javafx.collections.*;
 
 import java.lang.ref.WeakReference;
 import java.util.*;
@@ -23,13 +20,13 @@ import java.util.*;
 
 public class Ship implements MovableFigure {
 
-    //initializers:
+    //region initializers
 
     /*
      * Sets properties' values to default.
      * Should be called only after the object has been created.
      */
-    public void initialize(){
+    public void initialize() {
         currentHP.set(getMaxHP());
         this.destroyed.set(false);
     }
@@ -42,13 +39,31 @@ public class Ship implements MovableFigure {
         this.ownerTeam = owner;
         this.shipModel = shipModel;
         bindToModel();
+        //this is also bindingToModel, but has to be directly in constructor (because storage is marked final)
+        storage = new ResourceStorage(
+                shipModel.carriesClothUnitsProperty(),
+                shipModel.carriesMetalUnitsProperty(),
+                shipModel.carriesRumUnitsProperty(),
+                shipModel.carriesTobaccoUnitsProperty(),
+                shipModel.carriesWoodUnitsProperty(),
+                shipModel.carriesMoneyProperty(),
+                maxCargo
+        );
+        position = new Position(shipModel.positionProperty(), shipModel.orientationDegProperty());
     }
+    //endregion
+    //region model management
 
+    /*
+     * should be called only from constructor
+     */
     private void bindToModel() {
         name.bindBidirectional(shipModel.nameProperty());
         captainName.bindBidirectional(shipModel.captainProperty());
 
-        shipModel.typeProperty().addListener((observable, oldValue, newValue) -> { if(!oldValue.equals(newValue)) trySettingType(newValue);});
+        shipModel.typeProperty().addListener((observable, oldValue, newValue) -> {
+            if (!oldValue.equals(newValue)) trySettingType(newValue);
+        });
         boolean typeSet = trySettingType(shipModel.getType());
         if (!typeSet) {
             Warnings.makeWarning(toString() + ".ctor()", "Fallbacking to Brig.");
@@ -70,16 +85,21 @@ public class Ship implements MovableFigure {
         }
         destroyed.bindBidirectional(shipModel.destroyedProperty());
         currentHP.bindBidirectional(shipModel.HPProperty());
-        storage = new ResourceStorage(
-                shipModel.carriesClothUnitsProperty(),
-                shipModel.carriesMetalUnitsProperty(),
-                shipModel.carriesRumUnitsProperty(),
-                shipModel.carriesTobaccoUnitsProperty(),
-                shipModel.carriesWoodUnitsProperty(),
-                shipModel.carriesMoneyProperty(),
-                maxCargo
-        );
-        positionProperty().bindBidirectional(shipModel.positionProperty());
+        for (com.vztekoverflow.lospiratos.model.ShipMechanics m : shipModel.getActiveMechanics()) {
+            mechanics.add(ShipMechanics.getInstanceFromDescription(m));
+        }
+        shipModel.activeMechanicsProperty().addListener((SetChangeListener<com.vztekoverflow.lospiratos.model.ShipMechanics>) c -> {
+            if (c.wasAdded()) {
+                ShipMechanics m = ShipMechanics.getInstanceFromDescription(c.getElementAdded());
+                if (!mechanics.contains(m)) //this check could be omitted because it is inherent set behaviour
+                    mechanics.add(m);
+            }
+            if (c.wasRemoved()) {
+                mechanics.removeIf(p -> p.getModelDescription() == c.getElementRemoved());
+            }
+
+        });
+
     }
 
     private boolean trySettingType(String type) {
@@ -134,11 +154,12 @@ public class Ship implements MovableFigure {
         onEntityInvalidated();
     }
 
-    //general ship properties:
+    //endregion
+    //region general ship properties
 
     private ObjectProperty<ShipType> shipType = new SimpleObjectProperty<>();
 
-    public ShipType  getShipType() {
+    public ShipType getShipType() {
         return shipType.get();
     }
 
@@ -151,9 +172,9 @@ public class Ship implements MovableFigure {
         return shipType;
     }
 
-    private Team ownerTeam;
+    private final Team ownerTeam;
 
-    public Team getTeam() {
+    public final Team getTeam() {
         return ownerTeam;
     }
 
@@ -183,6 +204,10 @@ public class Ship implements MovableFigure {
         return destroyed.getValue();
     }
 
+    public ReadOnlyBooleanProperty destroyedProperty() {
+        return destroyed;
+    }
+
 
     private StringProperty name = new SimpleStringProperty();
 
@@ -203,48 +228,41 @@ public class Ship implements MovableFigure {
     }
 
     private StringProperty captainName = new SimpleStringProperty();
+
     public String getCaptainName() {
         return captainName.getValue();
     }
+
     public void setCaptainName(String captainName) {
         this.captainName.set(captainName);
     }
 
-    private ResourceStorage storage;
+    private final ResourceStorage storage;
 
-    public ResourceStorage getStorage() {
+    public final ResourceStorage getStorage() {
         return storage;
     }
 
-    private ObjectProperty<AxialCoordinate> position = new SimpleObjectProperty<>();
+    private final Position position;
 
-    @Override
-    public AxialCoordinate getPosition() {
-        return position.get();
-    }
-
-    public ObjectProperty<AxialCoordinate> positionProperty() {
+    public final Position getPosition() {
         return position;
     }
 
-    public void setPosition(AxialCoordinate position) {
-        this.position.set(position);
-    }
-    public void setPosition(int Q, int R) {
-        setPosition(new AxialCoordinate(Q, R));
-    }
-    //stats:
+    //endregion
+    //region stats
 
     private final List<WeakReference<Binding>> entityInvalidatedListeners = new ArrayList<>();
+
     private void onEntityInvalidated() {
-        for(WeakReference<Binding> b: entityInvalidatedListeners){
+        for (WeakReference<Binding> b : entityInvalidatedListeners) {
             b.get().invalidate();
         }
         maxHP.invalidate();
         cannonsCount.invalidate();
         speed.invalidate();
         maxCargo.invalidate();
-        garrisonCount.invalidate();
+        garrisonSize.invalidate();
     }
 
     private IntegerBinding maxHP = new IntegerBinding() {
@@ -287,7 +305,7 @@ public class Ship implements MovableFigure {
             return val;
         }
     };
-    private IntegerBinding garrisonCount = new IntegerBinding() {
+    private IntegerBinding garrisonSize = new IntegerBinding() {
         @Override
         protected int computeValue() {
             int val = 0;
@@ -322,25 +340,17 @@ public class Ship implements MovableFigure {
         return speed;
     }
 
-    public int getMaxCargo() {
-        return maxCargo.get();
+    public int getGarrisonSize() {
+        return garrisonSize.get();
     }
 
-    public IntegerBinding maxCargoProperty() {
-        return maxCargo;
+    public IntegerBinding garrisonSizeProperty() {
+        return garrisonSize;
     }
 
-    public int getGarrisonCount() {
-        return garrisonCount.get();
-    }
-
-    public IntegerBinding garrisonCountProperty() {
-        return garrisonCount;
-    }
-
-
-
-    // enhancements:
+    //endregion
+    //region entities
+    //region enhancements
 
     private MapProperty<Class<? extends ShipEnhancement>, ShipEnhancement> enhancements = new SimpleMapProperty<>(FXCollections.observableHashMap());
 
@@ -362,12 +372,12 @@ public class Ship implements MovableFigure {
     }
 
     public <Enhancement extends ShipEnhancement> ShipEnhancementStatus getEnhancementStatus(Class<Enhancement> enhancement) {
-        if(enhancements.containsKey(enhancement)){
-            if((enhancements.get(enhancement).isDestroyed())){
-                return  ShipEnhancementStatus.destroyed;
-            }else
+        if (enhancements.containsKey(enhancement)) {
+            if ((enhancements.get(enhancement).isDestroyed())) {
+                return ShipEnhancementStatus.destroyed;
+            } else
                 return ShipEnhancementStatus.active;
-        }else
+        } else
             return ShipEnhancementStatus.empty;
     }
 
@@ -375,7 +385,7 @@ public class Ship implements MovableFigure {
         return enhancements.containsKey(enhancement) && (!enhancements.get(enhancement).isDestroyed());
     }
 
-    public <Enhancement extends ShipEnhancement> ObjectBinding<ShipEnhancementStatus> hasActiveEnhancementProperty(Class<Enhancement> enhancement){
+    public <Enhancement extends ShipEnhancement> ObjectBinding<ShipEnhancementStatus> enhancementStatusProperty(Class<Enhancement> enhancement) {
         ObjectBinding<ShipEnhancementStatus> b = new ObjectBinding<ShipEnhancementStatus>() {
             @Override
             protected ShipEnhancementStatus computeValue() {
@@ -386,14 +396,43 @@ public class Ship implements MovableFigure {
         return b;
     }
 
+    //endregion
+    //region mechanics:
 
-    //mechanics:
+    private SetProperty<ShipMechanics> mechanics = new SimpleSetProperty<ShipMechanics>(FXCollections.observableSet()) {
+        @Override
+        public boolean add(ShipMechanics element) {
+            shipModel.activeMechanicsProperty().add(element.getModelDescription());
+            return super.add(element);
+        }
 
-    //todo mechanics are to be implemented:
-    private ListProperty<ShipMechanics> mechanics = new SimpleListProperty<>(FXCollections.observableArrayList());
+        @Override
+        public boolean addAll(Collection<? extends ShipMechanics> elements) {
+            boolean result = false;
+            for (ShipMechanics m : elements)
+                result = result || add(m);
+            return result;
+        }
+    };
+    private ReadOnlySetWrapper<ShipMechanics> mechanicsReadOnly = new ReadOnlySetWrapper<>(FXCollections.unmodifiableObservableSet(mechanics.get()));
 
-    private void applyToEntities(java.util.function.Consumer<ShipEntity> action){
-        for (ShipEntity e : getAllEntities()){
+    /*
+     * returns mechanics as read only set (elements cannot be added to it)
+     */
+    public ReadOnlySetWrapper<ShipMechanics> getMechanics() {
+        return mechanicsReadOnly;
+    }
+
+    /*
+     * To add new mechanics, add them to this property.
+     */
+    public ReadOnlySetProperty<ShipMechanics> mechanicsProperty() {
+        return mechanics;
+    }
+
+    //endregion
+    private void applyToEntities(java.util.function.Consumer<ShipEntity> action) {
+        for (ShipEntity e : getAllEntities()) {
             action.accept(e);
         }
     }
@@ -419,16 +458,16 @@ public class Ship implements MovableFigure {
             public ShipEntity next() {
                 ShipEntity result;
                 switch (state) {
-                    case 0:{
+                    case 0: {
                         stateAdvance();
                         return shipType.get();
                     }
-                    case 1:{
+                    case 1: {
                         result = enh.next();
                         stateAdvance();
                         return result;
                     }
-                    case 2:{
+                    case 2: {
                         result = mech.next();
                         stateAdvance();
                         return result;
@@ -439,17 +478,18 @@ public class Ship implements MovableFigure {
                         throw new NoSuchElementException();
                 }
             }
-            private void stateAdvance(){
+
+            private void stateAdvance() {
                 switch (state) {
                     case 0:
                         state = 1;
                         //yes, fall through to case 1:
                     case 1:
-                        if(enh.hasNext()) break;
+                        if (enh.hasNext()) break;
                         state = 2;
                         //yes, fall through to case 2:
                     case 2:
-                        if(mech.hasNext()) break;
+                        if (mech.hasNext()) break;
                         state = 3;
                         //yes, fall through to case 3:
                     case 3:
@@ -460,7 +500,8 @@ public class Ship implements MovableFigure {
         };
     }
 
-    //public functions:
+    //endregion
+    //region public functions
 
 
     @Override
@@ -501,22 +542,23 @@ public class Ship implements MovableFigure {
     /*
      * @returns Resource that corresponds to how many Resource had to be paid for obtaining the ship and all its enhancements
      */
-    public ResourceImmutable computeInitialCost(boolean includeDamagedEnhancements){
+    public ResourceImmutable computeInitialCost(boolean includeDamagedEnhancements) {
         Resource result = new Resource();
-        for(ShipEnhancement e: enhancements.values()){
-            if(e.isDestroyed() && !includeDamagedEnhancements) continue;
-            try{
+        for (ShipEnhancement e : enhancements.values()) {
+            if (e.isDestroyed() && !includeDamagedEnhancements) continue;
+            try {
                 result.add((Resource) (e.getClass().getMethod("getCost").invoke(null)));
-            }catch (Exception ex){
-                Warnings.makeWarning(toString()+".computeInitialCost()", ex.getMessage());
+            } catch (Exception ex) {
+                Warnings.makeWarning(toString() + ".computeInitialCost()", ex.getMessage());
             }
         }
-        try{
+        try {
             result.add((Resource) (shipType.getClass().getMethod("getCost").invoke(null)));
-        }catch (Exception ex){
-            Warnings.makeWarning(toString()+".computeInitialCost()", ex.getMessage());
+        } catch (Exception ex) {
+            Warnings.makeWarning(toString() + ".computeInitialCost()", ex.getMessage());
         }
         return result;
     }
+    //endregion
 
 }

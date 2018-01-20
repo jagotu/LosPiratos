@@ -4,8 +4,8 @@ package com.vztekoverflow.lospiratos.model;
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
+import javafx.collections.ObservableSet;
 
 
 public class Ship {
@@ -78,7 +78,7 @@ public class Ship {
 
     private MapProperty<String, String> customExtensions = new SimpleMapProperty<>(FXCollections.observableHashMap());
 
-    private ListProperty<ShipMechanics> activeMechanics = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private SetProperty<ShipMechanics> activeMechanics = new SimpleSetProperty<>(FXCollections.observableSet());
 
 
     //getters:
@@ -247,11 +247,11 @@ public class Ship {
         return customExtensions;
     }
 
-    public ObservableList<ShipMechanics> getActiveMechanics() {
+    public ObservableSet<ShipMechanics> getActiveMechanics() {
         return activeMechanics.get();
     }
 
-    public ListProperty<ShipMechanics> activeMechanicsProperty() {
+    public SetProperty<ShipMechanics> activeMechanicsProperty() {
         return activeMechanics;
     }
 }

@@ -8,4 +8,8 @@ public final class HeavyShot extends ShipEnhancement {
     public static ResourceImmutable getCost(){
         return new ResourceImmutable();
     }
+    @Override
+    public String getČeskéJméno() {
+        return "Těžká kule";
+    }
 }

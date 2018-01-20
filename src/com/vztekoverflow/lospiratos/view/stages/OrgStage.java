@@ -182,8 +182,8 @@ public class OrgStage {
         TeamView tv = new TeamView(t);
         tv.setRequestDeleteListener(team -> game.get().getTeams().remove(team));
         tv.setOnCenterShip(s -> {
-            hexPane.centerInParent(s.getPosition());
-            hexPane.highlightTile(s.getPosition());
+            hexPane.centerInParent(s.getPosition().getCoordinate());
+            hexPane.highlightTile(s.getPosition().getCoordinate());
 
         });
         tv.setOnShipDetails(s -> {
@@ -223,8 +223,8 @@ public class OrgStage {
 
         Platform.runLater(() -> shipsBox.getChildren().add(sv));
         sv.setOnCenterShip(sh -> {
-            hexPane.centerInParent(sh.getPosition());
-            hexPane.highlightTile(sh.getPosition());
+            hexPane.centerInParent(sh.getPosition().getCoordinate());
+            hexPane.highlightTile(sh.getPosition().getCoordinate());
 
         });
 
