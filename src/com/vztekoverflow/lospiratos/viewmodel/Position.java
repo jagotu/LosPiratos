@@ -57,9 +57,9 @@ public class Position {
 
     public AxialDirection getRotationAsDirection() {
         if (pointy) {
-            return AxialDirection.DirectionFromDegree_Pointy(getRotation());
+            return AxialDirection.directionFromDegree_Pointy(getRotation());
         } else {
-            return AxialDirection.DirectionFromDegree_Flat(getRotation());
+            return AxialDirection.directionFromDegree_Flat(getRotation());
         }
     }
 

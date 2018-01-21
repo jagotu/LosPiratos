@@ -44,15 +44,15 @@ public final class AxialDirection extends AxialCoordinate{
      * @degree degree representing the direction. 30 means topRight, 90 right etc.
      * if @degree is not multiple of 60 plus 30, nearest value will be used
      */
-    public static AxialDirection DirectionFromDegree_Pointy(int degree){
-        return  DirectionFromDegree_Flat(degree - 30);
+    public static AxialDirection directionFromDegree_Pointy(int degree){
+        return  directionFromDegree_Flat(degree - 30);
     }
     /*
      * Returns unit AxialCoordinate pointing in the direction defined by @degree
      * @param degree representing the direction. 0 means top, 60 rightTop etc.
      * if @degree is not multiple of 60, nearest value will be used
      */
-    public static AxialDirection DirectionFromDegree_Flat(int degree){
+    public static AxialDirection directionFromDegree_Flat(int degree){
         degree = ((degree % 360) + 360) % 360; //to get an always-positive representation of original value
 
         degree += 30; //for the next step to round correctly
