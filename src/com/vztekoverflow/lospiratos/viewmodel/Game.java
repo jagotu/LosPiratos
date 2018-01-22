@@ -241,7 +241,7 @@ public class Game {
 
 
     public static Game CreateNewMockGame() {
-        final int teamCount = 3; //beter do not make bigger than 6
+        final int teamCount = 6; //beter do not make bigger than 6
         int captainIdx = 0;
         Game g = new Game();
 
@@ -262,6 +262,7 @@ public class Game {
                 Class<ShipType> type = (Class<ShipType>) shipTypes[j % 4];
                 AxialCoordinate position = new AxialCoordinate(i - teamCount/2, j - teamCount/2);
                 Ship s = team.createAndAddNewShip(type, name, captain, position);
+                s.getPosition().setRotation(60*j);
                 s.getStorage().addMoney(500 * i + 10 * j);
                 s.getStorage().addCloth(10 * i + j);
                 s.getStorage().addMetal(20 * i + j);

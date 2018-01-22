@@ -1,11 +1,8 @@
 package com.vztekoverflow.lospiratos.view.stages;
 
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
-import com.vztekoverflow.lospiratos.util.CubeCoordinateMutable;
 import com.vztekoverflow.lospiratos.view.controls.ShipView;
 import com.vztekoverflow.lospiratos.view.controls.TeamView;
-import com.vztekoverflow.lospiratos.view.layout.HexTileContents;
-import com.vztekoverflow.lospiratos.view.layout.HexTileContentsFactory;
 import com.vztekoverflow.lospiratos.view.layout.PiratosHexTileContentsFactory;
 import com.vztekoverflow.lospiratos.view.layout.VirtualizingHexGridPane;
 import com.vztekoverflow.lospiratos.viewmodel.Game;
@@ -15,14 +12,18 @@ import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
 import javafx.application.Platform;
-import javafx.beans.property.*;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -34,7 +35,6 @@ import javafx.util.Duration;
 import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 
 public class OrgStage {
 
@@ -79,14 +79,6 @@ public class OrgStage {
 
     }
 
-
-    //TODO: Will be removed once HexTileContentsFactory is outsourced
-    private static final int SIZE = 8;
-    public void shutdown()
-    {
-        viewCreator.shutdownNow();
-    }
-
     @FXML
     private void initialize() {
         root.setDividerPosition(0, 0.75);
@@ -95,8 +87,7 @@ public class OrgStage {
     }
 
     private void connectToGame() {
-        if(hexPane != null)
-        {
+        if (hexPane != null) {
             root.getItems().remove(hexPane);
         }
         hexPane = new VirtualizingHexGridPane(40, true, new PiratosHexTileContentsFactory(game.get().getBoard()));
@@ -114,7 +105,7 @@ public class OrgStage {
 
 
         for (final Team t : game.get().getTeams()) {
-           viewCreator.submit(() -> addTeamView(t));
+            viewCreator.submit(() -> addTeamView(t));
         }
 
         game.get().getTeams().addListener((ListChangeListener.Change<? extends Team> c) -> {
@@ -211,6 +202,7 @@ public class OrgStage {
     private void loremIpsum() {
         int a = 0;
     }
+
     @FXML
     private void createShip() {
         game.get().getTeams().get(0).createAndAddNewDefaultShip();

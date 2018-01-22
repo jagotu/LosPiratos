@@ -60,7 +60,7 @@ public class ShipStatsView extends VBox {
         maxHP.textProperty().bind(s.maxHPProperty().asString());
         captain.textProperty().bindBidirectional(s.captainNameProperty());
         s.shipTypeProperty().addListener((observable, oldValue, newValue) ->
-                shipType.setText(newValue.getČeskéJméno()) );
+                shipType.setText(newValue.getČeskéJméno()));
         shipType.setText(s.getShipType().getČeskéJméno());
     }
 }

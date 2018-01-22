@@ -114,13 +114,12 @@ public class VirtualizingHexGridPane extends Pane {
         YOffset.setValue(location.getY() - (internalHeight.get() - Scale.get() * tileHeight) / 2);
     }
 
-    FillTransition ft = null;
+    private FillTransition ft = null;
 
     public void highlightTile(AxialCoordinate coord) {
 
         if (usedTiles.containsKey(coord)) {
-            if(ft != null)
-            {
+            if (ft != null) {
                 ft.jumpTo(ft.getTotalDuration());
             }
             Shape tile = usedTiles.get(coord).tileShape;

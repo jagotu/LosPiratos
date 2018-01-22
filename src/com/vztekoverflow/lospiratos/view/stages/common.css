@@ -3,12 +3,21 @@
 }
 
 .hex-tile {
+    background: transparent;
     -fx-stroke: black;
-    -fx-fill: transparent;
+    -fx-fill: background;
+}
+
+.hex-tile.Sea {
+    background: lightskyblue;
+}
+
+.hex-tile.Shore {
+    background: brown;
 }
 
 .hex-tile:hover {
-    -fx-fill: LemonChiffon;
+    -fx-fill: derive(background, 50%);
 }
 
 .editable-text .text-field {
