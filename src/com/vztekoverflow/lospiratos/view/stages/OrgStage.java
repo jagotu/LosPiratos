@@ -6,6 +6,7 @@ import com.vztekoverflow.lospiratos.view.controls.ShipView;
 import com.vztekoverflow.lospiratos.view.controls.TeamView;
 import com.vztekoverflow.lospiratos.view.layout.HexTileContents;
 import com.vztekoverflow.lospiratos.view.layout.HexTileContentsFactory;
+import com.vztekoverflow.lospiratos.view.layout.PiratosHexTileContentsFactory;
 import com.vztekoverflow.lospiratos.view.layout.VirtualizingHexGridPane;
 import com.vztekoverflow.lospiratos.viewmodel.Game;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
@@ -46,7 +47,7 @@ public class OrgStage {
     private FlowPane shipsBox;
     @FXML
     private SplitPane root;
-    private VirtualizingHexGridPane hexPane;
+    private VirtualizingHexGridPane hexPane = null;
     @FXML
     private ScrollPane shipsScroll;
     @FXML
@@ -81,41 +82,6 @@ public class OrgStage {
 
     //TODO: Will be removed once HexTileContentsFactory is outsourced
     private static final int SIZE = 8;
-    private HexTileContentsFactory fact = (coords, tileWidth, tileHeight) -> {
-
-        CubeCoordinateMutable cube = coords.toCubeCoordinate();
-        if (cube.getQ() < -SIZE || cube.getQ() > SIZE ||
-                cube.getR() < -SIZE || cube.getR() > SIZE ||
-                cube.getS() < -SIZE || cube.getS() > SIZE) {
-            return null;
-        }
-
-
-        final Label l = new Label();
-        l.setText(String.format("[%s,%s]", coords.getQ(), coords.getR()));
-
-        final String cssClassName = coords.getR() % 2 == 0 ? "even" : "odd";
-
-        return new HexTileContents() {
-
-            ObjectProperty<Node> contents = new ReadOnlyObjectWrapper<>(l);
-            StringProperty cssClass = new ReadOnlyStringWrapper(cssClassName);
-
-            @Override
-            public ObjectProperty<Node> contentsProperty() {
-                return contents;
-            }
-
-            @Override
-            public StringProperty cssClassProperty() {
-                return cssClass;
-            }
-
-
-        };
-
-    };
-
     public void shutdown()
     {
         viewCreator.shutdownNow();
@@ -123,8 +89,17 @@ public class OrgStage {
 
     @FXML
     private void initialize() {
-        hexPane = new VirtualizingHexGridPane(40, true, fact);
+        root.setDividerPosition(0, 0.75);
 
+        connectToGame();
+    }
+
+    private void connectToGame() {
+        if(hexPane != null)
+        {
+            root.getItems().remove(hexPane);
+        }
+        hexPane = new VirtualizingHexGridPane(40, true, new PiratosHexTileContentsFactory(game.get().getBoard()));
         Rectangle clipRect = new Rectangle(hexPane.getWidth(), hexPane.getHeight());
         clipRect.widthProperty().bind(hexPane.widthProperty());
         clipRect.heightProperty().bind(hexPane.heightProperty());
@@ -133,12 +108,7 @@ public class OrgStage {
 
         setHexPanePanAndZoom();
         Platform.runLater(() -> hexPane.centerInParent(new AxialCoordinate(0, 0)));
-        root.setDividerPosition(0, 0.75);
 
-        connectToGame();
-    }
-
-    private void connectToGame() {
         teamsBox.getChildren().clear();
         teamViews.clear();
 

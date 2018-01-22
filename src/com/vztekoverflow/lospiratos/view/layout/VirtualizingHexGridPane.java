@@ -114,14 +114,17 @@ public class VirtualizingHexGridPane extends Pane {
         YOffset.setValue(location.getY() - (internalHeight.get() - Scale.get() * tileHeight) / 2);
     }
 
-    boolean highlightingNOW = false;
+    FillTransition ft = null;
 
     public void highlightTile(AxialCoordinate coord) {
-        if (!highlightingNOW && usedTiles.containsKey(coord)) {
-            highlightingNOW = true;
+
+        if (usedTiles.containsKey(coord)) {
+            if(ft != null)
+            {
+                ft.jumpTo(ft.getTotalDuration());
+            }
             Shape tile = usedTiles.get(coord).tileShape;
-            FillTransition ft = new FillTransition(Duration.millis(1500), tile, Color.YELLOW, (Color) tile.getFill());
-            ft.setOnFinished(e -> highlightingNOW = false);
+            ft = new FillTransition(Duration.millis(1500), tile, Color.YELLOW, (Color) tile.getFill());
             ft.play();
         }
     }

@@ -93,6 +93,8 @@ public class ShipView extends StackPane {
         vbox.getChildren().add(rw);
 
 
+
+
     }
 
 
