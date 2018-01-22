@@ -22,8 +22,8 @@ public class Position {
     public Position() {
     }
 
-    private ObjectProperty<AxialCoordinate> coordinate = new SimpleObjectProperty<>();
-    private IntegerProperty rotation = new SimpleIntegerProperty() {
+    private ObjectProperty<AxialCoordinate> coordinate = new SimpleObjectProperty<>(AxialDirection.ZERO);
+    private IntegerProperty rotation = new SimpleIntegerProperty(0) {
         @Override
         public void set(int newValue) {
             super.set(((newValue % 360) + 360) % 360); //i.e. always set value \in [0,360)
@@ -37,6 +37,14 @@ public class Position {
 
     public AxialCoordinate getCoordinate() {
         return coordinate.get();
+    }
+
+    public int getQ() {
+        return getCoordinate().getQ();
+    }
+
+    public int getR() {
+        return getCoordinate().getR();
     }
 
     public ObjectProperty<AxialCoordinate> coordinateProperty() {
@@ -83,7 +91,7 @@ public class Position {
         setRotation((getRotation() - 60));
     }
 
-    public void moveForwards() { //btw, do we use British or American english in function names? this one is British
+    public void moveForward() {
         coordinate.set(coordinate.get().plus(getRotationAsDirection()));
     }
 
@@ -103,5 +111,12 @@ public class Position {
     @Override
     public int hashCode() {
         return coordinate.hashCode() * getRotationAsDirection().hashCode();
+    }
+
+    public Position createCopy() {
+        Position result = new Position();
+        result.rotation = this.rotation;
+        result.setCoordinate(this.getQ(), this.getR());
+        return result;
     }
 }

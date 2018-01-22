@@ -3,6 +3,8 @@ package com.vztekoverflow.lospiratos.viewmodel;
 
 import com.vztekoverflow.lospiratos.model.ShipEnhancementStatus;
 import com.vztekoverflow.lospiratos.util.Warnings;
+import com.vztekoverflow.lospiratos.viewmodel.Actions.Action;
+import com.vztekoverflow.lospiratos.viewmodel.Actions.PlannableAction;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEntity;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipMechanics;
@@ -255,8 +257,12 @@ public class Ship implements MovableFigure {
     private final List<WeakReference<Binding>> entityInvalidatedListeners = new ArrayList<>();
 
     private void onEntityInvalidated() {
-        for (WeakReference<Binding> b : entityInvalidatedListeners) {
-            b.get().invalidate();
+        for (WeakReference<Binding> wb : entityInvalidatedListeners) {
+            Binding b = wb.get();
+            if (b != null)
+                b.invalidate();
+            else
+                entityInvalidatedListeners.remove(wb);
         }
         maxHP.invalidate();
         cannonsCount.invalidate();
@@ -384,6 +390,9 @@ public class Ship implements MovableFigure {
     public <Enhancement extends ShipEnhancement> boolean hasActiveEnhancement(Class<Enhancement> enhancement) {
         return enhancements.containsKey(enhancement) && (!enhancements.get(enhancement).isDestroyed());
     }
+    public <Enhancement extends ShipEnhancement> boolean hasEnhancement(Class<Enhancement> enhancement) {
+        return enhancements.containsKey(enhancement);
+    }
 
     public <Enhancement extends ShipEnhancement> ObjectBinding<ShipEnhancementStatus> enhancementStatusProperty(Class<Enhancement> enhancement) {
         ObjectBinding<ShipEnhancementStatus> b = new ObjectBinding<ShipEnhancementStatus>() {
@@ -500,6 +509,36 @@ public class Ship implements MovableFigure {
         };
     }
 
+    //endregion
+    //region  actions
+
+    private final ListProperty<Action> plannedActions = new SimpleListProperty<>(FXCollections.observableArrayList());
+
+    public ObservableList<? extends PlannableAction> getPlannedActions() {
+        return plannedActions.get();
+    }
+
+    public ListProperty<? extends PlannableAction> plannedActionsProperty() {
+        return plannedActions;
+    }
+
+    public void planAction(PlannableAction action) {
+        Action a;
+        try {
+            a = (Action) action;
+        } catch (ClassCastException e){
+            //this should never happen in our game
+            throw new UnsupportedOperationException();
+        }
+        plannedActions.add(a);
+    }
+
+    //does not have to be a property thanks to implementation details of classes in Actions package
+    private final List<Class<? extends Action>> actionsProhibitedFromBeingPlanned = new ArrayList<>();
+
+    public List<Class<? extends Action>> getActionsProhibitedFromBeingPlanned() {
+        return actionsProhibitedFromBeingPlanned;
+    }
     //endregion
     //region public functions
 

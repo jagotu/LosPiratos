@@ -1,8 +1,9 @@
 package com.vztekoverflow.lospiratos.viewmodel.shipEntitites;
 
+import com.vztekoverflow.lospiratos.util.Translatable;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
 
-public abstract class ShipEntity {
+public abstract class ShipEntity implements Translatable {
 
     //this is just a proof of concept and should be later specialized into more specific classes:
 
@@ -35,7 +36,5 @@ public abstract class ShipEntity {
     public int getBonusCargoSpace() {return 0;}
     public int getBonusGarrison() {return 0;}
     public int getBonusSpeed() {return 0;}
-
-    abstract public String getČeskéJméno();
 
 }
