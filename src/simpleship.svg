@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="77.619926mm"
+   height="23.792625mm"
+   viewBox="0 0 275.03124 84.304578"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="brig_simple.svg"
+   inkscape:export-filename="C:\Users\Tonda\Documents\LosPiratos\graphics\ships\sources\brig.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
+  <defs
+     id="defs4">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 526.18107 : 1"
+       inkscape:vp_y="0 : 999.99995 : 0"
+       inkscape:vp_z="744.09446 : 526.18107 : 1"
+       inkscape:persp3d-origin="372.04722 : 350.78739 : 1"
+       id="perspective4169" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.7"
+     inkscape:cx="-43.950946"
+     inkscape:cy="20.691101"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1304"
+     inkscape:window-height="745"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:snap-grids="true"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Vrstva 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-25.185529,-255.52745)">
+    <path
+       style="fill:#000000"
+       d="m 101.95703,243.84375 c -17.798983,-0.0301 -26.754985,0.66656 -49.048827,2.93555 -17.870599,1.81881 -32.937381,3.75184 -33.480469,4.29492 -1.238949,1.23895 -9.7528765,28.93239 -10.7539059,34.68945 l -0.083984,0 c 0.00779,0.0592 0.032589,0.16565 0.042969,0.23242 -0.010275,0.0662 -0.035243,0.17178 -0.042969,0.23047 l 0.083984,0 c 1.0010297,5.75706 9.5149569,33.4505 10.7539059,34.68946 0.543088,0.54308 15.60987,2.47611 33.480469,4.29492 22.293842,2.26899 31.249839,2.96564 49.048827,2.93554 5.933,-0.01 12.84875,-0.1001 21.56836,-0.24023 62.62633,-1.00645 74.5942,-4.15544 112.71289,-29.65625 5.9613,-3.98801 14.11755,-8.23235 18.125,-9.43164 l 29.25781,-2.8125 -0.23242,-0.01 0.23242,-0.0117 -29.25781,-2.8125 c -4.00745,-1.19929 -12.1637,-5.44364 -18.125,-9.43165 -38.11869,-25.5008 -50.08656,-28.6498 -112.71289,-29.65625 -8.71961,-0.14013 -15.63536,-0.23019 -21.56836,-0.24023 z m 15.27344,7.60742 c 34.13722,-0.26391 67.6352,3.57975 81.29492,9.48828 7.24921,3.13566 32.63694,18.20127 37.00781,21.96094 l 3.33008,2.86328 -0.58398,0 0.33008,0.23242 -0.33008,0.23047 0.58398,0 -3.33008,2.86328 c -4.37087,3.75967 -29.7586,18.82528 -37.00781,21.96094 -14.57037,6.30244 -51.71204,10.25635 -88.125,9.38086 -19.074208,-0.45861 -82.715095,-6.12948 -83.771484,-7.46484 -0.142764,-0.18047 -2.094428,-6.43551 -4.33789,-13.90039 l -3.927735,-13.07032 3.927735,-13.07226 c 2.243462,-7.46488 4.195126,-13.71992 4.33789,-13.90039 1.056389,-1.33536 64.697278,-7.00624 83.771484,-7.46485 2.27581,-0.0547 4.55426,-0.0898 6.83008,-0.10742 z"
+       transform="translate(16.595685,11.684621)"
+       id="path41168"
+       inkscape:connector-curvature="0" />
+  </g>
+</svg>
