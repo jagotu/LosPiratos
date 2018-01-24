@@ -18,6 +18,17 @@ public interface PlannableAction extends Translatable {
      */
     ObservableBooleanValue plannableProperty();
 
+
     ObjectProperty<Ship> relatedShipProperty();
+
+    /*
+     * Indicates whether @preventedAction may be planned when this instance has already been planned
+     */
+    boolean preventsFromBeingPlanned(Action preventedAction);
+
+    /*
+     * @returns PerformableAction that performs the action planned by this instance
+     */
+    PerformableAction asPerformableAction();
 
 }

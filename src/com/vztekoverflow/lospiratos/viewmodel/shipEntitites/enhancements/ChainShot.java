@@ -5,6 +5,9 @@ import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
 
 public final class ChainShot extends ShipEnhancement {
 
+    @Override
+    public EnhancementIcon getIcon(){return EnhancementIcon.chain;}
+
     public static ResourceImmutable getCost(){
         return new ResourceImmutable();
     }

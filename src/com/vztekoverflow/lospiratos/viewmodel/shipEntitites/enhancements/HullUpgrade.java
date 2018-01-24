@@ -11,6 +11,9 @@ import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Schooner;
 public final class HullUpgrade extends ShipEnhancement {
 
     @Override
+    public EnhancementIcon getIcon(){return EnhancementIcon.hull;}
+
+    @Override
     public int getBonusMaxHP() {
         if(this.isDestroyed()) return 0;
         if(ship.getShipType() instanceof Schooner){

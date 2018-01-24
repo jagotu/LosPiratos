@@ -1,24 +1,14 @@
 package com.vztekoverflow.lospiratos.viewmodel.Actions.Transactions ;
 
 import com.vztekoverflow.lospiratos.viewmodel.Actions.Action;
-import com.vztekoverflow.lospiratos.viewmodel.Actions.Transaction;
-import com.vztekoverflow.lospiratos.viewmodel.ResourceImmutable;
+import com.vztekoverflow.lospiratos.viewmodel.Resource;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-public class SellCommodity extends Transaction {
-    private final ResourceImmutable commoditiesForSale;
-
-    public SellCommodity(ResourceImmutable commoditiesForSale) {
-        this.commoditiesForSale = commoditiesForSale;
-    }
-
-    public final ResourceImmutable getCommoditiesForSale() {
-        return commoditiesForSale;
-    }
+public class SellCommodity extends CommodityTransaction {
 
     @Override
     protected Action createCopy() {
-        return new SellCommodity(commoditiesForSale);
+        return new SellCommodity();
     }
 
     @Override
@@ -30,4 +20,10 @@ public class SellCommodity extends Transaction {
     public String getČeskéJméno() {
         return "prodej komodit";
     }
+
+    @Override
+    protected Resource recomputeCost() {
+        throw new NotImplementedException();
+    }
+
 }

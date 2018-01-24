@@ -10,6 +10,9 @@ import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Schooner;
 
 public final class CannonUpgrade extends ShipEnhancement {
 
+    @Override
+    public EnhancementIcon getIcon(){return EnhancementIcon.cannon;}
+
     //todo pouzivat u rozsireni pattern jako u CannonUpgrade nebo pattern jako u HullUpgrade?
     private int bonusCannons = 0;
 

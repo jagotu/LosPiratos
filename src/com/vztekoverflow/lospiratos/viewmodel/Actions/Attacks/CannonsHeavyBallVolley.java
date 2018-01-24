@@ -34,6 +34,11 @@ public class CannonsHeavyBallVolley extends CannonsAbstractVolley {
     }
 
     @Override
+    public boolean preventsFromBeingPlanned(Action preventedAction) {
+        return true; //HeavyBall prevents any action from being planned
+    }
+
+    @Override
     protected Action createCopy() {
         return new CannonsHeavyBallVolley(useLeftCannons);
     }

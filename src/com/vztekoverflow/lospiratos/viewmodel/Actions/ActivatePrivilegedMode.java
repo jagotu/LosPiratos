@@ -3,6 +3,10 @@ package com.vztekoverflow.lospiratos.viewmodel.Actions;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
+/*
+ * This is a real plannable activity, useful for debugging or for a game master.
+ * When planned, it allows any succeeding action to be planned, regardless of any limitations.
+ */
 public class ActivatePrivilegedMode extends Action {
     public static final BooleanProperty available = new SimpleBooleanProperty();
 

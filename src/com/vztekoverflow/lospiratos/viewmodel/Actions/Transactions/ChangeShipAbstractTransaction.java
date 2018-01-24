@@ -5,7 +5,7 @@ import com.vztekoverflow.lospiratos.viewmodel.Actions.Attack;
 import com.vztekoverflow.lospiratos.viewmodel.Actions.Maneuver;
 import com.vztekoverflow.lospiratos.viewmodel.Actions.Transaction;
 
-abstract class ShipChangeAbstractTransaction extends Transaction {
+abstract class ChangeShipAbstractTransaction extends Transaction {
     @Override
     public boolean preventsFromBeingPlanned(Action preventedAction) {
         return Maneuver.class.isAssignableFrom(preventedAction.getClass()) ||

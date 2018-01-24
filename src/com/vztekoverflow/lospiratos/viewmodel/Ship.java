@@ -517,6 +517,9 @@ public class Ship implements MovableFigure {
     public ObservableList<? extends PlannableAction> getPlannedActions() {
         return plannedActions.get();
     }
+    ObservableList<Action> getPlannedActionsInternal() {
+        return plannedActions.get();
+    }
 
     public ListProperty<? extends PlannableAction> plannedActionsProperty() {
         return plannedActions;
@@ -525,20 +528,22 @@ public class Ship implements MovableFigure {
     public void planAction(PlannableAction action) {
         Action a;
         try {
-            a = (Action) action;
+            a = (Action) action.asPerformableAction();
         } catch (ClassCastException e){
-            //this should never happen in our game
+            //this should never happen in our game, as Action is the only class that implements PerformableAction
             throw new UnsupportedOperationException();
         }
+        a.setRelatedShip(this);
         plannedActions.add(a);
     }
 
-    //does not have to be a property thanks to implementation details of classes in Actions package
-    private final List<Class<? extends Action>> actionsProhibitedFromBeingPlanned = new ArrayList<>();
-
-    public List<Class<? extends Action>> getActionsProhibitedFromBeingPlanned() {
-        return actionsProhibitedFromBeingPlanned;
+    //todo will be moved to some other class
+    public void performPlannedActionsDebugOnly(){
+        for(Action a : plannedActions){
+            a.performOnTarget();
+        }
     }
+
     //endregion
     //region public functions
 

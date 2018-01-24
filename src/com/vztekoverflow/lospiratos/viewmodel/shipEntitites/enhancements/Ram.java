@@ -5,6 +5,9 @@ import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
 
 public final class Ram extends ShipEnhancement {
 
+    @Override
+    public EnhancementIcon getIcon(){return EnhancementIcon.ram;}
+
     public static ResourceImmutable getCost(){
         return new ResourceImmutable();
     }

@@ -5,7 +5,6 @@ import com.vztekoverflow.lospiratos.viewmodel.Actions.Maneuver;
 import com.vztekoverflow.lospiratos.viewmodel.Position;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Frigate;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Galleon;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class MoveForward extends Maneuver {
 
@@ -26,7 +25,7 @@ public class MoveForward extends Maneuver {
 
     @Override
     public void performOnTarget() {
-        throw new NotImplementedException();
+        performOn(getRelatedShip().getPosition());
     }
 
     @Override

@@ -1,15 +1,14 @@
 package com.vztekoverflow.lospiratos.viewmodel.Actions.Transactions ;
 
 import com.vztekoverflow.lospiratos.viewmodel.Actions.Action;
-import com.vztekoverflow.lospiratos.viewmodel.Actions.ParameterizedAction;
 import com.vztekoverflow.lospiratos.viewmodel.Resource;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-public class BuyCommodity extends CommodityTransaction implements ParameterizedAction {
+public class RepairEnhancement extends EnhancementAbstractTransaction {
 
     @Override
     protected Action createCopy() {
-        return new BuyCommodity();
+        return new RepairEnhancement();
     }
 
     @Override
@@ -19,12 +18,11 @@ public class BuyCommodity extends CommodityTransaction implements ParameterizedA
 
     @Override
     public String getČeskéJméno() {
-        return "nákup komodit";
+        return "oprava vylepšení";
     }
 
     @Override
     protected Resource recomputeCost() {
         throw new NotImplementedException();
     }
-
 }

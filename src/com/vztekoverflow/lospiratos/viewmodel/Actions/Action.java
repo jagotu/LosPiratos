@@ -7,6 +7,8 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableBooleanValue;
 
+import java.util.List;
+
 public abstract class Action implements PerformableAction, PlannableAction {
 
     protected final BooleanBinding visible = new BooleanBinding() {
@@ -18,6 +20,8 @@ public abstract class Action implements PerformableAction, PlannableAction {
     protected final BooleanBinding plannable = new BooleanBinding() {
         @Override
         protected boolean computeValue() {
+            if(getRelatedShip().getPlannedActions().stream().anyMatch(a -> a.getClass().equals(ActivatePrivilegedMode.class)) ) return true;
+            if(getRelatedShip().getPlannedActions().stream().anyMatch(a -> a.preventsFromBeingPlanned(Action.this))) return false;
             return recomputePlannable();
         }
     };
@@ -29,13 +33,20 @@ public abstract class Action implements PerformableAction, PlannableAction {
 
     public Action() {
         relatedShip.addListener((__, old, newValue) -> {
-            visible.invalidate();
-            plannable.invalidate();
+            invalidateBindings();
             newValue.plannedActionsProperty().addListener((InvalidationListener)  ___ -> {
-                visible.invalidate();
-                plannable.invalidate();
+                invalidateBindings();
+                //todo this is not the most efficient solution (invalidations could be granulated and called only some of them), but is easy to implement
             });
         } );
+    }
+
+    /*
+     * Overridden implementations should ALWAYS call super.invalidateBindings() first
+     */
+    protected void invalidateBindings(){
+        visible.invalidate();
+        plannable.invalidate();
     }
 
     public boolean getVisible() {
@@ -70,13 +81,21 @@ public abstract class Action implements PerformableAction, PlannableAction {
         return relatedShip.get();
     }
 
-    protected abstract Action createCopy();
-
-    protected boolean shipHasPlannedLessThan(int count, Class<? extends Action> action){
+    final protected boolean shipHasPlannedLessThan(int count, Class<? extends Action> action){
         return getRelatedShip().getPlannedActions().stream().filter(a -> action.isAssignableFrom(a.getClass())).count() < count;
     }
-    protected boolean shipHasPlannedExactly(int count, Class<? extends Action> action){
+    final protected boolean shipHasPlannedExactly(int count, Class<? extends Action> action){
         return getRelatedShip().getPlannedActions().stream().filter(a -> action.isAssignableFrom(a.getClass())).count() == count;
     }
+    //may be overridden by children
+    public boolean preventsFromBeingPlanned(Action preventedAction){return false;}
 
+    @Override
+    public PerformableAction asPerformableAction() {
+        return createCopy();
+    }
+    protected abstract Action createCopy();
+
+    //may be overridden by children
+    public List<PlannableAction> getActionSpecifiers(){return null;}
 }

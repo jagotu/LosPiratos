@@ -1,15 +1,15 @@
 package com.vztekoverflow.lospiratos.viewmodel.Actions.Transactions ;
 
 import com.vztekoverflow.lospiratos.viewmodel.Actions.Action;
-import com.vztekoverflow.lospiratos.viewmodel.Actions.Transaction;
+import com.vztekoverflow.lospiratos.viewmodel.Resource;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.CustomShipType;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Galleon;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-public class ShipUpgrade extends Transaction {
+public class UpgradeShip extends ChangeShipAbstractTransaction {
     @Override
     protected Action createCopy() {
-        return new ShipUpgrade();
+        return new UpgradeShip();
     }
 
     @Override
@@ -29,5 +29,10 @@ public class ShipUpgrade extends Transaction {
     @Override
     public String getČeskéJméno() {
         return "upgrade lodě";
+    }
+
+    @Override
+    protected Resource recomputeCost() {
+        throw new NotImplementedException();
     }
 }

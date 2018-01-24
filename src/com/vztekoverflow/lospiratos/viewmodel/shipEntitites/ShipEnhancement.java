@@ -22,6 +22,8 @@ public abstract class ShipEnhancement extends ShipEntity {
         return destroyed;
     }
 
+    public abstract EnhancementIcon getIcon();
+
     //static:
 
     private static String persistentNameCannonUpgrade = "CannonUpgrade";
