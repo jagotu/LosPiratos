@@ -1,5 +1,8 @@
 package com.vztekoverflow.lospiratos.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /*
  * represents a direction in Axial coordinate system through a unit axial direction.
  * distance between AxialDirection and (0,0) is always 1.
@@ -86,5 +89,23 @@ public final class AxialDirection extends AxialCoordinate{
     public static AxialDirection FlatDown =  new AxialDirection(0,+1);
     public static AxialDirection FlatLeftDown = new AxialDirection(-1,+1);
     public static AxialDirection FlatLeftUp =  new AxialDirection(-1,0);
+
+
+    private static List<AxialDirection> allDirections;
+    /*
+     * Returns all available unit directions for a hexagon. When drawn, those would appear as a circle.
+     */
+    public static Iterable<AxialDirection> getAllDirections(){
+        if(allDirections == null){
+            allDirections = new ArrayList<>();
+            allDirections.add(FlatUp);
+            allDirections.add(FlatRightUp);
+            allDirections.add(FlatRightDown);
+            allDirections.add(FlatDown);
+            allDirections.add(FlatLeftDown);
+            allDirections.add(FlatLeftUp);
+        }
+        return allDirections;
+    }
 
 }
