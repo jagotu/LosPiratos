@@ -1,7 +1,7 @@
 package com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements;
 
 import com.vztekoverflow.lospiratos.util.Warnings;
-import com.vztekoverflow.lospiratos.viewmodel.ResourceImmutable;
+import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Brig;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Frigate;
@@ -9,6 +9,9 @@ import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Galleon;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Schooner;
 
 public final class CannonUpgrade extends ShipEnhancement {
+
+    @Override
+    public EnhancementIcon getIcon(){return EnhancementIcon.cannon;}
 
     //todo pouzivat u rozsireni pattern jako u CannonUpgrade nebo pattern jako u HullUpgrade?
     private int bonusCannons = 0;
@@ -49,8 +52,8 @@ public final class CannonUpgrade extends ShipEnhancement {
         return bonusCannons;
     }
 
-    public static ResourceImmutable getCost(){
-        return new ResourceImmutable();
+    public static ResourceReadOnly getCost(){
+        return new ResourceReadOnly();
     }
     @Override
     public String getČeskéJméno() {

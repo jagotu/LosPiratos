@@ -4,11 +4,11 @@ package com.vztekoverflow.lospiratos.viewmodel;
 import com.vztekoverflow.lospiratos.model.ShipEnhancementStatus;
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.util.Warnings;
-import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipMechanics;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipType;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.CannonUpgrade;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.ChainShot;
+import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.EnhancementsCatalog;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.HullUpgrade;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.shipMechanics.Chained;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.shipMechanics.Rooted;
@@ -202,13 +202,13 @@ class ShipTest {
         s.addNewEnhancement(CannonUpgrade.class);
         Assertions.assertTrue(s.hasActiveEnhancement(CannonUpgrade.class));
         Assertions.assertFalse(s.hasActiveEnhancement(HullUpgrade.class));
-        Assertions.assertTrue(modelShip.getEnhancements().containsKey(ShipEnhancement.getPersistentName(CannonUpgrade.class)));
+        Assertions.assertTrue(modelShip.getEnhancements().containsKey(EnhancementsCatalog.getPersistentName(CannonUpgrade.class)));
 
         //destroy the ship:
         s.destroyShipAndEnhancements();
         Assertions.assertTrue(s.isDestroyed());
         Assertions.assertTrue(s.getEnhancement(CannonUpgrade.class).isDestroyed());
-        Assertions.assertEquals(ShipEnhancementStatus.destroyed,modelShip.getEnhancements().get(ShipEnhancement.getPersistentName(CannonUpgrade.class)));
+        Assertions.assertEquals(ShipEnhancementStatus.destroyed,modelShip.getEnhancements().get(EnhancementsCatalog.getPersistentName(CannonUpgrade.class)));
         Assertions.assertFalse(s.hasActiveEnhancement(CannonUpgrade.class));
 
         //repair the ship:
@@ -219,13 +219,13 @@ class ShipTest {
         //repair cannon upgrade several times:
         s.getEnhancement(CannonUpgrade.class).setDestroyed(false);
         Assertions.assertTrue(s.hasActiveEnhancement(CannonUpgrade.class));
-        Assertions.assertEquals(ShipEnhancementStatus.active,modelShip.getEnhancements().get(ShipEnhancement.getPersistentName(CannonUpgrade.class)));
+        Assertions.assertEquals(ShipEnhancementStatus.active,modelShip.getEnhancements().get(EnhancementsCatalog.getPersistentName(CannonUpgrade.class)));
         for (int i = 0; i < 999; i++) {
             s.getEnhancement(CannonUpgrade.class).setDestroyed(true);
             s.getEnhancement(CannonUpgrade.class).setDestroyed(false);
         }
         Assertions.assertTrue(s.hasActiveEnhancement(CannonUpgrade.class));
-        Assertions.assertEquals(ShipEnhancementStatus.active,modelShip.getEnhancements().get(ShipEnhancement.getPersistentName(CannonUpgrade.class)));
+        Assertions.assertEquals(ShipEnhancementStatus.active,modelShip.getEnhancements().get(EnhancementsCatalog.getPersistentName(CannonUpgrade.class)));
         Assertions.assertFalse(modelShip.getEnhancements().size() > 2);
         Assertions.assertFalse(s.getEnhancements().values().size() > 2);
 
