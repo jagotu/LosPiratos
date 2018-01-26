@@ -2,7 +2,7 @@ package com.vztekoverflow.lospiratos.viewmodel;
 
 import javafx.beans.property.IntegerProperty;
 
-public class Resource extends ResourceImmutable {
+public class Resource extends ResourceReadOnly {
     public Resource(int money, int cloth, int metal, int rum, int tobacco, int wood) {
         super(money, cloth, metal, rum, tobacco, wood);
     }
@@ -60,7 +60,7 @@ public class Resource extends ResourceImmutable {
     /*
      * component-wise increases resource number by value in @value
      */
-    public void add(ResourceImmutable value){
+    public void add(ResourceReadOnly value){
         addMoney(value.money.get());
         addCloth(value.cloth.get());
         addMetal(value.metal.get());
@@ -71,7 +71,7 @@ public class Resource extends ResourceImmutable {
     /*
      * component-wise decreases resource number by value in @value
      */
-    public void subtract(ResourceImmutable value){
+    public void subtract(ResourceReadOnly value){
         addMoney(-value.money.get());
         addCloth(-value.cloth.get());
         addMetal(-value.metal.get());

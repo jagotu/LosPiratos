@@ -1,11 +1,10 @@
 package com.vztekoverflow.lospiratos.viewmodel.Actions.Transactions ;
 
 import com.vztekoverflow.lospiratos.viewmodel.Actions.Action;
-import com.vztekoverflow.lospiratos.viewmodel.Actions.ParameterizedAction;
 import com.vztekoverflow.lospiratos.viewmodel.Resource;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-public class BuyCommodity extends CommodityTransaction implements ParameterizedAction {
+public class BuyCommodity extends CommodityTransaction {
 
     @Override
     protected Action createCopy() {

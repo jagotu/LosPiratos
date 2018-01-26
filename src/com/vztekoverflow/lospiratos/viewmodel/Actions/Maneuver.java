@@ -12,7 +12,8 @@ public abstract class Maneuver extends Action {
     @Override
     protected boolean recomputePlannable() {
         int shipSpeed = getRelatedShip().getSpeed();
-        return shipHasPlannedLessThan(shipSpeed, Maneuver.class);
+        int maneuversAlreadyPlanned = getRelatedShip().getPlannedActions().stream().mapToInt(Action::getManeuverSlotsTaken).sum();
+        return maneuversAlreadyPlanned < shipSpeed;
     }
     @Override
     protected boolean recomputeVisible() {
@@ -20,4 +21,7 @@ public abstract class Maneuver extends Action {
     }
 
     public abstract void performOn(Position position);
+
+    @Override
+    public int getManeuverSlotsTaken(){return 1;}
 }

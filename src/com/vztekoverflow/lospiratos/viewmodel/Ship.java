@@ -4,11 +4,13 @@ package com.vztekoverflow.lospiratos.viewmodel;
 import com.vztekoverflow.lospiratos.model.ShipEnhancementStatus;
 import com.vztekoverflow.lospiratos.util.Warnings;
 import com.vztekoverflow.lospiratos.viewmodel.Actions.Action;
+import com.vztekoverflow.lospiratos.viewmodel.Actions.Maneuver;
 import com.vztekoverflow.lospiratos.viewmodel.Actions.PlannableAction;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEntity;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipMechanics;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipType;
+import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.EnhancementsCatalog;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Brig;
 import javafx.beans.binding.Binding;
 import javafx.beans.binding.IntegerBinding;
@@ -118,7 +120,7 @@ public class Ship implements MovableFigure {
     }
 
     private boolean tryAddingEnhancement(String name, ShipEnhancementStatus status) {
-        ShipEnhancement e = ShipEnhancement.createInstanceFromPersistentName(name);
+        ShipEnhancement e = EnhancementsCatalog.createInstanceFromPersistentName(name);
         if (e == null) return false;
         e.onAddedToShip(this);
         if (status == ShipEnhancementStatus.destroyed) {
@@ -148,7 +150,7 @@ public class Ship implements MovableFigure {
     }
 
     private void removeEnhancementFromCollection(String name) {
-        ShipEnhancement anotherInstance = ShipEnhancement.createInstanceFromPersistentName(name);
+        ShipEnhancement anotherInstance = EnhancementsCatalog.createInstanceFromPersistentName(name);
         if (anotherInstance == null) return;
         if (enhancements.containsKey(anotherInstance.getClass())) {
             enhancements.remove(anotherInstance.getClass());
@@ -366,7 +368,7 @@ public class Ship implements MovableFigure {
 
 
     public <Enhancement extends ShipEnhancement> void addNewEnhancement(Class<Enhancement> enhancement) {
-        shipModel.enhancementsProperty().put(ShipEnhancement.getPersistentName(enhancement), ShipEnhancementStatus.active);
+        shipModel.enhancementsProperty().put(EnhancementsCatalog.getPersistentName(enhancement), ShipEnhancementStatus.active);
     }
 
     /*
@@ -514,10 +516,7 @@ public class Ship implements MovableFigure {
 
     private final ListProperty<Action> plannedActions = new SimpleListProperty<>(FXCollections.observableArrayList());
 
-    public ObservableList<? extends PlannableAction> getPlannedActions() {
-        return plannedActions.get();
-    }
-    ObservableList<Action> getPlannedActionsInternal() {
+    public ObservableList<Action> getPlannedActions() {
         return plannedActions.get();
     }
 
@@ -540,7 +539,8 @@ public class Ship implements MovableFigure {
     //todo will be moved to some other class
     public void performPlannedActionsDebugOnly(){
         for(Action a : plannedActions){
-            a.performOnTarget();
+            if(a instanceof Maneuver) //for now, debug only
+                a.performOnTarget();
         }
     }
 
@@ -586,7 +586,7 @@ public class Ship implements MovableFigure {
     /*
      * @returns Resource that corresponds to how many Resource had to be paid for obtaining the ship and all its enhancements
      */
-    public ResourceImmutable computeInitialCost(boolean includeDamagedEnhancements) {
+    public ResourceReadOnly computeInitialCost(boolean includeDamagedEnhancements) {
         Resource result = new Resource();
         for (ShipEnhancement e : enhancements.values()) {
             if (e.isDestroyed() && !includeDamagedEnhancements) continue;

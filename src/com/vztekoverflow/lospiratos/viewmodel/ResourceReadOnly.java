@@ -5,7 +5,9 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
-public class ResourceImmutable {
+public class ResourceReadOnly {
+
+    public static final ResourceReadOnly ZERO = new ResourceReadOnly();
 
     protected IntegerProperty money = new SimpleIntegerProperty(0);
     protected IntegerProperty cloth = new SimpleIntegerProperty(0);
@@ -15,7 +17,7 @@ public class ResourceImmutable {
     protected IntegerProperty tobco = new SimpleIntegerProperty(0);
     protected IntegerProperty wood_ = new SimpleIntegerProperty(0);
 
-    public ResourceImmutable(int money, int cloth, int metal, int rum, int tobacco, int wood) {
+    public ResourceReadOnly(int money, int cloth, int metal, int rum, int tobacco, int wood) {
         this.money.set(money);
         this.cloth.set(cloth);
         this.metal.set(metal);
@@ -24,10 +26,10 @@ public class ResourceImmutable {
         this.wood_.set(wood);
     }
 
-    public ResourceImmutable() {
+    public ResourceReadOnly() {
     }
-    public ResourceImmutable createCopy() {
-        return new ResourceImmutable(this.money.get(), this.cloth.get(), this.metal.get(), this.rum__.get(), this.tobco.get(), this.wood_.get());
+    public ResourceReadOnly createCopy() {
+        return new ResourceReadOnly(this.money.get(), this.cloth.get(), this.metal.get(), this.rum__.get(), this.tobco.get(), this.wood_.get());
     }
 
     @Override
@@ -35,10 +37,10 @@ public class ResourceImmutable {
         if (obj == null) {
             return false;
         }
-        if (!ResourceImmutable.class.isAssignableFrom(obj.getClass())) {
+        if (!ResourceReadOnly.class.isAssignableFrom(obj.getClass())) {
             return false;
         }
-        ResourceImmutable r = (ResourceImmutable) obj;
+        ResourceReadOnly r = (ResourceReadOnly) obj;
         return equals(r.money.get(), r.cloth.get(), r.metal.get(), r.wood_.get(), r.rum__.get(), r.tobco.get());
     }
 
@@ -61,11 +63,11 @@ public class ResourceImmutable {
                 Integer.hashCode(tobco.get());
     }
 
-    public boolean isGreaterThanOrEqual(ResourceImmutable r){
+    public boolean isGreaterThanOrEqual(ResourceReadOnly r){
         PartialOrdering result = this.compare(r);
         return (result == PartialOrdering.GreaterThanOrEqual || result == PartialOrdering.GreaterThan || result == PartialOrdering.Equal);
     }
-    public boolean isLesserThanOrEqual(ResourceImmutable r){
+    public boolean isLesserThanOrEqual(ResourceReadOnly r){
         PartialOrdering result = this.compare(r);
         return (result == PartialOrdering.LessThanOrEqual || result == PartialOrdering.LessThan || result == PartialOrdering.Equal);
     }
@@ -82,7 +84,7 @@ public class ResourceImmutable {
          * Similarly for < and <=.
          * @returns Uncomparable if in one component holds > and in other <.
          */
-    public PartialOrdering compare(ResourceImmutable r) {
+    public PartialOrdering compare(ResourceReadOnly r) {
         return compare(r.money.get(), r.cloth.get(), r.metal.get(), r.wood_.get(), r.rum__.get(), r.tobco.get());
     }
 

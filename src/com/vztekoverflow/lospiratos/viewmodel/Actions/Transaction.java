@@ -47,5 +47,5 @@ public abstract class Transaction extends Action {
             return recomputeCost();
         }
     };
-    
+
 }

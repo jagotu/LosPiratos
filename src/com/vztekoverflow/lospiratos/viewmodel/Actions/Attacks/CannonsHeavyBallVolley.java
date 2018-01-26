@@ -18,7 +18,6 @@ public class CannonsHeavyBallVolley extends CannonsAbstractVolley {
     @Override
     protected boolean recomputePlannable() {
         return getRelatedShip().getPlannedActions().size() == 0;
-        //todo also make sure that no other action is planned after this one
     }
 
     @Override

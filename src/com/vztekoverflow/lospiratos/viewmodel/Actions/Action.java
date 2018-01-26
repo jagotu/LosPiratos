@@ -7,8 +7,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableBooleanValue;
 
-import java.util.List;
-
 public abstract class Action implements PerformableAction, PlannableAction {
 
     protected final BooleanBinding visible = new BooleanBinding() {
@@ -31,12 +29,13 @@ public abstract class Action implements PerformableAction, PlannableAction {
     protected abstract boolean recomputeVisible();
     protected abstract boolean recomputePlannable();
 
+
     public Action() {
         relatedShip.addListener((__, old, newValue) -> {
             invalidateBindings();
             newValue.plannedActionsProperty().addListener((InvalidationListener)  ___ -> {
                 invalidateBindings();
-                //todo this is not the most efficient solution (invalidations could be granulated and called only some of them), but is easy to implement
+                //this is not the most efficient solution (invalidations could be granulated and called only some of them), but is easy to implement
             });
         } );
     }
@@ -97,5 +96,5 @@ public abstract class Action implements PerformableAction, PlannableAction {
     protected abstract Action createCopy();
 
     //may be overridden by children
-    public List<PlannableAction> getActionSpecifiers(){return null;}
+    public int getManeuverSlotsTaken(){return 0;}
 }
