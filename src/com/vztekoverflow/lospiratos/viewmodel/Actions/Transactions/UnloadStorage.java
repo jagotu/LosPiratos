@@ -3,6 +3,7 @@ package com.vztekoverflow.lospiratos.viewmodel.Actions.Transactions;
 import com.vztekoverflow.lospiratos.viewmodel.Actions.Action;
 import com.vztekoverflow.lospiratos.viewmodel.Actions.Transaction;
 import com.vztekoverflow.lospiratos.viewmodel.Resource;
+import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
 import com.vztekoverflow.lospiratos.viewmodel.Team;
 
@@ -29,16 +30,11 @@ public class UnloadStorage extends Transaction {
     }
 
     @Override
-    public void performOnTarget() {
+    public void performOnTargetInternal() {
         Ship s = getRelatedShip();
         Team t = s.getTeam();
         t.getOwnedResource().add(s.getStorage());
-        s.getStorage().setRum(0);
-        s.getStorage().setCloth(0);
-        s.getStorage().setMetal(0);
-        s.getStorage().setMoney(0);
-        s.getStorage().setWood(0);
-        s.getStorage().setTobacco(0);
+        s.getStorage().setAll(ResourceReadOnly.ZERO);
     }
 
     @Override

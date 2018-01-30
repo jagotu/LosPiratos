@@ -6,11 +6,11 @@ import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.shipMechanics.Rooted
 public abstract class ShipMechanics extends ShipEntity {
     public abstract com.vztekoverflow.lospiratos.model.ShipMechanics getModelDescription();
 
-    public static ShipMechanics getInstanceFromDescription(com.vztekoverflow.lospiratos.model.ShipMechanics m){
-        if(m == com.vztekoverflow.lospiratos.model.ShipMechanics.rooted){
+    public static ShipMechanics getInstanceFromDescription(com.vztekoverflow.lospiratos.model.ShipMechanics m) {
+        if (m == com.vztekoverflow.lospiratos.model.ShipMechanics.rooted) {
             return new Rooted();
         }
-        if(m == com.vztekoverflow.lospiratos.model.ShipMechanics.chained){
+        if (m == com.vztekoverflow.lospiratos.model.ShipMechanics.chained) {
             return new Chained();
         }
         //todo warning
@@ -33,4 +33,6 @@ public abstract class ShipMechanics extends ShipEntity {
     public int hashCode() {
         return getModelDescription().hashCode();
     }
+
+
 }

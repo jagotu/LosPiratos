@@ -34,9 +34,16 @@ public final class HullUpgrade extends ShipEnhancement {
         }
     }
 
+    /*
+     * Returns universal cost of this enhancement that is same for all instances, by calling a static method getCost().
+     */
+    public ResourceReadOnly getCostUniversal() {
+        return new ResourceReadOnly();
+    }
+
 
     public static ResourceReadOnly getCost(){
-        return new ResourceReadOnly();
+        return getCost();
     }
     @Override
     public String getČeskéJméno() {

@@ -6,6 +6,7 @@ import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.Mortar;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class MortarShot extends Attack {
+    //todo tohle je paramaterized, bude chtit souradnice
     @Override
     protected boolean recomputeVisible() {
         return getRelatedShip().hasEnhancement(Mortar.class);
@@ -17,7 +18,7 @@ public class MortarShot extends Attack {
     }
 
     @Override
-    public void performOnTarget() {
+    public void performOnTargetInternal() {
         throw new NotImplementedException();
     }
 

@@ -22,7 +22,7 @@ import java.lang.ref.WeakReference;
 import java.util.*;
 
 
-public class Ship implements MovableFigure {
+public class Ship implements MovableFigure, DamagableFigure {
 
     //region initializers
 
@@ -194,10 +194,6 @@ public class Ship implements MovableFigure {
 
     private IntegerProperty currentHP = new SimpleIntegerProperty();
 
-    public void addToCurrentHP(int value) {
-        currentHP.set(currentHP.get() + value);
-    }
-
     public int getCurrentHP() {
         return currentHP.getValue();
     }
@@ -356,6 +352,20 @@ public class Ship implements MovableFigure {
         return garrisonSize;
     }
 
+    /*
+     * The ships takes damage, reducing its HP by @value.
+     * If HP goes below 0, the ship will be destroyed.
+     */
+    @Override
+    public void takeDamage(int value) {
+        int newValue = currentHP.get() - value;
+        if (newValue <= 0) {
+            newValue = 0;
+            destroyShipAndEnhancements();
+        }
+        currentHP.set(newValue);
+    }
+
     //endregion
     //region entities
     //region enhancements
@@ -392,6 +402,7 @@ public class Ship implements MovableFigure {
     public <Enhancement extends ShipEnhancement> boolean hasActiveEnhancement(Class<Enhancement> enhancement) {
         return enhancements.containsKey(enhancement) && (!enhancements.get(enhancement).isDestroyed());
     }
+
     public <Enhancement extends ShipEnhancement> boolean hasEnhancement(Class<Enhancement> enhancement) {
         return enhancements.containsKey(enhancement);
     }
@@ -528,18 +539,22 @@ public class Ship implements MovableFigure {
         Action a;
         try {
             a = (Action) action.asPerformableAction();
-        } catch (ClassCastException e){
+        } catch (ClassCastException e) {
             //this should never happen in our game, as Action is the only class that implements PerformableAction
             throw new UnsupportedOperationException();
         }
         a.setRelatedShip(this);
+        if (!a.getPlannable()) {
+            Warnings.makeWarning(toString() + ".planAction()", "attempt to plan action that is not plannable: " + a.getClass().getSimpleName());
+            return;
+        }
         plannedActions.add(a);
     }
 
-    //todo will be moved to some other class
-    public void performPlannedActionsDebugOnly(){
-        for(Action a : plannedActions){
-            if(a instanceof Maneuver) //for now, debug only
+    //todo will be removed
+    public void performPlannedActions__DebugOnly() {
+        for (Action a : plannedActions) {
+            if (a instanceof Maneuver) //for now, debug only
                 a.performOnTarget();
         }
     }
@@ -589,19 +604,22 @@ public class Ship implements MovableFigure {
     public ResourceReadOnly computeInitialCost(boolean includeDamagedEnhancements) {
         Resource result = new Resource();
         for (ShipEnhancement e : enhancements.values()) {
-            if (e.isDestroyed() && !includeDamagedEnhancements) continue;
-            try {
-                result.add((Resource) (e.getClass().getMethod("getCost").invoke(null)));
-            } catch (Exception ex) {
-                Warnings.makeWarning(toString() + ".computeInitialCost()", ex.getMessage());
-            }
+            if (e.isDestroyed() && !includeDamagedEnhancements)
+                continue;
+            result.add(e.getCostUniversal());
         }
-        try {
-            result.add((Resource) (shipType.getClass().getMethod("getCost").invoke(null)));
-        } catch (Exception ex) {
-            Warnings.makeWarning(toString() + ".computeInitialCost()", ex.getMessage());
-        }
+        result.add(getShipType().getCostUniversal());
         return result;
+    }
+
+    /*
+     * is called by Game whenever the game proceeds to a next round
+     */
+    public void onNextRoundStarted(int roundNo) {
+        plannedActions.removeIf(p -> true); //remove all
+        for (ShipEntity e : getAllEntities()) {
+            e.onNextRoundStarted(roundNo);
+        }
     }
     //endregion
 

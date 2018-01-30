@@ -24,4 +24,10 @@ public class Galleon extends ShipType {
     public String getČeskéJméno() {
         return "Galeona";
     }
+
+    @Override
+    public ResourceReadOnly getCostUniversal() {
+        return getCost();
+    }
+
 }

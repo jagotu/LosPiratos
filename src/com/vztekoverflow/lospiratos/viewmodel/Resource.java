@@ -10,6 +10,15 @@ public class Resource extends ResourceReadOnly {
     public Resource() {
     }
 
+    public void setAll(ResourceReadOnly value){
+        setMoney(value.getMoney());
+        setCloth(value.getCloth());
+        setMetal(value.getMetal());
+        setTobacco(value.getTobacco());
+        setRum(value.getRum());
+        setWood(value.getWood());
+    }
+
     public void setMoney(int money) {
         this.money.set(money);
     }
@@ -78,6 +87,17 @@ public class Resource extends ResourceReadOnly {
         addRum(-value.rum__.get());
         addTobacco(-value.tobco.get());
         addWood(-value.wood_.get());
+    }
+    /*
+     * component-wise multiplies resource number by @value and rounds to Integers
+     */
+    public void multiply(double value){
+        setMoney  ((int) (getMoney() * value));
+        setCloth  ((int) (getCloth() * value));
+        setMetal  ((int) (getMetal() * value));
+        setRum    ((int) (getRum() * value));
+        setTobacco((int) (getTobacco() * value));
+        setWood   ((int) (getWood() * value));
     }
 
     /*

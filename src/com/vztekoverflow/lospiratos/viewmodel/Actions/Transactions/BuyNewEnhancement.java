@@ -1,8 +1,8 @@
 package com.vztekoverflow.lospiratos.viewmodel.Actions.Transactions ;
 
 import com.vztekoverflow.lospiratos.viewmodel.Actions.Action;
-import com.vztekoverflow.lospiratos.viewmodel.Resource;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
+import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.EnhancementsCatalog;
 
 public class BuyNewEnhancement extends EnhancementAbstractTransaction {
 
@@ -12,8 +12,8 @@ public class BuyNewEnhancement extends EnhancementAbstractTransaction {
     }
 
     @Override
-    public void performOnTarget() {
-        throw new NotImplementedException();
+    public void performOnTargetInternal() {
+        getRelatedShip().addNewEnhancement(getEnhancement());
     }
 
     @Override
@@ -22,7 +22,7 @@ public class BuyNewEnhancement extends EnhancementAbstractTransaction {
     }
 
     @Override
-    protected Resource recomputeCost() {
-        throw new NotImplementedException();
+    protected ResourceReadOnly recomputeCost() {
+        return EnhancementsCatalog.createInstanceFromPersistentName(EnhancementsCatalog.getPersistentName(getEnhancement())).getCostUniversal();
     }
 }

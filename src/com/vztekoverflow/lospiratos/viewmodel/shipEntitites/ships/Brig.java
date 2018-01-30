@@ -24,4 +24,10 @@ public class Brig extends ShipType {
     public String getČeskéJméno() {
         return "Briga";
     }
+
+    @Override
+    public ResourceReadOnly getCostUniversal() {
+        return getCost();
+    }
+
 }

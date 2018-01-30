@@ -1,10 +1,8 @@
 package com.vztekoverflow.lospiratos.viewmodel.Actions.Transactions ;
 
 import com.vztekoverflow.lospiratos.viewmodel.Actions.Action;
-import com.vztekoverflow.lospiratos.viewmodel.Resource;
-import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.CustomShipType;
-import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Galleon;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
+import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipType;
 
 public class UpgradeShip extends ChangeShipAbstractTransaction {
     @Override
@@ -14,16 +12,12 @@ public class UpgradeShip extends ChangeShipAbstractTransaction {
 
     @Override
     protected boolean recomputePlannable() {
-        if(getRelatedShip().getShipType().getClass().equals(Galleon.class))
-            return false;
-        if(getRelatedShip().getShipType().getClass().equals(CustomShipType.class))
-            return false;
-        return super.recomputePlannable();
+        return super.recomputePlannable() && ShipType.increment(getRelatedShip().getShipType().getClass()) != null;
     }
 
     @Override
-    public void performOnTarget() {
-        throw new NotImplementedException();
+    public void performOnTargetInternal() {
+        getRelatedShip().setShipType(ShipType.increment(getRelatedShip().getShipType().getClass()));
     }
 
     @Override
@@ -32,7 +26,8 @@ public class UpgradeShip extends ChangeShipAbstractTransaction {
     }
 
     @Override
-    protected Resource recomputeCost() {
-        throw new NotImplementedException();
+    protected ResourceReadOnly recomputeCost() {
+        //todo tady by to asi melo byt jinak?
+        return getRelatedShip().getShipType().getCostUniversal();
     }
 }

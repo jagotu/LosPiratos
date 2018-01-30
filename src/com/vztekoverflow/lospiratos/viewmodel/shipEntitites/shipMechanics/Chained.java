@@ -12,4 +12,10 @@ public class Chained extends ShipMechanics {
     public com.vztekoverflow.lospiratos.model.ShipMechanics getModelDescription() {
         return com.vztekoverflow.lospiratos.model.ShipMechanics.chained;
     }
+
+    @Override
+    public void onNextRoundStarted(int roundNo) {
+        super.onNextRoundStarted(roundNo);
+        //todo remove itself
+    }
 }

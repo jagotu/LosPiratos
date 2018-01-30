@@ -1,11 +1,13 @@
 package com.vztekoverflow.lospiratos.viewmodel.Actions;
 
+import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
 /*
  * This is a real plannable activity, useful for debugging or for a game master.
  * When planned, it allows any succeeding action to be planned, regardless of any limitations.
+ * Moreover, when planned, then all other planned actions will be performed without any cost.
  */
 public class ActivatePrivilegedMode extends Action {
     public static final BooleanProperty available = new SimpleBooleanProperty();
@@ -30,7 +32,12 @@ public class ActivatePrivilegedMode extends Action {
     }
 
     @Override
-    public void performOnTarget() {
+    protected ResourceReadOnly recomputeCost() {
+        return new ResourceReadOnly();
+    }
+
+    @Override
+    protected void performOnTargetInternal() {
         //void
     }
 

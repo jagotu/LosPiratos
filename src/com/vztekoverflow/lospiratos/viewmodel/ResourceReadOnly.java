@@ -6,6 +6,8 @@ import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
 public class ResourceReadOnly {
+    //todo tahle trida ve skutecnosti neni read only, na tech properties jde normalne volat set
+    //reseni: at to vubec nejsou properties, ale jenom hodnoty; properties at ma az Resource
 
     public static final ResourceReadOnly ZERO = new ResourceReadOnly();
 
@@ -26,8 +28,18 @@ public class ResourceReadOnly {
         this.wood_.set(wood);
     }
 
+    public ResourceReadOnly(ResourceReadOnly original) {
+        this.money.set(original.money.get());
+        this.cloth.set(original.cloth.get());
+        this.metal.set(original.metal.get());
+        this.rum__.set(original.rum__.get());
+        this.tobco.set(original.tobco.get());
+        this.wood_.set(original.wood_.get());
+    }
+
     public ResourceReadOnly() {
     }
+
     public ResourceReadOnly createCopy() {
         return new ResourceReadOnly(this.money.get(), this.cloth.get(), this.metal.get(), this.rum__.get(), this.tobco.get(), this.wood_.get());
     }
@@ -63,27 +75,28 @@ public class ResourceReadOnly {
                 Integer.hashCode(tobco.get());
     }
 
-    public boolean isGreaterThanOrEqual(ResourceReadOnly r){
+    public boolean isGreaterThanOrEqual(ResourceReadOnly r) {
         PartialOrdering result = this.compare(r);
         return (result == PartialOrdering.GreaterThanOrEqual || result == PartialOrdering.GreaterThan || result == PartialOrdering.Equal);
     }
-    public boolean isLesserThanOrEqual(ResourceReadOnly r){
+
+    public boolean isLesserThanOrEqual(ResourceReadOnly r) {
         PartialOrdering result = this.compare(r);
         return (result == PartialOrdering.LessThanOrEqual || result == PartialOrdering.LessThan || result == PartialOrdering.Equal);
     }
 
     /*
-         * Compares two resources component wise and returns a PartialOrdering that holds for each of the component
-         * @returns PartialOrdering, trying to find the most precise result (in the sense of inclusion)
-         * I.e., if, in every component, the object's value > argument's value, @returns GreaterThan
-         *    Then, if, in every component, the object's value equals, @returns Equals
-         *    Then, if, in every component, the object's value >= argument's value, @returns GreaterThanOrEqual
-         *    Thus, result GreaterThanOrEqual means that in at least one component, but not in all, the value is equal.
-         * If you want to compare for >= in the usual sense, you have to test if (result == GreaterThan || result == GreaterThanOrEqual || result == Equal)
-         *     (Or use the method isGreaterThanOrEqual)
-         * Similarly for < and <=.
-         * @returns Uncomparable if in one component holds > and in other <.
-         */
+     * Compares two resources component wise and returns a PartialOrdering that holds for each of the component
+     * @returns PartialOrdering, trying to find the most precise result (in the sense of inclusion)
+     * I.e., if, in every component, the object's value > argument's value, @returns GreaterThan
+     *    Then, if, in every component, the object's value equals, @returns Equals
+     *    Then, if, in every component, the object's value >= argument's value, @returns GreaterThanOrEqual
+     *    Thus, result GreaterThanOrEqual means that in at least one component, but not in all, the value is equal.
+     * If you want to compare for >= in the usual sense, you have to test if (result == GreaterThan || result == GreaterThanOrEqual || result == Equal)
+     *     (Or use the method isGreaterThanOrEqual)
+     * Similarly for < and <=.
+     * @returns Uncomparable if in one component holds > and in other <.
+     */
     public PartialOrdering compare(ResourceReadOnly r) {
         return compare(r.money.get(), r.cloth.get(), r.metal.get(), r.wood_.get(), r.rum__.get(), r.tobco.get());
     }
@@ -182,8 +195,68 @@ public class ResourceReadOnly {
     /*
      * Creates a new instance of Resource that is mutable and contains copies of original values
      */
-    public Resource toMutable(){
+    public Resource createMutableCopy() {
         return new Resource(this.money.get(), this.cloth.get(), this.metal.get(), this.rum__.get(), this.tobco.get(), this.wood_.get());
+    }
+
+    /*
+     * fluent syntax for creating new ResourceReadOnly form arithmetic expressions
+     */
+    public ResourceReadOnly times(double value) {
+        ResourceReadOnly v = new ResourceReadOnly(this);
+        v.money.set((int) (v.money.get() * value));
+        v.cloth.set((int) (v.cloth.get() * value));
+        v.metal.set((int) (v.metal.get() * value));
+        v.rum__.set((int) (v.rum__.get() * value));
+        v.tobco.set((int) (v.tobco.get() * value));
+        v.wood_.set((int) (v.wood_.get() * value));
+        return v;
+    }
+
+    /*
+     * fluent syntax for creating new ResourceReadOnly form arithmetic expressions
+     */
+    public ResourceReadOnly plus(ResourceReadOnly rightOperand) {
+        ResourceReadOnly v = new ResourceReadOnly();
+        v.money.set(this.money.get() + rightOperand.money.get());
+        v.cloth.set(this.cloth.get() + rightOperand.cloth.get());
+        v.metal.set(this.metal.get() + rightOperand.metal.get());
+        v.rum__.set(this.rum__.get() + rightOperand.rum__.get());
+        v.tobco.set(this.tobco.get() + rightOperand.tobco.get());
+        v.wood_.set(this.wood_.get() + rightOperand.wood_.get());
+        return v;
+    }
+
+    /*
+     * fluent syntax for creating new ResourceReadOnly form arithmetic expressions
+     */
+    public ResourceReadOnly timesComponenWise(ResourceReadOnly rightOperand) {
+        ResourceReadOnly v = new ResourceReadOnly();
+        v.money.set(this.money.get() * rightOperand.money.get());
+        v.cloth.set(this.cloth.get() * rightOperand.cloth.get());
+        v.metal.set(this.metal.get() * rightOperand.metal.get());
+        v.rum__.set(this.rum__.get() * rightOperand.rum__.get());
+        v.tobco.set(this.tobco.get() * rightOperand.tobco.get());
+        v.wood_.set(this.wood_.get() * rightOperand.wood_.get());
+        return v;
+    }
+
+    /*
+     * fluent syntax for creating new ResourceReadOnly form arithmetic expressions
+     */
+    public int scalarProduct(ResourceReadOnly rightOperand) {
+        int result = 0;
+        result += (this.money.get() * rightOperand.money.get());
+        result += (this.cloth.get() * rightOperand.cloth.get());
+        result += (this.metal.get() * rightOperand.metal.get());
+        result += (this.rum__.get() * rightOperand.rum__.get());
+        result += (this.tobco.get() * rightOperand.tobco.get());
+        result += (this.wood_.get() * rightOperand.wood_.get());
+        return result;
+    }
+
+    public static ResourceReadOnly fromMoney(int value){
+        return new ResourceReadOnly(value, 0,0,0,0,0);
     }
 
 }

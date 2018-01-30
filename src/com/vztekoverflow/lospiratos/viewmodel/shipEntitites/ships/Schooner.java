@@ -25,4 +25,10 @@ public class Schooner extends ShipType {
     public String getČeskéJméno() {
         return "Škuner";
     }
+
+    @Override
+    public ResourceReadOnly getCostUniversal() {
+        return getCost();
+    }
+
 }

@@ -31,6 +31,14 @@ public abstract class ShipEntity implements Translatable {
      */
     public void onShipTypeJustChanged(){}
 
+    /*
+     * Is called by the owner whenever the game proceeds to a next round.
+     * Can be inherited to add custom implementation.
+     * Overridden implementations should always call super.onNextRoundStarted() first.
+     */
+    public void onNextRoundStarted(int roundNo) {
+    }
+
     public int getBonusCannonsCount() {return 0;}
     public int getBonusMaxHP() {return 0;}
     public int getBonusCargoSpace() {return 0;}

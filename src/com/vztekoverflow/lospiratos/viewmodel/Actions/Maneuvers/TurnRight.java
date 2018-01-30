@@ -11,7 +11,7 @@ public class TurnRight extends TurnAbstractManeuver {
     }
 
     @Override
-    public void performOnTarget() {
+    public void performOnTargetInternal() {
         performOn(getRelatedShip().getPosition());
     }
 

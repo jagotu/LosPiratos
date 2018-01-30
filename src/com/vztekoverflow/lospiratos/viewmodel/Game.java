@@ -4,6 +4,13 @@ import com.sun.javafx.collections.UnmodifiableObservableMap;
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.util.FxUtils;
 import com.vztekoverflow.lospiratos.util.Warnings;
+import com.vztekoverflow.lospiratos.viewmodel.Actions.Action;
+import com.vztekoverflow.lospiratos.viewmodel.Actions.Attacks.CannonsAbstractVolley;
+import com.vztekoverflow.lospiratos.viewmodel.Actions.Attacks.FrontalAssault;
+import com.vztekoverflow.lospiratos.viewmodel.Actions.Attacks.MortarShot;
+import com.vztekoverflow.lospiratos.viewmodel.Actions.Maneuver;
+import com.vztekoverflow.lospiratos.viewmodel.Actions.PerformableAction;
+import com.vztekoverflow.lospiratos.viewmodel.Actions.Transaction;
 import com.vztekoverflow.lospiratos.viewmodel.BoardTiles.Port;
 import com.vztekoverflow.lospiratos.viewmodel.BoardTiles.Sea;
 import com.vztekoverflow.lospiratos.viewmodel.BoardTiles.Shipwreck;
@@ -101,6 +108,41 @@ public class Game {
         return gameModel;
     }
 
+
+    //region evaluate
+    private int roundNo = 0;
+    public void closeRoundAndEvaluate(){
+        //zavolat agenty
+        evaluateVolleys();
+        evaluate(Maneuver.class);
+        evaluate(MortarShot.class);
+        evaluate(Transaction.class);
+        ++roundNo;
+        for(Ship s : getAllShips().values()){
+            s.onNextRoundStarted(roundNo);
+        }
+    }
+    private void evaluateVolleys(){
+        for(Ship s : allShips.values()){
+            Position oldPosition = s.getPosition().createCopy();
+            for(PerformableAction a : s.getPlannedActions()){
+                if(a instanceof Maneuver || a instanceof CannonsAbstractVolley || a instanceof FrontalAssault){
+                    a.performOnTarget();
+                }
+            }
+            s.getPosition().setFrom(oldPosition);
+        }
+    }
+    private void evaluate(Class<? extends Action> action){
+        for(Ship s : allShips.values()){
+            for(PerformableAction a : s.getPlannedActions()){
+                if(action.isAssignableFrom(a.getClass())){
+                    a.performOnTarget();
+                }
+            }
+        }
+    }
+    //endregion
 
     private final ListProperty<Team> teams = new SimpleListProperty<>(FXCollections.observableArrayList());
     private final ReadOnlyListProperty<Team> unmodifiableTeams = new SimpleListProperty<>(FXCollections.unmodifiableObservableList(teams));
@@ -269,7 +311,7 @@ public class Game {
                 s.getStorage().addRum(30 * i + j);
                 s.getStorage().addWood(40 * i + j);
                 if (i != 3) //random value
-                    s.addToCurrentHP(-6 * j);
+                    s.takeDamage(8 * j);
                 for (int k = 0; k < j; k++) {
                     Class<ShipEnhancement> enh = (Class<ShipEnhancement>) shipEnhancements[k];
                     s.addNewEnhancement(enh);

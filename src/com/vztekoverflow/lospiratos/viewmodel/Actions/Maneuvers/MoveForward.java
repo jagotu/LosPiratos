@@ -24,7 +24,7 @@ public class MoveForward extends Maneuver {
     }
 
     @Override
-    public void performOnTarget() {
+    public void performOnTargetInternal() {
         performOn(getRelatedShip().getPosition());
     }
 

@@ -21,7 +21,7 @@ public class CannonsHeavyBallVolley extends CannonsAbstractVolley {
     }
 
     @Override
-    public void performOnTarget() {
+    public void performOnTargetInternal() {
         throw new NotImplementedException();
     }
 

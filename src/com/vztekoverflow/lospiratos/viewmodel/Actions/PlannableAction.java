@@ -1,9 +1,11 @@
 package com.vztekoverflow.lospiratos.viewmodel.Actions;
 
 import com.vztekoverflow.lospiratos.util.Translatable;
+import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ObservableBooleanValue;
+import javafx.beans.value.ObservableObjectValue;
 
 public interface PlannableAction extends Translatable {
     ActionIcon getIcon();
@@ -31,4 +33,7 @@ public interface PlannableAction extends Translatable {
      */
     PerformableAction asPerformableAction();
 
+    ResourceReadOnly getCost();
+
+    ObservableObjectValue<ResourceReadOnly> costProperty();
 }

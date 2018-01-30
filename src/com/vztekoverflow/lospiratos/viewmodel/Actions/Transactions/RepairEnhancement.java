@@ -1,8 +1,9 @@
-package com.vztekoverflow.lospiratos.viewmodel.Actions.Transactions ;
+package com.vztekoverflow.lospiratos.viewmodel.Actions.Transactions;
 
 import com.vztekoverflow.lospiratos.viewmodel.Actions.Action;
-import com.vztekoverflow.lospiratos.viewmodel.Resource;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
+import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
+import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.EnhancementsCatalog;
 
 public class RepairEnhancement extends EnhancementAbstractTransaction {
 
@@ -12,8 +13,8 @@ public class RepairEnhancement extends EnhancementAbstractTransaction {
     }
 
     @Override
-    public void performOnTarget() {
-        throw new NotImplementedException();
+    public void performOnTargetInternal() {
+        getRelatedShip().getEnhancement(getEnhancement()).setDestroyed(false);
     }
 
     @Override
@@ -22,7 +23,11 @@ public class RepairEnhancement extends EnhancementAbstractTransaction {
     }
 
     @Override
-    protected Resource recomputeCost() {
-        throw new NotImplementedException();
+    protected ResourceReadOnly recomputeCost() {
+        ShipEnhancement e = EnhancementsCatalog.createInstanceFromPersistentName(EnhancementsCatalog.getPersistentName(getEnhancement()));
+        //the null pointer exception (reported here by code check) should not happen, based on Catalog's contract
+        return e.getCostUniversal().times(repairCostCoefficient);
     }
+
+    static final double repairCostCoefficient = 0.1;
 }

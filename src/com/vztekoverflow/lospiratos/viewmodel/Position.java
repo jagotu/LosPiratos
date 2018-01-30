@@ -7,6 +7,9 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
+/*
+ * A modifiable object, representing a position of a figure on a hexagonal board with axial coordinates
+ */
 public class Position {
 
     public static final boolean pointy = true;
@@ -81,6 +84,11 @@ public class Position {
 
     public void setRotation(AxialDirection direction) {
         rotation.set(direction.toDegrees());
+    }
+
+    public void setFrom(Position anotherPosition){
+        this.setCoordinate(anotherPosition.getCoordinate());
+        this.setRotation(anotherPosition.getRotation());
     }
 
     public void rotateRight() {

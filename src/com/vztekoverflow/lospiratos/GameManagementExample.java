@@ -32,7 +32,7 @@ public class GameManagementExample {
         AxialCoordinate pos = new AxialCoordinate(0,0);
         Ship perla = pirraten.createAndAddNewShip(Frigate.class, "Růžová perla", "Jack Daniels", pos);
         perla.addNewEnhancement(CannonUpgrade.class);
-        perla.addToCurrentHP(-10);
+        perla.takeDamage(10);
 
         Ship eliminace = pirraten.createAndAddNewShip(Galleon.class, "Eliminace", "Gauß", pos);
         eliminace.destroyShipAndEnhancements();

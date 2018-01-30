@@ -23,5 +23,11 @@ public class Frigate extends ShipType {
     public String getČeskéJméno() {
         return "Frigata";
     }
+
+    @Override
+    public ResourceReadOnly getCostUniversal() {
+        return getCost();
+    }
+
 }
 

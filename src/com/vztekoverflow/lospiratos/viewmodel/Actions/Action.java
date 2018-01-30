@@ -1,13 +1,56 @@
 package com.vztekoverflow.lospiratos.viewmodel.Actions;
 
+import com.vztekoverflow.lospiratos.util.Warnings;
+import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableBooleanValue;
 
 public abstract class Action implements PerformableAction, PlannableAction {
+
+
+    @Override
+    public PerformableAction asPerformableAction() {
+        return createCopy();
+    }
+
+    protected abstract Action createCopy();
+
+    public Action() {
+        relatedShip.addListener((__, old, newValue) -> {
+            invalidateBindings();
+            newValue.plannedActionsProperty().addListener((InvalidationListener) ___ -> {
+                invalidateBindings();
+                //this is not the most efficient solution (invalidations could be granulated and called only some of them), but is easy to implement
+            });
+        });
+    }
+
+    private final ObjectProperty<Ship> relatedShip = new SimpleObjectProperty<>();
+
+    @Override
+    public ObjectProperty<Ship> relatedShipProperty() {
+        return relatedShip;
+    }
+
+    public Ship getRelatedShip() {
+        return relatedShip.get();
+    }
+
+    protected final BooleanBinding privilegedModeActive = new BooleanBinding() {
+        @Override
+        protected boolean computeValue() {
+            return getRelatedShip().getPlannedActions().stream().anyMatch(a -> a.getClass().equals(ActivatePrivilegedMode.class));
+        }
+    };
+
+    protected boolean isPrivilegedModeActive() { return privilegedModeActive.get();}
+
+    //region plannable
 
     protected final BooleanBinding visible = new BooleanBinding() {
         @Override
@@ -18,35 +61,13 @@ public abstract class Action implements PerformableAction, PlannableAction {
     protected final BooleanBinding plannable = new BooleanBinding() {
         @Override
         protected boolean computeValue() {
-            if(getRelatedShip().getPlannedActions().stream().anyMatch(a -> a.getClass().equals(ActivatePrivilegedMode.class)) ) return true;
-            if(getRelatedShip().getPlannedActions().stream().anyMatch(a -> a.preventsFromBeingPlanned(Action.this))) return false;
+            if (isPrivilegedModeActive())
+                return true;
+            if (getRelatedShip().getPlannedActions().stream().anyMatch(a -> a.preventsFromBeingPlanned(Action.this)))
+                return false;
             return recomputePlannable();
         }
     };
-    protected final ObjectProperty<Ship> relatedShip = new SimpleObjectProperty<>();
-
-
-    protected abstract boolean recomputeVisible();
-    protected abstract boolean recomputePlannable();
-
-
-    public Action() {
-        relatedShip.addListener((__, old, newValue) -> {
-            invalidateBindings();
-            newValue.plannedActionsProperty().addListener((InvalidationListener)  ___ -> {
-                invalidateBindings();
-                //this is not the most efficient solution (invalidations could be granulated and called only some of them), but is easy to implement
-            });
-        } );
-    }
-
-    /*
-     * Overridden implementations should ALWAYS call super.invalidateBindings() first
-     */
-    protected void invalidateBindings(){
-        visible.invalidate();
-        plannable.invalidate();
-    }
 
     public boolean getVisible() {
         return visible.get();
@@ -67,34 +88,93 @@ public abstract class Action implements PerformableAction, PlannableAction {
     }
 
     @Override
-    public void setRelatedShip(Ship s){
+    public void setRelatedShip(Ship s) {
         relatedShip.set(s);
     }
 
-    @Override
-    public ObjectProperty<Ship> relatedShipProperty() {
-        return relatedShip;
+    //may be overridden by children
+    public int getManeuverSlotsTaken() {
+        return 0;
     }
 
-    public Ship getRelatedShip() {
-        return relatedShip.get();
+    //region inheritors' API
+    protected abstract boolean recomputeVisible();
+
+    protected abstract boolean recomputePlannable();
+
+    /*
+     * Overridden implementations should ALWAYS call super.invalidateBindings() first
+     */
+    protected void invalidateBindings() {
+        visible.invalidate();
+        plannable.invalidate();
+        cost.invalidate();
+        privilegedModeActive.invalidate();
     }
 
-    final protected boolean shipHasPlannedLessThan(int count, Class<? extends Action> action){
+    final protected boolean shipHasPlannedLessThan(int count, Class<? extends Action> action) {
         return getRelatedShip().getPlannedActions().stream().filter(a -> action.isAssignableFrom(a.getClass())).count() < count;
     }
-    final protected boolean shipHasPlannedExactly(int count, Class<? extends Action> action){
+
+    final protected boolean shipHasPlannedExactly(int count, Class<? extends Action> action) {
         return getRelatedShip().getPlannedActions().stream().filter(a -> action.isAssignableFrom(a.getClass())).count() == count;
     }
+
     //may be overridden by children
-    public boolean preventsFromBeingPlanned(Action preventedAction){return false;}
+    //this is public onlye because I want to use it in a lambda in an inheritor. Otherwise it should be protected. Sadly, it is the only option
+    public boolean preventsFromBeingPlanned(Action preventedAction) {
+        return false;
+    }
+
+    //endregion
+    //endregion
+    //region performable
+
+    protected abstract ResourceReadOnly recomputeCost();
+
+    protected final ObjectBinding<ResourceReadOnly> cost = new ObjectBinding<ResourceReadOnly>() {
+        @Override
+        protected ResourceReadOnly computeValue() {
+            return recomputeCost();
+        }
+    };
+
+    public ResourceReadOnly getCost() {
+        return cost.get();
+    }
+
+    public ObjectBinding<ResourceReadOnly> costProperty() {
+        return cost;
+    }
+
+    /*
+     * @returns true if action's cost has successfully been paid.
+     */
+    protected boolean performPayment(){
+        ResourceReadOnly cost = getCost();
+        if(cost.isLesserThanOrEqual(getRelatedShip().getTeam().getOwnedResource())){
+            getRelatedShip().getStorage().subtract(cost);
+            return true;
+        }else{
+            return false;
+        }
+    }
 
     @Override
-    public PerformableAction asPerformableAction() {
-        return createCopy();
+    public final void performOnTarget() {
+        if(isPrivilegedModeActive())
+            performOnTargetInternal();
+        else if(performPayment())
+            performOnTargetInternal();
+        else
+            Warnings.makeWarning(toString()+".performOnTarget()", "Action has not been performed because there is not enough resource");
+            //todo tell also some info to game user?
     }
-    protected abstract Action createCopy();
+    /*
+     * Should be overridden by inheritors to add custom behaviour.
+     */
+    protected abstract void performOnTargetInternal();
 
-    //may be overridden by children
-    public int getManeuverSlotsTaken(){return 0;}
+    //endregion
+
 }

@@ -18,7 +18,7 @@ public class FrontalAssault extends Attack {
     }
 
     @Override
-    public void performOnTarget() {
+    public void performOnTargetInternal() {
         throw new NotImplementedException();
     }
 

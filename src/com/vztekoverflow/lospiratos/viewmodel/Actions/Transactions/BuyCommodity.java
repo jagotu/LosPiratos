@@ -1,8 +1,7 @@
 package com.vztekoverflow.lospiratos.viewmodel.Actions.Transactions ;
 
 import com.vztekoverflow.lospiratos.viewmodel.Actions.Action;
-import com.vztekoverflow.lospiratos.viewmodel.Resource;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
 
 public class BuyCommodity extends CommodityTransaction {
 
@@ -12,8 +11,9 @@ public class BuyCommodity extends CommodityTransaction {
     }
 
     @Override
-    public void performOnTarget() {
-        throw new NotImplementedException();
+    public void performOnTargetInternal() {
+        //price has already been paid by the caller
+        getRelatedShip().getTeam().getOwnedResource().add(this.getCommodities());
     }
 
     @Override
@@ -22,8 +22,10 @@ public class BuyCommodity extends CommodityTransaction {
     }
 
     @Override
-    protected Resource recomputeCost() {
-        throw new NotImplementedException();
+    protected ResourceReadOnly recomputeCost() {
+        return ResourceReadOnly.fromMoney(getCommodities().scalarProduct(purchaseCoefficients));
     }
 
+    //todo opravdickou hodnotu
+    static final ResourceReadOnly purchaseCoefficients = new ResourceReadOnly (1,2,2,2,2,2);
 }
