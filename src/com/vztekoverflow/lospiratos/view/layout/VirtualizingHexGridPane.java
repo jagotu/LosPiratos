@@ -130,10 +130,13 @@ public class VirtualizingHexGridPane extends Pane {
     }
 
 
-    private Shape getHexagon() {
+    private Shape getHexagon(boolean transparent) {
         Polygon hexagon = new Polygon();
+        if(transparent)
+        {
+            hexagon.setFill(Color.TRANSPARENT);
+        }
         hexagon.getPoints().addAll(hexagonPoints);
-        hexagon.setFill(Color.TRANSPARENT);
         return hexagon;
     }
 
@@ -212,7 +215,7 @@ public class VirtualizingHexGridPane extends Pane {
 
 
                 if (t == null) {
-                    Shape tileShape = getHexagon();
+                    Shape tileShape = getHexagon(true);
                     tileShape.getStyleClass().add("hex-tile");
                     t = new HexTile(tileWidth, tileHeight, this, tileShape);
                 }
@@ -381,7 +384,7 @@ public class VirtualizingHexGridPane extends Pane {
             clip.addListener((observable ->
             {
                 if (clip.get()) {
-                    this.setClip(parent.getHexagon());
+                    this.setClip(parent.getHexagon(false));
                 } else {
                     this.setClip(null);
                 }
