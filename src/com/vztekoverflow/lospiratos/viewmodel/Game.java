@@ -68,7 +68,7 @@ public class Game {
     }
 
     private int createAndAddNewDefaultTeamCounter = 1;
-    /*
+    /**
      * Is guaranteed to always return a new team, with some default initial values (including name)
      */
     public Team createAndAddNewDefaultTeam(){
@@ -80,8 +80,8 @@ public class Game {
         return  t;
 
     }
-    /*
-     * @returns null if team with this name (case insensitive) already exists
+    /**
+     * @return null if team with this name (case insensitive) already exists
      */
     public Team createAndAddNewTeam(String teamName, Color teamColor) {
         if (teamName == null || teamName.isEmpty()) {
@@ -146,13 +146,13 @@ public class Game {
 
     private final ListProperty<Team> teams = new SimpleListProperty<>(FXCollections.observableArrayList());
     private final ReadOnlyListProperty<Team> unmodifiableTeams = new SimpleListProperty<>(FXCollections.unmodifiableObservableList(teams));
-    /*
+    /**
      * resulting list is unmodifiable
      */
     public ObservableList<Team> getTeams() {
         return unmodifiableTeams.get();
     }
-    /*
+    /**
      * resulting list is unmodifiable
      */
     public ReadOnlyListProperty<Team> teamsProperty() {
@@ -165,7 +165,7 @@ public class Game {
     public UnmodifiableObservableMap<String,Ship> getAllShips() {
         return unmodifiableAllShips;
     }
-    /*
+    /**
      * The resulting Map is unmodifiable and attempt to add a new ship throws an exception
      */
     public ReadOnlyMapProperty<String, Ship> allShipsProperty() {
@@ -211,8 +211,8 @@ public class Game {
         s.getTeam().removeShip(s.getName());
     }
 
-    /*
-     * @returns null when no team with the name has been found
+    /**
+     * @return null when no team with the name has been found
      */
     public Team findTeamByName(String teamName) {
         //this is a O(N) implementation. But there are just up to 10 teams in our game anyway...

@@ -16,7 +16,7 @@ public class Team {
     public static final int INITIAL_MONEY = 500;
 
     //initializers:
-    /*
+    /**
      * Sets properties' values to default.
      * Should be called only after the object has been created.
      */
@@ -26,7 +26,7 @@ public class Team {
 
     private com.vztekoverflow.lospiratos.model.Team teamModel;
     private Game game;
-    /*
+    /**
      * Creates a new team object with values as defined in the @teamModel.
      * @param owner is not bound to any property in model. It must correspond to the owner game as represented in model. If you set a game that is not an owner according to the model, behaviour is not defined.
      */
@@ -98,7 +98,7 @@ public class Team {
     public UnmodifiableObservableMap<String, Ship> getShips() {
         return unmodifiableShips;
     }
-    /*
+    /**
      * The resulting Map is unmodifiable and attempt to add a new ship throws an exception
      */
     public ReadOnlyMapProperty<String, Ship> shipsProperty() {
@@ -145,7 +145,7 @@ public class Team {
 
     //public methods:
 
-    /*
+    /**
      * Is guaranteed to always return a new ship, with some default initial values (including name)
      */
     public Ship createAndAddNewDefaultShip(){
@@ -158,10 +158,9 @@ public class Team {
         return  s;
     }
 
-    /* Creates a new ship owned by the team and adds it to its list of ships
-     * @param name If a ship with this name already exists, returns null
-     * @param name if is empty or null, returns null
-     * @returns null if a ship with the same name already exists
+    /**
+     * Creates a new ship owned by the team and adds it to its list of ships
+     * @return null if a ship with the same {@code shipName} name already exists or if it's empty or null
      */
     public <T extends ShipType> Ship createAndAddNewShip(Class<T> shipType, String shipName, String captainName, AxialCoordinate position) {
         if(!game.mayCreateShipWithName(shipName)) return null;
@@ -189,8 +188,8 @@ public class Team {
         return "Team \"" + name + "\"";
     }
 
-    /*
-     * @returns null when no ship with the name has been found
+    /**
+     * @return null when no ship with the name has been found
      */
     public Ship findShipByName(String shipName) {
         if (ships.containsKey(shipName)) {

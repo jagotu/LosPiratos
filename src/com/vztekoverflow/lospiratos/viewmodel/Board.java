@@ -90,7 +90,7 @@ public class Board /* I want my Burd */ {
         return tiles;
     }
 
-    /*
+    /**
      * !!! Adding a new figure to the figures list won't add it to the game.
      * Use .add method on the figures list only if you want to add an item only to the Board.
      */
@@ -98,7 +98,7 @@ public class Board /* I want my Burd */ {
         return figures.get();
     }
 
-    /*
+    /**
      * !!! Adding a new figure to the figures list won't add it to the game.
      * Use .add method on the figures list only if you want to add an item only to the Board.
      */

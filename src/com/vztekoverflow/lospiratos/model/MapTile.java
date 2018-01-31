@@ -4,7 +4,7 @@ import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import javafx.beans.property.*;
 import javafx.collections.ObservableMap;
 
-/*
+/**
  * Immutable class
  */
 public class MapTile {

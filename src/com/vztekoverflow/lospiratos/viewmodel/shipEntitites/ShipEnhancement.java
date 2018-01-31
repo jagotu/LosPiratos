@@ -24,7 +24,7 @@ public abstract class ShipEnhancement extends ShipEntity {
 
     public abstract EnhancementIcon getIcon();
 
-    /*
+    /**
      * Returns universal cost of this enhancement that is same for all instances.
      */
     abstract public ResourceReadOnly getCostUniversal();

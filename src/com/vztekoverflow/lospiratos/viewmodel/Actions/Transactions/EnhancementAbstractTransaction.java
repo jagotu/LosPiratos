@@ -55,21 +55,21 @@ public abstract class EnhancementAbstractTransaction extends ChangeShipAbstractT
         this.enhancement.set(enhancement);
     }
 
-    /*
+    /**
      * equivalent for calling params.get(0).property().get()
      */
     public EnhancementIcon getEnhancementIcon() {
         return enhancementIcon.get();
     }
 
-    /*
+    /**
      * equivalent for calling params.get(0).property().set()
      */
     public void setEnhancementIcon(EnhancementIcon enhancementIcon) {
         this.enhancementIcon.set(enhancementIcon);
     }
 
-    /*
+    /**
      * equivalent for calling params.get(0).property()
      */
     public ObjectProperty<EnhancementIcon> enhancementIconProperty(){

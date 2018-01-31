@@ -22,6 +22,8 @@ public abstract class Action implements PerformableAction, PlannableAction {
 
     public Action() {
         relatedShip.addListener((__, old, newValue) -> {
+            if(newValue == null)
+                return;
             invalidateBindings();
             newValue.plannedActionsProperty().addListener((InvalidationListener) ___ -> {
                 invalidateBindings();
@@ -102,7 +104,7 @@ public abstract class Action implements PerformableAction, PlannableAction {
 
     protected abstract boolean recomputePlannable();
 
-    /*
+    /**
      * Overridden implementations should ALWAYS call super.invalidateBindings() first
      */
     protected void invalidateBindings() {
@@ -147,8 +149,8 @@ public abstract class Action implements PerformableAction, PlannableAction {
         return cost;
     }
 
-    /*
-     * @returns true if action's cost has successfully been paid.
+    /**
+     * @return true if action's cost has successfully been paid.
      */
     protected boolean performPayment(){
         ResourceReadOnly cost = getCost();
@@ -170,7 +172,7 @@ public abstract class Action implements PerformableAction, PlannableAction {
             Warnings.makeWarning(toString()+".performOnTarget()", "Action has not been performed because there is not enough resource");
             //todo tell also some info to game user?
     }
-    /*
+    /**
      * Should be overridden by inheritors to add custom behaviour.
      */
     protected abstract void performOnTargetInternal();

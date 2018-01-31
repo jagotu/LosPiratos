@@ -26,7 +26,7 @@ public class Ship implements MovableFigure, DamagableFigure {
 
     //region initializers
 
-    /*
+    /**
      * Sets properties' values to default.
      * Should be called only after the object has been created.
      */
@@ -35,9 +35,9 @@ public class Ship implements MovableFigure, DamagableFigure {
         this.destroyed.set(false);
     }
 
-    /*
+    /**
      * Creates a new ship object with values as defined in the @shipModel.
-     * @param ownerTeam is not bound to any property in model. It must correspond to the ownerTeam as represented in model. If you set a team that is not an ownerTeam according to the model, behaviour is not defined.
+     * @param owner is not bound to any property in model. It must correspond to the ownerTeam as represented in model. If you set a team that is not an ownerTeam according to the model, behaviour is not defined.
      */
     public Ship(Team owner, com.vztekoverflow.lospiratos.model.Ship shipModel) {
         this.ownerTeam = owner;
@@ -58,7 +58,7 @@ public class Ship implements MovableFigure, DamagableFigure {
     //endregion
     //region model management
 
-    /*
+    /**
      * should be called only from constructor
      */
     private void bindToModel() {
@@ -352,8 +352,8 @@ public class Ship implements MovableFigure, DamagableFigure {
         return garrisonSize;
     }
 
-    /*
-     * The ships takes damage, reducing its HP by @value.
+    /**
+     * The ships takes damage, reducing its HP by {@code value}.
      * If HP goes below 0, the ship will be destroyed.
      */
     @Override
@@ -381,8 +381,8 @@ public class Ship implements MovableFigure, DamagableFigure {
         shipModel.enhancementsProperty().put(EnhancementsCatalog.getPersistentName(enhancement), ShipEnhancementStatus.active);
     }
 
-    /*
-     * @returns null if Ship does not contain any enhancement of given type
+    /**
+     * @return null if Ship does not contain any enhancement of given type
      */
     public <SpecificEnh extends ShipEnhancement> SpecificEnh getEnhancement(Class<SpecificEnh> enhancement) {
         if (!enhancements.containsKey(enhancement)) return null;
@@ -438,14 +438,14 @@ public class Ship implements MovableFigure, DamagableFigure {
     };
     private ReadOnlySetWrapper<ShipMechanics> mechanicsReadOnly = new ReadOnlySetWrapper<>(FXCollections.unmodifiableObservableSet(mechanics.get()));
 
-    /*
+    /**
      * returns mechanics as read only set (elements cannot be added to it)
      */
     public ReadOnlySetWrapper<ShipMechanics> getMechanics() {
         return mechanicsReadOnly;
     }
 
-    /*
+    /**
      * To add new mechanics, add them to this property.
      */
     public ReadOnlySetProperty<ShipMechanics> mechanicsProperty() {
@@ -570,7 +570,7 @@ public class Ship implements MovableFigure, DamagableFigure {
         return "Ship \"" + name + "\"";
     }
 
-    /*
+    /**
      * marks the ship and all its enhancements (e.g. upgrades) as destroyed
      */
     public void destroyShipAndEnhancements() {
@@ -591,15 +591,15 @@ public class Ship implements MovableFigure, DamagableFigure {
         }
     }
 
-    /*
+    /**
      * marks the ship (BUT NOT its enhancements) as not destroyed
      */
     public void repairShip() {
         destroyed.set(false);
     }
 
-    /*
-     * @returns Resource that corresponds to how many Resource had to be paid for obtaining the ship and all its enhancements
+    /**
+     * @return Resource that corresponds to how many Resource had to be paid for obtaining the ship and all its enhancements
      */
     public ResourceReadOnly computeInitialCost(boolean includeDamagedEnhancements) {
         Resource result = new Resource();
@@ -612,7 +612,7 @@ public class Ship implements MovableFigure, DamagableFigure {
         return result;
     }
 
-    /*
+    /**
      * is called by Game whenever the game proceeds to a next round
      */
     public void onNextRoundStarted(int roundNo) {

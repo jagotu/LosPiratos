@@ -85,9 +85,10 @@ public class ResourceReadOnly {
         return (result == PartialOrdering.LessThanOrEqual || result == PartialOrdering.LessThan || result == PartialOrdering.Equal);
     }
 
-    /*
+    //TODO: odmrdat tento dokumentační komentář
+    /**
      * Compares two resources component wise and returns a PartialOrdering that holds for each of the component
-     * @returns PartialOrdering, trying to find the most precise result (in the sense of inclusion)
+     * @return PartialOrdering, trying to find the most precise result (in the sense of inclusion)
      * I.e., if, in every component, the object's value > argument's value, @returns GreaterThan
      *    Then, if, in every component, the object's value equals, @returns Equals
      *    Then, if, in every component, the object's value >= argument's value, @returns GreaterThanOrEqual
@@ -95,14 +96,15 @@ public class ResourceReadOnly {
      * If you want to compare for >= in the usual sense, you have to test if (result == GreaterThan || result == GreaterThanOrEqual || result == Equal)
      *     (Or use the method isGreaterThanOrEqual)
      * Similarly for < and <=.
-     * @returns Uncomparable if in one component holds > and in other <.
+     * @return Uncomparable if in one component holds > and in other <.
      */
     public PartialOrdering compare(ResourceReadOnly r) {
         return compare(r.money.get(), r.cloth.get(), r.metal.get(), r.wood_.get(), r.rum__.get(), r.tobco.get());
     }
 
 
-    /*
+    //TODO: odmrdat tento dokumentační komentář
+    /**
      * Compares two resources component wise and returns a PartialOrdering that holds for each of the component
      * @returns PartialOrdering, trying to find the most precise result (in the sense of inclusion)
      * I.e., if, in every component, the object's value > argument's value, @returns GreaterThan
@@ -192,14 +194,14 @@ public class ResourceReadOnly {
         return wood_;
     }
 
-    /*
+    /**
      * Creates a new instance of Resource that is mutable and contains copies of original values
      */
     public Resource createMutableCopy() {
         return new Resource(this.money.get(), this.cloth.get(), this.metal.get(), this.rum__.get(), this.tobco.get(), this.wood_.get());
     }
 
-    /*
+    /**
      * fluent syntax for creating new ResourceReadOnly form arithmetic expressions
      */
     public ResourceReadOnly times(double value) {
@@ -213,7 +215,7 @@ public class ResourceReadOnly {
         return v;
     }
 
-    /*
+    /**
      * fluent syntax for creating new ResourceReadOnly form arithmetic expressions
      */
     public ResourceReadOnly plus(ResourceReadOnly rightOperand) {
@@ -227,7 +229,7 @@ public class ResourceReadOnly {
         return v;
     }
 
-    /*
+    /**
      * fluent syntax for creating new ResourceReadOnly form arithmetic expressions
      */
     public ResourceReadOnly timesComponenWise(ResourceReadOnly rightOperand) {
@@ -241,7 +243,7 @@ public class ResourceReadOnly {
         return v;
     }
 
-    /*
+    /**
      * fluent syntax for creating new ResourceReadOnly form arithmetic expressions
      */
     public int scalarProduct(ResourceReadOnly rightOperand) {

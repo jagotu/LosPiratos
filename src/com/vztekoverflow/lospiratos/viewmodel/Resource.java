@@ -66,8 +66,8 @@ public class Resource extends ResourceReadOnly {
         wood_.set(wood_.get() + value);
     }
 
-    /*
-     * component-wise increases resource number by value in @value
+    /**
+     * component-wise increases resource number by value in {@code value}
      */
     public void add(ResourceReadOnly value){
         addMoney(value.money.get());
@@ -77,8 +77,8 @@ public class Resource extends ResourceReadOnly {
         addTobacco(value.tobco.get());
         addWood(value.wood_.get());
     }
-    /*
-     * component-wise decreases resource number by value in @value
+    /**
+     * component-wise decreases resource number by value in {@code value}
      */
     public void subtract(ResourceReadOnly value){
         addMoney(-value.money.get());
@@ -88,8 +88,8 @@ public class Resource extends ResourceReadOnly {
         addTobacco(-value.tobco.get());
         addWood(-value.wood_.get());
     }
-    /*
-     * component-wise multiplies resource number by @value and rounds to Integers
+    /**
+     * component-wise multiplies resource number by {@code value} and rounds to Integers
      */
     public void multiply(double value){
         setMoney  ((int) (getMoney() * value));
@@ -100,7 +100,7 @@ public class Resource extends ResourceReadOnly {
         setWood   ((int) (getWood() * value));
     }
 
-    /*
+    /**
      * Clamps all contained resources to be between min (inclusive) and max (inclusive)
      * Typical usage: clamp(0,Integer.MAX_VALUE);
      */

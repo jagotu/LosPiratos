@@ -44,8 +44,8 @@ public abstract class BoardTile {
         return "UnknownTileType";
     }
 
-    /*
-     * @returns null if the @tileName is unknown
+    /**
+     * @return null if the {@code tileName} is unknown
      */
     public static BoardTile createInstanceFromPersistentName(String tileName, AxialCoordinate location) {
         if (tileName == null || tileName.isEmpty()) {

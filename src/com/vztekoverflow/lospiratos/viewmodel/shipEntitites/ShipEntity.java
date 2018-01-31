@@ -13,25 +13,26 @@ public abstract class ShipEntity implements Translatable {
     }
     protected Ship ship;
 
-    /*
+    /**
      * Should be called just after the entity has been added to the ship, before any other function is called.
      */
     public final void onAddedToShip(Ship ship){
         this.ship = ship;
         onAddedToShipInternal();
     }
-    /* Can be inherited to add custom implementation.
+    /**
+     * Can be inherited to add custom implementation.
      * Overridden implementations should always call super.onAddedToShipInternal() first.
      */
     protected void onAddedToShipInternal(){}
 
-    /*
+    /**
      * Should be called whenever the ship type changes.
      * Overridden implementations should always call super.onShipTypeJustChanged() first.
      */
     public void onShipTypeJustChanged(){}
 
-    /*
+    /**
      * Is called by the owner whenever the game proceeds to a next round.
      * Can be inherited to add custom implementation.
      * Overridden implementations should always call super.onNextRoundStarted() first.

@@ -7,7 +7,7 @@ import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
+/**
  * static class providing API for accesing available ship enhancements
  */
 public class EnhancementsCatalog {
@@ -82,8 +82,8 @@ public class EnhancementsCatalog {
         return "UnknownShipEnhancement";
     }
 
-    /*
-     * @returns null if the @enhancementName is unknown
+    /**
+     * @return null if the @enhancementName is unknown
      */
     public static ShipEnhancement createInstanceFromPersistentName(String enhancementName) {
         if (enhancementName == null || enhancementName.isEmpty()) {

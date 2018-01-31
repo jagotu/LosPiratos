@@ -15,7 +15,7 @@ public final class Ram extends ShipEnhancement {
         return "Kloun";
     }
 
-    /*
+    /**
      * Returns universal cost of this enhancement that is same for all instances, by calling a static method getCost().
      */
     public ResourceReadOnly getCostUniversal() {

@@ -18,7 +18,7 @@ public final class Mortar extends ShipEnhancement {
         return "Houfnice";
     }
 
-    /*
+    /**
      * Returns universal cost of this enhancement that is same for all instances, by calling a static method getCost().
      */
     public ResourceReadOnly getCostUniversal() {

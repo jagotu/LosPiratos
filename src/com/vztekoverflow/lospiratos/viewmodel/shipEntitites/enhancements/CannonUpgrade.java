@@ -52,7 +52,7 @@ public final class CannonUpgrade extends ShipEnhancement {
         return bonusCannons;
     }
 
-    /*
+    /**
      * Returns universal cost of this enhancement that is same for all instances, by calling a static method getCost().
      */
     public ResourceReadOnly getCostUniversal(){

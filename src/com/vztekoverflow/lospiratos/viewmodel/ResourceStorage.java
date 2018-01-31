@@ -12,8 +12,8 @@ public class ResourceStorage extends Resource {
     private static final int woodCargoUsageCoefficient = 1;
     private static final int moneyCargoUsageCoefficient = 0;
 
-    /*
-     * @params: resource properties to bind the storage to
+    /**
+     * params resource properties to bind the storage to
      */
     public ResourceStorage(IntegerProperty cloth, IntegerProperty metal, IntegerProperty rum, IntegerProperty tobacco, IntegerProperty wood, IntegerProperty money, IntegerBinding capacity) {
 
@@ -68,40 +68,45 @@ public class ResourceStorage extends Resource {
         return capacityLeft.get() >= woodCargoUsageCoefficient * amount;
     }
 
-    /* adds cloth to the ships storage, if there is enough storage room
-     * @returns value indicating whether the amount has been successfully added
+    /**
+     * adds cloth to the ships storage, if there is enough storage room
+     * @return value indicating whether the amount has been successfully added
      */
     public boolean tryAddCloth(int amount){
         if(!canStoreMoreCloth(amount)) return false;
         cloth.set(getCloth()+amount);
         return true;
     }
-    /* adds metal to the ships storage, if there is enough storage room
-     * @returns value indicating whether the amount has been successfully added
+    /**
+     * adds metal to the ships storage, if there is enough storage room
+     * @return value indicating whether the amount has been successfully added
      */
     public boolean tryAddMetal(int amount){
         if(!canStoreMoreMetal(amount)) return false;
         metal.set(getMetal()+amount);
         return true;
     }
-    /* adds rum to the ships storage, if there is enough storage room
-     * @returns value indicating whether the amount has been successfully added
+    /**
+     * adds rum to the ships storage, if there is enough storage room
+     * @return value indicating whether the amount has been successfully added
      */
     public boolean tryAddRum(int amount){
         if(!canStoreMoreRum(amount)) return false;
         rum__.set(getRum()+amount);
         return true;
     }
-    /* adds tobacco to the ships storage, if there is enough storage room
-     * @returns value indicating whether the amount has been successfully added
+    /**
+     * adds tobacco to the ships storage, if there is enough storage room
+     * @return value indicating whether the amount has been successfully added
      */
     public boolean tryAddTobacco(int amount){
         if(!canStoreMoreTobacco(amount)) return false;
         tobco.set(getTobacco()+amount);
         return true;
     }
-    /* adds wood to the ships storage, if there is enough storage room
-     * @returns value indicating whether the amount has been successfully added
+    /**
+     * adds wood to the ships storage, if there is enough storage room
+     * @return value indicating whether the amount has been successfully added
      */
     public boolean tryAddWood(int amount){
         if(!canStoreMoreWood(amount)) return false;

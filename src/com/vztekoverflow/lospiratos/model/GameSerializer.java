@@ -9,8 +9,8 @@ import java.io.*;
 
 
 public class GameSerializer {
-    /*
-     * @returns null if the loading was unsuccessful due to IOError or invalid JSON
+    /**
+     * @return null if the loading was unsuccessful due to IOError or invalid JSON
      */
     public static Game LoadGameFromFile(String inputFilePath) {
 
@@ -25,8 +25,8 @@ public class GameSerializer {
         return game;
     }
 
-    /*
-     * @returns boolean indicating whether the game has been successfully saved
+    /**
+     * @return boolean indicating whether the game has been successfully saved
      */
     public static boolean SaveGameToFile(String outputFilePath, Game game, boolean append) {
         Gson gson = FxGson.coreBuilder().setPrettyPrinting().create();
@@ -45,8 +45,8 @@ public class GameSerializer {
         return true;
     }
 
-    /*
-     * @returns null if the game could not be loaded
+    /**
+     * @return null if the game could not be loaded
      */
     public static Game GameFromJson(String inputJson) {
         Game g;

@@ -10,7 +10,7 @@ import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Schooner;
 
 public abstract class ShipType extends ShipEntity {
 
-    /*
+    /**
      * Returns universal cost of this ship type that is same for all instances.
      */
     abstract public ResourceReadOnly getCostUniversal();
@@ -41,8 +41,8 @@ public abstract class ShipType extends ShipEntity {
         return "UnknownShipType";
     }
 
-    /*
-     * @returns null if the @shipTypeName is unknown
+    /**
+     * @return null if the @shipTypeName is unknown
      */
     public static ShipType createInstanceFromPersistentName(String shipTypeName) {
         if (shipTypeName == null || shipTypeName.isEmpty()) {
@@ -66,9 +66,9 @@ public abstract class ShipType extends ShipEntity {
         return null;
     }
 
-    /*
-     * @returns a ship type that is one order better than @shipTypeToIncrement
-     * @returns null if @shipTypeToIncrement cannot be incremented
+    /**
+     * @return a ship type that is one order better than {@code shipTypeToIncrement}
+     * null if {@code shipTypeToIncrement} cannot be incremented
      */
     public static Class<? extends ShipType> increment(Class<? extends ShipType> shipTypeToIncrement){
         if(shipTypeToIncrement.equals(Schooner.class))
@@ -81,9 +81,9 @@ public abstract class ShipType extends ShipEntity {
         return null;
     }
 
-    /*
-     * @returns a ship type that is one order worse than @shipTypeToDecrement
-     * @returns null if @shipTypeToDecrement cannot be decremented
+    /**
+     * @return a ship type that is one order worse than {@code shipTypeToDecrement}
+     * null if {@code shipTypeToDecrement} cannot be decremented
      */
     public static Class<? extends ShipType> decrement(Class<? extends ShipType> shipTypeToDecrement){
         if(shipTypeToDecrement.equals(Brig.class))
