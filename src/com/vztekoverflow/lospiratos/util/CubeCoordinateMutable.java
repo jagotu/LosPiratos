@@ -1,11 +1,11 @@
 package com.vztekoverflow.lospiratos.util;
 
 
-/*
+/**
  *  Hexagonal grid Cube Coordinate, as defined on https://www.redblobgames.com/grids/hexagons/#coordinates
  */
 public class CubeCoordinateMutable extends AxialCoordinateMutable {
-    /*
+    /**
      * Creates new CubeCoordinateMutable.
      * If (q + r + s != 0), throws IllegalArgumentException
      */

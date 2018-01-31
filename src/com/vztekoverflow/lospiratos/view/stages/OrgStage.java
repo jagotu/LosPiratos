@@ -1,11 +1,15 @@
 package com.vztekoverflow.lospiratos.view.stages;
 
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
+import com.vztekoverflow.lospiratos.view.controls.ActionSelector;
+import com.vztekoverflow.lospiratos.view.controls.PlannedActionsBar;
 import com.vztekoverflow.lospiratos.view.controls.ShipView;
 import com.vztekoverflow.lospiratos.view.controls.TeamView;
 import com.vztekoverflow.lospiratos.view.layout.PiratosHexTileContentsFactory;
 import com.vztekoverflow.lospiratos.view.layout.VirtualizingHexGridPane;
+import com.vztekoverflow.lospiratos.viewmodel.Actions.ActionsCatalog;
 import com.vztekoverflow.lospiratos.viewmodel.Game;
+import com.vztekoverflow.lospiratos.viewmodel.MovableFigure;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
 import com.vztekoverflow.lospiratos.viewmodel.Team;
 import javafx.animation.Animation;
@@ -24,10 +28,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
@@ -54,6 +55,12 @@ public class OrgStage {
     private Tab shipsTab;
     @FXML
     private TabPane tabPane;
+    @FXML
+    private Pane mainPane;
+    @FXML
+    private ActionSelector actionSelector;
+    @FXML
+    private PlannedActionsBar actionsBar;
 
     private final ExecutorService viewCreator = Executors.newSingleThreadExecutor(r -> {
         Thread thread = Executors.defaultThreadFactory().newThread(r);
@@ -79,30 +86,58 @@ public class OrgStage {
 
     }
 
+
     @FXML
     private void initialize() {
         root.setDividerPosition(0, 0.75);
+        actionSelector.setOnActionSelectedListener(x -> ActionsCatalog.relatedShip.get().planAction(x));
+        ActionsCatalog.relatedShip.addListener((observable, oldValue, newValue) -> {
 
+        });
         connectToGame();
     }
+
+    private boolean relocateActionSelector = false;
 
     private void connectToGame() {
         if (hexPane != null) {
             root.getItems().remove(hexPane);
         }
-        hexPane = new VirtualizingHexGridPane(40, true, new PiratosHexTileContentsFactory(game.get().getBoard()));
+        hexPane = new VirtualizingHexGridPane(40, true, new PiratosHexTileContentsFactory(game.get().getBoard(), (figures, e) -> {
+            for (MovableFigure f : figures) {
+                if (f instanceof Ship) {
+                    ActionsCatalog.relatedShip.set((Ship) f);
+                    actionSelector.setCurrentNode(ActionsCatalog.allPossiblePlannableActions);
+                    relocateActionSelector = true;
+                    return;
+                }
+            }
+        }));
+        hexPane.setOnMouseClicked(e -> {
+            if (relocateActionSelector) {
+                double hexPaneX = hexPane.getXOffset() + e.getX() * hexPane.getScale();
+                double hexPaneY = hexPane.getYOffset() + e.getY() * hexPane.getScale();
+
+                actionSelector.layoutXProperty().unbind();
+                actionSelector.layoutYProperty().unbind();
+                actionSelector.layoutXProperty().bind(hexPane.XOffsetProperty().negate().add(hexPaneX).divide(hexPane.scaleProperty()));
+                actionSelector.layoutYProperty().bind(hexPane.YOffsetProperty().negate().add(hexPaneY).divide(hexPane.scaleProperty()));
+                relocateActionSelector = false;
+            }
+        });
         Rectangle clipRect = new Rectangle(hexPane.getWidth(), hexPane.getHeight());
         clipRect.widthProperty().bind(hexPane.widthProperty());
         clipRect.heightProperty().bind(hexPane.heightProperty());
-        hexPane.setClip(clipRect);
-        root.getItems().add(0, hexPane);
+        mainPane.setClip(clipRect);
+        hexPane.maxWidthProperty().bind(mainPane.widthProperty());
+        hexPane.maxHeightProperty().bind(mainPane.heightProperty());
+        hexPane.relocate(0, 0);
+        mainPane.getChildren().add(0, hexPane);
 
         setHexPanePanAndZoom();
-        Platform.runLater(() -> hexPane.centerInParent(new AxialCoordinate(0, 0)));
 
         teamsBox.getChildren().clear();
         teamViews.clear();
-
 
         for (final Team t : game.get().getTeams()) {
             viewCreator.submit(() -> addTeamView(t));
@@ -137,6 +172,8 @@ public class OrgStage {
             }
 
         });
+
+        Platform.runLater(() -> hexPane.centerInParent(new AxialCoordinate(0, 0)));
     }
 
     private void addTeamView(Team t) {
@@ -201,6 +238,7 @@ public class OrgStage {
     @FXML
     private void loremIpsum() {
         int a = 0;
+        game.get().closeRoundAndEvaluate();
     }
 
     @FXML
@@ -214,7 +252,9 @@ public class OrgStage {
     }
 
     private void setHexPanePanAndZoom() {
-        hexPane.setOnMousePressed(MouseEvent -> lastMouse = new Point2D(MouseEvent.getX(), MouseEvent.getY()));
+        hexPane.setOnMousePressed(MouseEvent -> {
+            lastMouse = new Point2D(MouseEvent.getX(), MouseEvent.getY());
+        });
 
         hexPane.setOnMouseDragged(MouseEvent -> {
             hexPane.setXOffset(Math.min(Math.max(hexPane.getXOffset() + (lastMouse.getX() - MouseEvent.getX()) * hexPane.getScale(), minMove), maxMove));

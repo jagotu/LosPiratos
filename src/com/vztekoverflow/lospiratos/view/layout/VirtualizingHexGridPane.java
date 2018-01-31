@@ -14,6 +14,7 @@ import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
 import javafx.scene.transform.Scale;
@@ -360,9 +361,8 @@ public class VirtualizingHexGridPane extends Pane {
                     tileShape.onMouseClickedProperty().unbind();
                 }
                 if (newValue != null) {
-                    newValue.setMouseTransparent(true);
                     this.getChildren().add(newValue);
-                    tileShape.onMouseClickedProperty().bind(contentNode.get().onMouseClickedProperty());
+                    tileShape.onMouseClickedProperty().bind(newValue.onMouseClickedProperty());
                 }
             });
 

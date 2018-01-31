@@ -20,15 +20,21 @@ public abstract class Action implements PerformableAction, PlannableAction {
 
     protected abstract Action createCopy();
 
+    private InvalidationListener invalidationListener = ___ -> {
+        invalidateBindings();
+        //this is not the most efficient solution (invalidations could be granulated and called only some of them), but is easy to implement
+    };
+
     public Action() {
-        relatedShip.addListener((__, old, newValue) -> {
-            if(newValue == null)
-                return;
-            invalidateBindings();
-            newValue.plannedActionsProperty().addListener((InvalidationListener) ___ -> {
+        relatedShip.addListener((__, oldValue, newValue) -> {
+            if(oldValue != null)
+            {
+                oldValue.plannedActionsProperty().removeListener(invalidationListener);
+            }
+            if(newValue != null) {
+                newValue.plannedActionsProperty().addListener(invalidationListener);
                 invalidateBindings();
-                //this is not the most efficient solution (invalidations could be granulated and called only some of them), but is easy to implement
-            });
+            }
         });
     }
 

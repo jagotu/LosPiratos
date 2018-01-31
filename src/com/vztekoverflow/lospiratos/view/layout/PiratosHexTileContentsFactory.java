@@ -1,16 +1,20 @@
 package com.vztekoverflow.lospiratos.view.layout;
 
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
+import com.vztekoverflow.lospiratos.viewmodel.Actions.ActionsCatalog;
 import com.vztekoverflow.lospiratos.viewmodel.Board;
 import com.vztekoverflow.lospiratos.viewmodel.BoardTile;
 import com.vztekoverflow.lospiratos.viewmodel.MovableFigure;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
 import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 
 import java.util.HashMap;
@@ -19,8 +23,35 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
 
     private HashMap<AxialCoordinate, PiratosHexTileContents> current = new HashMap<>();
     private double tileWidth, tileHeight;
+    private OnClickEventHandler onMouseClick;
 
-    public PiratosHexTileContentsFactory(Board board) {
+    private ChangeListener<? super AxialCoordinate> highlightedMoveListener = (observable, oldValue, newValue) -> {
+        if (oldValue != null && current.get(oldValue) != null) {
+            current.get(oldValue).setSelected(false);
+        }
+        if (newValue != null && current.get(newValue) != null) {
+            current.get(newValue).setSelected(true);
+        }
+    };
+
+    public PiratosHexTileContentsFactory(Board board, OnClickEventHandler onMouseClick) {
+        this.onMouseClick = onMouseClick;
+
+        ActionsCatalog.relatedShip.addListener((observable, oldValue, newValue) -> {
+            if (oldValue != null) {
+                oldValue.getPosition().coordinateProperty().removeListener(highlightedMoveListener);
+                if (current.get(oldValue.getPosition().coordinateProperty().get()) != null) {
+                    current.get(oldValue.getPosition().coordinateProperty().get()).setSelected(false);
+                }
+            }
+            if (newValue != null) {
+                newValue.getPosition().coordinateProperty().addListener(highlightedMoveListener);
+                if (current.get(newValue.getPosition().coordinateProperty().get()) != null) {
+                    current.get(newValue.getPosition().coordinateProperty().get()).setSelected(true);
+                }
+            }
+        });
+
         for (AxialCoordinate coords : board.getTiles().keySet()) {
             if (current.containsKey(coords)) {
                 throw new UnsupportedOperationException("Cannot have the same tile defined twice!");
@@ -44,6 +75,11 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
                 }
             }
         });
+
+    }
+
+    public PiratosHexTileContentsFactory(Board board) {
+        this(board, null);
     }
 
 
@@ -93,6 +129,10 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
         };
     }
 
+    public interface OnClickEventHandler {
+        void OnClick(Iterable<MovableFigure> figures, MouseEvent e);
+    }
+
     private class PiratosHexTileContents implements HexTileContents {
         StackPane s = new StackPane();
         ObjectProperty<Node> contents = new ReadOnlyObjectWrapper<>(s);
@@ -106,10 +146,27 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
 
         private PiratosHexTileContents(BoardTile bt) {
             classProperty.setValue(bt.getClass().getSimpleName());
+            this.bt = bt;
+            if (onMouseClick != null) {
+                s.setOnMouseClicked(e -> {
+                    if (e.isStillSincePress() && e.getButton().equals(MouseButton.PRIMARY)) {
+                        onMouseClick.OnClick(internalNodes.keySet(), e);
+                    }
+                });
+            }
+
+        }
+
+        private void setSelected(boolean selected) {
+            if (selected) {
+                classProperty.setValue(bt.getClass().getSimpleName() + " selected");
+            } else {
+                classProperty.setValue(bt.getClass().getSimpleName());
+            }
         }
 
         /**
-         * Removes a MovableFigure from this node and returns the internal node represenation, so it doesn't have to be recreated
+         * Removes a MovableFigure from this node and returns the internal node representation, so it doesn't have to be recreated
          *
          * @param f
          * @return The internal node representing the figure,
@@ -120,6 +177,7 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
             }
             Node n = internalNodes.get(f);
             s.getChildren().remove(n);
+            internalNodes.remove(f);
             return n;
         }
 
@@ -139,7 +197,7 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
                 n = new Label(f.getClass().getSimpleName());
             }
 
-            n.rotateProperty().bind(f.getPosition().rotationProperty());
+            n.rotateProperty().bind(f.getPosition().rotationProperty().subtract(120));
             addFigure(f, n);
 
 

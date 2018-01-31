@@ -3,7 +3,7 @@ package com.vztekoverflow.lospiratos.util;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
+/**
  * represents a direction in Axial coordinate system through a unit axial direction.
  * distance between AxialDirection and (0,0) is always 1.
  */
@@ -13,7 +13,7 @@ public final class AxialDirection extends AxialCoordinate{
         super(P,Q);
     }
 
-    /*
+    /**
      * returns degree representation of the direction, as understood by the DirectionFromDegree functions
      * 0 represents top, 90 represents right etc
      * returns values that are multiple of 60 plus 15, thus working both for pointy and flat-topped representation
@@ -42,18 +42,18 @@ public final class AxialDirection extends AxialCoordinate{
 
     }
 
-    /*
-     * Returns unit AxialCoordinate pointing in the direction defined by @degree
-     * @degree degree representing the direction. 30 means topRight, 90 right etc.
-     * if @degree is not multiple of 60 plus 30, nearest value will be used
+    /**
+     * Returns unit AxialCoordinate pointing in the direction defined by {@code degree}
+     * @param degree degree representing the direction. 30 means topRight, 90 right etc.
+     * if {@code degree} is not multiple of 60 plus 30, nearest value will be used
      */
     public static AxialDirection directionFromDegree_Pointy(int degree){
         return  directionFromDegree_Flat(degree - 30);
     }
-    /*
-     * Returns unit AxialCoordinate pointing in the direction defined by @degree
+    /**
+     * Returns unit AxialCoordinate pointing in the direction defined by @{code degree}
      * @param degree representing the direction. 0 means top, 60 rightTop etc.
-     * if @degree is not multiple of 60, nearest value will be used
+     * if {@code degree} is not multiple of 60, nearest value will be used
      */
     public static AxialDirection directionFromDegree_Flat(int degree){
         degree = ((degree % 360) + 360) % 360; //to get an always-positive representation of original value
@@ -92,7 +92,7 @@ public final class AxialDirection extends AxialCoordinate{
 
 
     private static List<AxialDirection> allDirections;
-    /*
+    /**
      * Returns all available unit directions for a hexagon. When drawn, those would appear as a circle.
      */
     public static Iterable<AxialDirection> getAllDirections(){

@@ -16,6 +16,18 @@
     background: brown;
 }
 
+.hex-tile.Shipwreck {
+    background: gold;
+}
+
+.hex-tile.Port {
+    background: royalblue;
+}
+
+.hex-tile.selected {
+    -fx-fill: yellow;
+}
+
 .hex-tile:hover {
     -fx-fill: derive(background, 50%);
 }

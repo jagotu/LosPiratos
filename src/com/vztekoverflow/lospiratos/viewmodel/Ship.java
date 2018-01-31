@@ -20,6 +20,7 @@ import javafx.collections.*;
 
 import java.lang.ref.WeakReference;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class Ship implements MovableFigure, DamagableFigure {
@@ -533,6 +534,10 @@ public class Ship implements MovableFigure, DamagableFigure {
 
     public ListProperty<? extends PlannableAction> plannedActionsProperty() {
         return plannedActions;
+    }
+
+    public void unplanActions(int howManyToLeave){
+        plannedActions.remove(howManyToLeave, plannedActions.size());
     }
 
     public void planAction(PlannableAction action) {

@@ -2,7 +2,7 @@ package com.vztekoverflow.lospiratos.util;
 
 import javafx.geometry.Point2D;
 
-/*
+/**
  *  Hexagonal grid Axial Coordinate, as defined on https://www.redblobgames.com/grids/hexagons/#coordinates
  */
 public class AxialCoordinate {
@@ -25,45 +25,45 @@ public class AxialCoordinate {
 
     protected int R;
 
-    /*
+    /**
      * classical 2D vector addition
      */
     public AxialCoordinate plus(AxialCoordinate arg){
         return new AxialCoordinate(Q+arg.Q,R+arg.R);
     }
-    /*
+    /**
      * classical 2D vector subtraction
      */
     public AxialCoordinate minus(AxialCoordinate arg){
         return new AxialCoordinate(Q-arg.Q,R-arg.R);
     }
-    /*
+    /**
      * classical 2D vector by scalar multiplication
      */
     public AxialCoordinate times(int coeff){
         return new AxialCoordinate(Q*coeff,R*coeff);
     }
-    /*
+    /**
      * classical 2D vector by scalar multiplication
-     * @returns AxialCoordinate with internal values truncated to int
+     * @return AxialCoordinate with internal values truncated to int
      */
     public AxialCoordinate times(float coeff){
         return new AxialCoordinate((int)(Q*coeff),(int)(R*coeff));
     }
-    /*
-     * @returns AxialCoordinate where each component is the square of its original value
+    /**
+     * @return AxialCoordinate where each component is the square of its original value
      */
     public AxialCoordinate squareComponentwise(){
         return new AxialCoordinate((Q*Q),(R*R));
     }
-    /*
-     * @returns minimal number of movements needed to reach @param from @this in an Euclidean geometry
+    /**
+     * @return minimal number of movements needed to reach @param from @this in an Euclidean geometry
      */
     public int distanceTo(AxialCoordinate arg){
         return distanceTo(arg.Q, arg.R);
     }
-    /*
-     * @returns minimal number of movements needed to reach @param from @this in an Euclidean geometry
+    /**
+     * @return minimal number of movements needed to reach @param from @this in an Euclidean geometry
      */
     public int distanceTo(int q, int r){
         //the algorithm is explained here: https://www.redblobgames.com/grids/hexagons/#distances
