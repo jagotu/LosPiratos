@@ -1,5 +1,6 @@
 package com.vztekoverflow.lospiratos.viewmodel.shipEntitites;
 
+import com.vztekoverflow.lospiratos.viewmodel.Actions.Action;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.shipMechanics.Chained;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.shipMechanics.Rooted;
 
@@ -34,5 +35,6 @@ public abstract class ShipMechanics extends ShipEntity {
         return getModelDescription().hashCode();
     }
 
+    public abstract boolean preventsFromBeingPlanned(Action preventedAction);
 
 }

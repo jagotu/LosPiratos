@@ -73,6 +73,8 @@ public abstract class Action implements PerformableAction, PlannableAction {
                 return true;
             if (getRelatedShip().getPlannedActions().stream().anyMatch(a -> a.preventsFromBeingPlanned(Action.this)))
                 return false;
+            if (getRelatedShip().getMechanics().stream().anyMatch(m -> m.preventsFromBeingPlanned(Action.this)))
+                return false;
             return recomputePlannable();
         }
     };
@@ -129,7 +131,7 @@ public abstract class Action implements PerformableAction, PlannableAction {
     }
 
     //may be overridden by children
-    //this is public onlye because I want to use it in a lambda in an inheritor. Otherwise it should be protected. Sadly, it is the only option
+    //this is public only because I want to use it in a lambda in an inheritor. Otherwise it should be protected. Sadly, it is the only option
     public boolean preventsFromBeingPlanned(Action preventedAction) {
         return false;
     }

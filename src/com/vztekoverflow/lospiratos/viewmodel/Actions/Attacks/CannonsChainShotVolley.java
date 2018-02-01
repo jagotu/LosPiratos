@@ -1,8 +1,9 @@
-package com.vztekoverflow.lospiratos.viewmodel.Actions.Attacks ;
+package com.vztekoverflow.lospiratos.viewmodel.Actions.Attacks;
 
+import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.viewmodel.Actions.Action;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.ChainShot;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.shipMechanics.Chained;
 
 public class CannonsChainShotVolley extends CannonsAbstractVolley {
 
@@ -12,17 +13,25 @@ public class CannonsChainShotVolley extends CannonsAbstractVolley {
 
     @Override
     protected boolean recomputeVisible() {
-        return  getRelatedShip().hasEnhancement(ChainShot.class);
+        return getRelatedShip().hasEnhancement(ChainShot.class);
+    }
+
+    @Override
+    protected boolean recomputePlannable() {
+        return super.recomputePlannable() &&
+                getRelatedShip().hasActiveEnhancement(ChainShot.class);
     }
 
     @Override
     public void performOnTargetInternal() {
-        throw new NotImplementedException();
+        for(AxialCoordinate target : getCannonsTargets()){
+            applyMechanicsTo(new Chained(), target);
+        }
     }
 
     @Override
     public String getČeskéJméno() {
-        if(useLeftCannons)
+        if (useLeftCannons)
             return "salva řetězovou střelou na levoboku";
         else return "salva řetězovou střelou na pravoboku";
     }

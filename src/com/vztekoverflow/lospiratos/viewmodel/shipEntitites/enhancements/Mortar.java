@@ -1,7 +1,12 @@
 package com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements;
 
+import com.vztekoverflow.lospiratos.util.Warnings;
 import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
+import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Brig;
+import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Frigate;
+import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Galleon;
+import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Schooner;
 
 public final class Mortar extends ShipEnhancement {
 
@@ -25,4 +30,47 @@ public final class Mortar extends ShipEnhancement {
         return getCost();
     }
 
+    @Override
+    public void onShipTypeJustChanged() {
+        super.onShipTypeJustChanged();
+        recompute();
+    }
+
+    private void recompute(){
+        if(ship.getShipType() instanceof Schooner){
+            ship.removeEnhancement(this.getClass());
+        }
+        else if(ship.getShipType() instanceof Brig){
+            mortarsCount = 1;
+            range = 2;
+        }
+        else if(ship.getShipType() instanceof Frigate){
+            mortarsCount = 2;
+            range = 2;
+        }
+        else if(ship.getShipType() instanceof Galleon){
+            mortarsCount = 4;
+            range = 3;
+        }
+        else{
+            Warnings.makeStrongWarning(toString()+"onShipTypeJustChanged()", "unknown ship type: " + ship.getShipType());
+        }
+    }
+
+    @Override
+    protected void onAddedToShipInternal() {
+        super.onAddedToShipInternal();
+        recompute();
+    }
+
+    private int mortarsCount = 0;
+    private int range = 0;
+
+    public int getMortarsCount() {
+        return mortarsCount;
+    }
+
+    public int getRange() {
+        return range;
+    }
 }

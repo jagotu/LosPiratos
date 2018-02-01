@@ -1,7 +1,6 @@
 package com.vztekoverflow.lospiratos.viewmodel.Actions.Attacks ;
 
 import com.vztekoverflow.lospiratos.viewmodel.Actions.Action;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class CannonsSimpleVolley extends CannonsAbstractVolley {
 
@@ -17,7 +16,7 @@ public class CannonsSimpleVolley extends CannonsAbstractVolley {
 
     @Override
     public void performOnTargetInternal() {
-        throw new NotImplementedException();
+        applyDamageToCannonsTargets(getRelatedShip().getCannonsCount());
     }
 
     @Override

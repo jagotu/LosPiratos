@@ -2,6 +2,7 @@ package com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements;
 
 import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
+import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Galleon;
 
 public final class HeavyShot extends ShipEnhancement {
 
@@ -26,4 +27,11 @@ public final class HeavyShot extends ShipEnhancement {
         return getCost();
     }
 
+    @Override
+    public void onShipTypeJustChanged() {
+        super.onShipTypeJustChanged();
+        if(! (ship.getShipType() instanceof Galleon)){
+            ship.removeEnhancement(this.getClass());
+        }
+    }
 }

@@ -20,10 +20,9 @@ import javafx.collections.*;
 
 import java.lang.ref.WeakReference;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
-public class Ship implements MovableFigure, DamagableFigure {
+public class Ship implements MovableFigure, DamageableFigure {
 
     //region initializers
 
@@ -356,15 +355,17 @@ public class Ship implements MovableFigure, DamagableFigure {
     /**
      * The ships takes damage, reducing its HP by {@code value}.
      * If HP goes below 0, the ship will be destroyed.
+     * @returns value indicating whether the ship has been destroyed.
      */
     @Override
-    public void takeDamage(int value) {
+    public DamageSufferedResponse takeDamage(int value) {
         int newValue = currentHP.get() - value;
         if (newValue <= 0) {
-            newValue = 0;
             destroyShipAndEnhancements();
+            return DamageSufferedResponse.hasBeenDestroyed;
         }
         currentHP.set(newValue);
+        return DamageSufferedResponse.stillAlive;
     }
 
     //endregion
@@ -400,6 +401,13 @@ public class Ship implements MovableFigure, DamagableFigure {
             return ShipEnhancementStatus.empty;
     }
 
+    public <Enhancement extends ShipEnhancement> void removeEnhancement(Class<Enhancement> enhancement) {
+        if (enhancements.containsKey(enhancement)) {
+            enhancements.remove(enhancement);
+            onEntityInvalidated();
+        }
+    }
+
     public <Enhancement extends ShipEnhancement> boolean hasActiveEnhancement(Class<Enhancement> enhancement) {
         return enhancements.containsKey(enhancement) && (!enhancements.get(enhancement).isDestroyed());
     }
@@ -426,7 +434,9 @@ public class Ship implements MovableFigure, DamagableFigure {
         @Override
         public boolean add(ShipMechanics element) {
             shipModel.activeMechanicsProperty().add(element.getModelDescription());
-            return super.add(element);
+            boolean result = super.add(element);
+            element.onAddedToShip(Ship.this);
+            return result;
         }
 
         @Override
@@ -580,7 +590,11 @@ public class Ship implements MovableFigure, DamagableFigure {
      */
     public void destroyShipAndEnhancements() {
         destroyed.setValue(true);
+        currentHP.set(0);
+        getStorage().setAll(ResourceReadOnly.ZERO);
+        translocateToNearestPort();
 
+        //destroy enhancements:
         //do this in 2 steps, because enhancements collection will be changed, thus invalidated, thus couldnt be iterated through
         List<ShipEnhancement> enhCopy = new ArrayList<>(enhancements.values());
         for (ShipEnhancement e : enhCopy) {
@@ -594,6 +608,10 @@ public class Ship implements MovableFigure, DamagableFigure {
             //         > map changed > callback to ship's "addEnh"
             //  2) this Enhancement instance disappears, the collection contains a new one
         }
+    }
+
+    private void translocateToNearestPort() {
+        //todo
     }
 
     /**

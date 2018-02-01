@@ -13,6 +13,7 @@ public class BuyNewEnhancement extends EnhancementAbstractTransaction {
 
     @Override
     public void performOnTargetInternal() {
+        //todo ne vsechny enhancementy jdou koupit vsem typum lodi
         getRelatedShip().addNewEnhancement(getEnhancement());
     }
 

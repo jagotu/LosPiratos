@@ -1,5 +1,7 @@
 package com.vztekoverflow.lospiratos.viewmodel.shipEntitites.shipMechanics;
 
+import com.vztekoverflow.lospiratos.viewmodel.Actions.Action;
+import com.vztekoverflow.lospiratos.viewmodel.Actions.Maneuvers.MoveForward;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipMechanics;
 
 public class Chained extends ShipMechanics {
@@ -13,9 +15,18 @@ public class Chained extends ShipMechanics {
         return com.vztekoverflow.lospiratos.model.ShipMechanics.chained;
     }
 
+    int roundsActive = 0;
     @Override
     public void onNextRoundStarted(int roundNo) {
         super.onNextRoundStarted(roundNo);
-        //todo remove itself
+        roundsActive++;
+        if(roundsActive >= 2){
+            ship.mechanicsProperty().remove(this);
+        }
+    }
+
+    @Override
+    public boolean preventsFromBeingPlanned(Action preventedAction) {
+        return preventedAction instanceof MoveForward;
     }
 }
