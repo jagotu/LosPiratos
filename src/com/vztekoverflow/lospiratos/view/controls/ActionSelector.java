@@ -1,7 +1,7 @@
 package com.vztekoverflow.lospiratos.view.controls;
 
-import com.vztekoverflow.lospiratos.viewmodel.Actions.ActionsCatalog;
-import com.vztekoverflow.lospiratos.viewmodel.Actions.PlannableAction;
+import com.vztekoverflow.lospiratos.viewmodel.actions.ActionsCatalog;
+import com.vztekoverflow.lospiratos.viewmodel.actions.PlannableAction;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -11,6 +11,7 @@ import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.TextAlignment;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
 
@@ -21,8 +22,10 @@ import java.util.stream.Collectors;
 public class ActionSelector extends Pane {
 
     private Stack<Point2D> previousCenters = new Stack<>();
-    public static final double BUTTON_SIZE = 128;
+    public static final double BUTTON_SIZE = 100;
+    private static final int layoutRadius = 170;
     private static final Point2D defaultCenter = new Point2D(-BUTTON_SIZE / 2, -BUTTON_SIZE / 2);
+
 
     public ActionsCatalog.Node getCurrentNode() {
         return currentNode.get();
@@ -72,6 +75,8 @@ public class ActionSelector extends Pane {
             } else {
                 b.setText(n.getIcon().toString());
             }
+            b.wrapTextProperty().set(true);
+            b.textAlignmentProperty().set(TextAlignment.CENTER);
 
             b.setMaxWidth(Double.MAX_VALUE);
             b.setMaxHeight(Double.MAX_VALUE);
@@ -136,10 +141,9 @@ public class ActionSelector extends Pane {
 
         double angle = 0;
         double toAdd = (2 * Math.PI) / childCount;
-        double radius = 300;
 
         for (Node c : visibleChildren) {
-            layoutInArea(c, center.getX() + radius * Math.sin(angle), center.getY() + radius * Math.cos(angle), BUTTON_SIZE, BUTTON_SIZE, 0, HPos.CENTER, VPos.CENTER);
+            layoutInArea(c, center.getX() + layoutRadius * Math.sin(angle), center.getY() + layoutRadius * Math.cos(angle), BUTTON_SIZE, BUTTON_SIZE, 0, HPos.CENTER, VPos.CENTER);
             angle += toAdd;
         }
 

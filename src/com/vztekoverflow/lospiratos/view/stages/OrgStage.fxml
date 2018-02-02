@@ -50,6 +50,7 @@
                 <Button maxWidth="1.7976931348623157E308" text="Načíst hru"/>
                 <Button maxWidth="1.7976931348623157E308" text="Uložit hru"/>
                 <Button maxWidth="1.7976931348623157E308" onAction="#loremIpsum" text="Lorem Ipsum"/>
+                <Button maxWidth="1.7976931348623157E308" onAction="#evaluateRound" text="Vyhodnotit kolo"/>
                 <Button maxWidth="1.7976931348623157E308" onAction="#createShip" text="Debug vyrobit novou loď"/>
             </VBox>
         </Tab>

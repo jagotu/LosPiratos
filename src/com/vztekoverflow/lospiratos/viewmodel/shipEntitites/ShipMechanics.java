@@ -1,6 +1,6 @@
 package com.vztekoverflow.lospiratos.viewmodel.shipEntitites;
 
-import com.vztekoverflow.lospiratos.viewmodel.Actions.Action;
+import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.shipMechanics.Chained;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.shipMechanics.Rooted;
 

@@ -1,7 +1,7 @@
 package com.vztekoverflow.lospiratos.view.controls;
 
-import com.vztekoverflow.lospiratos.viewmodel.Actions.ActionsCatalog;
-import com.vztekoverflow.lospiratos.viewmodel.Actions.PlannableAction;
+import com.vztekoverflow.lospiratos.viewmodel.actions.ActionsCatalog;
+import com.vztekoverflow.lospiratos.viewmodel.actions.PlannableAction;
 import impl.org.controlsfx.skin.BreadCrumbBarSkin;
 import javafx.collections.ListChangeListener;
 import javafx.scene.Node;

@@ -1,7 +1,7 @@
 package com.vztekoverflow.lospiratos.viewmodel.shipEntitites.shipMechanics;
 
-import com.vztekoverflow.lospiratos.viewmodel.Actions.Action;
-import com.vztekoverflow.lospiratos.viewmodel.Actions.Maneuvers.MoveForward;
+import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
+import com.vztekoverflow.lospiratos.viewmodel.actions.maneuvers.MoveForward;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipMechanics;
 
 public class Chained extends ShipMechanics {

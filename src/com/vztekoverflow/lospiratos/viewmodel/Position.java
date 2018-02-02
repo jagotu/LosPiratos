@@ -108,9 +108,13 @@ public class Position {
         if (obj == null) {
             return false;
         }
-        if (Position.class.isAssignableFrom(obj.getClass())) {
+        if(AxialCoordinate.class.isAssignableFrom(obj.getClass())){
+            AxialCoordinate c = (AxialCoordinate) obj;
+            return this.coordinate.get().equals(c);
+        }
+        else if (Position.class.isAssignableFrom(obj.getClass())) {
             Position p = (Position) obj;
-            return p.coordinate.equals(this.coordinate) &&
+            return p.coordinate.get().equals(this.coordinate.get()) &&
                     p.getRotationAsDirection().equals(this.getRotationAsDirection());
         }
         return false;
@@ -123,7 +127,7 @@ public class Position {
 
     public Position createCopy() {
         Position result = new Position();
-        result.rotation = this.rotation;
+        result.rotation.set(this.rotation.get());
         result.setCoordinate(this.getQ(), this.getR());
         return result;
     }

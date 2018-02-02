@@ -1,7 +1,7 @@
 package com.vztekoverflow.lospiratos.view.layout;
 
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
-import com.vztekoverflow.lospiratos.viewmodel.Actions.ActionsCatalog;
+import com.vztekoverflow.lospiratos.viewmodel.actions.ActionsCatalog;
 import com.vztekoverflow.lospiratos.viewmodel.Board;
 import com.vztekoverflow.lospiratos.viewmodel.BoardTile;
 import com.vztekoverflow.lospiratos.viewmodel.MovableFigure;

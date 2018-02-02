@@ -7,7 +7,7 @@ import com.vztekoverflow.lospiratos.view.controls.ShipView;
 import com.vztekoverflow.lospiratos.view.controls.TeamView;
 import com.vztekoverflow.lospiratos.view.layout.PiratosHexTileContentsFactory;
 import com.vztekoverflow.lospiratos.view.layout.VirtualizingHexGridPane;
-import com.vztekoverflow.lospiratos.viewmodel.Actions.ActionsCatalog;
+import com.vztekoverflow.lospiratos.viewmodel.actions.ActionsCatalog;
 import com.vztekoverflow.lospiratos.viewmodel.Game;
 import com.vztekoverflow.lospiratos.viewmodel.MovableFigure;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
@@ -238,6 +238,10 @@ public class OrgStage {
     @FXML
     private void loremIpsum() {
         int a = 0;
+    }
+
+    @FXML
+    private void evaluateRound() {
         game.get().closeRoundAndEvaluate();
     }
 

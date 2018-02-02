@@ -4,17 +4,17 @@ import com.sun.javafx.collections.UnmodifiableObservableMap;
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.util.FxUtils;
 import com.vztekoverflow.lospiratos.util.Warnings;
-import com.vztekoverflow.lospiratos.viewmodel.Actions.Action;
-import com.vztekoverflow.lospiratos.viewmodel.Actions.Attacks.CannonsAbstractVolley;
-import com.vztekoverflow.lospiratos.viewmodel.Actions.Attacks.FrontalAssault;
-import com.vztekoverflow.lospiratos.viewmodel.Actions.Attacks.MortarShot;
-import com.vztekoverflow.lospiratos.viewmodel.Actions.Maneuver;
-import com.vztekoverflow.lospiratos.viewmodel.Actions.PerformableAction;
-import com.vztekoverflow.lospiratos.viewmodel.Actions.Transaction;
-import com.vztekoverflow.lospiratos.viewmodel.BoardTiles.Port;
-import com.vztekoverflow.lospiratos.viewmodel.BoardTiles.Sea;
-import com.vztekoverflow.lospiratos.viewmodel.BoardTiles.Shipwreck;
-import com.vztekoverflow.lospiratos.viewmodel.BoardTiles.Shore;
+import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
+import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.CannonsAbstractVolley;
+import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.FrontalAssault;
+import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.MortarShot;
+import com.vztekoverflow.lospiratos.viewmodel.actions.Maneuver;
+import com.vztekoverflow.lospiratos.viewmodel.actions.PerformableAction;
+import com.vztekoverflow.lospiratos.viewmodel.actions.Transaction;
+import com.vztekoverflow.lospiratos.viewmodel.boardTiles.Port;
+import com.vztekoverflow.lospiratos.viewmodel.boardTiles.Sea;
+import com.vztekoverflow.lospiratos.viewmodel.boardTiles.Shipwreck;
+import com.vztekoverflow.lospiratos.viewmodel.boardTiles.Shore;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipType;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.*;
@@ -283,7 +283,7 @@ public class Game {
 
 
     public static Game CreateNewMockGame() {
-        final int teamCount = 6; //beter do not make bigger than 6
+        final int teamCount = 3; //beter do not make bigger than 6
         int captainIdx = 0;
         Game g = new Game();
 
@@ -299,10 +299,10 @@ public class Game {
             team.getOwnedResource().setWood(40 * i);
             //Create ships:
             for (int j = 0; j < i; j++) {
-                name = "Tým" + i + "_Loď" + j;
+                AxialCoordinate position = new AxialCoordinate(i - teamCount/2, j - teamCount/2);
+                name = "Tým" + i + "_Loď" + (j+1) + " na " + position;
                 String captain = captainNames[captainIdx++];
                 Class<ShipType> type = (Class<ShipType>) shipTypes[j % 4];
-                AxialCoordinate position = new AxialCoordinate(i - teamCount/2, j - teamCount/2);
                 Ship s = team.createAndAddNewShip(type, name, captain, position);
                 s.getPosition().setRotation(60*j);
                 s.getStorage().addMoney(500 * i + 10 * j);
@@ -311,17 +311,17 @@ public class Game {
                 s.getStorage().addRum(30 * i + j);
                 s.getStorage().addWood(40 * i + j);
                 if (i != 3) //random value
-                    s.takeDamage(8 * j);
+                    //s.takeDamage(0 * j);
                 for (int k = 0; k < j; k++) {
                     Class<ShipEnhancement> enh = (Class<ShipEnhancement>) shipEnhancements[k];
                     s.addNewEnhancement(enh);
                 }
                 if ((i == 3 && j == 2) || (i == 5 && j == 4)) { //random values
-                    s.destroyShipAndEnhancements();
+                    //s.destroyShipAndEnhancements();
                 }
                 if (i == 2) { //random value
-                    s.destroyShipAndEnhancements();
-                    s.repairShip();
+                   // s.destroyShipAndEnhancements();
+                    //s.repairShip();
                 }
             }
         }
@@ -337,9 +337,9 @@ public class Game {
                 if (c.distanceTo(0,0) >= boardDiameter -1) { //random value
                     tile = new Shore(c);
                 } else if (i == 1 && j == 1) { //random value
-                    tile = new Shipwreck(c);
-                } else if (i == -6 && j == 0) { //random value
                     tile = new Port(c);
+                } else if (i == -6 && j == 0) { //random value
+                    tile = new Shipwreck(c);
                 }else {
                     tile = new Sea(c);
                 }

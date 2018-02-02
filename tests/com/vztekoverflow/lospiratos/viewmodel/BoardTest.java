@@ -2,8 +2,8 @@ package com.vztekoverflow.lospiratos.viewmodel;
 
 import com.vztekoverflow.lospiratos.model.MapTile;
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
-import com.vztekoverflow.lospiratos.viewmodel.BoardTiles.Sea;
-import com.vztekoverflow.lospiratos.viewmodel.BoardTiles.Shore;
+import com.vztekoverflow.lospiratos.viewmodel.boardTiles.Sea;
+import com.vztekoverflow.lospiratos.viewmodel.boardTiles.Shore;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Schooner;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ReadOnlyMapProperty;

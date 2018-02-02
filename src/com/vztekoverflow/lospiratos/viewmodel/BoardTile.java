@@ -2,7 +2,7 @@ package com.vztekoverflow.lospiratos.viewmodel;
 
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.util.Warnings;
-import com.vztekoverflow.lospiratos.viewmodel.BoardTiles.*;
+import com.vztekoverflow.lospiratos.viewmodel.boardTiles.*;
 
 public abstract class BoardTile {
 

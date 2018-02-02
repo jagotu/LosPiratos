@@ -3,9 +3,9 @@ package com.vztekoverflow.lospiratos.viewmodel;
 
 import com.vztekoverflow.lospiratos.model.ShipEnhancementStatus;
 import com.vztekoverflow.lospiratos.util.Warnings;
-import com.vztekoverflow.lospiratos.viewmodel.Actions.Action;
-import com.vztekoverflow.lospiratos.viewmodel.Actions.Maneuver;
-import com.vztekoverflow.lospiratos.viewmodel.Actions.PlannableAction;
+import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
+import com.vztekoverflow.lospiratos.viewmodel.actions.Maneuver;
+import com.vztekoverflow.lospiratos.viewmodel.actions.PlannableAction;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEntity;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipMechanics;
@@ -359,10 +359,11 @@ public class Ship implements MovableFigure, DamageableFigure {
      */
     @Override
     public DamageSufferedResponse takeDamage(int value) {
+        if(isDestroyed()) return DamageSufferedResponse.alreadyDestroyed;
         int newValue = currentHP.get() - value;
         if (newValue <= 0) {
             destroyShipAndEnhancements();
-            return DamageSufferedResponse.hasBeenDestroyed;
+            return DamageSufferedResponse.hasJustBeenDestroyed;
         }
         currentHP.set(newValue);
         return DamageSufferedResponse.stillAlive;
@@ -619,6 +620,7 @@ public class Ship implements MovableFigure, DamageableFigure {
      */
     public void repairShip() {
         destroyed.set(false);
+        currentHP.set(getMaxHP());
     }
 
     /**
