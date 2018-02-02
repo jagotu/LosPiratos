@@ -53,6 +53,14 @@ public class VirtualizingHexGridPane extends Pane {
     private final Pane tilesPlane = new Pane();
     private final Pane contentPlane = new Pane();
 
+    public double getTileWidth() {
+        return tileWidth;
+    }
+
+    public double getTileHeight() {
+        return tileHeight;
+    }
+
     public VirtualizingHexGridPane(double edgeLength, boolean pointy, HexTileContentsFactory factory) {
 
         this.edgeLength = edgeLength;

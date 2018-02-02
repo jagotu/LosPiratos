@@ -11,6 +11,15 @@
         <BorderPane fx:id="boxHeader">
             <right>
                 <HBox alignment="CENTER_LEFT" BorderPane.alignment="CENTER">
+                    <Button fx:id="info" onAction="#info" minWidth="16">
+                        <graphic>
+                            <Glyph fontFamily="FontAwesome" icon="info"/>
+                        </graphic>
+                        <styleClass>
+                            <String fx:value="mini-button"/>
+                            <String fx:value="contrast"/>
+                        </styleClass>
+                    </Button>
                     <Button fx:id="center" onAction="#center">
                         <graphic>
                             <Glyph fontFamily="FontAwesome" icon="bullseye"/>
@@ -29,6 +38,7 @@
                             <String fx:value="contrast"/>
                         </styleClass>
                     </Button>
+
                 </HBox>
 
             </right>

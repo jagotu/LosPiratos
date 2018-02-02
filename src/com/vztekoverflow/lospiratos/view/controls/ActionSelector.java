@@ -196,6 +196,10 @@ public class ActionSelector extends Pane {
                 g = new Glyph("FontAwesome", FontAwesome.Glyph.ANGLE_DOUBLE_UP);
                 g.setFontSize(32);
                 return g;
+            /*case attackGenericIcon:
+                g = new Glyph("FontAwesome", FontAwesome.Glyph.BOMB);
+                g.setFontSize(32);
+                return g;*/
             default:
                 return null;
         }

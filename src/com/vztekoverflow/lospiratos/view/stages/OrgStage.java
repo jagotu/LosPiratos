@@ -99,13 +99,14 @@ public class OrgStage {
     }
 
     private boolean relocateActionSelector = false;
+    private double edgeLength = 40;
+    private boolean pointy = true;
 
     private void connectToGame() {
         if (hexPane != null) {
             root.getItems().remove(hexPane);
         }
-        double edgeLength = 40;
-        boolean pointy = true;
+
         hexPane = new VirtualizingHexGridPane(edgeLength, pointy, new PiratosHexTileContentsFactory(game.get().getBoard(), edgeLength, pointy, (figures, e) -> {
             for (MovableFigure f : figures) {
                 if (f instanceof Ship) {
@@ -184,6 +185,7 @@ public class OrgStage {
         Platform.runLater(() -> hexPane.centerInParent(new AxialCoordinate(0, 0)));
     }
 
+
     private void addTeamView(Team t) {
         TeamView tv = new TeamView(t);
         tv.setRequestDeleteListener(team -> game.get().getTeams().remove(team));
@@ -192,26 +194,7 @@ public class OrgStage {
             hexPane.highlightTile(s.getPosition().getCoordinate());
 
         });
-        tv.setOnShipDetails(s -> {
-            tabPane.getSelectionModel().select(shipsTab);
-            final ShipView sv = shipViews.get(s);
-            ensureVisible(shipsScroll, sv);
-
-            final Animation animation = new Transition() {
-
-                {
-                    setCycleDuration(Duration.millis(3000));
-                    setInterpolator(Interpolator.EASE_OUT);
-                }
-
-                @Override
-                protected void interpolate(double frac) {
-                    Color vColor = new Color(1, 0, 0, 1 - frac);
-                    sv.setBackground(new Background(new BackgroundFill(vColor, CornerRadii.EMPTY, Insets.EMPTY)));
-                }
-            };
-            animation.play();
-        });
+        tv.setOnShipDetails(this::showShipDetails);
         Platform.runLater(() -> teamsBox.getChildren().add(tv));
 
         teamViews.put(t, tv);
@@ -221,6 +204,20 @@ public class OrgStage {
         teamsBox.getChildren().remove(teamViews.get(t));
         teamViews.remove(t);
 
+    }
+
+    private void showShipDetails(Ship s)
+    {
+        ActionsCatalog.relatedShip.set(s);
+        Point2D shippos = AxialCoordinate.hexToPixel(s.getPosition().getCoordinate(), pointy, edgeLength);
+        actionSelector.layoutXProperty().unbind();
+        actionSelector.layoutYProperty().unbind();
+        actionSelector.layoutXProperty().bind(hexPane.XOffsetProperty().negate().add(shippos.getX() + hexPane.getTileWidth()/2).divide(hexPane.scaleProperty()));
+        actionSelector.layoutYProperty().bind(hexPane.YOffsetProperty().negate().add(shippos.getY() + hexPane.getTileHeight()/2).divide(hexPane.scaleProperty()));
+        actionSelector.setCurrentNode(ActionsCatalog.allPossiblePlannableActions);
+        tabPane.getSelectionModel().select(shipsTab);
+        final ShipView sv = shipViews.get(s);
+        ensureVisible(shipsScroll, sv);
     }
 
 
@@ -237,6 +234,8 @@ public class OrgStage {
             hexPane.highlightTile(sh.getPosition().getCoordinate());
 
         });
+
+        sv.setOnShipDetails(this::showShipDetails);
 
         sv.backgroundProperty().bind(Bindings.when(ActionsCatalog.relatedShip.isEqualTo(s)).then(yellow).otherwise(transparent));
 

@@ -58,6 +58,20 @@ public class ShipView extends StackPane {
 
     private CenterShipListener onCenterShip;
 
+    public interface ShipDetailsListener {
+        void ShipDetails(Ship s);
+    }
+
+    ShipDetailsListener onShipDetails;
+
+    public ShipDetailsListener getOnShipDetails() {
+        return onShipDetails;
+    }
+
+    public void setOnShipDetails(ShipDetailsListener onShipDetails) {
+        this.onShipDetails = onShipDetails;
+    }
+
     static FXMLLoader fxmlLoader = new FXMLLoader(ShipView.class.getResource(
             "ShipView.fxml"));
 
@@ -122,6 +136,13 @@ public class ShipView extends StackPane {
     private void center() {
         if (onCenterShip != null) {
             onCenterShip.CenterShip(s);
+        }
+    }
+
+    @FXML
+    private void info() {
+        if (onShipDetails != null) {
+            onShipDetails.ShipDetails(s);
         }
     }
 }
