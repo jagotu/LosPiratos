@@ -21,10 +21,11 @@ public class CannonsSimpleVolley extends CannonsAbstractVolley {
 
     @Override
     public String getČeskéJméno() {
-        if(useLeftCannons)
+        if (useLeftCannons)
             return "salva děl na levoboku";
         else return "salva děl na pravoboku";
     }
+
     @Override
     protected Action createCopy() {
         return new CannonsSimpleVolley(useLeftCannons);

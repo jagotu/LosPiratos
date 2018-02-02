@@ -4,5 +4,8 @@ public enum ActionIcon {
     attackGenericIcon,
     maneuverGenericIcon,
     transactionGenericIcon,
-    priviledged
+    priviledged,
+    turnLeft,
+    turnRight,
+    moveForward
 }

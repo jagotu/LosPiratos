@@ -7,15 +7,16 @@ import com.vztekoverflow.lospiratos.view.controls.ShipView;
 import com.vztekoverflow.lospiratos.view.controls.TeamView;
 import com.vztekoverflow.lospiratos.view.layout.PiratosHexTileContentsFactory;
 import com.vztekoverflow.lospiratos.view.layout.VirtualizingHexGridPane;
-import com.vztekoverflow.lospiratos.viewmodel.actions.ActionsCatalog;
 import com.vztekoverflow.lospiratos.viewmodel.Game;
 import com.vztekoverflow.lospiratos.viewmodel.MovableFigure;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
 import com.vztekoverflow.lospiratos.viewmodel.Team;
+import com.vztekoverflow.lospiratos.viewmodel.actions.ActionsCatalog;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
@@ -103,11 +104,18 @@ public class OrgStage {
         if (hexPane != null) {
             root.getItems().remove(hexPane);
         }
-        hexPane = new VirtualizingHexGridPane(40, true, new PiratosHexTileContentsFactory(game.get().getBoard(), (figures, e) -> {
+        double edgeLength = 40;
+        boolean pointy = true;
+        hexPane = new VirtualizingHexGridPane(edgeLength, pointy, new PiratosHexTileContentsFactory(game.get().getBoard(), edgeLength, pointy, (figures, e) -> {
             for (MovableFigure f : figures) {
                 if (f instanceof Ship) {
-                    ActionsCatalog.relatedShip.set((Ship) f);
+                    Ship s = (Ship) f;
+                    ActionsCatalog.relatedShip.set(s);
                     actionSelector.setCurrentNode(ActionsCatalog.allPossiblePlannableActions);
+                    tabPane.getSelectionModel().select(shipsTab);
+                    final ShipView sv = shipViews.get(s);
+                    ensureVisible(shipsScroll, sv);
+
                     relocateActionSelector = true;
                     return;
                 }
@@ -215,6 +223,10 @@ public class OrgStage {
 
     }
 
+
+    private static final Background yellow = new Background(new BackgroundFill(Color.YELLOW, CornerRadii.EMPTY, Insets.EMPTY));
+    private static final Background transparent = new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY));
+
     private void addShipView(Ship s) {
         ShipView sv = new ShipView(s);
         sv.setRequestDeleteListener(ship -> s.getTeam().removeShip(s.getName()));
@@ -225,6 +237,8 @@ public class OrgStage {
             hexPane.highlightTile(sh.getPosition().getCoordinate());
 
         });
+
+        sv.backgroundProperty().bind(Bindings.when(ActionsCatalog.relatedShip.isEqualTo(s)).then(yellow).otherwise(transparent));
 
         shipViews.put(s, sv);
     }

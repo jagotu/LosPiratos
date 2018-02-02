@@ -14,7 +14,6 @@ import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
 import javafx.scene.transform.Scale;
@@ -132,8 +131,7 @@ public class VirtualizingHexGridPane extends Pane {
 
     private Shape getHexagon(boolean transparent) {
         Polygon hexagon = new Polygon();
-        if(transparent)
-        {
+        if (transparent) {
             hexagon.setFill(Color.TRANSPARENT);
         }
         hexagon.getPoints().addAll(hexagonPoints);

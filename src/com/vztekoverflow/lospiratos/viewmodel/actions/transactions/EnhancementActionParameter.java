@@ -30,6 +30,7 @@ public class EnhancementActionParameter implements ActionParameter<EnhancementIc
     public ObjectProperty<EnhancementIcon> property() {
         return enh;
     }
+
     private ObjectProperty<EnhancementIcon> enh;
 
     public EnhancementActionParameter(ObjectProperty<EnhancementIcon> property) {

@@ -5,12 +5,12 @@ import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.util.FxUtils;
 import com.vztekoverflow.lospiratos.util.Warnings;
 import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
-import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.CannonsAbstractVolley;
-import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.FrontalAssault;
-import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.MortarShot;
 import com.vztekoverflow.lospiratos.viewmodel.actions.Maneuver;
 import com.vztekoverflow.lospiratos.viewmodel.actions.PerformableAction;
 import com.vztekoverflow.lospiratos.viewmodel.actions.Transaction;
+import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.CannonsAbstractVolley;
+import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.FrontalAssault;
+import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.MortarShot;
 import com.vztekoverflow.lospiratos.viewmodel.boardTiles.Port;
 import com.vztekoverflow.lospiratos.viewmodel.boardTiles.Sea;
 import com.vztekoverflow.lospiratos.viewmodel.boardTiles.Shipwreck;
@@ -68,18 +68,20 @@ public class Game {
     }
 
     private int createAndAddNewDefaultTeamCounter = 1;
+
     /**
      * Is guaranteed to always return a new team, with some default initial values (including name)
      */
-    public Team createAndAddNewDefaultTeam(){
+    public Team createAndAddNewDefaultTeam() {
         Team t = null;
-        while (t == null){
+        while (t == null) {
             String name = "Tým #" + ++createAndAddNewDefaultTeamCounter;
             t = createAndAddNewTeam(name, Color.BLACK);
         }
-        return  t;
+        return t;
 
     }
+
     /**
      * @return null if team with this name (case insensitive) already exists
      */
@@ -111,32 +113,35 @@ public class Game {
 
     //region evaluate
     private int roundNo = 0;
-    public void closeRoundAndEvaluate(){
+
+    public void closeRoundAndEvaluate() {
         //zavolat agenty
         evaluateVolleys();
         evaluate(Maneuver.class);
         evaluate(MortarShot.class);
         evaluate(Transaction.class);
         ++roundNo;
-        for(Ship s : getAllShips().values()){
+        for (Ship s : getAllShips().values()) {
             s.onNextRoundStarted(roundNo);
         }
     }
-    private void evaluateVolleys(){
-        for(Ship s : allShips.values()){
+
+    private void evaluateVolleys() {
+        for (Ship s : allShips.values()) {
             Position oldPosition = s.getPosition().createCopy();
-            for(PerformableAction a : s.getPlannedActions()){
-                if(a instanceof Maneuver || a instanceof CannonsAbstractVolley || a instanceof FrontalAssault){
+            for (PerformableAction a : s.getPlannedActions()) {
+                if (a instanceof Maneuver || a instanceof CannonsAbstractVolley || a instanceof FrontalAssault) {
                     a.performOnTarget();
                 }
             }
             s.getPosition().setFrom(oldPosition);
         }
     }
-    private void evaluate(Class<? extends Action> action){
-        for(Ship s : allShips.values()){
-            for(PerformableAction a : s.getPlannedActions()){
-                if(action.isAssignableFrom(a.getClass())){
+
+    private void evaluate(Class<? extends Action> action) {
+        for (Ship s : allShips.values()) {
+            for (PerformableAction a : s.getPlannedActions()) {
+                if (action.isAssignableFrom(a.getClass())) {
                     a.performOnTarget();
                 }
             }
@@ -146,12 +151,14 @@ public class Game {
 
     private final ListProperty<Team> teams = new SimpleListProperty<>(FXCollections.observableArrayList());
     private final ReadOnlyListProperty<Team> unmodifiableTeams = new SimpleListProperty<>(FXCollections.unmodifiableObservableList(teams));
+
     /**
      * resulting list is unmodifiable
      */
     public ObservableList<Team> getTeams() {
         return unmodifiableTeams.get();
     }
+
     /**
      * resulting list is unmodifiable
      */
@@ -162,9 +169,11 @@ public class Game {
     private MapProperty<String, Ship> allShips = new SimpleMapProperty<>(FXCollections.observableHashMap());
     private UnmodifiableObservableMap<String, Ship> unmodifiableAllShips = new UnmodifiableObservableMap<>(allShips.get());
     private ReadOnlyMapProperty<String, Ship> unmodifiableAllShipsProperty = new SimpleMapProperty<>(unmodifiableAllShips);
-    public UnmodifiableObservableMap<String,Ship> getAllShips() {
+
+    public UnmodifiableObservableMap<String, Ship> getAllShips() {
         return unmodifiableAllShips;
     }
+
     /**
      * The resulting Map is unmodifiable and attempt to add a new ship throws an exception
      */
@@ -196,18 +205,18 @@ public class Game {
     }
 
     void unregisterShip(String shipName) {
-        if (allShips.containsKey(shipName)){
+        if (allShips.containsKey(shipName)) {
             boolean removedFromBoard = board.figuresProperty().remove(allShips.get(shipName));
-            if(!removedFromBoard){
-                Warnings.panic(toString() + ".unregisterShip()","Attempt to remove a ship which is in allShips but not in board.figures: " + shipName);
+            if (!removedFromBoard) {
+                Warnings.panic(toString() + ".unregisterShip()", "Attempt to remove a ship which is in allShips but not in board.figures: " + shipName);
             }
             allShips.remove(shipName);
-        }
-        else {
+        } else {
             Warnings.makeStrongWarning(toString() + ".unregisterShip()", "Attempt to remove a ship whose name is unknown: " + shipName);
         }
     }
-    public void deleteShip(Ship s){
+
+    public void deleteShip(Ship s) {
         s.getTeam().removeShip(s.getName());
     }
 
@@ -299,12 +308,12 @@ public class Game {
             team.getOwnedResource().setWood(40 * i);
             //Create ships:
             for (int j = 0; j < i; j++) {
-                AxialCoordinate position = new AxialCoordinate(i - teamCount/2, j - teamCount/2);
-                name = "Tým" + i + "_Loď" + (j+1) + " na " + position;
+                AxialCoordinate position = new AxialCoordinate(i - teamCount / 2, j - teamCount / 2);
+                name = "Tým" + i + "_Loď" + (j + 1) + " na " + position;
                 String captain = captainNames[captainIdx++];
                 Class<ShipType> type = (Class<ShipType>) shipTypes[j % 4];
                 Ship s = team.createAndAddNewShip(type, name, captain, position);
-                s.getPosition().setRotation(60*j);
+                s.getPosition().setRotation(60 * j);
                 s.getStorage().addMoney(500 * i + 10 * j);
                 s.getStorage().addCloth(10 * i + j);
                 s.getStorage().addMetal(20 * i + j);
@@ -312,15 +321,15 @@ public class Game {
                 s.getStorage().addWood(40 * i + j);
                 if (i != 3) //random value
                     //s.takeDamage(0 * j);
-                for (int k = 0; k < j; k++) {
-                    Class<ShipEnhancement> enh = (Class<ShipEnhancement>) shipEnhancements[k];
-                    s.addNewEnhancement(enh);
-                }
+                    for (int k = 0; k < j; k++) {
+                        Class<ShipEnhancement> enh = (Class<ShipEnhancement>) shipEnhancements[k];
+                        s.addNewEnhancement(enh);
+                    }
                 if ((i == 3 && j == 2) || (i == 5 && j == 4)) { //random values
                     //s.destroyShipAndEnhancements();
                 }
                 if (i == 2) { //random value
-                   // s.destroyShipAndEnhancements();
+                    // s.destroyShipAndEnhancements();
                     //s.repairShip();
                 }
             }
@@ -332,15 +341,15 @@ public class Game {
         for (int i = -boardDiameter; i <= boardDiameter; i++) {
             for (int j = -boardDiameter; j <= boardDiameter; j++) {
                 AxialCoordinate c = new AxialCoordinate(i, j);
-                if(c.distanceTo(0,0) >= boardDiameter) continue;
+                if (c.distanceTo(0, 0) >= boardDiameter) continue;
                 BoardTile tile;
-                if (c.distanceTo(0,0) >= boardDiameter -1) { //random value
+                if (c.distanceTo(0, 0) >= boardDiameter - 1) { //random value
                     tile = new Shore(c);
                 } else if (i == 1 && j == 1) { //random value
                     tile = new Port(c);
                 } else if (i == -6 && j == 0) { //random value
                     tile = new Shipwreck(c);
-                }else {
+                } else {
                     tile = new Sea(c);
                 }
                 b.tilesProperty().put(c, tile);

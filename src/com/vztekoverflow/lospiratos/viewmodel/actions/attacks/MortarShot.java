@@ -28,7 +28,7 @@ public class MortarShot extends Attack implements ParameterizedAction {
 
     @Override
     public void performOnTargetInternal() {
-        if(getTarget() == null) throw new IllegalArgumentException("target must be set before Mortar can shoot.");
+        if (getTarget() == null) throw new IllegalArgumentException("target must be set before Mortar can shoot.");
         applyDamageTo(MORTAR_DAMAGE, getTarget());
     }
 
@@ -42,11 +42,11 @@ public class MortarShot extends Attack implements ParameterizedAction {
         return new MortarShot();
     }
 
-    public int getRange(){
+    public int getRange() {
         return range.get();
     }
 
-    public IntegerBinding rangeProperty(){
+    public IntegerBinding rangeProperty() {
         return range;
     }
 
@@ -54,7 +54,7 @@ public class MortarShot extends Attack implements ParameterizedAction {
         @Override
         protected int computeValue() {
             Mortar mortar = getRelatedShip().getEnhancement(Mortar.class);
-            if(mortar == null) return 0;
+            if (mortar == null) return 0;
             return mortar.getRange();
         }
     };
@@ -68,8 +68,9 @@ public class MortarShot extends Attack implements ParameterizedAction {
     public Iterable<ActionParameter> getAvailableParameters() {
         return params;
     }
+
     private List<ActionParameter> params = new ArrayList<>();
-    private AxialCoordinateActionParameter target = new AxialCoordinateActionParameter(){
+    private AxialCoordinateActionParameter target = new AxialCoordinateActionParameter() {
         @Override
         public String getČeskéJméno() {
             return "cíl";
@@ -93,7 +94,7 @@ public class MortarShot extends Attack implements ParameterizedAction {
     /*
      * equivalent for calling params.get(0).property()
      */
-    public ObjectProperty<AxialCoordinate> enhancementIconProperty(){
+    public ObjectProperty<AxialCoordinate> enhancementIconProperty() {
         return target.property();
     }
 }

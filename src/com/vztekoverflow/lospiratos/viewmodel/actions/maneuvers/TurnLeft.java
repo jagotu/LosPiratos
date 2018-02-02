@@ -1,8 +1,9 @@
 package com.vztekoverflow.lospiratos.viewmodel.actions.maneuvers;
 
 
-import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
 import com.vztekoverflow.lospiratos.viewmodel.Position;
+import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
+import com.vztekoverflow.lospiratos.viewmodel.actions.ActionIcon;
 
 public class TurnLeft extends TurnAbstractManeuver {
     @Override
@@ -23,5 +24,10 @@ public class TurnLeft extends TurnAbstractManeuver {
     @Override
     public void performOn(Position position) {
         position.rotateLeft();
+    }
+
+    @Override
+    public ActionIcon getIcon() {
+        return ActionIcon.turnLeft;
     }
 }

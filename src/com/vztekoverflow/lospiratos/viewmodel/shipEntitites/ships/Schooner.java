@@ -6,18 +6,32 @@ import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipType;
 
 public class Schooner extends ShipType {
     @Override
-    public int getBonusMaxHP() {return 30;}
+    public int getBonusMaxHP() {
+        return 30;
+    }
+
     @Override
-    public int getBonusCannonsCount() {return 8;}
+    public int getBonusCannonsCount() {
+        return 8;
+    }
+
     @Override
-    public int getBonusCargoSpace() {return 250;}
+    public int getBonusCargoSpace() {
+        return 250;
+    }
+
     @Override
-    public int getBonusGarrison() {return 30;}
+    public int getBonusGarrison() {
+        return 30;
+    }
+
     @Override
-    public int getBonusSpeed() {return 4;}
+    public int getBonusSpeed() {
+        return 4;
+    }
 
 
-    public static ResourceReadOnly getCost(){
+    public static ResourceReadOnly getCost() {
         return new ResourceReadOnly();
     }
 

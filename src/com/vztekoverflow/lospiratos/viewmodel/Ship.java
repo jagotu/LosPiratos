@@ -37,6 +37,7 @@ public class Ship implements MovableFigure, DamageableFigure {
 
     /**
      * Creates a new ship object with values as defined in the @shipModel.
+     *
      * @param owner is not bound to any property in model. It must correspond to the ownerTeam as represented in model. If you set a team that is not an ownerTeam according to the model, behaviour is not defined.
      */
     public Ship(Team owner, com.vztekoverflow.lospiratos.model.Ship shipModel) {
@@ -355,11 +356,12 @@ public class Ship implements MovableFigure, DamageableFigure {
     /**
      * The ships takes damage, reducing its HP by {@code value}.
      * If HP goes below 0, the ship will be destroyed.
+     *
      * @returns value indicating whether the ship has been destroyed.
      */
     @Override
     public DamageSufferedResponse takeDamage(int value) {
-        if(isDestroyed()) return DamageSufferedResponse.alreadyDestroyed;
+        if (isDestroyed()) return DamageSufferedResponse.alreadyDestroyed;
         int newValue = currentHP.get() - value;
         if (newValue <= 0) {
             destroyShipAndEnhancements();
@@ -547,7 +549,7 @@ public class Ship implements MovableFigure, DamageableFigure {
         return plannedActions;
     }
 
-    public void unplanActions(int howManyToLeave){
+    public void unplanActions(int howManyToLeave) {
         plannedActions.remove(howManyToLeave, plannedActions.size());
     }
 

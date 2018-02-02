@@ -11,26 +11,30 @@ public abstract class ShipEntity implements Translatable {
     protected ShipEntity() {
 
     }
+
     protected Ship ship;
 
     /**
      * Should be called just after the entity has been added to the ship, before any other function is called.
      */
-    public final void onAddedToShip(Ship ship){
+    public final void onAddedToShip(Ship ship) {
         this.ship = ship;
         onAddedToShipInternal();
     }
+
     /**
      * Can be inherited to add custom implementation.
      * Overridden implementations should always call super.onAddedToShipInternal() first.
      */
-    protected void onAddedToShipInternal(){}
+    protected void onAddedToShipInternal() {
+    }
 
     /**
      * Should be called whenever the ship type changes.
      * Overridden implementations should always call super.onShipTypeJustChanged() first.
      */
-    public void onShipTypeJustChanged(){}
+    public void onShipTypeJustChanged() {
+    }
 
     /**
      * Is called by the owner whenever the game proceeds to a next round.
@@ -40,10 +44,24 @@ public abstract class ShipEntity implements Translatable {
     public void onNextRoundStarted(int roundNo) {
     }
 
-    public int getBonusCannonsCount() {return 0;}
-    public int getBonusMaxHP() {return 0;}
-    public int getBonusCargoSpace() {return 0;}
-    public int getBonusGarrison() {return 0;}
-    public int getBonusSpeed() {return 0;}
+    public int getBonusCannonsCount() {
+        return 0;
+    }
+
+    public int getBonusMaxHP() {
+        return 0;
+    }
+
+    public int getBonusCargoSpace() {
+        return 0;
+    }
+
+    public int getBonusGarrison() {
+        return 0;
+    }
+
+    public int getBonusSpeed() {
+        return 0;
+    }
 
 }

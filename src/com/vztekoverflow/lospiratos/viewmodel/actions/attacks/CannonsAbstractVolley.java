@@ -1,14 +1,15 @@
 package com.vztekoverflow.lospiratos.viewmodel.actions.attacks;
 
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
-import com.vztekoverflow.lospiratos.viewmodel.actions.Attack;
 import com.vztekoverflow.lospiratos.viewmodel.Position;
+import com.vztekoverflow.lospiratos.viewmodel.actions.Attack;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class CannonsAbstractVolley extends Attack {
     final protected boolean useLeftCannons; //false ~ right, true ~ left
+
     protected CannonsAbstractVolley(boolean useLeftCannons) {
         this.useLeftCannons = useLeftCannons;
     }
@@ -17,19 +18,20 @@ public abstract class CannonsAbstractVolley extends Attack {
     protected boolean recomputePlannable() {
         return getRelatedShip().getPlannedActions().stream().
                 noneMatch(a -> CannonsAbstractVolley.class.isAssignableFrom(a.getClass()) &&
-                        ((CannonsAbstractVolley)a).useLeftCannons == useLeftCannons
+                        ((CannonsAbstractVolley) a).useLeftCannons == useLeftCannons
                 );
     }
 
-    protected final void applyDamageToCannonsTargets(int damage){
-        for(AxialCoordinate target: getCannonsTargets()){
+    protected final void applyDamageToCannonsTargets(int damage) {
+        for (AxialCoordinate target : getCannonsTargets()) {
             applyDamageTo(damage, target);
         }
     }
-    protected final List<AxialCoordinate> getCannonsTargets(){
+
+    protected final List<AxialCoordinate> getCannonsTargets() {
         List<AxialCoordinate> result = new ArrayList<>(2);
         int sign = 1;
-        if(useLeftCannons) sign = -1;
+        if (useLeftCannons) sign = -1;
 
         //left/right top:
         Position p = getRelatedShip().getPosition().createCopy();

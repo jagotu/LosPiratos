@@ -11,24 +11,22 @@ import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Schooner;
 public final class HullUpgrade extends ShipEnhancement {
 
     @Override
-    public EnhancementIcon getIcon(){return EnhancementIcon.hull;}
+    public EnhancementIcon getIcon() {
+        return EnhancementIcon.hull;
+    }
 
     @Override
     public int getBonusMaxHP() {
-        if(this.isDestroyed()) return 0;
-        if(ship.getShipType() instanceof Schooner){
+        if (this.isDestroyed()) return 0;
+        if (ship.getShipType() instanceof Schooner) {
             return 5;
-        }
-        else if(ship.getShipType() instanceof Brig){
+        } else if (ship.getShipType() instanceof Brig) {
             return 10;
-        }
-        else if(ship.getShipType() instanceof Frigate){
+        } else if (ship.getShipType() instanceof Frigate) {
             return 15;
-        }
-        else if(ship.getShipType() instanceof Galleon){
+        } else if (ship.getShipType() instanceof Galleon) {
             return 20;
-        }
-        else{
+        } else {
             Warnings.makeWarning("CannonUpgrade", " Unknown ship type: " + ship.getShipType());
             return 0;
         }
@@ -42,9 +40,10 @@ public final class HullUpgrade extends ShipEnhancement {
     }
 
 
-    public static ResourceReadOnly getCost(){
+    public static ResourceReadOnly getCost() {
         return getCost();
     }
+
     @Override
     public String getČeskéJméno() {
         return "Vyztužení trupu";

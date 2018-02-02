@@ -43,6 +43,9 @@ public class ActionsCatalog {
         attacks.addChild(new Node(new CannonsSimpleVolley(true)));
         attacks.icon = ActionIcon.attackGenericIcon;
 
+        //maneuvers
+        root.addChild(new Node(new MoveForward()));
+        root.addChild(new Node(new TurnRight()));
         //transactions
         Node transactions = new Node(false);
         transactions.addChild(new Node(new UnloadStorage()));
@@ -57,8 +60,6 @@ public class ActionsCatalog {
 
         //maneuvers and categories, in the order in which they appear in UI
         //root.addChild(new Node(new ActivatePrivilegedMode())); //proč se tam tahle akce nezobrazuje?!
-        root.addChild(new Node(new MoveForward()));
-        root.addChild(new Node(new TurnRight()));
         root.addChild(transactions);
         root.addChild(attacks);
         root.addChild(new Node(new TurnLeft()));

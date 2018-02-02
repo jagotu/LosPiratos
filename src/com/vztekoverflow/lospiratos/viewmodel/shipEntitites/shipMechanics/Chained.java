@@ -16,11 +16,12 @@ public class Chained extends ShipMechanics {
     }
 
     int roundsActive = 0;
+
     @Override
     public void onNextRoundStarted(int roundNo) {
         super.onNextRoundStarted(roundNo);
         roundsActive++;
-        if(roundsActive >= 2){
+        if (roundsActive >= 2) {
             ship.mechanicsProperty().remove(this);
         }
     }

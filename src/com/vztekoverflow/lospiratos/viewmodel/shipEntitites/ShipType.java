@@ -70,12 +70,12 @@ public abstract class ShipType extends ShipEntity {
      * @return a ship type that is one order better than {@code shipTypeToIncrement}
      * null if {@code shipTypeToIncrement} cannot be incremented
      */
-    public static Class<? extends ShipType> increment(Class<? extends ShipType> shipTypeToIncrement){
-        if(shipTypeToIncrement.equals(Schooner.class))
+    public static Class<? extends ShipType> increment(Class<? extends ShipType> shipTypeToIncrement) {
+        if (shipTypeToIncrement.equals(Schooner.class))
             return Brig.class;
-        if(shipTypeToIncrement.equals(Brig.class))
+        if (shipTypeToIncrement.equals(Brig.class))
             return Frigate.class;
-        if(shipTypeToIncrement.equals(Frigate.class))
+        if (shipTypeToIncrement.equals(Frigate.class))
             return Galleon.class;
         //else
         return null;
@@ -85,12 +85,12 @@ public abstract class ShipType extends ShipEntity {
      * @return a ship type that is one order worse than {@code shipTypeToDecrement}
      * null if {@code shipTypeToDecrement} cannot be decremented
      */
-    public static Class<? extends ShipType> decrement(Class<? extends ShipType> shipTypeToDecrement){
-        if(shipTypeToDecrement.equals(Brig.class))
+    public static Class<? extends ShipType> decrement(Class<? extends ShipType> shipTypeToDecrement) {
+        if (shipTypeToDecrement.equals(Brig.class))
             return Schooner.class;
-        if(shipTypeToDecrement.equals(Frigate.class))
+        if (shipTypeToDecrement.equals(Frigate.class))
             return Brig.class;
-        if(shipTypeToDecrement.equals(Galleon.class))
+        if (shipTypeToDecrement.equals(Galleon.class))
             return Frigate.class;
         //else
         return null;

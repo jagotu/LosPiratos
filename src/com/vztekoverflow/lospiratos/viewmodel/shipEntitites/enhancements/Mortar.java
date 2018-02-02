@@ -36,24 +36,20 @@ public final class Mortar extends ShipEnhancement {
         recompute();
     }
 
-    private void recompute(){
-        if(ship.getShipType() instanceof Schooner){
+    private void recompute() {
+        if (ship.getShipType() instanceof Schooner) {
             ship.removeEnhancement(this.getClass());
-        }
-        else if(ship.getShipType() instanceof Brig){
+        } else if (ship.getShipType() instanceof Brig) {
             mortarsCount = 1;
             range = 2;
-        }
-        else if(ship.getShipType() instanceof Frigate){
+        } else if (ship.getShipType() instanceof Frigate) {
             mortarsCount = 2;
             range = 2;
-        }
-        else if(ship.getShipType() instanceof Galleon){
+        } else if (ship.getShipType() instanceof Galleon) {
             mortarsCount = 4;
             range = 3;
-        }
-        else{
-            Warnings.makeStrongWarning(toString()+"onShipTypeJustChanged()", "unknown ship type: " + ship.getShipType());
+        } else {
+            Warnings.makeStrongWarning(toString() + "onShipTypeJustChanged()", "unknown ship type: " + ship.getShipType());
         }
     }
 

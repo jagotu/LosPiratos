@@ -1,9 +1,9 @@
 package com.vztekoverflow.lospiratos.viewmodel.actions.transactions;
 
+import com.vztekoverflow.lospiratos.viewmodel.Resource;
 import com.vztekoverflow.lospiratos.viewmodel.actions.ActionParameter;
 import com.vztekoverflow.lospiratos.viewmodel.actions.ParameterizedAction;
 import com.vztekoverflow.lospiratos.viewmodel.actions.Transaction;
-import com.vztekoverflow.lospiratos.viewmodel.Resource;
 import javafx.beans.property.ObjectProperty;
 
 import java.util.ArrayList;
@@ -22,6 +22,7 @@ abstract public class CommodityTransaction extends Transaction implements Parame
     public Iterable<ActionParameter> getAvailableParameters() {
         return params;
     }
+
     private ResourceActionParameter commodities = new ResourceActionParameter();
 
     public Resource getCommodities() {

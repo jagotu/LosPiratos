@@ -5,5 +5,6 @@ import com.vztekoverflow.lospiratos.viewmodel.Ship;
 
 public interface PerformableAction extends Translatable {
     void performOnTarget();
+
     void setRelatedShip(Ship s);
 }

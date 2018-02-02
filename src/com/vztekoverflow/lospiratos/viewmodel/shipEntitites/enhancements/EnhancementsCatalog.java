@@ -14,8 +14,7 @@ public class EnhancementsCatalog {
     public final static Iterable<Class<? extends ShipEnhancement>> allPossibleEnhancements;
     private final static BijectiveMap<Class<? extends ShipEnhancement>, EnhancementIcon> icons = new BijectiveMap<>();
 
-    static
-    {
+    static {
         List<Class<? extends ShipEnhancement>> l = new ArrayList<>();
         l.add(CannonUpgrade.class);
         l.add(ChainShot.class);
@@ -33,8 +32,8 @@ public class EnhancementsCatalog {
         icons.put(Ram.class, new Ram().getIcon());
     }
 
-    public static EnhancementIcon getIcon(Class<? extends ShipEnhancement> enhancementType){
-        if(icons.containsKey(enhancementType)){
+    public static EnhancementIcon getIcon(Class<? extends ShipEnhancement> enhancementType) {
+        if (icons.containsKey(enhancementType)) {
             return icons.getValue(enhancementType);
         }
         //else
@@ -42,8 +41,8 @@ public class EnhancementsCatalog {
         return null;
     }
 
-    public static Class<? extends ShipEnhancement> getEnhancementFromIcon(EnhancementIcon icon){
-        if(icons.containsValue(icon)){
+    public static Class<? extends ShipEnhancement> getEnhancementFromIcon(EnhancementIcon icon) {
+        if (icons.containsValue(icon)) {
             return icons.getKey(icon);
         }
         //else

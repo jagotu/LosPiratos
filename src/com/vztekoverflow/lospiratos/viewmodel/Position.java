@@ -86,7 +86,7 @@ public class Position {
         rotation.set(direction.toDegrees());
     }
 
-    public void setFrom(Position anotherPosition){
+    public void setFrom(Position anotherPosition) {
         this.setCoordinate(anotherPosition.getCoordinate());
         this.setRotation(anotherPosition.getRotation());
     }
@@ -108,11 +108,10 @@ public class Position {
         if (obj == null) {
             return false;
         }
-        if(AxialCoordinate.class.isAssignableFrom(obj.getClass())){
+        if (AxialCoordinate.class.isAssignableFrom(obj.getClass())) {
             AxialCoordinate c = (AxialCoordinate) obj;
             return this.coordinate.get().equals(c);
-        }
-        else if (Position.class.isAssignableFrom(obj.getClass())) {
+        } else if (Position.class.isAssignableFrom(obj.getClass())) {
             Position p = (Position) obj;
             return p.coordinate.get().equals(this.coordinate.get()) &&
                     p.getRotationAsDirection().equals(this.getRotationAsDirection());

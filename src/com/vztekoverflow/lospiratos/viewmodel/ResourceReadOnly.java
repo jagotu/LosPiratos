@@ -86,16 +86,10 @@ public class ResourceReadOnly {
     }
 
     //TODO: odmrdat tento dokumentační komentář
+
     /**
      * Compares two resources component wise and returns a PartialOrdering that holds for each of the component
-     * @return PartialOrdering, trying to find the most precise result (in the sense of inclusion)
-     * I.e., if, in every component, the object's value > argument's value, @returns GreaterThan
-     *    Then, if, in every component, the object's value equals, @returns Equals
-     *    Then, if, in every component, the object's value >= argument's value, @returns GreaterThanOrEqual
-     *    Thus, result GreaterThanOrEqual means that in at least one component, but not in all, the value is equal.
-     * If you want to compare for >= in the usual sense, you have to test if (result == GreaterThan || result == GreaterThanOrEqual || result == Equal)
-     *     (Or use the method isGreaterThanOrEqual)
-     * Similarly for < and <=.
+     *
      * @return Uncomparable if in one component holds > and in other <.
      */
     public PartialOrdering compare(ResourceReadOnly r) {
@@ -104,15 +98,17 @@ public class ResourceReadOnly {
 
 
     //TODO: odmrdat tento dokumentační komentář
+
     /**
      * Compares two resources component wise and returns a PartialOrdering that holds for each of the component
+     *
      * @returns PartialOrdering, trying to find the most precise result (in the sense of inclusion)
      * I.e., if, in every component, the object's value > argument's value, @returns GreaterThan
-     *    Then, if, in every component, the object's value equals, @returns Equals
-     *    Then, if, in every component, the object's value >= argument's value, @returns GreaterThanOrEqual
-     *    Thus, result GreaterThanOrEqual means that in at least one component, but not in all, the value is equal.
+     * Then, if, in every component, the object's value equals, @returns Equals
+     * Then, if, in every component, the object's value >= argument's value, @returns GreaterThanOrEqual
+     * Thus, result GreaterThanOrEqual means that in at least one component, but not in all, the value is equal.
      * If you want to compare for >= in the usual sense, you have to test if (result == GreaterThan || result == GreaterThanOrEqual || result == Equal)
-     *     (Or use the method isGreaterThanOrEqual)
+     * (Or use the method isGreaterThanOrEqual)
      * Similarly for < and <=.
      * @returns Uncomparable if in one component holds > and in other <.
      */
@@ -257,8 +253,8 @@ public class ResourceReadOnly {
         return result;
     }
 
-    public static ResourceReadOnly fromMoney(int value){
-        return new ResourceReadOnly(value, 0,0,0,0,0);
+    public static ResourceReadOnly fromMoney(int value) {
+        return new ResourceReadOnly(value, 0, 0, 0, 0, 0);
     }
 
 }

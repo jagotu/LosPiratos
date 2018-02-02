@@ -6,7 +6,9 @@ import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
 public final class ChainShot extends ShipEnhancement {
 
     @Override
-    public EnhancementIcon getIcon(){return EnhancementIcon.chain;}
+    public EnhancementIcon getIcon() {
+        return EnhancementIcon.chain;
+    }
 
     @Override
     public String getČeskéJméno() {
@@ -16,11 +18,11 @@ public final class ChainShot extends ShipEnhancement {
     /**
      * Returns universal cost of this enhancement that is same for all instances, by calling a static method getCost().
      */
-    public ResourceReadOnly getCostUniversal(){
+    public ResourceReadOnly getCostUniversal() {
         return getCost();
     }
 
-    public static ResourceReadOnly getCost(){
+    public static ResourceReadOnly getCost() {
         return new ResourceReadOnly();
     }
 }

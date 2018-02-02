@@ -23,24 +23,25 @@ public abstract class EnhancementAbstractTransaction extends ChangeShipAbstractT
     public Iterable<ActionParameter> getAvailableParameters() {
         return null;
     }
-    private ObjectProperty<Class<? extends ShipEnhancement>> enhancement = new SimpleObjectProperty<Class<? extends ShipEnhancement>>(){
+
+    private ObjectProperty<Class<? extends ShipEnhancement>> enhancement = new SimpleObjectProperty<Class<? extends ShipEnhancement>>() {
         @Override
         public void set(Class<? extends ShipEnhancement> newValue) {
             //support for enhIcon <> enhClass 2way binding
             EnhancementIcon icon = EnhancementsCatalog.getIcon(newValue);
-            if(enhancementIcon.property().get().equals(icon)) return;
+            if (enhancementIcon.property().get().equals(icon)) return;
             //else
             enhancementIcon.property().set(icon);
         }
     };
 
     private EnhancementActionParameter enhancementIcon = new EnhancementActionParameter(
-            new SimpleObjectProperty<EnhancementIcon>(){
+            new SimpleObjectProperty<EnhancementIcon>() {
                 @Override
                 public void set(EnhancementIcon newValue) {
                     //support for enhIcon <> enhClass 2way binding
                     Class<? extends ShipEnhancement> e = EnhancementsCatalog.getEnhancementFromIcon(newValue);
-                    if(enhancement.get().equals(e)) return;
+                    if (enhancement.get().equals(e)) return;
                     //else
                     enhancement.set(e);
                 }
@@ -72,7 +73,7 @@ public abstract class EnhancementAbstractTransaction extends ChangeShipAbstractT
     /**
      * equivalent for calling params.get(0).property()
      */
-    public ObjectProperty<EnhancementIcon> enhancementIconProperty(){
+    public ObjectProperty<EnhancementIcon> enhancementIconProperty() {
         return enhancementIcon.property();
     }
 }

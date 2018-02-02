@@ -1,8 +1,8 @@
 package com.vztekoverflow.lospiratos.viewmodel.actions.transactions;
 
 import com.vztekoverflow.lospiratos.util.Warnings;
-import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
 import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
+import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipType;
 
 public class RepairShipViaDowngrade extends RepairShip {
@@ -14,8 +14,8 @@ public class RepairShipViaDowngrade extends RepairShip {
     @Override
     public void performOnTargetInternal() {
         Class<? extends ShipType> newType = ShipType.decrement(getRelatedShip().getShipType().getClass());
-        if(newType == null){
-            Warnings.makeWarning(toString()+"perform()", "Attempt to downgrade a ship that is not downgradable: " + getRelatedShip());
+        if (newType == null) {
+            Warnings.makeWarning(toString() + "perform()", "Attempt to downgrade a ship that is not downgradable: " + getRelatedShip());
             return;
         }
         getRelatedShip().setShipType(newType);

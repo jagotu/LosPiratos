@@ -16,18 +16,21 @@ public class Team {
     public static final int INITIAL_MONEY = 500;
 
     //initializers:
+
     /**
      * Sets properties' values to default.
      * Should be called only after the object has been created.
      */
-    public void initialize(){
+    public void initialize() {
         ownedResource.money.set(Team.INITIAL_MONEY);
     }
 
     private com.vztekoverflow.lospiratos.model.Team teamModel;
     private Game game;
+
     /**
      * Creates a new team object with values as defined in the @teamModel.
+     *
      * @param owner is not bound to any property in model. It must correspond to the owner game as represented in model. If you set a game that is not an owner according to the model, behaviour is not defined.
      */
     public Team(Game owner, com.vztekoverflow.lospiratos.model.Team teamModel) {
@@ -51,11 +54,11 @@ public class Team {
 
         teamModel.shipsProperty().addListener((ListChangeListener<com.vztekoverflow.lospiratos.model.Ship>) c -> {
             while (c.next()) {
-                if (c.wasAdded()){
+                if (c.wasAdded()) {
                     for (com.vztekoverflow.lospiratos.model.Ship addedItem : c.getAddedSubList()) {
                         tryCreatingAndAdd(addedItem);
                     }
-                } else if(c.wasRemoved()) {
+                } else if (c.wasRemoved()) {
                     for (com.vztekoverflow.lospiratos.model.Ship removedItem : c.getRemoved()) {
                         removeShipFromCollections(removedItem.getName());
                     }
@@ -66,27 +69,28 @@ public class Team {
             tryCreatingAndAdd(modelShip);
         }
     }
-    private void tryCreatingAndAdd(com.vztekoverflow.lospiratos.model.Ship model){
+
+    private void tryCreatingAndAdd(com.vztekoverflow.lospiratos.model.Ship model) {
         String shipName = model.getName();
         if (!game.mayCreateShipWithName(shipName)) {
-            Warnings.makeWarning(toString()+".tryCreatingAndAdd()", "No ship created, because ship's name already exists or is invalid: " + shipName);
+            Warnings.makeWarning(toString() + ".tryCreatingAndAdd()", "No ship created, because ship's name already exists or is invalid: " + shipName);
             return;
         }
-        if(ships.containsKey(shipName)){
-            Warnings.panic(toString()+".tryCreatingAndAdd()","Map<Ship> ships contains a key which game.ships does not!!! : " + shipName);
+        if (ships.containsKey(shipName)) {
+            Warnings.panic(toString() + ".tryCreatingAndAdd()", "Map<Ship> ships contains a key which game.ships does not!!! : " + shipName);
             return;
         }
         Ship s = new Ship(this, model);
         ships.put(shipName, s);
         game.registerShip(s);
     }
-    private void removeShipFromCollections(String shipName){
-        if(ships.containsKey(shipName)){
+
+    private void removeShipFromCollections(String shipName) {
+        if (ships.containsKey(shipName)) {
             ships.remove(shipName);
             game.unregisterShip(shipName);
-        }
-        else{
-            Warnings.makeStrongWarning(toString()+".removeShipFromCollections()", "Attempt to remove a ship whose name is unknown: " + shipName);
+        } else {
+            Warnings.makeStrongWarning(toString() + ".removeShipFromCollections()", "Attempt to remove a ship whose name is unknown: " + shipName);
         }
     }
 
@@ -95,9 +99,11 @@ public class Team {
     private MapProperty<String, Ship> ships = new SimpleMapProperty<String, Ship>(FXCollections.observableHashMap());
     private UnmodifiableObservableMap<String, Ship> unmodifiableShips = new UnmodifiableObservableMap<>(ships.get());
     private ReadOnlyMapProperty<String, Ship> unmodifiableShipsProperty = new SimpleMapProperty<>(unmodifiableShips);
+
     public UnmodifiableObservableMap<String, Ship> getShips() {
         return unmodifiableShips;
     }
+
     /**
      * The resulting Map is unmodifiable and attempt to add a new ship throws an exception
      */
@@ -148,22 +154,23 @@ public class Team {
     /**
      * Is guaranteed to always return a new ship, with some default initial values (including name)
      */
-    public Ship createAndAddNewDefaultShip(){
+    public Ship createAndAddNewDefaultShip() {
         Ship s = null;
         int i = 0;
-        while(s == null){
+        while (s == null) {
             String name = "Loď #" + ++i + " týmu " + getName();
-            s = createAndAddNewShip(Schooner.class,name, "kapitán", AxialCoordinate.ZERO);
+            s = createAndAddNewShip(Schooner.class, name, "kapitán", AxialCoordinate.ZERO);
         }
-        return  s;
+        return s;
     }
 
     /**
      * Creates a new ship owned by the team and adds it to its list of ships
+     *
      * @return null if a ship with the same {@code shipName} name already exists or if it's empty or null
      */
     public <T extends ShipType> Ship createAndAddNewShip(Class<T> shipType, String shipName, String captainName, AxialCoordinate position) {
-        if(!game.mayCreateShipWithName(shipName)) return null;
+        if (!game.mayCreateShipWithName(shipName)) return null;
         com.vztekoverflow.lospiratos.model.Ship modelShip = new com.vztekoverflow.lospiratos.model.Ship();
         modelShip.nameProperty().set(shipName);
         modelShip.typeProperty().set(ShipType.getPersistentName(shipType));
@@ -173,11 +180,12 @@ public class Team {
         //at this place, teamModel.shipsProperty's change calls my observer
         //   which then adds the ship to this team's collection (if valid)
         Ship s = findShipByName(shipName);
-        if(s == null) return null; //this means the model was somehow invalid
+        if (s == null) return null; //this means the model was somehow invalid
         s.initialize();
         return s;
     }
-    public void removeShip(String shipName){
+
+    public void removeShip(String shipName) {
         teamModel.shipsProperty().removeIf(s -> s.getName().equals(shipName));
     }
 

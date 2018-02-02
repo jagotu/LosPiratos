@@ -30,7 +30,7 @@ public final class HeavyShot extends ShipEnhancement {
     @Override
     public void onShipTypeJustChanged() {
         super.onShipTypeJustChanged();
-        if(! (ship.getShipType() instanceof Galleon)){
+        if (!(ship.getShipType() instanceof Galleon)) {
             ship.removeEnhancement(this.getClass());
         }
     }

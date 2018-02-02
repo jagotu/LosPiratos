@@ -14,7 +14,7 @@ public class CustomShipType extends ShipType {
         return getCost();
     }
 
-    public static ResourceReadOnly getCost(){
+    public static ResourceReadOnly getCost() {
         return new ResourceReadOnly();
     }
 }

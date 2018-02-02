@@ -10,7 +10,7 @@ public class Resource extends ResourceReadOnly {
     public Resource() {
     }
 
-    public void setAll(ResourceReadOnly value){
+    public void setAll(ResourceReadOnly value) {
         setMoney(value.getMoney());
         setCloth(value.getCloth());
         setMetal(value.getMetal());
@@ -50,6 +50,7 @@ public class Resource extends ResourceReadOnly {
     public void addCloth(int value) {
         cloth.set(cloth.get() + value);
     }
+
     public void addMetal(int value) {
         metal.set(metal.get() + value);
     }
@@ -69,7 +70,7 @@ public class Resource extends ResourceReadOnly {
     /**
      * component-wise increases resource number by value in {@code value}
      */
-    public void add(ResourceReadOnly value){
+    public void add(ResourceReadOnly value) {
         addMoney(value.money.get());
         addCloth(value.cloth.get());
         addMetal(value.metal.get());
@@ -77,10 +78,11 @@ public class Resource extends ResourceReadOnly {
         addTobacco(value.tobco.get());
         addWood(value.wood_.get());
     }
+
     /**
      * component-wise decreases resource number by value in {@code value}
      */
-    public void subtract(ResourceReadOnly value){
+    public void subtract(ResourceReadOnly value) {
         addMoney(-value.money.get());
         addCloth(-value.cloth.get());
         addMetal(-value.metal.get());
@@ -88,23 +90,24 @@ public class Resource extends ResourceReadOnly {
         addTobacco(-value.tobco.get());
         addWood(-value.wood_.get());
     }
+
     /**
      * component-wise multiplies resource number by {@code value} and rounds to Integers
      */
-    public void multiply(double value){
-        setMoney  ((int) (getMoney() * value));
-        setCloth  ((int) (getCloth() * value));
-        setMetal  ((int) (getMetal() * value));
-        setRum    ((int) (getRum() * value));
+    public void multiply(double value) {
+        setMoney((int) (getMoney() * value));
+        setCloth((int) (getCloth() * value));
+        setMetal((int) (getMetal() * value));
+        setRum((int) (getRum() * value));
         setTobacco((int) (getTobacco() * value));
-        setWood   ((int) (getWood() * value));
+        setWood((int) (getWood() * value));
     }
 
     /**
      * Clamps all contained resources to be between min (inclusive) and max (inclusive)
      * Typical usage: clamp(0,Integer.MAX_VALUE);
      */
-    public void clamp(int min, int max){
+    public void clamp(int min, int max) {
         money.set(clampInt(min, money.get(), max));
         cloth.set(clampInt(min, cloth.get(), max));
         metal.set(clampInt(min, metal.get(), max));
@@ -112,7 +115,8 @@ public class Resource extends ResourceReadOnly {
         tobco.set(clampInt(min, tobco.get(), max));
         wood_.set(clampInt(min, wood_.get(), max));
     }
-    private int clampInt(int lower, int value, int upper){
+
+    private int clampInt(int lower, int value, int upper) {
         return Math.max(lower, Math.min(upper, value));
     }
 

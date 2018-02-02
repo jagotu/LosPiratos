@@ -9,6 +9,6 @@ abstract class ChangeShipAbstractTransaction extends Transaction {
     @Override
     public boolean preventsFromBeingPlanned(Action preventedAction) {
         return Maneuver.class.isAssignableFrom(preventedAction.getClass()) ||
-                Attack.class.isAssignableFrom(preventedAction.getClass()) ;
+                Attack.class.isAssignableFrom(preventedAction.getClass());
     }
 }

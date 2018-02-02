@@ -1,11 +1,11 @@
 package com.vztekoverflow.lospiratos.view.layout;
 
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
-import com.vztekoverflow.lospiratos.viewmodel.actions.ActionsCatalog;
 import com.vztekoverflow.lospiratos.viewmodel.Board;
 import com.vztekoverflow.lospiratos.viewmodel.BoardTile;
 import com.vztekoverflow.lospiratos.viewmodel.MovableFigure;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
+import com.vztekoverflow.lospiratos.viewmodel.actions.ActionsCatalog;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
@@ -34,8 +34,10 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
         }
     };
 
-    public PiratosHexTileContentsFactory(Board board, OnClickEventHandler onMouseClick) {
+    public PiratosHexTileContentsFactory(Board board, double edgeLength, boolean pointy, OnClickEventHandler onMouseClick) {
         this.onMouseClick = onMouseClick;
+        this.edgeLength = edgeLength;
+        this.pointy = pointy;
 
         ActionsCatalog.relatedShip.addListener((observable, oldValue, newValue) -> {
             if (oldValue != null) {
@@ -78,9 +80,12 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
 
     }
 
-    public PiratosHexTileContentsFactory(Board board) {
-        this(board, null);
+    public PiratosHexTileContentsFactory(Board board, double edgeLength, boolean pointy) {
+        this(board, edgeLength, pointy, null);
     }
+
+    private boolean pointy;
+    private double edgeLength;
 
 
     private void addFigure(MovableFigure f) {
@@ -102,12 +107,15 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
         if (!current.containsKey(f.getPosition().getCoordinate())) {
             throw new UnsupportedOperationException("Figure out of bounds or not on a tile!");
         }
+
         current.get(f.getPosition().getCoordinate()).removeFigure(f);
     }
 
 
     @Override
     public HexTileContents getContentsFor(AxialCoordinate coords, double tileWidth, double tileHeight) {
+        this.tileHeight = tileHeight;
+        this.tileWidth = tileWidth;
         if (current.containsKey(coords)) {
             PiratosHexTileContents ht = current.get(coords);
             ht.tileWidth.setValue(tileWidth);

@@ -1,7 +1,7 @@
 package com.vztekoverflow.lospiratos.viewmodel.actions.transactions;
 
-import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
 import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
+import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipType;
 
 public class UpgradeShip extends ChangeShipAbstractTransaction {

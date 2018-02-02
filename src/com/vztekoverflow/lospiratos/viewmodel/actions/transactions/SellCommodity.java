@@ -1,7 +1,7 @@
 package com.vztekoverflow.lospiratos.viewmodel.actions.transactions;
 
-import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
 import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
+import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
 
 public class SellCommodity extends CommodityTransaction {
 
@@ -28,5 +28,5 @@ public class SellCommodity extends CommodityTransaction {
     }
 
     //todo opravdickou hodnotu
-    static final ResourceReadOnly sellCoefficients = new ResourceReadOnly (1,2,2,2,2,2);
+    static final ResourceReadOnly sellCoefficients = new ResourceReadOnly(1, 2, 2, 2, 2, 2);
 }

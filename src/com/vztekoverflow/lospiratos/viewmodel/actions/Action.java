@@ -27,11 +27,10 @@ public abstract class Action implements PerformableAction, PlannableAction {
 
     public Action() {
         relatedShip.addListener((__, oldValue, newValue) -> {
-            if(oldValue != null)
-            {
+            if (oldValue != null) {
                 oldValue.plannedActionsProperty().removeListener(invalidationListener);
             }
-            if(newValue != null) {
+            if (newValue != null) {
                 newValue.plannedActionsProperty().addListener(invalidationListener);
                 invalidateBindings();
             }
@@ -56,7 +55,9 @@ public abstract class Action implements PerformableAction, PlannableAction {
         }
     };
 
-    protected boolean isPrivilegedModeActive() { return privilegedModeActive.get();}
+    protected boolean isPrivilegedModeActive() {
+        return privilegedModeActive.get();
+    }
 
     //region plannable
 
@@ -160,26 +161,27 @@ public abstract class Action implements PerformableAction, PlannableAction {
     /**
      * @return true if action's cost has successfully been paid.
      */
-    protected boolean performPayment(){
+    protected boolean performPayment() {
         ResourceReadOnly cost = getCost();
-        if(cost.isLesserThanOrEqual(getRelatedShip().getTeam().getOwnedResource())){
+        if (cost.isLesserThanOrEqual(getRelatedShip().getTeam().getOwnedResource())) {
             getRelatedShip().getStorage().subtract(cost);
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
     @Override
     public final void performOnTarget() {
-        if(isPrivilegedModeActive())
+        if (isPrivilegedModeActive())
             performOnTargetInternal();
-        else if(performPayment())
+        else if (performPayment())
             performOnTargetInternal();
         else
-            Warnings.makeWarning(toString()+".performOnTarget()", "Action has not been performed because there is not enough resource");
-            //todo tell also some info to game user?
+            Warnings.makeWarning(toString() + ".performOnTarget()", "Action has not been performed because there is not enough resource");
+        //todo tell also some info to game user?
     }
+
     /**
      * Should be overridden by inheritors to add custom behaviour.
      */

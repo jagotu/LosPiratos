@@ -11,57 +11,56 @@ import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Schooner;
 public final class CannonUpgrade extends ShipEnhancement {
 
     @Override
-    public EnhancementIcon getIcon(){return EnhancementIcon.cannon;}
+    public EnhancementIcon getIcon() {
+        return EnhancementIcon.cannon;
+    }
 
     //todo pouzivat u rozsireni pattern jako u CannonUpgrade nebo pattern jako u HullUpgrade?
     private int bonusCannons = 0;
 
-    private void recomputeBonusCannons(){
-        if(ship.getShipType() instanceof Schooner){
+    private void recomputeBonusCannons() {
+        if (ship.getShipType() instanceof Schooner) {
             bonusCannons = 2;
-        }
-        else if(ship.getShipType() instanceof Brig){
+        } else if (ship.getShipType() instanceof Brig) {
             bonusCannons = 3;
-        }
-        else if(ship.getShipType() instanceof Frigate){
+        } else if (ship.getShipType() instanceof Frigate) {
             bonusCannons = 5;
-        }
-        else if(ship.getShipType() instanceof Galleon){
+        } else if (ship.getShipType() instanceof Galleon) {
             bonusCannons = 7;
-        }
-        else{
-            Warnings.makeWarning("CannonUpgrade:","Unknown ship type: " + ship.getShipType());
+        } else {
+            Warnings.makeWarning("CannonUpgrade:", "Unknown ship type: " + ship.getShipType());
         }
     }
 
     @Override
-    protected void onAddedToShipInternal(){
+    protected void onAddedToShipInternal() {
         super.onAddedToShipInternal();
         recomputeBonusCannons();
     }
 
     @Override
-    public void onShipTypeJustChanged(){
+    public void onShipTypeJustChanged() {
         super.onShipTypeJustChanged();
         recomputeBonusCannons();
     }
 
     @Override
     public int getBonusCannonsCount() {
-        if(this.isDestroyed()) return 0;
+        if (this.isDestroyed()) return 0;
         return bonusCannons;
     }
 
     /**
      * Returns universal cost of this enhancement that is same for all instances, by calling a static method getCost().
      */
-    public ResourceReadOnly getCostUniversal(){
+    public ResourceReadOnly getCostUniversal() {
         return getCost();
     }
 
-    public static ResourceReadOnly getCost(){
+    public static ResourceReadOnly getCost() {
         return new ResourceReadOnly();
     }
+
     @Override
     public String getČeskéJméno() {
         return "Přídavná děla";

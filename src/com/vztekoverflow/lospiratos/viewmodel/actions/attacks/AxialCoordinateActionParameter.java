@@ -5,7 +5,7 @@ import com.vztekoverflow.lospiratos.viewmodel.actions.ActionParameter;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
-public abstract class AxialCoordinateActionParameter implements ActionParameter<AxialCoordinate>{
+public abstract class AxialCoordinateActionParameter implements ActionParameter<AxialCoordinate> {
     @Override
     public Class<AxialCoordinate> getParameterType() {
         return AxialCoordinate.class;

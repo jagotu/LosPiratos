@@ -1,7 +1,9 @@
 package com.vztekoverflow.lospiratos.view.controls;
 
+import com.vztekoverflow.lospiratos.viewmodel.actions.ActionIcon;
 import com.vztekoverflow.lospiratos.viewmodel.actions.ActionsCatalog;
 import com.vztekoverflow.lospiratos.viewmodel.actions.PlannableAction;
+import javafx.animation.TranslateTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -12,6 +14,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.TextAlignment;
+import javafx.util.Duration;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
 
@@ -22,8 +25,7 @@ import java.util.stream.Collectors;
 public class ActionSelector extends Pane {
 
     private Stack<Point2D> previousCenters = new Stack<>();
-    public static final double BUTTON_SIZE = 100;
-    private static final int layoutRadius = 170;
+    public static final double BUTTON_SIZE = 64;
     private static final Point2D defaultCenter = new Point2D(-BUTTON_SIZE / 2, -BUTTON_SIZE / 2);
 
 
@@ -40,6 +42,7 @@ public class ActionSelector extends Pane {
     private ObjectProperty<ActionsCatalog.Node> currentNode = new SimpleObjectProperty<>(null);
 
     public ActionSelector() {
+        getStyleClass().add("action-selector");
         currentNode.addListener(x -> updateActionRoster());
         setPickOnBounds(false);
     }
@@ -70,10 +73,16 @@ public class ActionSelector extends Pane {
         }
         for (ActionsCatalog.Node n : currentNode.get().getChildren()) {
             final Button b = new Button();
-            if (n.isLeaf()) {
-                b.setText(n.getAction().getČeskéJméno());
+            Node graphic;
+            if ((graphic = getGraphicFor(n.getIcon())) != null) {
+                b.setGraphic(graphic);
             } else {
-                b.setText(n.getIcon().toString());
+                //This is bullshit. Everything should have a distinct icon
+                if (n.isLeaf()) {
+                    b.setText(n.getAction().getČeskéJméno());
+                } else {
+                    b.setText(n.getIcon().toString());
+                }
             }
             b.wrapTextProperty().set(true);
             b.textAlignmentProperty().set(TextAlignment.CENTER);
@@ -82,12 +91,15 @@ public class ActionSelector extends Pane {
             b.setMaxHeight(Double.MAX_VALUE);
             b.setMinWidth(0);
             b.setMinHeight(0);
+            //hack for improper long names
+            b.wrapTextProperty().set(true);
+            b.textAlignmentProperty().set(TextAlignment.CENTER);
             if (!n.isLeaf()) {
                 //Show three dots
                 b.setText(b.getText() + "...");
                 b.setOnAction(e -> {
                     previousCenters.push(center);
-                    center = new Point2D(b.getLayoutX(), b.getLayoutY());
+                    center = new Point2D(b.getLayoutX() + b.getTranslateX(), b.getLayoutY() + b.getTranslateY());
                     currentNode.set(n);
                 });
             } else {
@@ -101,14 +113,11 @@ public class ActionSelector extends Pane {
                     }
                 });
             }
+            b.relocate(center.getX(), center.getY());
             getChildren().add(b);
         }
         back = new Button();
-        if (currentNode.get().getParent() != null) {
-            back.setGraphic(new Glyph("FontAwesome", FontAwesome.Glyph.UNDO));
-        } else {
-            back.setGraphic(new Glyph("FontAwesome", FontAwesome.Glyph.TIMES));
-        }
+        back.setGraphic(new Glyph("FontAwesome", FontAwesome.Glyph.TIMES));
         final ActionsCatalog.Node parent = currentNode.get().getParent();
         back.setMaxWidth(Double.MAX_VALUE);
         back.setMaxHeight(Double.MAX_VALUE);
@@ -120,17 +129,30 @@ public class ActionSelector extends Pane {
             } else {
                 center = previousCenters.pop();
             }
-            currentNode.set(parent);
-            if (parent == null) {
-                ActionsCatalog.relatedShip.set(null);
+            boolean first = true;
+            for (Node c : getChildren().stream().filter(Node::isVisible).collect(Collectors.toList())) {
+                TranslateTransition tt = new TranslateTransition(Duration.millis(100), c);
+                tt.setToX(0);
+                tt.setToY(0);
+                if (first && c != back) {
+                    first = false;
+                    tt.setOnFinished(x -> {
+                        currentNode.set(parent);
+                        if (parent == null) {
+                            ActionsCatalog.relatedShip.set(null);
+                        }
+                    });
+                }
+                tt.play();
             }
+
         });
 
         getChildren().add(back);
 
     }
 
-    private Point2D center = new Point2D(-BUTTON_SIZE / 2, -BUTTON_SIZE / 2);
+    private Point2D center = defaultCenter;
 
     @Override
     protected void layoutChildren() {
@@ -141,15 +163,41 @@ public class ActionSelector extends Pane {
 
         double angle = 0;
         double toAdd = (2 * Math.PI) / childCount;
+        double radius = 100;
 
         for (Node c : visibleChildren) {
-            layoutInArea(c, center.getX() + layoutRadius * Math.sin(angle), center.getY() + layoutRadius * Math.cos(angle), BUTTON_SIZE, BUTTON_SIZE, 0, HPos.CENTER, VPos.CENTER);
+            final double cangle = angle;
+            c.resize(BUTTON_SIZE, BUTTON_SIZE);
+            if (c != back) {
+                TranslateTransition tt = new TranslateTransition(Duration.millis(100), c);
+                tt.setToX(radius * Math.sin(angle));
+                tt.setToY(-radius * Math.cos(angle));
+                tt.play();
+            }
+            layoutInArea(c, center.getX(), center.getY(), BUTTON_SIZE, BUTTON_SIZE, 0, HPos.CENTER, VPos.CENTER);
             angle += toAdd;
         }
 
-        if (back != null) {
-            layoutInArea(back, center.getX(), center.getY(), BUTTON_SIZE, BUTTON_SIZE, 0, HPos.CENTER, VPos.CENTER);
-        }
+    }
 
+    private Node getGraphicFor(ActionIcon icon) {
+        Glyph g;
+        switch (icon) {
+
+            case turnLeft:
+                g = new Glyph("FontAwesome", FontAwesome.Glyph.UNDO);
+                g.setFontSize(24);
+                return g;
+            case turnRight:
+                g = new Glyph("FontAwesome", '\uf01e');
+                g.setFontSize(24);
+                return g;
+            case moveForward:
+                g = new Glyph("FontAwesome", FontAwesome.Glyph.ANGLE_DOUBLE_UP);
+                g.setFontSize(32);
+                return g;
+            default:
+                return null;
+        }
     }
 }
