@@ -3,6 +3,7 @@ package com.vztekoverflow.lospiratos.view.controls;
 import com.sun.javafx.scene.control.skin.ColorPickerSkin;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
 import com.vztekoverflow.lospiratos.viewmodel.Team;
+import com.vztekoverflow.lospiratos.viewmodel.actions.ActionsCatalog;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -12,10 +13,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import org.controlsfx.glyphfont.FontAwesome;
@@ -177,6 +175,8 @@ public class TeamView extends StackPane {
 
     HashMap<Ship, Node> ships = new HashMap<>();
 
+    private static final Background YELLOW = new Background(new BackgroundFill(Color.YELLOW, CornerRadii.EMPTY, Insets.EMPTY));
+    private static final Background TRANSPARENT = new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY));
 
     private void addShip(Ship s) {
         BorderPane bp = new BorderPane();
@@ -211,7 +211,7 @@ public class TeamView extends StackPane {
         BorderPane.setMargin(hb, new Insets(0, 4, 0, 0));
         bp.setLeft(hb);
 
-
+        bp.backgroundProperty().bind(Bindings.when(ActionsCatalog.relatedShip.isEqualTo(s)).then(YELLOW).otherwise(TRANSPARENT));
         ships.put(s, bp);
         overflow.getChildren().add(bp);
     }

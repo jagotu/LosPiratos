@@ -88,9 +88,6 @@ public class OrgStage {
     private void initialize() {
         root.setDividerPosition(0, 0.75);
         actionSelector.setOnActionSelectedListener(x -> ActionsCatalog.relatedShip.get().planAction(x));
-        ActionsCatalog.relatedShip.addListener((observable, oldValue, newValue) -> {
-
-        });
         connectToGame();
     }
 
@@ -109,7 +106,6 @@ public class OrgStage {
                     Ship s = (Ship) f;
                     ActionsCatalog.relatedShip.set(s);
                     actionSelector.setCurrentNode(ActionsCatalog.allPossiblePlannableActions);
-                    tabPane.getSelectionModel().select(shipsTab);
                     final ShipView sv = shipViews.get(s);
                     ensureVisible(shipsScroll, sv);
 
@@ -210,7 +206,6 @@ public class OrgStage {
         actionSelector.layoutXProperty().bind(hexPane.XOffsetProperty().negate().add(shippos.getX() + hexPane.getTileWidth() / 2).divide(hexPane.scaleProperty()));
         actionSelector.layoutYProperty().bind(hexPane.YOffsetProperty().negate().add(shippos.getY() + hexPane.getTileHeight() / 2).divide(hexPane.scaleProperty()));
         actionSelector.setCurrentNode(ActionsCatalog.allPossiblePlannableActions);
-        tabPane.getSelectionModel().select(shipsTab);
         final ShipView sv = shipViews.get(s);
         ensureVisible(shipsScroll, sv);
     }
