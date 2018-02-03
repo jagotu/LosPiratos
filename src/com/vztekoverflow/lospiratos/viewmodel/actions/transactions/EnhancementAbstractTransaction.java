@@ -21,7 +21,7 @@ public abstract class EnhancementAbstractTransaction extends ChangeShipAbstractT
 
     @Override
     public Iterable<ActionParameter> getAvailableParameters() {
-        return null;
+        return params;
     }
 
     private ObjectProperty<Class<? extends ShipEnhancement>> enhancement = new SimpleObjectProperty<Class<? extends ShipEnhancement>>() {

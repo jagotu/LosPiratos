@@ -11,6 +11,8 @@
         <center>
             <Pane fx:id="mainPane">
                 <ActionSelector fx:id="actionSelector"/>
+                <Region fx:id="mouseBlocker" visible="false"/>
+
             </Pane>
         </center>
         <bottom>

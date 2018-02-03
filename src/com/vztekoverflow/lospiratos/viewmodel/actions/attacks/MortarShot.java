@@ -6,8 +6,7 @@ import com.vztekoverflow.lospiratos.viewmodel.actions.ActionParameter;
 import com.vztekoverflow.lospiratos.viewmodel.actions.Attack;
 import com.vztekoverflow.lospiratos.viewmodel.actions.ParameterizedAction;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.Mortar;
-import javafx.beans.binding.IntegerBinding;
-import javafx.beans.property.ObjectProperty;
+import javafx.beans.value.ObservableValue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,26 +41,24 @@ public class MortarShot extends Attack implements ParameterizedAction {
         return new MortarShot();
     }
 
-    public int getRange() {
-        return range.get();
-    }
-
-    public IntegerBinding rangeProperty() {
-        return range;
-    }
-
-    private IntegerBinding range = new IntegerBinding() {
-        @Override
-        protected int computeValue() {
-            Mortar mortar = getRelatedShip().getEnhancement(Mortar.class);
-            if (mortar == null) return 0;
-            return mortar.getRange();
-        }
-    };
-
     public MortarShot() {
         params.add(target);
         target.set(null);
+        relatedShipProperty().addListener(i -> {
+            target.groundZeroProperty().unbind();
+            if (getRelatedShip() == null) {
+                target.setRange(0);
+                return;
+            }
+            target.groundZeroProperty().bind(getRelatedShip().getPosition().coordinateProperty());
+
+            Mortar mortar = getRelatedShip().getEnhancement(Mortar.class);
+            if (mortar == null) {
+                target.setRange(0);
+            } else {
+                target.setRange(mortar.getRange());
+            }
+        });
     }
 
     @Override
@@ -70,7 +67,7 @@ public class MortarShot extends Attack implements ParameterizedAction {
     }
 
     private List<ActionParameter> params = new ArrayList<>();
-    private AxialCoordinateActionParameter target = new AxialCoordinateActionParameter() {
+    private RangedAxialCoordinateActionParameter target = new RangedAxialCoordinateActionParameter() {
         @Override
         public String getČeskéJméno() {
             return "cíl";
@@ -94,7 +91,7 @@ public class MortarShot extends Attack implements ParameterizedAction {
     /*
      * equivalent for calling params.get(0).property()
      */
-    public ObjectProperty<AxialCoordinate> enhancementIconProperty() {
+    public ObservableValue<AxialCoordinate> targetProperty() {
         return target.property();
     }
 }

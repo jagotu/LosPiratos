@@ -50,7 +50,7 @@ public class ActionSelector extends Pane {
     private Button back = null;
 
     public interface OnActionSelectedListener {
-        void onActionSelected(PlannableAction action);
+        void onActionSelected(PlannableAction action, Node sender);
     }
 
     private OnActionSelectedListener onActionSelectedListener = null;
@@ -109,7 +109,7 @@ public class ActionSelector extends Pane {
 
                 b.setOnAction(e -> {
                     if (onActionSelectedListener != null) {
-                        onActionSelectedListener.onActionSelected(n.getAction());
+                        onActionSelectedListener.onActionSelected(n.getAction(), b);
                     }
                 });
             }

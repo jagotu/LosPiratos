@@ -1,10 +1,7 @@
 package com.vztekoverflow.lospiratos.view.stages;
 
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
-import com.vztekoverflow.lospiratos.view.controls.ActionSelector;
-import com.vztekoverflow.lospiratos.view.controls.PlannedActionsBar;
-import com.vztekoverflow.lospiratos.view.controls.ShipView;
-import com.vztekoverflow.lospiratos.view.controls.TeamView;
+import com.vztekoverflow.lospiratos.view.controls.*;
 import com.vztekoverflow.lospiratos.view.layout.PiratosHexTileContentsFactory;
 import com.vztekoverflow.lospiratos.view.layout.VirtualizingHexGridPane;
 import com.vztekoverflow.lospiratos.viewmodel.Game;
@@ -12,6 +9,9 @@ import com.vztekoverflow.lospiratos.viewmodel.MovableFigure;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
 import com.vztekoverflow.lospiratos.viewmodel.Team;
 import com.vztekoverflow.lospiratos.viewmodel.actions.ActionsCatalog;
+import com.vztekoverflow.lospiratos.viewmodel.actions.ParameterizedAction;
+import com.vztekoverflow.lospiratos.viewmodel.actions.PlannableAction;
+import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.AxialCoordinateActionParameter;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
@@ -36,6 +36,7 @@ import java.util.concurrent.Executors;
 
 public class OrgStage {
 
+
     private ObjectProperty<Game> game;
 
     //Controls
@@ -58,6 +59,11 @@ public class OrgStage {
     private ActionSelector actionSelector;
     @FXML
     private PlannedActionsBar actionsBar;
+    @FXML
+    private Region mouseBlocker;
+
+
+    private ActionParametersPopOver parametersPopOver = new ActionParametersPopOver();
 
     private final ExecutorService viewCreator = Executors.newSingleThreadExecutor(r -> {
         Thread thread = Executors.defaultThreadFactory().newThread(r);
@@ -80,15 +86,37 @@ public class OrgStage {
     public OrgStage(Game game) {
         this.game = new SimpleObjectProperty<>(game);
         this.game.addListener(c -> connectToGame());
-
     }
 
 
     @FXML
     private void initialize() {
         root.setDividerPosition(0, 0.75);
-        actionSelector.setOnActionSelectedListener(x -> ActionsCatalog.relatedShip.get().planAction(x));
+        actionSelector.setOnActionSelectedListener(this::parametrizeAndPlan);
+        mouseBlocker.prefWidthProperty().bind(mainPane.widthProperty());
+        mouseBlocker.prefHeightProperty().bind(mainPane.heightProperty());
+        mouseBlocker.visibleProperty().bind(parametersPopOver.showingProperty());
+        parametersPopOver.setOnRequestAxialCoordinateListener(((action, par) -> {
+            axialCoordinateActionParameterPending.set(par);
+            parametersPopOverOwnerCache = parametersPopOver.getOwnerNode();
+            parametersPopOver.hide();
+            actionSelector.setVisible(false);
+            actionSelector.setMouseTransparent(true);
+        }));
         connectToGame();
+    }
+
+    private ObjectProperty<AxialCoordinateActionParameter> axialCoordinateActionParameterPending = new SimpleObjectProperty<>(null);
+    private Node parametersPopOverOwnerCache = null;
+
+
+    private void parametrizeAndPlan(PlannableAction act, Node n) {
+        if (act instanceof ParameterizedAction) {
+            parametersPopOver.setAction(act);
+            parametersPopOver.show(n);
+            return;
+        }
+        ActionsCatalog.relatedShip.get().planAction(act);
     }
 
     private boolean relocateActionSelector = false;
@@ -100,7 +128,15 @@ public class OrgStage {
             root.getItems().remove(hexPane);
         }
 
-        hexPane = new VirtualizingHexGridPane(edgeLength, pointy, new PiratosHexTileContentsFactory(game.get().getBoard(), edgeLength, pointy, (figures, e) -> {
+        hexPane = new VirtualizingHexGridPane(edgeLength, pointy, new PiratosHexTileContentsFactory(game.get().getBoard(), edgeLength, pointy, (figures, ac, e) -> {
+            if (axialCoordinateActionParameterPending.get() != null && axialCoordinateActionParameterPending.get().isAvailable(ac)) {
+                axialCoordinateActionParameterPending.get().set(ac);
+                axialCoordinateActionParameterPending.set(null);
+                actionSelector.setVisible(true);
+                actionSelector.setMouseTransparent(false);
+                parametersPopOver.show(parametersPopOverOwnerCache);
+                return;
+            }
             for (MovableFigure f : figures) {
                 if (f instanceof Ship) {
                     Ship s = (Ship) f;
@@ -113,7 +149,7 @@ public class OrgStage {
                     return;
                 }
             }
-        }));
+        }, axialCoordinateActionParameterPending, parametersPopOver.getHighlightedTiles()));
         hexPane.setOnMouseClicked(e -> {
             if (relocateActionSelector) {
                 double hexPaneX = hexPane.getXOffset() + e.getX() * hexPane.getScale();

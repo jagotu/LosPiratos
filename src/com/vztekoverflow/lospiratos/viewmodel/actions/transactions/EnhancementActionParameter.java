@@ -2,6 +2,8 @@ package com.vztekoverflow.lospiratos.viewmodel.actions.transactions;
 
 import com.vztekoverflow.lospiratos.viewmodel.actions.ActionParameter;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.EnhancementIcon;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.ObjectProperty;
 
 public class EnhancementActionParameter implements ActionParameter<EnhancementIcon> {
@@ -29,6 +31,12 @@ public class EnhancementActionParameter implements ActionParameter<EnhancementIc
     @Override
     public ObjectProperty<EnhancementIcon> property() {
         return enh;
+    }
+
+    @Override
+    public BooleanBinding isSatisfied() {
+        //TODO
+        return Bindings.createBooleanBinding(() -> true);
     }
 
     private ObjectProperty<EnhancementIcon> enh;

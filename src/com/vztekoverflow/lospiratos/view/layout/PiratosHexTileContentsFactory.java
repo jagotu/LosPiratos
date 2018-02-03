@@ -6,9 +6,12 @@ import com.vztekoverflow.lospiratos.viewmodel.BoardTile;
 import com.vztekoverflow.lospiratos.viewmodel.MovableFigure;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
 import com.vztekoverflow.lospiratos.viewmodel.actions.ActionsCatalog;
+import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.AxialCoordinateActionParameter;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -17,13 +20,16 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
 
+    private ObjectProperty<AxialCoordinateActionParameter> axialSelector;
     private HashMap<AxialCoordinate, PiratosHexTileContents> current = new HashMap<>();
     private double tileWidth, tileHeight;
     private OnClickEventHandler onMouseClick;
+    private ObservableList<AxialCoordinate> highlightedCoordinates;
 
     private ChangeListener<? super AxialCoordinate> highlightedMoveListener = (observable, oldValue, newValue) -> {
         if (oldValue != null && current.get(oldValue) != null) {
@@ -34,10 +40,12 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
         }
     };
 
-    public PiratosHexTileContentsFactory(Board board, double edgeLength, boolean pointy, OnClickEventHandler onMouseClick) {
+    public PiratosHexTileContentsFactory(Board board, double edgeLength, boolean pointy, OnClickEventHandler onMouseClick, ObjectProperty<AxialCoordinateActionParameter> axialSelector, ObservableList<AxialCoordinate> highlightedCoordinates) {
         this.onMouseClick = onMouseClick;
         this.edgeLength = edgeLength;
         this.pointy = pointy;
+        this.axialSelector = axialSelector;
+        this.highlightedCoordinates = highlightedCoordinates;
 
         ActionsCatalog.relatedShip.addListener((observable, oldValue, newValue) -> {
             if (oldValue != null) {
@@ -81,7 +89,7 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
     }
 
     public PiratosHexTileContentsFactory(Board board, double edgeLength, boolean pointy) {
-        this(board, edgeLength, pointy, null);
+        this(board, edgeLength, pointy, null, null, null);
     }
 
     private boolean pointy;
@@ -120,6 +128,14 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
             PiratosHexTileContents ht = current.get(coords);
             ht.tileWidth.setValue(tileWidth);
             ht.tileHeight.setValue(tileHeight);
+            if (axialSelector != null) {
+                ht.availableProperty.bind(Bindings.createBooleanBinding(() -> axialSelector.get() == null || axialSelector.get().isAvailable(coords), axialSelector));
+            }
+
+            if (highlightedCoordinates != null) {
+                ht.highlightedProperty.bind(Bindings.createBooleanBinding(() -> highlightedCoordinates.contains(coords), highlightedCoordinates));
+            }
+
             return ht;
         }
         return new HexTileContents() {
@@ -138,7 +154,7 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
     }
 
     public interface OnClickEventHandler {
-        void OnClick(Iterable<MovableFigure> figures, MouseEvent e);
+        void OnClick(Iterable<MovableFigure> figures, AxialCoordinate ac, MouseEvent e);
     }
 
     private class PiratosHexTileContents implements HexTileContents {
@@ -149,29 +165,58 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
         ListProperty<MovableFigure> figures = new SimpleListProperty<>();
         DoubleProperty tileWidth = new SimpleDoubleProperty();
         DoubleProperty tileHeight = new SimpleDoubleProperty();
+        ArrayList<String> classes = new ArrayList<>();
         StringProperty classProperty = new SimpleStringProperty();
-
+        BooleanProperty availableProperty = new SimpleBooleanProperty(true);
+        BooleanProperty highlightedProperty = new SimpleBooleanProperty(false);
 
         private PiratosHexTileContents(BoardTile bt) {
-            classProperty.setValue(bt.getClass().getSimpleName());
+            classes.add(bt.getClass().getSimpleName());
+            updateClasses();
             this.bt = bt;
             if (onMouseClick != null) {
                 s.setOnMouseClicked(e -> {
                     if (e.isStillSincePress() && e.getButton().equals(MouseButton.PRIMARY)) {
-                        onMouseClick.OnClick(internalNodes.keySet(), e);
+                        onMouseClick.OnClick(internalNodes.keySet(), bt.getLocation(), e);
                     }
                 });
             }
+            availableProperty.addListener(i -> {
+                if (classes.contains("disabled")) {
+                    classes.remove("disabled");
+                }
+                if (!availableProperty.get()) {
+                    classes.add("disabled");
+                }
+                updateClasses();
+            });
 
+
+            highlightedProperty.addListener(i -> {
+                if (classes.contains("highlighted")) {
+                    classes.remove("highlighted");
+                }
+                if (highlightedProperty.get()) {
+                    classes.add("highlighted");
+                }
+                updateClasses();
+            });
+
+        }
+
+        private void updateClasses() {
+            classProperty.setValue(String.join(" ", classes));
         }
 
         private void setSelected(boolean selected) {
             if (selected) {
-                classProperty.setValue(bt.getClass().getSimpleName() + " selected");
+                classes.add("selected");
             } else {
-                classProperty.setValue(bt.getClass().getSimpleName());
+                classes.remove("selected");
             }
+            updateClasses();
         }
+
 
         /**
          * Removes a MovableFigure from this node and returns the internal node representation, so it doesn't have to be recreated

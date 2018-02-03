@@ -2,6 +2,9 @@ package com.vztekoverflow.lospiratos.viewmodel.actions.attacks;
 
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.viewmodel.actions.ActionParameter;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.binding.BooleanExpression;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
@@ -26,5 +29,12 @@ public abstract class AxialCoordinateActionParameter implements ActionParameter<
         return coordinate;
     }
 
+    @Override
+    public BooleanBinding isSatisfied() {
+        return Bindings.createBooleanBinding(() -> coordinate.get() != null && isAvailable(coordinate.get()), coordinate);
+    }
+
     private ObjectProperty<AxialCoordinate> coordinate = new SimpleObjectProperty<>();
+
+    abstract public boolean isAvailable(AxialCoordinate coord);
 }

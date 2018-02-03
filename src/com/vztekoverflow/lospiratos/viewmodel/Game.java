@@ -292,7 +292,7 @@ public class Game {
 
 
     public static Game CreateNewMockGame() {
-        final int teamCount = 3; //beter do not make bigger than 6
+        final int teamCount = 6; //beter do not make bigger than 6
         int captainIdx = 0;
         Game g = new Game();
 

@@ -32,6 +32,14 @@
     -fx-fill: derive(background, 50%);
 }
 
+.hex-tile.disabled {
+    -fx-opacity: 0.3
+}
+
+.hex-tile.highlighted {
+    -fx-fill: red;
+}
+
 .editable-text .text-field {
     -fx-background-color: white;
     -fx-padding: 0px;
