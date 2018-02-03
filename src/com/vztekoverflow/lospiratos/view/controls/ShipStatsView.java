@@ -1,11 +1,19 @@
 package com.vztekoverflow.lospiratos.view.controls;
 
+import com.vztekoverflow.lospiratos.model.ShipEnhancementStatus;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
+import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
+import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.EnhancementIcon;
+import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.EnhancementsCatalog;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -33,6 +41,8 @@ public class ShipStatsView extends VBox {
     private EditableStringText captain;
     @FXML
     private Label shipType;
+    @FXML
+    private HBox shipEnhancements;
 
     static FXMLLoader fxmlLoader = new FXMLLoader(ShipStatsView.class.getResource(
             "ShipStatsView.fxml"));
@@ -62,5 +72,24 @@ public class ShipStatsView extends VBox {
         s.shipTypeProperty().addListener((observable, oldValue, newValue) ->
                 shipType.setText(newValue.getČeskéJméno()));
         shipType.setText(s.getShipType().getČeskéJméno());
+
+        for (Class<? extends ShipEnhancement> enh : EnhancementsCatalog.allPossibleEnhancements) {
+            Node n = getNodeFor(EnhancementsCatalog.getIcon(enh));
+            n.opacityProperty().bind(Bindings.when(s.enhancementStatusProperty(enh).isEqualTo(ShipEnhancementStatus.active)).then(1).otherwise(0.5));
+            shipEnhancements.getChildren().add(n);
+        }
+    }
+
+    private Node getNodeFor(EnhancementIcon enhancementIcon) {
+        if (enhancementIcon == null) {
+            return new Label("NULL");
+        }
+        Node n;
+        switch (enhancementIcon) {
+            default:
+                n = new Label(enhancementIcon.toString());
+                HBox.setMargin(n, new Insets(0, 2, 0, 2));
+                return n;
+        }
     }
 }

@@ -23,8 +23,6 @@ public class ShipView extends StackPane {
     private EditableStringText shipName;
     @FXML
     private VBox vbox;
-    @FXML
-    private VBox overflow;
 
     private Ship s;
 
@@ -89,8 +87,6 @@ public class ShipView extends StackPane {
             throw new RuntimeException(exception);
         }
 
-        vbox.getChildren().remove(overflow);
-
         s.getTeam().colorProperty().addListener(a -> updateColor());
 
         updateColor();
@@ -145,4 +141,5 @@ public class ShipView extends StackPane {
             onShipDetails.ShipDetails(s);
         }
     }
+
 }

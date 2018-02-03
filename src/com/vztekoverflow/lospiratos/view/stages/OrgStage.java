@@ -12,9 +12,6 @@ import com.vztekoverflow.lospiratos.viewmodel.MovableFigure;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
 import com.vztekoverflow.lospiratos.viewmodel.Team;
 import com.vztekoverflow.lospiratos.viewmodel.actions.ActionsCatalog;
-import javafx.animation.Animation;
-import javafx.animation.Interpolator;
-import javafx.animation.Transition;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
@@ -32,7 +29,6 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.util.Duration;
 
 import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
@@ -206,14 +202,13 @@ public class OrgStage {
 
     }
 
-    private void showShipDetails(Ship s)
-    {
+    private void showShipDetails(Ship s) {
         ActionsCatalog.relatedShip.set(s);
         Point2D shippos = AxialCoordinate.hexToPixel(s.getPosition().getCoordinate(), pointy, edgeLength);
         actionSelector.layoutXProperty().unbind();
         actionSelector.layoutYProperty().unbind();
-        actionSelector.layoutXProperty().bind(hexPane.XOffsetProperty().negate().add(shippos.getX() + hexPane.getTileWidth()/2).divide(hexPane.scaleProperty()));
-        actionSelector.layoutYProperty().bind(hexPane.YOffsetProperty().negate().add(shippos.getY() + hexPane.getTileHeight()/2).divide(hexPane.scaleProperty()));
+        actionSelector.layoutXProperty().bind(hexPane.XOffsetProperty().negate().add(shippos.getX() + hexPane.getTileWidth() / 2).divide(hexPane.scaleProperty()));
+        actionSelector.layoutYProperty().bind(hexPane.YOffsetProperty().negate().add(shippos.getY() + hexPane.getTileHeight() / 2).divide(hexPane.scaleProperty()));
         actionSelector.setCurrentNode(ActionsCatalog.allPossiblePlannableActions);
         tabPane.getSelectionModel().select(shipsTab);
         final ShipView sv = shipViews.get(s);

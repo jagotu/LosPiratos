@@ -24,7 +24,14 @@
             </HBox>
         </right>
     </BorderPane>
-    <Label fx:id="shipType"/>
+    <BorderPane>
+        <center>
+            <Label fx:id="shipType" BorderPane.alignment="CENTER_LEFT"/>
+        </center>
+        <right>
+            <HBox fx:id="shipEnhancements"/>
+        </right>
+    </BorderPane>
     <HBox>
         <Label>
             <graphic>
