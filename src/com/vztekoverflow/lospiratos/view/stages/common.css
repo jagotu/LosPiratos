@@ -67,7 +67,7 @@
 .ship-stats-view .progress-bar > .bar {
     -fx-background-insets: 1 1 2 1;
     -fx-padding: 0.5em;
-    -fx-accent: limegreen; /*-team-color;*/
+    -fx-accent: lime; /*-team-color;*/
 }
 
 #shipName #contentShow, #teamName #contentShow {
@@ -104,4 +104,25 @@
 
 #colorPicker .glyph-font:hover {
     -fx-border-color: ladder(-team-color, white 49%, black 50%);
+}
+
+.ship-figure .progress-bar > .bar {
+    -fx-padding:0px;
+    -fx-background-insets: 1px;
+    -fx-accent: lime;
+    -fx-background-radius: 1px;
+}
+
+.ship-figure .progress-bar > .track {
+    -fx-background-color: white;
+    -fx-background-insets: 1px;
+    -fx-background-radius: 0;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-border-radius: 2px;
+}
+
+.ship-figure .progress-bar {
+    -fx-effect: dropshadow(gaussian, grey, 10, 0.2, 1, 1);
+    -fx-opacity: 1;
 }
