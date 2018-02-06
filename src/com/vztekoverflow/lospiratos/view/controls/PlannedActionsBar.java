@@ -1,11 +1,13 @@
 package com.vztekoverflow.lospiratos.view.controls;
 
 import com.vztekoverflow.lospiratos.viewmodel.actions.ActionsCatalog;
+import com.vztekoverflow.lospiratos.viewmodel.actions.ParameterizedAction;
 import com.vztekoverflow.lospiratos.viewmodel.actions.PlannableAction;
 import impl.org.controlsfx.skin.BreadCrumbBarSkin;
 import javafx.collections.ListChangeListener;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Region;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
@@ -15,6 +17,20 @@ import java.util.stream.Collectors;
 
 public class PlannedActionsBar extends Region {
 
+
+    public interface OnActionDetailsListener {
+        void onActionClicked(PlannableAction action, Node sender);
+    }
+
+    private OnActionDetailsListener onActionDetailsListener;
+
+    public OnActionDetailsListener getOnActionDetailsListener() {
+        return onActionDetailsListener;
+    }
+
+    public void setOnActionDetailsListener(OnActionDetailsListener onActionDetailsListener) {
+        this.onActionDetailsListener = onActionDetailsListener;
+    }
 
     private ListChangeListener<PlannableAction> listchange = change -> {
         while (change.next()) {
@@ -91,7 +107,12 @@ public class PlannedActionsBar extends Region {
 
     private Node getButtonFor(PlannableAction action) {
         Button b = new BreadCrumbBarSkin.BreadCrumbButton(action.getČeskéJméno());
-        b.setOnAction(x -> ActionsCatalog.relatedShip.get().unplanActions(getChildren().indexOf(b) + 1));
+        b.setOnAction(e -> ActionsCatalog.relatedShip.get().unplanActions(getChildren().indexOf(b) + 1));
+        b.setOnMouseClicked(e -> {
+            if (onActionDetailsListener != null && e.isStillSincePress() && e.getButton().equals(MouseButton.SECONDARY) && action instanceof ParameterizedAction) {
+                onActionDetailsListener.onActionClicked(action, b);
+            }
+        });
         return b;
     }
 }

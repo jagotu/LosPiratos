@@ -299,7 +299,7 @@ public class Game {
         //teams:
         for (int i = 1; i <= teamCount; i++) {
             String name = "(" + i + ") " + teamNames[i];
-            Color c = Color.color((255 - (i - 1) * 49) / 255d, (255 - (i - 1) * 49) / 255d, ((i - 1) * 49d) / 255d);
+            Color c = Color.color((255 - (i - 1) * 49) / 255d, ((i - 1) * 49) / 255d, ((i - 1) * 49d) / 255d);
             Team team = g.createAndAddNewTeam(name, c);
             team.getOwnedResource().setMoney(5000 + i);
             team.getOwnedResource().setCloth(10 * i);

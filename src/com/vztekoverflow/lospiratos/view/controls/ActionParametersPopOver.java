@@ -8,6 +8,8 @@ import com.vztekoverflow.lospiratos.viewmodel.actions.PlannableAction;
 import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.AxialCoordinateActionParameter;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -47,6 +49,20 @@ public class ActionParametersPopOver extends PopOver {
     }
 
     private ObservableList<AxialCoordinate> highlightedTiles = new SimpleListProperty<>(FXCollections.observableArrayList());
+
+    private BooleanProperty readOnly = new SimpleBooleanProperty(false);
+
+    public boolean getReadOnly() {
+        return readOnly.get();
+    }
+
+    public BooleanProperty readOnlyProperty() {
+        return readOnly;
+    }
+
+    public void setReadOnly(boolean readOnly) {
+        this.readOnly.set(readOnly);
+    }
 
     private PlannableAction action;
     private GridPane gp = new GridPane();
@@ -89,6 +105,7 @@ public class ActionParametersPopOver extends PopOver {
     }
 
     public ActionParametersPopOver() {
+
         ButtonBar buttons = new ButtonBar();
 
         Button cancelButton = new Button(ButtonType.CANCEL.getText());
@@ -97,6 +114,7 @@ public class ActionParametersPopOver extends PopOver {
             setAction(null);
             hide();
         });
+
         buttons.getButtons().add(cancelButton);
 
         okButton = new Button("Plán!");
@@ -106,7 +124,9 @@ public class ActionParametersPopOver extends PopOver {
             setAction(null);
             hide();
         });
+        okButton.visibleProperty().bind(readOnly.not());
         buttons.getButtons().add(okButton);
+
 
         gp = new GridPane();
         gp.setPadding(new Insets(0, 0, 6, 0));
@@ -116,12 +136,12 @@ public class ActionParametersPopOver extends PopOver {
         root.setCenter(gp);
         root.setPadding(new Insets(6));
 
+
         setDetachable(false);
         setCloseButtonEnabled(true);
         setContentNode(root);
         setAutoHide(false);
         setAutoFix(false);
-
     }
 
     private Node getNodeFor(ActionParameter p) {
@@ -141,6 +161,7 @@ public class ActionParametersPopOver extends PopOver {
                     hide();
                 }
             });
+            b.visibleProperty().bind(readOnly.not());
             ap.property().addListener((observable, oldValue, newValue) -> {
                 if (oldValue != null) {
                     highlightedTiles.remove(oldValue);

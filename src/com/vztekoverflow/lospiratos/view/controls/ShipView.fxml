@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.vztekoverflow.lospiratos.view.controls.EditableStringText?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.glyphfont.Glyph?>
@@ -11,7 +12,7 @@
         <BorderPane fx:id="boxHeader">
             <right>
                 <HBox alignment="CENTER_LEFT" BorderPane.alignment="CENTER">
-                    <Button fx:id="info" onAction="#info" minWidth="16">
+                    <Button fx:id="info" minWidth="16" onAction="#info">
                         <graphic>
                             <Glyph fontFamily="FontAwesome" icon="info"/>
                         </graphic>
@@ -49,5 +50,8 @@
 
             </left>
         </BorderPane>
+        <StackPane.margin>
+            <Insets/>
+        </StackPane.margin>
     </VBox>
 </fx:root>

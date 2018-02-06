@@ -67,7 +67,7 @@
 .ship-stats-view .progress-bar > .bar {
     -fx-background-insets: 1 1 2 1;
     -fx-padding: 0.5em;
-    -fx-accent: -team-color;
+    -fx-accent: limegreen; /*-team-color;*/
 }
 
 #shipName #contentShow, #teamName #contentShow {
@@ -90,7 +90,7 @@
 .ship-view, .team-view {
     -fx-border-color: -team-color;
     -fx-border-width: 4px;
-    -fx-border-radius: 4px;
+    -fx-border-radius: 2px;
 }
 
 #colorPicker {

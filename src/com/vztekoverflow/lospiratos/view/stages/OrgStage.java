@@ -103,6 +103,11 @@ public class OrgStage {
             actionSelector.setVisible(false);
             actionSelector.setMouseTransparent(true);
         }));
+        actionsBar.setOnActionDetailsListener((action, sender) -> {
+            parametersPopOver.setAction(action);
+            parametersPopOver.setReadOnly(true);
+            parametersPopOver.show(sender);
+        });
         connectToGame();
     }
 
@@ -112,6 +117,7 @@ public class OrgStage {
 
     private void parametrizeAndPlan(PlannableAction act, Node n) {
         if (act instanceof ParameterizedAction) {
+            parametersPopOver.setReadOnly(false);
             parametersPopOver.setAction(act);
             parametersPopOver.show(n);
             return;
@@ -121,7 +127,7 @@ public class OrgStage {
 
     private boolean relocateActionSelector = false;
     private double edgeLength = 40;
-    private boolean pointy = true;
+    private boolean pointy = true; //DON'T SET TO FALSE
 
     private void connectToGame() {
         if (hexPane != null) {
@@ -216,6 +222,7 @@ public class OrgStage {
 
     private void addTeamView(Team t) {
         TeamView tv = new TeamView(t);
+        FlowPane.setMargin(tv, new Insets(2, 2, 2, 2));
         tv.setRequestDeleteListener(team -> game.get().getTeams().remove(team));
         tv.setOnCenterShip(s -> {
             hexPane.centerInParent(s.getPosition().getCoordinate());
@@ -252,6 +259,7 @@ public class OrgStage {
 
     private void addShipView(Ship s) {
         ShipView sv = new ShipView(s);
+        FlowPane.setMargin(sv, new Insets(2, 2, 2, 2));
         sv.setRequestDeleteListener(ship -> s.getTeam().removeShip(s.getName()));
 
         Platform.runLater(() -> shipsBox.getChildren().add(sv));
@@ -327,15 +335,9 @@ public class OrgStage {
 
     private static void ensureVisible(ScrollPane pane, Node node) {
         double height = pane.getContent().getBoundsInLocal().getHeight();
+        double result = node.getBoundsInParent().getMinY() / (height - pane.getHeight());
 
-
-        double y = node.getBoundsInParent().getMinY();
-
-        if (y / height > 0.5) {
-            y = node.getBoundsInParent().getMaxY();
-        }
-
-        pane.setVvalue(y / height);
+        pane.setVvalue(Math.min(result, 1));
     }
 }
 
