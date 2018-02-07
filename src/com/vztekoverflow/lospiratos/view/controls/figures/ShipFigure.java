@@ -40,6 +40,6 @@ public class ShipFigure extends Pane {
     @Override
     protected void layoutChildren() {
         layoutInArea(shipPath, 0, 0, getWidth(), getHeight(), 0, HPos.CENTER, VPos.CENTER);
-        layoutInArea(hpBar, 0, getHeight()*0.25, getWidth(), hpBar.prefHeight(-1), 0, HPos.CENTER, VPos.TOP);
+        layoutInArea(hpBar, 0, getHeight() * 0.25, getWidth(), hpBar.prefHeight(-1), 0, HPos.CENTER, VPos.TOP);
     }
 }

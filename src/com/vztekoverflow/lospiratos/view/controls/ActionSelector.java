@@ -9,10 +9,12 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.HPos;
 import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import org.controlsfx.glyphfont.FontAwesome;
@@ -96,7 +98,16 @@ public class ActionSelector extends Pane {
             b.textAlignmentProperty().set(TextAlignment.CENTER);
             if (!n.isLeaf()) {
                 //Show three dots
-                b.setText(b.getText() + "...");
+                if (b.getGraphic() != null) {
+                    StackPane sp = new StackPane();
+                    sp.getChildren().add(b.getGraphic());
+                    Glyph ellipsis = new Glyph("FontAwesome", FontAwesome.Glyph.ELLIPSIS_H);
+                    StackPane.setAlignment(ellipsis, Pos.BOTTOM_RIGHT);
+                    sp.getChildren().add(ellipsis);
+                    b.setGraphic(sp);
+                }
+
+
                 b.setOnAction(e -> {
                     previousCenters.push(center);
                     center = new Point2D(b.getLayoutX() + b.getTranslateX(), b.getLayoutY() + b.getTranslateY());
@@ -181,7 +192,8 @@ public class ActionSelector extends Pane {
     }
 
     private Node getGraphicFor(ActionIcon icon) {
-        Glyph g;
+        Glyph g, g2;
+        StackPane s;
         switch (icon) {
 
             case turnLeft:
@@ -196,10 +208,70 @@ public class ActionSelector extends Pane {
                 g = new Glyph("FontAwesome", FontAwesome.Glyph.ANGLE_DOUBLE_UP);
                 g.setFontSize(32);
                 return g;
-            /*case attackGenericIcon:
-                g = new Glyph("FontAwesome", FontAwesome.Glyph.BOMB);
+            case mortar:
+                g = new Glyph("piratos", 'K');
+                g.setFontSize(40);
+                return g;
+            case ballLeft:
+                s = new StackPane();
+                g = new Glyph("piratos", 'I');
+                g.setFontSize(36);
+                s.getChildren().add(g);
+                g2 = new Glyph("FontAwesome", FontAwesome.Glyph.ARROW_LEFT);
+                StackPane.setAlignment(g2, Pos.TOP_LEFT);
+                s.getChildren().add(g2);
+                return s;
+            case ballRight:
+                s = new StackPane();
+                g = new Glyph("piratos", 'I');
+                g.setFontSize(36);
+                s.getChildren().add(g);
+                g2 = new Glyph("FontAwesome", FontAwesome.Glyph.ARROW_RIGHT);
+                StackPane.setAlignment(g2, Pos.TOP_RIGHT);
+                s.getChildren().add(g2);
+                return s;
+            case chainLeft:
+                s = new StackPane();
+                g = new Glyph("piratos", 'H');
+                g.setFontSize(40);
+                s.getChildren().add(g);
+                g2 = new Glyph("FontAwesome", FontAwesome.Glyph.ARROW_LEFT);
+                StackPane.setAlignment(g2, Pos.TOP_LEFT);
+                s.getChildren().add(g2);
+                return s;
+            case chainRight:
+                s = new StackPane();
+                g = new Glyph("piratos", 'H');
+                g.setFontSize(40);
+                g.setScaleX(-1);
+                s.getChildren().add(g);
+                g2 = new Glyph("FontAwesome", FontAwesome.Glyph.ARROW_RIGHT);
+                StackPane.setAlignment(g2, Pos.TOP_RIGHT);
+                s.getChildren().add(g2);
+                return s;
+            case cannonLeft:
+                s = new StackPane();
+                g = new Glyph("piratos", 'E');
+                g.setFontSize(40);
+                g.setScaleX(-1);
+                s.getChildren().add(g);
+                g2 = new Glyph("FontAwesome", FontAwesome.Glyph.ARROW_LEFT);
+                StackPane.setAlignment(g2, Pos.TOP_LEFT);
+                s.getChildren().add(g2);
+                return s;
+            case cannonRight:
+                s = new StackPane();
+                g = new Glyph("piratos", 'E');
+                g.setFontSize(40);
+                s.getChildren().add(g);
+                g2 = new Glyph("FontAwesome", FontAwesome.Glyph.ARROW_RIGHT);
+                StackPane.setAlignment(g2, Pos.TOP_RIGHT);
+                s.getChildren().add(g2);
+                return s;
+            case attackGenericIcon:
+                g = new Glyph("piratos", 'E');
                 g.setFontSize(32);
-                return g;*/
+                return g;
             default:
                 return null;
         }

@@ -1,6 +1,7 @@
 package com.vztekoverflow.lospiratos.viewmodel.actions.attacks;
 
 import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
+import com.vztekoverflow.lospiratos.viewmodel.actions.ActionIcon;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.HeavyShot;
 
 public class CannonsHeavyBallVolley extends CannonsAbstractVolley {
@@ -42,5 +43,13 @@ public class CannonsHeavyBallVolley extends CannonsAbstractVolley {
     @Override
     protected Action createCopy() {
         return new CannonsHeavyBallVolley(useLeftCannons);
+    }
+
+    @Override
+    public ActionIcon getIcon() {
+        if (useLeftCannons) {
+            return ActionIcon.ballLeft;
+        }
+        return ActionIcon.ballRight;
     }
 }

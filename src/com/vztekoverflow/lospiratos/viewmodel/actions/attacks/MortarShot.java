@@ -1,10 +1,7 @@
 package com.vztekoverflow.lospiratos.viewmodel.actions.attacks;
 
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
-import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
-import com.vztekoverflow.lospiratos.viewmodel.actions.ActionParameter;
-import com.vztekoverflow.lospiratos.viewmodel.actions.Attack;
-import com.vztekoverflow.lospiratos.viewmodel.actions.ParameterizedAction;
+import com.vztekoverflow.lospiratos.viewmodel.actions.*;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.Mortar;
 import javafx.beans.value.ObservableValue;
 
@@ -93,5 +90,10 @@ public class MortarShot extends Attack implements ParameterizedAction {
      */
     public ObservableValue<AxialCoordinate> targetProperty() {
         return target.property();
+    }
+
+    @Override
+    public ActionIcon getIcon() {
+        return ActionIcon.mortar;
     }
 }

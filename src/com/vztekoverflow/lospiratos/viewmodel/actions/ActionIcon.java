@@ -7,5 +7,13 @@ public enum ActionIcon {
     priviledged,
     turnLeft,
     turnRight,
-    moveForward
+    moveForward,
+    mortar,
+    ballLeft,
+    ballRight,
+    chainLeft,
+    chainRight,
+    cannonLeft,
+    cannonRight,
+    ram
 }

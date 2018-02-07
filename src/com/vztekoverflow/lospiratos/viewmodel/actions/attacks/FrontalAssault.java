@@ -3,6 +3,7 @@ package com.vztekoverflow.lospiratos.viewmodel.actions.attacks;
 import com.vztekoverflow.lospiratos.viewmodel.Position;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
 import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
+import com.vztekoverflow.lospiratos.viewmodel.actions.ActionIcon;
 import com.vztekoverflow.lospiratos.viewmodel.actions.Attack;
 import com.vztekoverflow.lospiratos.viewmodel.actions.maneuvers.MoveForward;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.Ram;
@@ -65,6 +66,11 @@ public class FrontalAssault extends Attack {
     @Override
     protected Action createCopy() {
         return new FrontalAssault();
+    }
+
+    @Override
+    public ActionIcon getIcon() {
+        return ActionIcon.ram;
     }
 
 }

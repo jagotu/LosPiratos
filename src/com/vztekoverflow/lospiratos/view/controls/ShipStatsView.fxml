@@ -55,12 +55,12 @@
         </rowConstraints>
         <Label fx:id="cannonsCount">
             <graphic>
-                <Glyph fontFamily="FontAwesome" text=""/>
+                <Glyph fontFamily="piratos" text="E"/>
             </graphic>
         </Label>
         <Label fx:id="maxCargo" GridPane.columnIndex="1">
             <graphic>
-                <Glyph fontFamily="FontAwesome" icon="briefcase"/>
+                <Glyph fontFamily="piratos" text="F"/>
             </graphic>
         </Label>
         <Label fx:id="garrison" GridPane.columnIndex="2">

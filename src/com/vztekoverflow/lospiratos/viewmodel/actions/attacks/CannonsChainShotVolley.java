@@ -2,6 +2,7 @@ package com.vztekoverflow.lospiratos.viewmodel.actions.attacks;
 
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
+import com.vztekoverflow.lospiratos.viewmodel.actions.ActionIcon;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.ChainShot;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.shipMechanics.Chained;
 
@@ -41,5 +42,12 @@ public class CannonsChainShotVolley extends CannonsAbstractVolley {
         return new CannonsChainShotVolley(useLeftCannons);
     }
 
+    @Override
+    public ActionIcon getIcon() {
+        if (useLeftCannons) {
+            return ActionIcon.chainLeft;
+        }
+        return ActionIcon.chainRight;
+    }
 
 }

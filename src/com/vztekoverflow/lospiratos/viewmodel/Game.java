@@ -321,10 +321,10 @@ public class Game {
                 s.getStorage().addWood(40 * i + j);
                 if (i != 3) //random value
                     s.takeDamage(6 * j);
-                    for (int k = 0; k < j; k++) {
-                        Class<ShipEnhancement> enh = (Class<ShipEnhancement>) shipEnhancements[k];
-                        s.addNewEnhancement(enh);
-                    }
+                for (int k = 0; k < j; k++) {
+                    Class<ShipEnhancement> enh = (Class<ShipEnhancement>) shipEnhancements[k];
+                    s.addNewEnhancement(enh);
+                }
                 if ((i == 3 && j == 2) || (i == 5 && j == 4)) { //random values
                     //s.destroyShipAndEnhancements();
                 }

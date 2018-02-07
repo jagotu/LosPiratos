@@ -1,6 +1,5 @@
 package com.vztekoverflow.lospiratos.view.layout;
 
-import com.sun.javaws.progress.Progress;
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.view.controls.figures.ShipFigure;
 import com.vztekoverflow.lospiratos.viewmodel.Board;
@@ -14,18 +13,11 @@ import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.FillRule;
-import javafx.scene.shape.SVGPath;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -254,7 +246,7 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
 
             Node n;
             if (f.getClass().equals(Ship.class)) {
-                ShipFigure s = new ShipFigure((Ship)f);
+                ShipFigure s = new ShipFigure((Ship) f);
                 s.maxWidthProperty().bind(tileWidth);
                 s.maxHeightProperty().bind(tileHeight);
                 n = s;

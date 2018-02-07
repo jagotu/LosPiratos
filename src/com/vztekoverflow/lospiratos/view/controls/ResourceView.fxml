@@ -26,7 +26,7 @@
         <left>
             <Label>
                 <graphic>
-                    <Glyph fontFamily="FontAwesome" icon="cogs"/>
+                    <Glyph fontFamily="piratos" text="A"/>
                 </graphic>
                 <BorderPane.margin>
                     <Insets right="2.0"/>
@@ -57,7 +57,7 @@
         <left>
             <Label>
                 <graphic>
-                    <Glyph fontFamily="FontAwesome" icon="tag"/>
+                    <Glyph fontFamily="piratos" text="B"/>
                 </graphic>
                 <BorderPane.margin>
                     <Insets right="2.0"/>
@@ -72,7 +72,7 @@
         <left>
             <Label>
                 <graphic>
-                    <Glyph fontFamily="FontAwesome" icon="beer"/>
+                    <Glyph fontFamily="piratos" text="C"/>
                 </graphic>
                 <BorderPane.margin>
                     <Insets right="2.0"/>

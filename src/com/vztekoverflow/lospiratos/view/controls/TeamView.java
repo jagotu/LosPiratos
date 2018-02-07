@@ -123,7 +123,7 @@ public class TeamView extends StackPane {
         BorderPane shipsCount = new BorderPane();
         shipsCount.setMinWidth(40);
         Label shipLabel = new Label();
-        shipLabel.setGraphic(new Glyph("FontAwesome", FontAwesome.Glyph.SHIP));
+        shipLabel.setGraphic(new Glyph("piratos", "D"));
         BorderPane.setMargin(shipLabel, new Insets(0, 2, 0, 0));
         shipsCount.setLeft(shipLabel);
         Label shipCount = new Label();

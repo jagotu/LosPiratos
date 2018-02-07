@@ -15,6 +15,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import org.controlsfx.glyphfont.Glyph;
 
 import java.io.IOException;
 
@@ -75,7 +76,7 @@ public class ShipStatsView extends VBox {
 
         for (Class<? extends ShipEnhancement> enh : EnhancementsCatalog.allPossibleEnhancements) {
             Node n = getNodeFor(EnhancementsCatalog.getIcon(enh));
-            n.opacityProperty().bind(Bindings.when(s.enhancementStatusProperty(enh).isEqualTo(ShipEnhancementStatus.active)).then(1).otherwise(0.5));
+            n.opacityProperty().bind(Bindings.when(s.enhancementStatusProperty(enh).isEqualTo(ShipEnhancementStatus.active)).then(1).otherwise(0.3));
             shipEnhancements.getChildren().add(n);
         }
     }
@@ -86,10 +87,28 @@ public class ShipStatsView extends VBox {
         }
         Node n;
         switch (enhancementIcon) {
+            case hull:
+                n = new Glyph("piratos", 'J');
+                break;
+            case chain:
+                n = new Glyph("piratos", 'H');
+                break;
+            case cannon:
+                n = new Glyph("piratos", 'G');
+                break;
+            case mortar:
+                n = new Glyph("piratos", 'K');
+                break;
+            case heavyBall:
+                n = new Glyph("piratos", 'I');
+                break;
             default:
                 n = new Label(enhancementIcon.toString());
-                HBox.setMargin(n, new Insets(0, 2, 0, 2));
-                return n;
         }
+        HBox.setMargin(n, new Insets(0, 2, 0, 2));
+        if (n instanceof Glyph) {
+            ((Glyph) n).setFontSize(18);
+        }
+        return n;
     }
 }
