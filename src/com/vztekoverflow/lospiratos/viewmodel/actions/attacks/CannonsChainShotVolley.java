@@ -38,7 +38,7 @@ public class CannonsChainShotVolley extends CannonsAbstractVolley {
     }
 
     @Override
-    protected Action createCopy() {
+    protected Action createCopyAndResetThis() {
         return new CannonsChainShotVolley(useLeftCannons);
     }
 

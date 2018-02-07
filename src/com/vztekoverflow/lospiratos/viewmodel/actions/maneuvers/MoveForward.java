@@ -10,7 +10,7 @@ import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Galleon;
 public class MoveForward extends Maneuver {
 
     @Override
-    protected Action createCopy() {
+    protected Action createCopyAndResetThis() {
         return new MoveForward();
     }
 

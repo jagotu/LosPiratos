@@ -7,7 +7,7 @@ import com.vztekoverflow.lospiratos.viewmodel.actions.ActionIcon;
 
 public class TurnLeft extends TurnAbstractManeuver {
     @Override
-    protected Action createCopy() {
+    protected Action createCopyAndResetThis() {
         return new TurnLeft();
     }
 
@@ -18,7 +18,7 @@ public class TurnLeft extends TurnAbstractManeuver {
 
     @Override
     public String getČeskéJméno() {
-        return "Otočení vlevo";
+        return "otočení vlevo";
     }
 
     @Override

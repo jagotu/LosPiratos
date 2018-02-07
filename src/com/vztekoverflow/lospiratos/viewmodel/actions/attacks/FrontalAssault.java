@@ -64,7 +64,7 @@ public class FrontalAssault extends Attack {
     }
 
     @Override
-    protected Action createCopy() {
+    protected Action createCopyAndResetThis() {
         return new FrontalAssault();
     }
 

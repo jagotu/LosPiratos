@@ -3,6 +3,7 @@ package com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements;
 import com.vztekoverflow.lospiratos.util.BijectiveMap;
 import com.vztekoverflow.lospiratos.util.Warnings;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
+import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -111,5 +112,13 @@ public class EnhancementsCatalog {
         Warnings.makeWarning("ShipEnhancement.createInstanceFromPersistentName()", "Unknown enhancement: " + enhancementName);
         return null;
 
+    }
+
+    public static boolean isAcquirableBy(Class<? extends ShipEnhancement> enh, Class<? extends ShipType> type){
+        return true; //todo
+    }
+
+    public static boolean isAcquirableBy(Class<? extends ShipEnhancement> enh, ShipType type){
+        return isAcquirableBy(enh, type.getClass());
     }
 }

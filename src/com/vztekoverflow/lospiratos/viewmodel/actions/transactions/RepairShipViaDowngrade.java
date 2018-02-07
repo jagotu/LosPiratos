@@ -7,7 +7,7 @@ import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipType;
 
 public class RepairShipViaDowngrade extends RepairShip {
     @Override
-    protected Action createCopy() {
+    protected Action createCopyAndResetThis() {
         return new RepairShipViaDowngrade();
     }
 

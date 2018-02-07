@@ -7,11 +7,6 @@ import javafx.beans.property.SimpleObjectProperty;
 abstract public class IntegerActionParameter implements ActionParameter<Integer> {
 
     @Override
-    public Class<Integer> getParameterType() {
-        return Integer.class;
-    }
-
-    @Override
     public void set(Integer value) {
         this.value.set(value);
     }

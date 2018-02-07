@@ -4,6 +4,7 @@ import com.vztekoverflow.lospiratos.util.Warnings;
 import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
 import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.ObjectProperty;
@@ -15,10 +16,10 @@ public abstract class Action implements PerformableAction, PlannableAction {
 
     @Override
     public PerformableAction asPerformableAction() {
-        return createCopy();
+        return createCopyAndResetThis();
     }
 
-    protected abstract Action createCopy();
+    protected abstract Action createCopyAndResetThis();
 
     private InvalidationListener invalidationListener = ___ -> {
         invalidateBindings();
@@ -114,13 +115,22 @@ public abstract class Action implements PerformableAction, PlannableAction {
     protected abstract boolean recomputePlannable();
 
     /**
-     * Overridden implementations should ALWAYS call super.invalidateBindings() first
+     * An Observable that you can bind to.
+     * It will be triggered every time the related ship or its planned actions change.
      */
-    protected void invalidateBindings() {
+    protected final Observable relatedShipJustChanged = new BooleanBinding() {
+        @Override
+        protected boolean computeValue() {
+            return false;
+        }
+    }; //Boolean Binding is here used as a simple implementation of Observable; we do not care about its value
+
+    protected final void invalidateBindings() {
         visible.invalidate();
         plannable.invalidate();
         cost.invalidate();
         privilegedModeActive.invalidate();
+        ((BooleanBinding)relatedShipJustChanged).invalidate();
     }
 
     final protected boolean shipHasPlannedLessThan(int count, Class<? extends Action> action) {

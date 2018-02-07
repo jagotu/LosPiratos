@@ -1,13 +1,20 @@
 package com.vztekoverflow.lospiratos.viewmodel.actions.transactions;
 
+import com.vztekoverflow.lospiratos.util.PartialOrdering;
+import com.vztekoverflow.lospiratos.viewmodel.Resource;
 import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
 import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
+import javafx.beans.binding.Bindings;
+import javafx.beans.value.ObservableBooleanValue;
 
 public class SellCommodity extends CommodityTransaction {
 
     @Override
-    protected Action createCopy() {
-        return new SellCommodity();
+    protected Action createCopyAndResetThis() {
+        SellCommodity result = new SellCommodity();
+        result.setCommodities(this.getCommodities().createMutableCopy());
+        this.setCommodities(new Resource());
+        return result;
     }
 
     @Override
@@ -25,6 +32,14 @@ public class SellCommodity extends CommodityTransaction {
     protected ResourceReadOnly recomputeCost() {
         return ResourceReadOnly.fromMoney(getCommodities().scalarProduct(sellCoefficients) * -1);
         //return negative value, because this cost is actually a gain (we are selling something)
+    }
+
+    @Override
+    public ObservableBooleanValue isSatisfied() {
+        return Bindings.createBooleanBinding(() ->
+                        !getCommodities().compare(Resource.ZERO).equals(PartialOrdering.Equal)
+                                && getCommodities().getMoney() == 0
+                , commoditiesProperty());
     }
 
     //todo opravdickou hodnotu

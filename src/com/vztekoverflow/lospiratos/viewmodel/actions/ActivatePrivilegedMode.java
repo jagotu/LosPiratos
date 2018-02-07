@@ -27,7 +27,7 @@ public class ActivatePrivilegedMode extends Action {
     }
 
     @Override
-    protected Action createCopy() {
+    protected Action createCopyAndResetThis() {
         return new ActivatePrivilegedMode();
     }
 

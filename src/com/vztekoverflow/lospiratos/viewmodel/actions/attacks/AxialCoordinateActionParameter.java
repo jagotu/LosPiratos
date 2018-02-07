@@ -1,18 +1,11 @@
 package com.vztekoverflow.lospiratos.viewmodel.actions.attacks;
 
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
-import com.vztekoverflow.lospiratos.viewmodel.actions.ActionParameter;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanBinding;
+import com.vztekoverflow.lospiratos.viewmodel.actions.ValidableActionParameter;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
-public abstract class AxialCoordinateActionParameter implements ActionParameter<AxialCoordinate> {
-    @Override
-    public Class<AxialCoordinate> getParameterType() {
-        return AxialCoordinate.class;
-    }
-
+public abstract class AxialCoordinateActionParameter implements ValidableActionParameter<AxialCoordinate> {
     @Override
     public void set(AxialCoordinate value) {
         coordinate.set(value);
@@ -28,12 +21,6 @@ public abstract class AxialCoordinateActionParameter implements ActionParameter<
         return coordinate;
     }
 
-    @Override
-    public BooleanBinding isSatisfied() {
-        return Bindings.createBooleanBinding(() -> coordinate.get() != null && isAvailable(coordinate.get()), coordinate);
-    }
-
     private ObjectProperty<AxialCoordinate> coordinate = new SimpleObjectProperty<>();
 
-    abstract public boolean isAvailable(AxialCoordinate coord);
 }

@@ -129,7 +129,7 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
             ht.tileWidth.setValue(tileWidth);
             ht.tileHeight.setValue(tileHeight);
             if (axialSelector != null) {
-                ht.availableProperty.bind(Bindings.createBooleanBinding(() -> axialSelector.get() == null || axialSelector.get().isAvailable(coords), axialSelector));
+                ht.availableProperty.bind(Bindings.createBooleanBinding(() -> axialSelector.get() == null || axialSelector.get().isValidValue(coords), axialSelector));
             }
 
             if (highlightedCoordinates != null) {

@@ -35,7 +35,8 @@ public abstract class RangedAxialCoordinateActionParameter extends AxialCoordina
     }
 
     @Override
-    public boolean isAvailable(AxialCoordinate coord) {
-        return coord.distanceTo(groundZero.get()) <= range.get();
+    public boolean isValidValue(AxialCoordinate parameter) {
+        return parameter.distanceTo(groundZero.get()) <= range.get();
     }
+
 }

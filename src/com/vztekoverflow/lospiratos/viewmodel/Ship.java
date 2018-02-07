@@ -4,7 +4,6 @@ package com.vztekoverflow.lospiratos.viewmodel;
 import com.vztekoverflow.lospiratos.model.ShipEnhancementStatus;
 import com.vztekoverflow.lospiratos.util.Warnings;
 import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
-import com.vztekoverflow.lospiratos.viewmodel.actions.Maneuver;
 import com.vztekoverflow.lospiratos.viewmodel.actions.PlannableAction;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEntity;
@@ -568,15 +567,6 @@ public class Ship implements MovableFigure, DamageableFigure {
         }
         plannedActions.add(a);
     }
-
-    //todo will be removed
-    public void performPlannedActions__DebugOnly() {
-        for (Action a : plannedActions) {
-            if (a instanceof Maneuver) //for now, debug only
-                a.performOnTarget();
-        }
-    }
-
     //endregion
     //region public functions
 

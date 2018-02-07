@@ -28,7 +28,7 @@ public class UnloadStorage extends Transaction {
     }
 
     @Override
-    protected Action createCopy() {
+    protected Action createCopyAndResetThis() {
         return new UnloadStorage();
     }
 

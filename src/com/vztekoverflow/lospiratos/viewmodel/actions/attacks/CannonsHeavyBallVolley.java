@@ -41,7 +41,7 @@ public class CannonsHeavyBallVolley extends CannonsAbstractVolley {
     }
 
     @Override
-    protected Action createCopy() {
+    protected Action createCopyAndResetThis() {
         return new CannonsHeavyBallVolley(useLeftCannons);
     }
 

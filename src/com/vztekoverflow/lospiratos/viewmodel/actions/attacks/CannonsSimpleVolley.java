@@ -28,7 +28,7 @@ public class CannonsSimpleVolley extends CannonsAbstractVolley {
     }
 
     @Override
-    protected Action createCopy() {
+    protected Action createCopyAndResetThis() {
         return new CannonsSimpleVolley(useLeftCannons);
     }
 

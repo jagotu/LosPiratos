@@ -3,6 +3,8 @@ package com.vztekoverflow.lospiratos.viewmodel.actions.attacks;
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.viewmodel.actions.*;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.Mortar;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.value.ObservableValue;
 
 import java.util.ArrayList;
@@ -34,19 +36,22 @@ public class MortarShot extends Attack implements ParameterizedAction {
     }
 
     @Override
-    protected Action createCopy() {
-        return new MortarShot();
+    protected Action createCopyAndResetThis() {
+        MortarShot result = new MortarShot();
+        result.setTarget(this.getTarget());
+        this.setTarget(null);
+        return result;
     }
 
     public MortarShot() {
         params.add(target);
         target.set(null);
-        relatedShipProperty().addListener(i -> {
-            target.groundZeroProperty().unbind();
+        relatedShipJustChanged.addListener(__ -> {
             if (getRelatedShip() == null) {
                 target.setRange(0);
                 return;
             }
+            target.groundZeroProperty().unbind();
             target.groundZeroProperty().bind(getRelatedShip().getPosition().coordinateProperty());
 
             Mortar mortar = getRelatedShip().getEnhancement(Mortar.class);
@@ -71,21 +76,29 @@ public class MortarShot extends Attack implements ParameterizedAction {
         }
     };
 
-    /*
+    private BooleanBinding satisfied = Bindings.createBooleanBinding(() ->
+                    target.get() != null && target.isValid()
+            , target.property(), target.rangeProperty());
+
+    public BooleanBinding isSatisfied() {
+        return satisfied;
+    }
+
+    /**
      * equivalent for calling params.get(0).property().get()
      */
     public AxialCoordinate getTarget() {
         return target.get();
     }
 
-    /*
+    /**
      * equivalent for calling params.get(0).property().set()
      */
     public void setTarget(AxialCoordinate target) {
         this.target.set(target);
     }
 
-    /*
+    /**
      * equivalent for calling params.get(0).property()
      */
     public ObservableValue<AxialCoordinate> targetProperty() {

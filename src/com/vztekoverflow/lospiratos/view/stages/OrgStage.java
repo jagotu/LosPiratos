@@ -135,7 +135,7 @@ public class OrgStage {
         }
 
         hexPane = new VirtualizingHexGridPane(edgeLength, pointy, new PiratosHexTileContentsFactory(game.get().getBoard(), edgeLength, pointy, (figures, ac, e) -> {
-            if (axialCoordinateActionParameterPending.get() != null && axialCoordinateActionParameterPending.get().isAvailable(ac)) {
+            if (axialCoordinateActionParameterPending.get() != null && axialCoordinateActionParameterPending.get().isValidValue(ac)) {
                 axialCoordinateActionParameterPending.get().set(ac);
                 axialCoordinateActionParameterPending.set(null);
                 actionSelector.setVisible(true);

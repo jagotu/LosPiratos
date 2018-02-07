@@ -96,7 +96,7 @@ public class ActionParametersPopOver extends PopOver {
             l.setPadding(new Insets(0, 4, 0, 0));
             gp.add(l, 0, i);
             gp.add(getNodeFor(a), 1, i);
-            okEnabledBinding = okEnabledBinding.and(a.isSatisfied());
+            //okEnabledBinding = okEnabledBinding.and(a.isSatisfied()); //todo rozlisit ActionParameter ParametrizedActionParameter
             i++;
         }
 
@@ -140,8 +140,10 @@ public class ActionParametersPopOver extends PopOver {
         setDetachable(false);
         setCloseButtonEnabled(true);
         setContentNode(root);
-        setAutoHide(false);
+        autoHideProperty().bind(readOnly);
         setAutoFix(false);
+
+        setOnAutoHide(e -> setAction(null));
     }
 
     private Node getNodeFor(ActionParameter p) {

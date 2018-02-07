@@ -6,7 +6,7 @@ import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipType;
 
 public class UpgradeShip extends ChangeShipAbstractTransaction {
     @Override
-    protected Action createCopy() {
+    protected Action createCopyAndResetThis() {
         return new UpgradeShip();
     }
 
