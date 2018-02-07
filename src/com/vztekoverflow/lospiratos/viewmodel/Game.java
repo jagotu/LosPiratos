@@ -309,11 +309,11 @@ public class Game {
             //Create ships:
             for (int j = 0; j < i; j++) {
                 AxialCoordinate position = new AxialCoordinate(i - teamCount / 2, j - teamCount / 2);
-                name = "Tým" + i + "_Loď" + (j + 1) + " na " + position;
+                name = "Tým" + i + "_Loď" + (j + 1);
                 String captain = captainNames[captainIdx++];
                 Class<ShipType> type = (Class<ShipType>) shipTypes[j % 4];
                 Ship s = team.createAndAddNewShip(type, name, captain, position);
-                s.getPosition().setRotation(60 * j);
+                s.getPosition().setRotation(60 * j * (i+1));
                 s.getStorage().addMoney(500 * i + 10 * j);
                 s.getStorage().addCloth(10 * i + j);
                 s.getStorage().addMetal(20 * i + j);
@@ -321,12 +321,13 @@ public class Game {
                 s.getStorage().addWood(40 * i + j);
                 if (i != 3) //random value
                     s.takeDamage(6 * j);
-                for (int k = 0; k < j; k++) {
+                for (int k = 0; k < j+i; k++) {
+                    if(k >= shipEnhancements.length) continue;
                     Class<ShipEnhancement> enh = (Class<ShipEnhancement>) shipEnhancements[k];
                     s.addNewEnhancement(enh);
                 }
-                if ((i == 3 && j == 2) || (i == 5 && j == 4)) { //random values
-                    //s.destroyShipAndEnhancements();
+                if ((i == 3 && j == 2)) { //random values
+                   // s.destroyShipAndEnhancements();
                 }
                 if (i == 2) { //random value
                     // s.destroyShipAndEnhancements();
