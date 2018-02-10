@@ -1,5 +1,6 @@
 package com.vztekoverflow.lospiratos.viewmodel.actions;
 
+import com.vztekoverflow.lospiratos.util.SimpleObservable;
 import com.vztekoverflow.lospiratos.util.Warnings;
 import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
@@ -118,19 +119,14 @@ public abstract class Action implements PerformableAction, PlannableAction {
      * An Observable that you can bind to.
      * It will be triggered every time the related ship or its planned actions change.
      */
-    protected final Observable relatedShipJustChanged = new BooleanBinding() {
-        @Override
-        protected boolean computeValue() {
-            return false;
-        }
-    }; //Boolean Binding is here used as a simple implementation of Observable; we do not care about its value
+    protected final Observable relatedShipJustChanged = new SimpleObservable();
 
     protected final void invalidateBindings() {
         visible.invalidate();
         plannable.invalidate();
         cost.invalidate();
         privilegedModeActive.invalidate();
-        ((BooleanBinding)relatedShipJustChanged).invalidate();
+        ((SimpleObservable)relatedShipJustChanged).fireListenerChange();
     }
 
     final protected boolean shipHasPlannedLessThan(int count, Class<? extends Action> action) {
