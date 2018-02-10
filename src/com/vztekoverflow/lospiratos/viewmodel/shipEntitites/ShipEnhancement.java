@@ -29,5 +29,7 @@ public abstract class ShipEnhancement extends ShipEntity {
      */
     abstract public ResourceReadOnly getCostUniversal();
 
+    public boolean isAcquirableBy(ShipType type){return true;}
+
 }
 

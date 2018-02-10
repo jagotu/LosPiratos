@@ -122,6 +122,7 @@ public class Ship implements MovableFigure, DamageableFigure {
     private boolean tryAddingEnhancement(String name, ShipEnhancementStatus status) {
         ShipEnhancement e = EnhancementsCatalog.createInstanceFromPersistentName(name);
         if (e == null) return false;
+        if(!e.isAcquirableBy(getShipType())) return false;
         e.onAddedToShip(this);
         if (status == ShipEnhancementStatus.destroyed) {
             e.setDestroyed(true);

@@ -3,6 +3,7 @@ package com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements;
 import com.vztekoverflow.lospiratos.util.Warnings;
 import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
+import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipType;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Brig;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Frigate;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Galleon;
@@ -63,6 +64,13 @@ public final class Ram extends ShipEnhancement {
 
     public int getFrontalAssaultBonusDamage() {
         return frontalAssaultBonusDamage;
+    }
+
+    @Override
+    public boolean isAcquirableBy(ShipType type) {
+        if( type instanceof Schooner || type instanceof Brig )
+            return false;
+        return true;
     }
 
 }

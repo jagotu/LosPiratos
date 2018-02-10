@@ -28,6 +28,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.paint.Color;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -327,7 +328,7 @@ public class Game {
                     s.addNewEnhancement(enh);
                 }
                 if ((i == 3 && j == 2)) { //random values
-                   // s.destroyShipAndEnhancements();
+                    //s.destroyShipAndEnhancements();
                 }
                 if (i == 2) { //random value
                     // s.destroyShipAndEnhancements();
@@ -336,6 +337,28 @@ public class Game {
             }
         }
 
+        List<AxialCoordinate> ports = new ArrayList<>();
+        ports.add(new AxialCoordinate(1,1));
+        ports.add(new AxialCoordinate(4,2));
+        ports.add(new AxialCoordinate(-2,-4));
+        ports.add(new AxialCoordinate(-6,-6));
+
+        List<AxialCoordinate> shores = new ArrayList<>();
+        shores.add(new AxialCoordinate(0,1));
+        shores.add(new AxialCoordinate(0,2));
+        shores.add(new AxialCoordinate(1,2));
+        shores.add(new AxialCoordinate(-1,2));
+        shores.add(new AxialCoordinate(5,1));
+        shores.add(new AxialCoordinate(6,0));
+        shores.add(new AxialCoordinate(2,-5));
+        shores.add(new AxialCoordinate(-2,4));
+        shores.add(new AxialCoordinate(-3,-3));
+        shores.add(new AxialCoordinate(-1,5));
+        shores.add(new AxialCoordinate(-6,3));
+
+        List<AxialCoordinate> shipwrecks = new ArrayList<>();
+        shipwrecks.add(new AxialCoordinate(-6,0));
+
         //board:
         Board b = g.getBoard();
         int boardDiameter = 8;
@@ -343,12 +366,15 @@ public class Game {
             for (int j = -boardDiameter; j <= boardDiameter; j++) {
                 AxialCoordinate c = new AxialCoordinate(i, j);
                 if (c.distanceTo(0, 0) >= boardDiameter) continue;
+
                 BoardTile tile;
                 if (c.distanceTo(0, 0) >= boardDiameter - 1) { //random value
                     tile = new Shore(c);
-                } else if (i == 1 && j == 1) { //random value
+                } else if (shores.contains(c)) {
+                    tile = new Shore(c);
+                } else if (ports.contains(c)) {
                     tile = new Port(c);
-                } else if (i == -6 && j == 0) { //random value
+                } else if (shipwrecks.contains(c)) {
                     tile = new Shipwreck(c);
                 } else {
                     tile = new Sea(c);
