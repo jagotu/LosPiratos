@@ -15,6 +15,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
@@ -138,19 +139,7 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
 
             return ht;
         }
-        return new HexTileContents() {
-            private StringProperty css = new ReadOnlyStringWrapper("Sea");
-
-            @Override
-            public ObjectProperty<Node> contentsProperty() {
-                return null;
-            }
-
-            @Override
-            public StringProperty cssClassProperty() {
-                return css;
-            }
-        };
+        return null;
     }
 
     public interface OnClickEventHandler {
@@ -181,6 +170,9 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
             classes.add(bt.getClass().getSimpleName());
             updateClasses();
             this.bt = bt;
+            if (bt instanceof com.vztekoverflow.lospiratos.viewmodel.boardTiles.Port) {
+                s.getChildren().add(new ImageView("/com/vztekoverflow/lospiratos/view/port.png"));
+            }
             if (onMouseClick != null) {
                 s.setOnMouseClicked(e -> {
                     if (e.isStillSincePress() && e.getButton().equals(MouseButton.PRIMARY)) {
@@ -277,6 +269,8 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
         public StringProperty cssClassProperty() {
             return classProperty;
         }
+
+
     }
 
 }

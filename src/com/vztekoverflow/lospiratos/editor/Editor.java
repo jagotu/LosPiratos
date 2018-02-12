@@ -207,6 +207,7 @@ public class Editor extends Application {
         public StringProperty cssClassProperty() {
             return cssClass;
         }
+
     }
 
     @FXML

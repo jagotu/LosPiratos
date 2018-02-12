@@ -314,7 +314,7 @@ public class Game {
                 String captain = captainNames[captainIdx++];
                 Class<ShipType> type = (Class<ShipType>) shipTypes[j % 4];
                 Ship s = team.createAndAddNewShip(type, name, captain, position);
-                s.getPosition().setRotation(60 * j * (i+1));
+                s.getPosition().setRotation(60 * j * (i + 1));
                 s.getStorage().addMoney(500 * i + 10 * j);
                 s.getStorage().addCloth(10 * i + j);
                 s.getStorage().addMetal(20 * i + j);
@@ -322,8 +322,8 @@ public class Game {
                 s.getStorage().addWood(40 * i + j);
                 if (i != 3) //random value
                     s.takeDamage(6 * j);
-                for (int k = 0; k < j+i; k++) {
-                    if(k >= shipEnhancements.length) continue;
+                for (int k = 0; k < j + i; k++) {
+                    if (k >= shipEnhancements.length) continue;
                     Class<ShipEnhancement> enh = (Class<ShipEnhancement>) shipEnhancements[k];
                     s.addNewEnhancement(enh);
                 }
@@ -338,30 +338,30 @@ public class Game {
         }
 
         List<AxialCoordinate> ports = new ArrayList<>();
-        ports.add(new AxialCoordinate(1,1));
-        ports.add(new AxialCoordinate(4,2));
-        ports.add(new AxialCoordinate(-2,-4));
-        ports.add(new AxialCoordinate(-6,-6));
+        ports.add(new AxialCoordinate(1, 1));
+        ports.add(new AxialCoordinate(4, 2));
+        ports.add(new AxialCoordinate(-2, -4));
+        ports.add(new AxialCoordinate(-6, -6));
 
         List<AxialCoordinate> shores = new ArrayList<>();
-        shores.add(new AxialCoordinate(0,1));
-        shores.add(new AxialCoordinate(0,2));
-        shores.add(new AxialCoordinate(1,2));
-        shores.add(new AxialCoordinate(-1,2));
-        shores.add(new AxialCoordinate(5,1));
-        shores.add(new AxialCoordinate(6,0));
-        shores.add(new AxialCoordinate(2,-5));
-        shores.add(new AxialCoordinate(-2,4));
-        shores.add(new AxialCoordinate(-3,-3));
-        shores.add(new AxialCoordinate(-1,5));
-        shores.add(new AxialCoordinate(-6,3));
+        shores.add(new AxialCoordinate(0, 1));
+        shores.add(new AxialCoordinate(0, 2));
+        shores.add(new AxialCoordinate(1, 2));
+        shores.add(new AxialCoordinate(-1, 2));
+        shores.add(new AxialCoordinate(5, 1));
+        shores.add(new AxialCoordinate(6, 0));
+        shores.add(new AxialCoordinate(2, -5));
+        shores.add(new AxialCoordinate(-2, 4));
+        shores.add(new AxialCoordinate(-3, -3));
+        shores.add(new AxialCoordinate(-1, 5));
+        shores.add(new AxialCoordinate(-6, 3));
 
         List<AxialCoordinate> shipwrecks = new ArrayList<>();
-        shipwrecks.add(new AxialCoordinate(-6,0));
+        shipwrecks.add(new AxialCoordinate(-6, 0));
 
         //board:
         Board b = g.getBoard();
-        int boardDiameter = 8;
+        int boardDiameter = 7;
         for (int i = -boardDiameter; i <= boardDiameter; i++) {
             for (int j = -boardDiameter; j <= boardDiameter; j++) {
                 AxialCoordinate c = new AxialCoordinate(i, j);

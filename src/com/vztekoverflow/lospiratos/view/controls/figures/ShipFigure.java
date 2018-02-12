@@ -31,7 +31,7 @@ public class ShipFigure extends Pane {
         hpBar = new ProgressBar();
         hpBar.progressProperty().bind(s.currentHPProperty().add(0.0).divide(s.maxHPProperty()));
         hpBar.prefWidthProperty().bind(widthProperty().multiply(0.7).multiply(s.maxHPProperty()).divide(120));
-        hpBar.prefHeightProperty().set(7);
+        hpBar.prefHeightProperty().set(18);
         getChildren().add(hpBar);
         shipPath.rotateProperty().bind(s.getPosition().rotationProperty().subtract(120));
     }

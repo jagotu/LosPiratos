@@ -61,7 +61,47 @@ public class VirtualizingHexGridPane extends Pane {
         return tileHeight;
     }
 
+    private Node backgroundGraphic = null;
+
+    public Node getBackgroundGraphic() {
+        return backgroundGraphic;
+    }
+
+    public void setBackgroundGraphic(Node backgroundGraphic) {
+        if (this.backgroundGraphic != null) {
+            backgroundGraphic.getTransforms().remove(backgroundTransform);
+            tilesPlane.getChildren().remove(backgroundGraphic);
+        }
+
+        this.backgroundGraphic = backgroundGraphic;
+        if (backgroundGraphic != null) {
+            backgroundGraphic.getTransforms().add(backgroundTransform);
+            tilesPlane.getChildren().add(backgroundGraphic);
+        }
+
+    }
+
+    private Point2D backgroundGraphicOffset = new Point2D(0, 0);
+
+    public Point2D getBackgroundGraphicOffset() {
+        return backgroundGraphicOffset;
+    }
+
+    private Scale backgroundTransform = new Scale();
+
+    public void setBackgroundGraphicOffset(Point2D backgroundGraphicOffset) {
+        if (backgroundGraphicOffset == null) {
+            backgroundGraphicOffset = new Point2D(0, 0);
+            return;
+        }
+        this.backgroundGraphicOffset = backgroundGraphicOffset;
+        requestLayout();
+    }
+
     public VirtualizingHexGridPane(double edgeLength, boolean pointy, HexTileContentsFactory factory) {
+
+        backgroundTransform.setPivotX(0);
+        backgroundTransform.setPivotY(0);
 
         this.edgeLength = edgeLength;
         this.pointy = pointy;
@@ -287,6 +327,12 @@ public class VirtualizingHexGridPane extends Pane {
             }
             innerLoop(x, inner, localFreeTiles);
         }
+        if (backgroundGraphic != null) {
+            layoutInArea(backgroundGraphic, (backgroundGraphicOffset.getX() - XOffset.get()) / scaleProperty().get(), (backgroundGraphicOffset.getY() - YOffset.get()) / scaleProperty().get(), backgroundGraphic.prefWidth(-1), backgroundGraphic.prefHeight(-1), 0, HPos.LEFT, VPos.TOP);
+            backgroundTransform.setX(1 / Scale.get());
+            backgroundTransform.setY(1 / Scale.get());
+        }
+
 
         //Remove all extra children
         for (List<HexTile> k : localFreeTiles.values()) {

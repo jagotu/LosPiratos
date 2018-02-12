@@ -15,6 +15,7 @@ public abstract class EnhancementAbstractTransaction extends ChangeShipAbstractT
         params.add(getEnhancementParameter());
         getEnhancementParameter().property().addListener(__ -> cost.invalidate());
     }
+
     abstract protected EnhancementActionParameter getEnhancementParameter();
 
     @Override

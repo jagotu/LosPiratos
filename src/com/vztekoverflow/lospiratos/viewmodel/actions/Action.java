@@ -126,7 +126,7 @@ public abstract class Action implements PerformableAction, PlannableAction {
         plannable.invalidate();
         cost.invalidate();
         privilegedModeActive.invalidate();
-        ((SimpleObservable)relatedShipJustChanged).fireListenerChange();
+        ((SimpleObservable) relatedShipJustChanged).fireListenerChange();
     }
 
     final protected boolean shipHasPlannedLessThan(int count, Class<? extends Action> action) {

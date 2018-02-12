@@ -26,6 +26,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -75,8 +76,8 @@ public class OrgStage {
     private Point2D lastMouse;
     private HashMap<Team, TeamView> teamViews = new HashMap<>();
     private HashMap<Ship, ShipView> shipViews = new HashMap<>();
-    private static final int minMove = -3000;
-    private static final int maxMove = 500;
+    private static final int minMove = -4000;
+    private static final int maxMove = 1000;
 
 
     public OrgStage() {
@@ -126,8 +127,8 @@ public class OrgStage {
     }
 
     private boolean relocateActionSelector = false;
-    private double edgeLength = 40;
-    private boolean pointy = true; //DON'T SET TO FALSE
+    private double edgeLength = 107.312;
+    private boolean pointy = false; //DON'T SET TO FALSE
 
     private void connectToGame() {
         if (hexPane != null) {
@@ -175,6 +176,8 @@ public class OrgStage {
         hexPane.maxWidthProperty().bind(mainPane.widthProperty());
         hexPane.maxHeightProperty().bind(mainPane.heightProperty());
         hexPane.relocate(0, 0);
+        hexPane.setBackgroundGraphic(new ImageView("/cad.png"));
+        hexPane.setBackgroundGraphicOffset(new Point2D(-1000, -1208));
         mainPane.getChildren().add(0, hexPane);
 
         setHexPanePanAndZoom();
@@ -316,13 +319,13 @@ public class OrgStage {
         hexPane.setOnScroll(ScrollEvent -> {
             double scale = Math.pow(1.005, -ScrollEvent.getDeltaY());
             double newScale = scale * hexPane.getScale();
-            if (newScale > 2) {
-                newScale = 2;
-                scale = 2 / hexPane.getScale();
+            if (newScale > 4) {
+                newScale = 4;
+                scale = 4 / hexPane.getScale();
             }
-            if (newScale < 0.1) {
-                newScale = 0.1;
-                scale = 0.1 / hexPane.getScale();
+            if (newScale < 0.3) {
+                newScale = 0.3;
+                scale = 0.3 / hexPane.getScale();
             }
 
             Point2D mouse = new Point2D(hexPane.getXOffset() + (ScrollEvent.getX() * hexPane.getScale()), hexPane.getYOffset() + (ScrollEvent.getY() * hexPane.getScale()));

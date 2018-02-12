@@ -114,11 +114,11 @@ public class EnhancementsCatalog {
 
     }
 
-    public static boolean isAcquirableBy(Class<? extends ShipEnhancement> enh, Class<? extends ShipType> type){
+    public static boolean isAcquirableBy(Class<? extends ShipEnhancement> enh, Class<? extends ShipType> type) {
         return true; //todo
     }
 
-    public static boolean isAcquirableBy(Class<? extends ShipEnhancement> enh, ShipType type){
+    public static boolean isAcquirableBy(Class<? extends ShipEnhancement> enh, ShipType type) {
         return isAcquirableBy(enh, type.getClass());
     }
 }

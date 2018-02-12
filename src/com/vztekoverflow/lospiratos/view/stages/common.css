@@ -3,41 +3,37 @@
 }
 
 .hex-tile {
-    background: transparent;
     -fx-stroke: black;
-    -fx-fill: background;
+    -fx-stroke-width: 2px;
 }
 
 .hex-tile.Sea {
-    background: lightskyblue;
 }
 
 .hex-tile.Shore {
-    background: brown;
 }
 
 .hex-tile.Shipwreck {
-    background: gold;
 }
 
 .hex-tile.Port {
-    background: royalblue;
+
 }
 
 .hex-tile.selected {
-    -fx-fill: yellow;
+    -fx-fill: rgba(255, 255, 0, 0.6)
 }
 
 .hex-tile:hover {
-    -fx-fill: derive(background, 50%);
+    -fx-fill: rgba(255, 255, 255, 0.4)
 }
 
 .hex-tile.disabled {
-    -fx-opacity: 0.3
+    -fx-fill: rgb(255, 255, 255)
 }
 
 .hex-tile.highlighted {
-    -fx-fill: red;
+    -fx-fill: rgba(255, 0, 0, 0.6)
 }
 
 .editable-text .text-field {
@@ -108,21 +104,21 @@
 
 .ship-figure .progress-bar > .bar {
     -fx-padding: 0px;
-    -fx-background-insets: 1px;
+    -fx-background-insets: 3px;
     -fx-accent: lime;
     -fx-background-radius: 1px;
 }
 
 .ship-figure .progress-bar > .track {
     -fx-background-color: white;
-    -fx-background-insets: 1px;
+    -fx-background-insets: 3px;
     -fx-background-radius: 0;
     -fx-border-color: black;
-    -fx-border-width: 1px;
+    -fx-border-width: 3px;
     -fx-border-radius: 2px;
 }
 
 .ship-figure .progress-bar {
-    -fx-effect: dropshadow(gaussian, grey, 10, 0.2, 1, 1);
+    -fx-effect: dropshadow(gaussian, grey, 25, 0.4, 1, 1);
     -fx-opacity: 1;
 }

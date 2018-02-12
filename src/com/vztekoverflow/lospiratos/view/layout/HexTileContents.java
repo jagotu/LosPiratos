@@ -8,4 +8,5 @@ public interface HexTileContents {
     ObjectProperty<Node> contentsProperty();
 
     StringProperty cssClassProperty();
+
 }

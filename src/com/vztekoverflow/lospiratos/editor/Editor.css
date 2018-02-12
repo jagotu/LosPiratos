@@ -3,23 +3,19 @@
     -fx-fill: transparent;
 }
 
-.hex-tile:hover
-{
+.hex-tile:hover {
     -fx-fill: LemonChiffon;
 }
 
-.hex-tile.origin
-{
+.hex-tile.origin {
     -fx-fill: black;
 }
 
-.hex-tile.selected
-{
+.hex-tile.selected {
     -fx-fill: yellow;
     -fx-effect: dropshadow(gaussian, yellow, 20, 0.2, 0, 0);
 }
 
-.hex-parent.clipped
-{
+.hex-parent.clipped {
     -hex-clip: true;
 }

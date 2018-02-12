@@ -73,7 +73,7 @@ public final class Mortar extends ShipEnhancement {
 
     @Override
     public boolean isAcquirableBy(ShipType type) {
-        if( type instanceof Schooner )
+        if (type instanceof Schooner)
             return false;
         return true;
     }

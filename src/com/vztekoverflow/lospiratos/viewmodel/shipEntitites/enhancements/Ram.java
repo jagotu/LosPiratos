@@ -68,7 +68,7 @@ public final class Ram extends ShipEnhancement {
 
     @Override
     public boolean isAcquirableBy(ShipType type) {
-        if( type instanceof Schooner || type instanceof Brig )
+        if (type instanceof Schooner || type instanceof Brig)
             return false;
         return true;
     }

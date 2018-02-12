@@ -28,7 +28,7 @@ public class RepairEnhancement extends EnhancementAbstractTransaction {
 
     @Override
     protected EnhancementActionParameter getEnhancementParameter() {
-        if(parameter == null){
+        if (parameter == null) {
             parameter = new EnhancementActionParameter() {
                 @Override
                 public boolean isValidValue(Class<? extends ShipEnhancement> value) {
