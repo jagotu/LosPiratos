@@ -15,7 +15,7 @@ public class ShipFigure extends Pane {
     private SVGPath shipPath;
     private ProgressBar hpBar;
 
-    public ShipFigure(Ship s) {
+    public ShipFigure(Ship s, boolean pointy) {
         getStyleClass().add("ship-figure");
 
         shipPath = new SVGPath();
@@ -33,7 +33,11 @@ public class ShipFigure extends Pane {
         hpBar.prefWidthProperty().bind(widthProperty().multiply(0.7).multiply(s.maxHPProperty()).divide(120));
         hpBar.prefHeightProperty().set(18);
         getChildren().add(hpBar);
-        shipPath.rotateProperty().bind(s.getPosition().rotationProperty().subtract(120));
+
+        int rotationNormalisation = 120;
+        if(!pointy)
+            rotationNormalisation -= 30;
+        shipPath.rotateProperty().bind(s.getPosition().rotationProperty().subtract(rotationNormalisation));
     }
 
 

@@ -19,6 +19,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Font;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -159,10 +160,11 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
         BooleanProperty availableProperty = new SimpleBooleanProperty(true);
         BooleanProperty highlightedProperty = new SimpleBooleanProperty(false);
 
-        Node tondaHack = null;
+        Label tondaHack = null;
 
         private void tonikuvHack(AxialCoordinate coords) {
             tondaHack = new Label(coords.toString());
+            tondaHack.setFont(new Font("Consolas",50));
             s.getChildren().add(tondaHack);
         }
 
@@ -172,6 +174,9 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
             this.bt = bt;
             if (bt instanceof com.vztekoverflow.lospiratos.viewmodel.boardTiles.Port) {
                 s.getChildren().add(new ImageView("/com/vztekoverflow/lospiratos/view/port.png"));
+            }
+            if (bt instanceof com.vztekoverflow.lospiratos.viewmodel.boardTiles.Plantation) {
+                s.getChildren().add(new ImageView("/com/vztekoverflow/lospiratos/view/plantation.png"));
             }
             if (onMouseClick != null) {
                 s.setOnMouseClicked(e -> {
@@ -238,7 +243,7 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
 
             Node n;
             if (f.getClass().equals(Ship.class)) {
-                ShipFigure s = new ShipFigure((Ship) f);
+                ShipFigure s = new ShipFigure((Ship) f, pointy);
                 s.maxWidthProperty().bind(tileWidth);
                 s.maxHeightProperty().bind(tileHeight);
                 n = s;
