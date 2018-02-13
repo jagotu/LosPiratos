@@ -1,6 +1,6 @@
 package com.vztekoverflow.lospiratos.viewmodel.actions;
 
-import javafx.beans.value.ObservableBooleanValue;
+import javafx.beans.binding.BooleanExpression;
 
 public interface ParameterizedAction extends PlannableAction {
     Iterable<ActionParameter> getAvailableParameters();
@@ -8,5 +8,12 @@ public interface ParameterizedAction extends PlannableAction {
     /**
      * Indicates whether all parameters are set and valid (i.e. their values are correct, e.g. in allowed range).
      */
-    ObservableBooleanValue isSatisfied();
+    default boolean isSatisfied(){
+        return satisfiedProperty().get();
+    }
+
+    /**
+     * @return boolean expression indicating whether all parameters are set and valid (i.e. their values are correct, e.g. in allowed range).
+     */
+    BooleanExpression satisfiedProperty();
 }

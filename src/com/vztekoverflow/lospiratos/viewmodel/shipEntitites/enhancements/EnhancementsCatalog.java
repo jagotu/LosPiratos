@@ -114,8 +114,14 @@ public class EnhancementsCatalog {
 
     }
 
+    public static ShipEnhancement createInstance(Class<? extends ShipEnhancement> enh){
+        return createInstanceFromPersistentName(getPersistentName(enh));
+    }
+
     public static boolean isAcquirableBy(Class<? extends ShipEnhancement> enh, Class<? extends ShipType> type) {
-        return true; //todo
+        ShipEnhancement e = createInstance(enh);
+        if(e == null) return false;
+        return e.isAcquirableBy(ShipType.createInstance(type));
     }
 
     public static boolean isAcquirableBy(Class<? extends ShipEnhancement> enh, ShipType type) {

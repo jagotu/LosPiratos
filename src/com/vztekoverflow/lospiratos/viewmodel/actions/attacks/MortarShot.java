@@ -3,8 +3,7 @@ package com.vztekoverflow.lospiratos.viewmodel.actions.attacks;
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.viewmodel.actions.*;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.Mortar;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanBinding;
+import javafx.beans.binding.BooleanExpression;
 import javafx.beans.value.ObservableValue;
 
 import java.util.ArrayList;
@@ -76,12 +75,9 @@ public class MortarShot extends Attack implements ParameterizedAction {
         }
     };
 
-    private BooleanBinding satisfied = Bindings.createBooleanBinding(() ->
-                    target.get() != null && target.isValid()
-            , target.property(), target.rangeProperty());
-
-    public BooleanBinding isSatisfied() {
-        return satisfied;
+    @Override
+    public BooleanExpression satisfiedProperty() {
+        return target.validProperty();
     }
 
     /**

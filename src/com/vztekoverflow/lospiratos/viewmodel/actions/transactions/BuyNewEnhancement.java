@@ -5,8 +5,8 @@ import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.EnhancementsCatalog;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanBinding;
-import javafx.beans.value.ObservableBooleanValue;
+import javafx.beans.binding.BooleanExpression;
+import javafx.beans.value.ObservableValue;
 
 public class BuyNewEnhancement extends EnhancementAbstractTransaction {
 
@@ -33,8 +33,12 @@ public class BuyNewEnhancement extends EnhancementAbstractTransaction {
         if (parameter == null) {
             parameter = new EnhancementActionParameter() {
                 @Override
-                public boolean isValidValue(Class<? extends ShipEnhancement> value) {
-                    return EnhancementsCatalog.isAcquirableBy(parameter.get(), getRelatedShip().getShipType());
+                public BooleanExpression validValueProperty(ObservableValue<Class<? extends ShipEnhancement>> value) {
+                    return Bindings.createBooleanBinding(() -> {
+                                if (getRelatedShip() == null) return false;
+                                return EnhancementsCatalog.isAcquirableBy(value.getValue(), getRelatedShip().getShipType());
+                            }, relatedShipProperty(), value
+                    );
                 }
             };
         }
@@ -51,12 +55,8 @@ public class BuyNewEnhancement extends EnhancementAbstractTransaction {
         return EnhancementsCatalog.createInstanceFromPersistentName(EnhancementsCatalog.getPersistentName(getEnhancement())).getCostUniversal();
     }
 
-    private BooleanBinding satisfied = Bindings.createBooleanBinding(() ->
-                    parameter.isValid(),
-            relatedShipJustChanged, parameter.property());
-
     @Override
-    public ObservableBooleanValue isSatisfied() {
-        return satisfied;
+    public BooleanExpression satisfiedProperty() {
+        return parameter.validProperty();
     }
 }

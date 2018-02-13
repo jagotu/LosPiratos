@@ -6,10 +6,12 @@ import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.EnhancementsCatalog;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanBinding;
-import javafx.beans.value.ObservableBooleanValue;
+import javafx.beans.binding.BooleanExpression;
+import javafx.beans.value.ObservableValue;
 
 public class RepairEnhancement extends EnhancementAbstractTransaction {
+
+    static final double repairCostCoefficient = 0.1;
 
     @Override
     protected Action createCopyAndResetThis() {
@@ -31,8 +33,12 @@ public class RepairEnhancement extends EnhancementAbstractTransaction {
         if (parameter == null) {
             parameter = new EnhancementActionParameter() {
                 @Override
-                public boolean isValidValue(Class<? extends ShipEnhancement> value) {
-                    return getRelatedShip().getEnhancementStatus(getEnhancement()).equals(ShipEnhancementStatus.destroyed);
+                public BooleanExpression validValueProperty(ObservableValue<Class<? extends ShipEnhancement>> value) {
+                    return Bindings.createBooleanBinding(() -> {
+                                if (getRelatedShip() == null) return false;
+                                return getRelatedShip().getEnhancementStatus(value.getValue()).equals(ShipEnhancementStatus.destroyed);
+                            }, relatedShipProperty(), value
+                    );
                 }
             };
         }
@@ -46,19 +52,15 @@ public class RepairEnhancement extends EnhancementAbstractTransaction {
 
     @Override
     protected ResourceReadOnly recomputeCost() {
+        if(!isSatisfied()) return null;
         ShipEnhancement e = EnhancementsCatalog.createInstanceFromPersistentName(EnhancementsCatalog.getPersistentName(getEnhancement()));
-        //the null pointer exception (reported here by code check) should not happen, based on Catalog's contract
+        if(e == null) return null;
         return e.getCostUniversal().times(repairCostCoefficient);
     }
 
-    private BooleanBinding satisfied = Bindings.createBooleanBinding(() ->
-                    parameter.isValid(),
-            relatedShipJustChanged, parameter.property());
-
     @Override
-    public ObservableBooleanValue isSatisfied() {
-        return satisfied;
+    public BooleanExpression satisfiedProperty() {
+        return getEnhancementParameter().validProperty();
     }
 
-    static final double repairCostCoefficient = 0.1;
 }

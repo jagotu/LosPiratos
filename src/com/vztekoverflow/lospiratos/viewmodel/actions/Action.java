@@ -42,11 +42,11 @@ public abstract class Action implements PerformableAction, PlannableAction {
     private final ObjectProperty<Ship> relatedShip = new SimpleObjectProperty<>();
 
     @Override
-    public ObjectProperty<Ship> relatedShipProperty() {
+    public final ObjectProperty<Ship> relatedShipProperty() {
         return relatedShip;
     }
 
-    public Ship getRelatedShip() {
+    public final Ship getRelatedShip() {
         return relatedShip.get();
     }
 
@@ -66,12 +66,16 @@ public abstract class Action implements PerformableAction, PlannableAction {
     protected final BooleanBinding visible = new BooleanBinding() {
         @Override
         protected boolean computeValue() {
+            if(getRelatedShip() == null)
+                return false;
             return recomputeVisible();
         }
     };
     protected final BooleanBinding plannable = new BooleanBinding() {
         @Override
         protected boolean computeValue() {
+            if(getRelatedShip() == null)
+                return false;
             if (isPrivilegedModeActive())
                 return true;
             if (getRelatedShip().getPlannedActions().stream().anyMatch(a -> a.preventsFromBeingPlanned(Action.this)))
@@ -105,12 +109,13 @@ public abstract class Action implements PerformableAction, PlannableAction {
         relatedShip.set(s);
     }
 
+    //region inheritors' API
+
     //may be overridden by children
     public int getManeuverSlotsTaken() {
         return 0;
     }
 
-    //region inheritors' API
     protected abstract boolean recomputeVisible();
 
     protected abstract boolean recomputePlannable();
@@ -152,25 +157,27 @@ public abstract class Action implements PerformableAction, PlannableAction {
     protected final ObjectBinding<ResourceReadOnly> cost = new ObjectBinding<ResourceReadOnly>() {
         @Override
         protected ResourceReadOnly computeValue() {
+            if(getRelatedShip() == null)
+                return ResourceReadOnly.ZERO;
             return recomputeCost();
         }
     };
 
-    public ResourceReadOnly getCost() {
+    public final ResourceReadOnly getCost() {
         return cost.get();
     }
 
-    public ObjectBinding<ResourceReadOnly> costProperty() {
+    public final ObjectBinding<ResourceReadOnly> costProperty() {
         return cost;
     }
 
     /**
      * @return true if action's cost has successfully been paid.
      */
-    protected boolean performPayment() {
+    protected final boolean performPayment() {
         ResourceReadOnly cost = getCost();
         if (cost.isLesserThanOrEqual(getRelatedShip().getTeam().getOwnedResource())) {
-            getRelatedShip().getStorage().subtract(cost);
+            getRelatedShip().getTeam().getOwnedResource().subtract(cost);
             return true;
         } else {
             return false;

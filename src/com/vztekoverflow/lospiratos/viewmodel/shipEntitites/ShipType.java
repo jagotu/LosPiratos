@@ -66,6 +66,10 @@ public abstract class ShipType extends ShipEntity {
         return null;
     }
 
+    public static ShipType createInstance(Class<? extends ShipType> type){
+        return createInstanceFromPersistentName(ShipType.getPersistentName(type));
+    }
+
     /**
      * @return a ship type that is one order better than {@code shipTypeToIncrement}
      * null if {@code shipTypeToIncrement} cannot be incremented
