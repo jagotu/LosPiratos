@@ -7,10 +7,10 @@ import com.vztekoverflow.lospiratos.viewmodel.Ship;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.binding.BooleanExpression;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ObservableBooleanValue;
 
 public abstract class Action implements PerformableAction, PlannableAction {
 
@@ -87,7 +87,7 @@ public abstract class Action implements PerformableAction, PlannableAction {
     }
 
     @Override
-    public ObservableBooleanValue visibleProperty() {
+    public BooleanExpression visibleProperty() {
         return visible;
     }
 
@@ -96,7 +96,7 @@ public abstract class Action implements PerformableAction, PlannableAction {
     }
 
     @Override
-    public ObservableBooleanValue plannableProperty() {
+    public BooleanExpression plannableProperty() {
         return plannable;
     }
 

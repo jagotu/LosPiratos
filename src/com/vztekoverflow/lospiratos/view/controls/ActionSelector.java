@@ -4,7 +4,6 @@ import com.vztekoverflow.lospiratos.viewmodel.actions.ActionIcon;
 import com.vztekoverflow.lospiratos.viewmodel.actions.ActionsCatalog;
 import com.vztekoverflow.lospiratos.viewmodel.actions.PlannableAction;
 import javafx.animation.TranslateTransition;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.HPos;
@@ -116,7 +115,7 @@ public class ActionSelector extends Pane {
             } else {
                 b.visibleProperty().bind(n.getAction().visibleProperty());
                 b.visibleProperty().addListener(i -> requestLayout());
-                b.disableProperty().bind(Bindings.not(n.getAction().plannableProperty()));
+                b.disableProperty().bind(n.getAction().plannableProperty().not());
 
                 b.setOnAction(e -> {
                     if (onActionSelectedListener != null) {

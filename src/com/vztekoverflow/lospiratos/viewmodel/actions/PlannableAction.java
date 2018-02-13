@@ -3,8 +3,8 @@ package com.vztekoverflow.lospiratos.viewmodel.actions;
 import com.vztekoverflow.lospiratos.util.Translatable;
 import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
+import javafx.beans.binding.BooleanExpression;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.value.ObservableBooleanValue;
 import javafx.beans.value.ObservableObjectValue;
 
 public interface PlannableAction extends Translatable {
@@ -13,12 +13,12 @@ public interface PlannableAction extends Translatable {
     /**
      * Indicates whether the Action should be shown to the user
      */
-    ObservableBooleanValue visibleProperty();
+    BooleanExpression visibleProperty();
 
     /**
      * Indicates whether, with respect to current state, the Action may be planned
      */
-    ObservableBooleanValue plannableProperty();
+    BooleanExpression plannableProperty();
 
 
     ObjectProperty<Ship> relatedShipProperty();

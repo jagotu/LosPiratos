@@ -30,11 +30,11 @@
 }
 
 .hex-tile:hover {
-    -fx-fill: rgba(255, 255, 255, 0.4)
+    -fx-fill: rgba(255, 255, 230, 0.4)
 }
 
 .hex-tile.disabled {
-    -fx-fill: rgb(255, 255, 255)
+    -fx-fill: rgba(20, 0, 0, 0.30);
 }
 
 .hex-tile.highlighted {
