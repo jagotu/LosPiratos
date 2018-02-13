@@ -1,6 +1,7 @@
 package com.vztekoverflow.lospiratos.viewmodel;
 
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 
 public class Resource extends ResourceReadOnly {
     public Resource(int money, int cloth, int metal, int rum, int tobacco, int wood) {
@@ -10,6 +11,14 @@ public class Resource extends ResourceReadOnly {
     public Resource() {
     }
 
+    protected IntegerProperty money = new SimpleIntegerProperty(0);
+    protected IntegerProperty cloth = new SimpleIntegerProperty(0);
+    protected IntegerProperty metal = new SimpleIntegerProperty(0);
+    //those weird names for rum, tobacco and wood are so that all resource have same number of characters (better code readability)
+    protected IntegerProperty rum__ = new SimpleIntegerProperty(0);
+    protected IntegerProperty tobco = new SimpleIntegerProperty(0);
+    protected IntegerProperty wood_ = new SimpleIntegerProperty(0);
+
     public void setAll(ResourceReadOnly value) {
         setMoney(value.getMoney());
         setCloth(value.getCloth());
@@ -17,6 +26,31 @@ public class Resource extends ResourceReadOnly {
         setTobacco(value.getTobacco());
         setRum(value.getRum());
         setWood(value.getWood());
+    }
+
+    @Override
+    public int getMoney() {
+        return money.get();
+    }
+
+    @Override
+    public int getCloth() {
+        return cloth.get();
+    }
+
+    @Override
+    public int getMetal() {
+        return metal.get();
+    }
+
+    @Override
+    public int getRum() {
+        return rum__.get();
+    }
+
+    @Override
+    public int getWood() {
+        return wood_.get();
     }
 
     public void setMoney(int money) {
@@ -71,24 +105,24 @@ public class Resource extends ResourceReadOnly {
      * component-wise increases resource number by value in {@code value}
      */
     public void add(ResourceReadOnly value) {
-        addMoney(value.money.get());
-        addCloth(value.cloth.get());
-        addMetal(value.metal.get());
-        addRum(value.rum__.get());
-        addTobacco(value.tobco.get());
-        addWood(value.wood_.get());
+        addMoney(value.getMoney());
+        addCloth(value.getCloth());
+        addMetal(value.getMetal());
+        addRum(value.getRum());
+        addTobacco(value.getTobacco());
+        addWood(value.getWood());
     }
 
     /**
      * component-wise decreases resource number by value in {@code value}
      */
     public void subtract(ResourceReadOnly value) {
-        addMoney(-value.money.get());
-        addCloth(-value.cloth.get());
-        addMetal(-value.metal.get());
-        addRum(-value.rum__.get());
-        addTobacco(-value.tobco.get());
-        addWood(-value.wood_.get());
+        addMoney(-value.getMoney());
+        addCloth(-value.getCloth());
+        addMetal(-value.getMetal());
+        addRum(-value.getRum());
+        addTobacco(-value.getTobacco());
+        addWood(-value.getWood());
     }
 
     /**
@@ -120,32 +154,32 @@ public class Resource extends ResourceReadOnly {
         return Math.max(lower, Math.min(upper, value));
     }
 
-    @Override
+
     public IntegerProperty moneyProperty() {
         return money;
     }
 
-    @Override
+
     public IntegerProperty clothProperty() {
         return cloth;
     }
 
-    @Override
+
     public IntegerProperty metalProperty() {
         return metal;
     }
 
-    @Override
+
     public IntegerProperty rumProperty() {
         return rum__;
     }
 
-    @Override
+
     public IntegerProperty tobaccoProperty() {
         return tobco;
     }
 
-    @Override
+
     public IntegerProperty woodProperty() {
         return wood_;
     }
