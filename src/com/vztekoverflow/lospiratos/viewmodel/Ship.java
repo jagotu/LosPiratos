@@ -634,7 +634,7 @@ public class Ship implements MovableFigure, DamageableFigure {
      * is called by Game whenever the game proceeds to a next round
      */
     public void onNextRoundStarted(int roundNo) {
-        plannedActions.removeIf(p -> true); //remove all
+        plannedActions.clear();
         for (ShipEntity e : getAllEntities()) {
             e.onNextRoundStarted(roundNo);
         }

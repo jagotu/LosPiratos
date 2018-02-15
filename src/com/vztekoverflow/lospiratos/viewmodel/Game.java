@@ -12,6 +12,7 @@ import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.CannonsAbstractVol
 import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.FrontalAssault;
 import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.MortarShot;
 import com.vztekoverflow.lospiratos.viewmodel.boardTiles.*;
+import com.vztekoverflow.lospiratos.viewmodel.logs.EventLogger;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipType;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.*;
@@ -108,6 +109,11 @@ public class Game {
         return gameModel;
     }
 
+    EventLogger logger = new EventLogger();
+
+    public EventLogger getLogger() {
+        return logger;
+    }
 
     //region evaluate
     private int roundNo = 0;
@@ -118,6 +124,7 @@ public class Game {
         evaluate(Maneuver.class);
         evaluate(MortarShot.class);
         evaluate(Transaction.class);
+        logger.logRoundHasEnded(roundNo);
         ++roundNo;
         for (Ship s : getAllShips().values()) {
             s.onNextRoundStarted(roundNo);

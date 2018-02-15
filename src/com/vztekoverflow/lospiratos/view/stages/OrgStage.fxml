@@ -56,5 +56,10 @@
                 <Button maxWidth="1.7976931348623157E308" onAction="#createShip" text="Debug vyrobit novou loď"/>
             </VBox>
         </Tab>
+        <Tab text="log">
+            <ListView fx:id="logListView">
+
+            </ListView>
+        </Tab>
     </TabPane>
 </SplitPane>

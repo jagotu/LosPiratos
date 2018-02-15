@@ -144,10 +144,10 @@ public class Board /* I want my Burd */ {
      *
      * @return null if no figure is located at given @position
      */
-    public DamageableFigure getDamageableFigure(AxialCoordinate position) {
+    public Ship getDamageableFigure(AxialCoordinate position) {
         MovableFigure f = findFigure(position);
-        if (f instanceof DamageableFigure)
-            return (DamageableFigure) f;
+        if (f instanceof Ship)
+            return (Ship) f;
         else return null;
     }
 

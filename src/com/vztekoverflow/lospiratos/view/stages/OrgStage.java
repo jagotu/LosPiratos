@@ -12,6 +12,8 @@ import com.vztekoverflow.lospiratos.viewmodel.actions.ActionsCatalog;
 import com.vztekoverflow.lospiratos.viewmodel.actions.ParameterizedAction;
 import com.vztekoverflow.lospiratos.viewmodel.actions.PlannableAction;
 import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.AxialCoordinateActionParameter;
+import com.vztekoverflow.lospiratos.viewmodel.logs.LogFormatter;
+import com.vztekoverflow.lospiratos.viewmodel.logs.LoggedEvent;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
@@ -22,14 +24,13 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
+import javafx.util.Callback;
 
 import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
@@ -62,6 +63,8 @@ public class OrgStage {
     private PlannedActionsBar actionsBar;
     @FXML
     private Region mouseBlocker;
+    @FXML
+    private ListView<LoggedEvent> logListView;
 
 
     private ActionParametersPopOver parametersPopOver = new ActionParametersPopOver();
@@ -218,6 +221,25 @@ public class OrgStage {
             }
 
         });
+
+        logListView.setItems(game.get().getLogger().getLoggedEvents());
+        logListView.setCellFactory(new Callback<ListView<LoggedEvent>, ListCell<LoggedEvent>>() {
+            @Override
+            public ListCell<LoggedEvent> call(ListView<LoggedEvent> param) {
+                return new ListCell<LoggedEvent>() {
+                    @Override
+                    protected void updateItem(LoggedEvent item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) return;
+                        Text text = new Text();
+                        text.wrappingWidthProperty().bind(logListView.widthProperty().subtract(15));
+                        text.setText(item.getTextualDescription(LogFormatter.stručně()));
+                        setGraphic(text);
+                    }
+                };
+            }
+        });
+
 
         Platform.runLater(() -> hexPane.centerInParent(new AxialCoordinate(0, 0)));
     }

@@ -2,10 +2,11 @@ package com.vztekoverflow.lospiratos.viewmodel.actions;
 
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.viewmodel.DamageSufferedResponse;
-import com.vztekoverflow.lospiratos.viewmodel.DamageableFigure;
 import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipMechanics;
+
+import java.util.Collections;
 
 public abstract class Attack extends Action {
 
@@ -35,19 +36,17 @@ public abstract class Attack extends Action {
      * @return value indicating whether the target has been destroyed
      */
     protected final DamageSufferedResponse applyDamageTo(int damageValue, AxialCoordinate targetPosition) {
-        DamageableFigure target = getRelatedShip().getTeam().getGame().getBoard().getDamageableFigure(targetPosition);
+        Ship target = getRelatedShip().getTeam().getGame().getBoard().getDamageableFigure(targetPosition);
         if (target == null) return null;
 
-        ResourceReadOnly targetsResource = new ResourceReadOnly();
-        if (target instanceof Ship) {
-            targetsResource = ((Ship) target).getStorage().createCopy();
-        }
-
+        ResourceReadOnly targetsResource = target.getStorage().createCopy();
         DamageSufferedResponse result = target.takeDamage(damageValue);
-        //todo log the damage: getShip() has just destroyed target using this
+
+        getEventLogger().logAttack(getRelatedShip(), this, target, damageValue);
         if (result == DamageSufferedResponse.hasJustBeenDestroyed) {
-            //todo log: target has been destroyed; this gains targetsResource
             getRelatedShip().getStorage().add(targetsResource);
+            getEventLogger().logShipHasDied(target, Collections.singleton(getRelatedShip()));
+            getEventLogger().logResourceGain(getRelatedShip(), targetsResource, this);
         }
         return result;
     }

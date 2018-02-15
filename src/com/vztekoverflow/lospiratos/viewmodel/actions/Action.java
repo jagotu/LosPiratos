@@ -4,6 +4,7 @@ import com.vztekoverflow.lospiratos.util.SimpleObservable;
 import com.vztekoverflow.lospiratos.util.Warnings;
 import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
+import com.vztekoverflow.lospiratos.viewmodel.logs.EventLogger;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.binding.BooleanBinding;
@@ -110,6 +111,10 @@ public abstract class Action implements PerformableAction, PlannableAction {
     }
 
     //region inheritors' API
+
+    protected final EventLogger getEventLogger(){
+        return getRelatedShip().getTeam().getGame().getLogger();
+    }
 
     //may be overridden by children
     public int getManeuverSlotsTaken() {

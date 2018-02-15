@@ -7,13 +7,13 @@ public class ResourceReadOnly {
     public static final ResourceReadOnly ZERO = new ResourceReadOnly();
     public static final ResourceReadOnly MAX = new ResourceReadOnly(Integer.MAX_VALUE,Integer.MAX_VALUE,Integer.MAX_VALUE,Integer.MAX_VALUE,Integer.MAX_VALUE,Integer.MAX_VALUE);
 
-    private int money;
-    private int cloth;
-    private int metal;
+    private final int money;
+    private final int cloth;
+    private final int metal;
     //those weird names for rum, tobacco and wood are so that all resource have same number of characters (better code readability)
-    private int rum__;
-    private int tobco;
-    private int wood_;
+    private final int rum__;
+    private final int tobco;
+    private final int wood_;
 
     public ResourceReadOnly(int money, int cloth, int metal, int rum, int tobacco, int wood) {
         this.money = (money);
@@ -24,7 +24,7 @@ public class ResourceReadOnly {
         this.wood_ = (wood);
     }
 
-    public ResourceReadOnly(ResourceReadOnly original) {
+    private ResourceReadOnly(ResourceReadOnly original) {
         this.money = (original.money);
         this.cloth = (original.cloth);
         this.metal = (original.metal);
@@ -34,15 +34,21 @@ public class ResourceReadOnly {
     }
 
     public ResourceReadOnly() {
+        money = 0;
+        cloth = 0;
+        metal = 0;
+        rum__ = 0;
+        tobco = 0;
+        wood_ = 0;
     }
 
     public ResourceReadOnly createCopy() {
-        return new ResourceReadOnly(this.money,
-                this.cloth,
-                this.metal,
-                this.rum__,
-                this.tobco,
-                this.wood_);
+        return new ResourceReadOnly(this.getMoney(),
+                this.getCloth(),
+                this.getMetal(),
+                this.getRum(),
+                this.getTobacco(),
+                this.getWood());
     }
 
     @Override
@@ -54,31 +60,31 @@ public class ResourceReadOnly {
             return false;
         }
         ResourceReadOnly r = (ResourceReadOnly) obj;
-        return equals(r.money,
-                r.cloth,
-                r.metal,
-                r.wood_,
-                r.rum__,
-                r.tobco);
+        return equals(r.getMoney(),
+                r.getCloth(),
+                r.getMetal(),
+                r.getWood(),
+                r.getRum(),
+                r.getTobacco());
     }
 
     public boolean equals(int money, int cloth, int metal, int wood, int rum, int tobacco) {
-        return this.money == money &&
-                this.cloth == cloth &&
-                this.metal == metal &&
-                this.rum__ == rum &&
-                this.tobco == tobacco &&
-                this.wood_ == wood;
+        return this.getMoney() == money &&
+                this.getCloth() == cloth &&
+                this.getMetal() == metal &&
+                this.getRum() == rum &&
+                this.getTobacco() == tobacco &&
+                this.getWood() == wood;
     }
 
     @Override
     public int hashCode() {
-        return Integer.hashCode(money) +
-                Integer.hashCode(cloth) +
-                Integer.hashCode(metal) +
-                Integer.hashCode(wood_) +
-                Integer.hashCode(rum__) +
-                Integer.hashCode(tobco);
+        return Integer.hashCode(getMoney()) +
+                Integer.hashCode(getCloth()) +
+                Integer.hashCode(getMetal()) +
+                Integer.hashCode(getWood()) +
+                Integer.hashCode(getRum()) +
+                Integer.hashCode(getTobacco());
     }
 
     public boolean isGreaterThanOrEqual(ResourceReadOnly r) {
@@ -105,12 +111,12 @@ public class ResourceReadOnly {
      * @returns A PartialOrdering. Uncomparable if in one component holds '>' and in some other '<'.
      */
     public PartialOrdering compare(ResourceReadOnly r) {
-        return compare(r.money,
-                r.cloth,
-                r.metal,
-                r.wood_,
-                r.rum__,
-                r.tobco);
+        return compare(r.getMoney(),
+                r.getCloth(),
+                r.getMetal(),
+                r.getWood(),
+                r.getRum(),
+                r.getTobacco());
     }
 
     /**
@@ -128,30 +134,30 @@ public class ResourceReadOnly {
      */
     public PartialOrdering compare(int money, int cloth, int metal, int wood, int rum, int tobacco) {
         if (this.equals(money, cloth, metal, wood, rum, tobacco)) return PartialOrdering.Equal;
-        if (this.money > money &&
-                this.cloth > cloth &&
-                this.metal > metal &&
-                this.rum__ > rum &&
-                this.tobco > tobacco &&
-                this.wood_ > wood) return PartialOrdering.GreaterThan;
-        if (this.money >= money &&
-                this.cloth >= cloth &&
-                this.metal >= metal &&
-                this.rum__ >= rum &&
-                this.tobco >= tobacco &&
-                this.wood_ >= wood) return PartialOrdering.GreaterThanOrEqual;
-        if (this.money < money &&
-                this.cloth < cloth &&
-                this.metal < metal &&
-                this.rum__ < rum &&
-                this.tobco < tobacco &&
-                this.wood_ < wood) return PartialOrdering.LessThan;
-        if (this.money <= money &&
-                this.cloth <= cloth &&
-                this.metal <= metal &&
-                this.rum__ <= rum &&
-                this.tobco <= tobacco &&
-                this.wood_ <= wood) return PartialOrdering.LessThanOrEqual;
+        if (this.getMoney() > money &&
+                this.getCloth()   > cloth &&
+                this.getMetal()   > metal &&
+                this.getRum()     > rum &&
+                this.getTobacco() > tobacco &&
+                this.getRum()     > wood) return PartialOrdering.GreaterThan;
+        if (this.getMoney() >= money &&
+                this.getCloth()   >= cloth &&
+                this.getMetal()   >= metal &&
+                this.getRum()     >= rum &&
+                this.getTobacco() >= tobacco &&
+                this.getRum()     >= wood) return PartialOrdering.GreaterThanOrEqual;
+        if (this.getMoney() < money &&
+                this.getCloth()    < cloth &&
+                this.getMetal()    < metal &&
+                this.getRum()      < rum &&
+                this.getTobacco()  < tobacco &&
+                this.getRum()      < wood) return PartialOrdering.LessThan;
+        if (this.getMoney() <= money &&
+                this.getCloth()    <= cloth &&
+                this.getMetal()    <= metal &&
+                this.getRum()      <= rum &&
+                this.getTobacco()  <= tobacco &&
+                this.getRum()      <= wood) return PartialOrdering.LessThanOrEqual;
         //otherwise
         return PartialOrdering.Uncomparable;
     }
@@ -184,25 +190,25 @@ public class ResourceReadOnly {
      * Creates a new instance of Resource that is mutable and contains copies of original values
      */
     public Resource createMutableCopy() {
-        return new Resource(this.money,
-                this.cloth,
-                this.metal,
-                this.rum__,
-                this.tobco,
-                this.wood_);
+        return new Resource(getMoney(),
+                getCloth(),
+                getMetal(),
+                getWood(),
+                getRum(),
+                getTobacco());
     }
 
     /**
      * fluent syntax for creating new ResourceReadOnly form arithmetic expressions
      */
     public ResourceReadOnly times(double value) {
-        ResourceReadOnly v = new ResourceReadOnly(this);
-        v.money = ((int) (v.money * value));
-        v.cloth = ((int) (v.cloth * value));
-        v.metal = ((int) (v.metal * value));
-        v.rum__ = ((int) (v.rum__ * value));
-        v.tobco = ((int) (v.tobco * value));
-        v.wood_ = ((int) (v.wood_ * value));
+        int money = ((int) (getMoney()   * value));
+        int cloth = ((int) (getCloth()   * value));
+        int metal = ((int) (getMetal()   * value));
+        int rum   = ((int) (getRum()     * value));
+        int tobco = ((int) (getTobacco() * value));
+        int wood  = ((int) (getWood()    * value));
+        ResourceReadOnly v = new ResourceReadOnly(money, cloth, metal, rum, tobco, wood);
         return v;
     }
 
@@ -210,13 +216,13 @@ public class ResourceReadOnly {
      * fluent syntax for creating new ResourceReadOnly form arithmetic expressions
      */
     public ResourceReadOnly plus(ResourceReadOnly rightOperand) {
-        ResourceReadOnly v = new ResourceReadOnly();
-        v.money = (this.money + rightOperand.money);
-        v.cloth = (this.cloth + rightOperand.cloth);
-        v.metal = (this.metal + rightOperand.metal);
-        v.rum__ = (this.rum__ + rightOperand.rum__);
-        v.tobco = (this.tobco + rightOperand.tobco);
-        v.wood_ = (this.wood_ + rightOperand.wood_);
+        int money = (this.getMoney()    + rightOperand.getMoney()   );
+        int cloth = (this.getCloth()    + rightOperand.getCloth()   );
+        int metal = (this.getMetal()    + rightOperand.getMetal()   );
+        int rum   = (this.getRum()      + rightOperand.getRum()     );
+        int tobco = (this.getTobacco()  + rightOperand.getTobacco() );
+        int wood  = (this.getWood()     + rightOperand.getWood()    );
+        ResourceReadOnly v = new ResourceReadOnly(money, cloth, metal, rum, tobco, wood);
         return v;
     }
 
@@ -224,13 +230,13 @@ public class ResourceReadOnly {
      * fluent syntax for creating new ResourceReadOnly form arithmetic expressions
      */
     public ResourceReadOnly timesComponenWise(ResourceReadOnly rightOperand) {
-        ResourceReadOnly v = new ResourceReadOnly();
-        v.money = (this.money * rightOperand.money);
-        v.cloth = (this.cloth * rightOperand.cloth);
-        v.metal = (this.metal * rightOperand.metal);
-        v.rum__ = (this.rum__ * rightOperand.rum__);
-        v.tobco = (this.tobco * rightOperand.tobco);
-        v.wood_ = (this.wood_ * rightOperand.wood_);
+        int money = (this.getMoney()    * rightOperand.getMoney()   );
+        int cloth = (this.getCloth()    * rightOperand.getCloth()   );
+        int metal = (this.getMetal()    * rightOperand.getMetal()   );
+        int rum   = (this.getRum()      * rightOperand.getRum()     );
+        int tobco = (this.getTobacco()  * rightOperand.getTobacco() );
+        int wood  = (this.getWood()     * rightOperand.getWood()    );
+        ResourceReadOnly v = new ResourceReadOnly(money, cloth, metal, rum, tobco, wood);
         return v;
     }
 
@@ -246,6 +252,18 @@ public class ResourceReadOnly {
         result += (this.tobco * rightOperand.tobco);
         result += (this.wood_ * rightOperand.wood_);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        char c = ',';
+        return "" + '('
+                + getMoney() + c
+                + getCloth() + c
+                + getMetal() + c
+                + getRum() + c
+                + getWood() + c
+                + ')';
     }
 
     public static ResourceReadOnly fromMoney(int value) {
