@@ -27,6 +27,11 @@ public class TurnLeft extends TurnAbstractManeuver {
     }
 
     @Override
+    public void undo() {
+        getRelatedShip().getPosition().rotateRight();
+    }
+
+    @Override
     public ActionIcon getIcon() {
         return ActionIcon.turnLeft;
     }

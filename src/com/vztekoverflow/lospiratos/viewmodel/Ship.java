@@ -362,13 +362,11 @@ public class Ship implements MovableFigure, DamageableFigure {
     @Override
     public DamageSufferedResponse takeDamage(int value) {
         if (isDestroyed()) return DamageSufferedResponse.alreadyDestroyed;
-        int newValue = currentHP.get() - value;
-        if (newValue <= 0) {
-            destroyShipAndEnhancements();
+        currentHP.set(currentHP.get()-value);
+        if (currentHP.get() <= 0) {
             return DamageSufferedResponse.hasJustBeenDestroyed;
-        }
-        currentHP.set(newValue);
-        return DamageSufferedResponse.stillAlive;
+        } else
+            return DamageSufferedResponse.stillAlive;
     }
 
     //endregion

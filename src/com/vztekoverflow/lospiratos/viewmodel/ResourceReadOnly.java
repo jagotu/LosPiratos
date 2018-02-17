@@ -108,7 +108,7 @@ public class ResourceReadOnly {
      * Thus, result GreaterThanOrEqual means that in at least one component, but not in all, the value is equal.
      * If you want to compare for >= in the usual sense, you have to test if (result == GreaterThan || result == GreaterThanOrEqual || result == Equal)
      * (Or use the method isGreaterThanOrEqual). Similarly for < and <=.
-     * @returns A PartialOrdering. Uncomparable if in one component holds '>' and in some other '<'.
+     * @return A PartialOrdering. Uncomparable if in one component holds '>' and in some other '<'.
      */
     public PartialOrdering compare(ResourceReadOnly r) {
         return compare(r.getMoney(),
@@ -130,7 +130,7 @@ public class ResourceReadOnly {
      * Thus, result GreaterThanOrEqual means that in at least one component, but not in all, the value is equal.
      * If you want to compare for >= in the usual sense, you have to test if (result == GreaterThan || result == GreaterThanOrEqual || result == Equal)
      * (Or use the method isGreaterThanOrEqual). Similarly for < and <=.
-     * @returns A PartialOrdering. Uncomparable if in one component holds '>' and in some other '<'.
+     * @return A PartialOrdering. Uncomparable if in one component holds '>' and in some other '<'.
      */
     public PartialOrdering compare(int money, int cloth, int metal, int wood, int rum, int tobacco) {
         if (this.equals(money, cloth, metal, wood, rum, tobacco)) return PartialOrdering.Equal;

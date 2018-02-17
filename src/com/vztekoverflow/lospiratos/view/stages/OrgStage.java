@@ -230,10 +230,13 @@ public class OrgStage {
                     @Override
                     protected void updateItem(LoggedEvent item, boolean empty) {
                         super.updateItem(item, empty);
-                        if (empty) return;
+                        if (empty){
+                            setGraphic(new Text(""));
+                            return;
+                        }
                         Text text = new Text();
                         text.wrappingWidthProperty().bind(logListView.widthProperty().subtract(15));
-                        text.setText(item.getTextualDescription(LogFormatter.stručně()));
+                        text.setText(item.getTextualDescription(LogFormatter.hezkyČesky()));
                         setGraphic(text);
                     }
                 };

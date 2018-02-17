@@ -24,6 +24,8 @@ public abstract class Maneuver extends Action {
 
     public abstract void performOn(Position position);
 
+    public abstract void undo();
+
     @Override
     public int getManeuverSlotsTaken() {
         return 1;

@@ -20,10 +20,10 @@ public class ShipDied extends LoggedEvent {
                 + f.const_ThanksTo() + s + "{" + attackers.toString() + "}";
     }
 
-    Ship deadShip;
-    Iterable<Ship> attackers;
+    private Ship deadShip;
+    private Iterable<Ship> attackers;
 
-    public ShipDied(Ship deadShip, Iterable<Ship> attackers) {
+    ShipDied(Ship deadShip, Iterable<Ship> attackers) {
         this.deadShip = deadShip;
         this.attackers = attackers;
     }

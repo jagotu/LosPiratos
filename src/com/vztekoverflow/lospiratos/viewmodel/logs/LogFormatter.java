@@ -52,6 +52,11 @@ public abstract class LogFormatter {
             }
 
             @Override
+            String formatIteration(int i) {
+                return i + ". iterace";
+            }
+
+            @Override
             String const_AttacksVia() {
                 return "útočí pomocí";
             }
@@ -85,6 +90,11 @@ public abstract class LogFormatter {
             @Override
             String const_Dies() {
                 return "umírá";
+            }
+
+            @Override
+            String const_CollisionOn() {
+                return "Kolize na";
             }
         };
 
@@ -130,6 +140,11 @@ public abstract class LogFormatter {
             }
 
             @Override
+            String formatIteration(int i) {
+                return "i "+ i;
+            }
+
+            @Override
             String const_AttacksVia() {
                 return ":";
             }
@@ -163,6 +178,11 @@ public abstract class LogFormatter {
             String const_Dies() {
                 return "†";
             }
+
+            @Override
+            String const_CollisionOn() {
+                return "\uD83D\uDCA5:";
+            }
         };
     }
 
@@ -178,6 +198,8 @@ public abstract class LogFormatter {
 
     abstract String formatDamage(int value);
 
+    abstract String formatIteration(int i);
+
     abstract String const_AttacksVia();
 
     abstract String const_AttacksOn();
@@ -192,8 +214,14 @@ public abstract class LogFormatter {
 
     abstract String const_Dies();
 
+    abstract String const_CollisionOn();
+
     String space() {
         return " ";
+    }
+
+    String newLine() {
+        return System.lineSeparator();
     }
 
 }

@@ -17,7 +17,7 @@ public class DamageDone extends LoggedEvent {
     private Ship target;
     private int damageCaused;
 
-    public DamageDone(Ship sender, Attack cause, Ship target, int damageCaused) {
+    DamageDone(Ship sender, Attack cause, Ship target, int damageCaused) {
         this.sender = sender;
         this.cause = cause;
         this.target = target;

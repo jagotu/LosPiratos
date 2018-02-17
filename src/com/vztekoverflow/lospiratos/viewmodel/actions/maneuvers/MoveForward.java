@@ -40,6 +40,18 @@ public class MoveForward extends Maneuver {
     }
 
     @Override
+    public void undo() {
+        Position p = getRelatedShip().getPosition();
+        p.rotateRight();
+        p.rotateRight();
+        p.rotateRight();
+        p.moveForward();
+        p.rotateLeft();
+        p.rotateLeft();
+        p.rotateLeft();
+    }
+
+    @Override
     public ActionIcon getIcon() {
         return ActionIcon.moveForward;
     }

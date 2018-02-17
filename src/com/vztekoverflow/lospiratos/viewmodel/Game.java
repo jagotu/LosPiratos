@@ -1,16 +1,10 @@
 package com.vztekoverflow.lospiratos.viewmodel;
 
 import com.sun.javafx.collections.UnmodifiableObservableMap;
+import com.vztekoverflow.lospiratos.evaluator.GameEvaluator;
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.util.FxUtils;
 import com.vztekoverflow.lospiratos.util.Warnings;
-import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
-import com.vztekoverflow.lospiratos.viewmodel.actions.Maneuver;
-import com.vztekoverflow.lospiratos.viewmodel.actions.PerformableAction;
-import com.vztekoverflow.lospiratos.viewmodel.actions.Transaction;
-import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.CannonsAbstractVolley;
-import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.FrontalAssault;
-import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.MortarShot;
 import com.vztekoverflow.lospiratos.viewmodel.boardTiles.*;
 import com.vztekoverflow.lospiratos.viewmodel.logs.EventLogger;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
@@ -117,13 +111,11 @@ public class Game {
 
     //region evaluate
     private int roundNo = 0;
+    GameEvaluator evaluator = GameEvaluator.createInstance(this);
 
     public void closeRoundAndEvaluate() {
-        //zavolat agenty
-        evaluateVolleys();
-        evaluate(Maneuver.class);
-        evaluate(MortarShot.class);
-        evaluate(Transaction.class);
+
+        evaluator.evaluateRound(roundNo);
         logger.logRoundHasEnded(roundNo);
         ++roundNo;
         for (Ship s : getAllShips().values()) {
@@ -131,27 +123,6 @@ public class Game {
         }
     }
 
-    private void evaluateVolleys() {
-        for (Ship s : allShips.values()) {
-            Position oldPosition = s.getPosition().createCopy();
-            for (PerformableAction a : s.getPlannedActions()) {
-                if (a instanceof Maneuver || a instanceof CannonsAbstractVolley || a instanceof FrontalAssault) {
-                    a.performOnTarget();
-                }
-            }
-            s.getPosition().setFrom(oldPosition);
-        }
-    }
-
-    private void evaluate(Class<? extends Action> action) {
-        for (Ship s : allShips.values()) {
-            for (PerformableAction a : s.getPlannedActions()) {
-                if (action.isAssignableFrom(a.getClass())) {
-                    a.performOnTarget();
-                }
-            }
-        }
-    }
     //endregion
 
     private final ListProperty<Team> teams = new SimpleListProperty<>(FXCollections.observableArrayList());
