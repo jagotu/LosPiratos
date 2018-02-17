@@ -8,6 +8,7 @@ import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.CannonsAbstractVol
 import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.FrontalAssault;
 import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.MortarShot;
 import com.vztekoverflow.lospiratos.viewmodel.actions.maneuvers.MoveForward;
+import com.vztekoverflow.lospiratos.viewmodel.boardTiles.Port;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -19,7 +20,7 @@ abstract public class GameEvaluator {
 
     public static GameEvaluator createInstance(Game g) {
 
-        return new SimpleGameEvaluator(g);
+        return new StandardGameEvaluator(g);
     }
 
     protected GameEvaluator(Game g) {
@@ -29,9 +30,9 @@ abstract public class GameEvaluator {
     protected Game g;
 }
 
-class SimpleGameEvaluator extends GameEvaluator {
+class StandardGameEvaluator extends GameEvaluator {
 
-    public SimpleGameEvaluator(Game g) {
+    public StandardGameEvaluator(Game g) {
         super(g);
     }
 
@@ -45,11 +46,12 @@ class SimpleGameEvaluator extends GameEvaluator {
         evaluateVolleys();
         evaluate(Maneuver.class);
         evaluate(MortarShot.class);
+        evaluate(Transaction.class);
+        evaluatePlundering();
         performOnAllActions(a -> {
             if (a instanceof Attack) ((Attack) a).removeOnDamageDoneListener(onDamageDoneListener);
         });
         destroyDamagedShips();
-        evaluate(Transaction.class);
         solveCollisions(0);
         damageCollisionAttendees();
     }
@@ -92,7 +94,7 @@ class SimpleGameEvaluator extends GameEvaluator {
             Position oldPosition = s.getPosition().createCopy();
             for (PerformableAction a : s.getPlannedActions()) {
                 if (a instanceof Maneuver || a instanceof CannonsAbstractVolley || a instanceof FrontalAssault) {
-                    a.performOnTarget();
+                    a.performOnShip();
                 }
             }
             s.getPosition().setFrom(oldPosition);
@@ -102,9 +104,15 @@ class SimpleGameEvaluator extends GameEvaluator {
     private void evaluate(Class<? extends Action> action) {
         performOnAllActions(a -> {
             if (action.isAssignableFrom(a.getClass())) {
-                a.performOnTarget();
+                a.performOnShip();
             }
         });
+    }
+
+    private void evaluatePlundering(){
+        //predtim si musim do Plunder action ulozit listenery "tedka pludruju tady"
+        //projdu listenery, sestavim si mapu <plunderable, set<ship>>
+        //pro kazdou pluderable polozku provedu rozdeleni koristi (haha, na to uz mam funkci z deleni)
     }
 
     private void damageCollisionAttendees(){
@@ -120,9 +128,12 @@ class SimpleGameEvaluator extends GameEvaluator {
 
     private void destroyDamagedShips() {
         for (Ship s : killedShips) {
-            dividePlunderedTreasure(s, attackers.get(s));
+            //dividePlunderedTreasure(s, attackers.get(s)); //currently not supported by the game rules
             s.destroyShipAndEnhancements();
             g.getLogger().logShipHasDied(s, attackers.get(s));
+            for (Ship a : attackers.get(s)){
+                a.incrementXP();
+            }
         }
     }
 
@@ -143,7 +154,7 @@ class SimpleGameEvaluator extends GameEvaluator {
         }
         Map<AxialCoordinate, Set<Ship>> collisionTiles = new HashMap<>();
         for (Map.Entry<AxialCoordinate, Set<Ship>> e : nonemptyTiles.entrySet()) {
-            if (e.getValue().size() > 1) {
+            if (e.getValue().size() > 1 && ! (g.getBoard().getTiles().get(e.getKey()) instanceof Port)) {
                 collisionTiles.put(e.getKey(), e.getValue());
             }
         }

@@ -12,7 +12,7 @@ public class RepairShipViaDowngrade extends RepairShip {
     }
 
     @Override
-    public void performOnTargetInternal() {
+    public void performOnShipInternal() {
         Class<? extends ShipType> newType = ShipType.decrement(getRelatedShip().getShipType().getClass());
         if (newType == null) {
             Warnings.makeWarning(toString() + "perform()", "Attempt to downgrade a ship that is not downgradable: " + getRelatedShip());
@@ -20,6 +20,11 @@ public class RepairShipViaDowngrade extends RepairShip {
         }
         getRelatedShip().setShipType(newType);
         getRelatedShip().repairShip();
+    }
+
+    @Override
+    protected boolean recomputePlannable() {
+        return super.recomputePlannable() && ShipType.decrement(getRelatedShip().getShipType().getClass()) != null;
     }
 
     @Override

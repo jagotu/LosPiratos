@@ -1,6 +1,7 @@
 package com.vztekoverflow.lospiratos.viewmodel.actions;
 
 import com.vztekoverflow.lospiratos.viewmodel.Board;
+import com.vztekoverflow.lospiratos.viewmodel.BoardTile;
 import com.vztekoverflow.lospiratos.viewmodel.Position;
 import com.vztekoverflow.lospiratos.viewmodel.boardTiles.Port;
 
@@ -23,12 +24,11 @@ public abstract class Transaction extends Action {
     }
 
     protected boolean targetShipWillBeInAPort() {
-        Position p = getRelatedShip().getPosition().createCopy();
-        getRelatedShip().getPlannedActions().stream().
-                filter(a -> Maneuver.class.isAssignableFrom(a.getClass())).
-                map(a -> (Maneuver) a).forEach(a -> a.performOn(p));
+        Position p = getRelatedShipsFuturePosition();
         Board b = getRelatedShip().getTeam().getGame().getBoard();
-        return b.getTiles().get(p.getCoordinate()).getClass().equals(Port.class);
+        BoardTile t = b.getTiles().get(p.getCoordinate());
+        if(t == null) return false;
+        return t.getClass().equals(Port.class);
     }
 
 }

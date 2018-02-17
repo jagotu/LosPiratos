@@ -21,7 +21,7 @@ import java.lang.ref.WeakReference;
 import java.util.*;
 
 
-public class Ship implements MovableFigure, DamageableFigure {
+public class Ship implements MovableFigure, DamageableFigure, OnNextRoundStartedListener {
 
     //region initializers
 
@@ -89,6 +89,7 @@ public class Ship implements MovableFigure, DamageableFigure {
         }
         destroyed.bindBidirectional(shipModel.destroyedProperty());
         currentHP.bindBidirectional(shipModel.HPProperty());
+        XP.bindBidirectional(shipModel.XPProperty());
         for (com.vztekoverflow.lospiratos.model.ShipMechanics m : shipModel.getActiveMechanics()) {
             mechanics.add(ShipMechanics.getInstanceFromDescription(m));
         }
@@ -248,6 +249,20 @@ public class Ship implements MovableFigure, DamageableFigure {
 
     public final Position getPosition() {
         return position;
+    }
+
+    private IntegerProperty XP = new SimpleIntegerProperty();
+
+    public int getXP() {
+        return XP.get();
+    }
+
+    public IntegerProperty XPProperty() {
+        return XP;
+    }
+
+    public void incrementXP() {
+        this.XP.set(this.XP.get() +1);
     }
 
     //endregion
@@ -631,6 +646,7 @@ public class Ship implements MovableFigure, DamageableFigure {
     /**
      * is called by Game whenever the game proceeds to a next round
      */
+    @Override
     public void onNextRoundStarted(int roundNo) {
         plannedActions.clear();
         for (ShipEntity e : getAllEntities()) {

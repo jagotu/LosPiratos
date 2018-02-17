@@ -15,5 +15,7 @@ public enum ActionIcon {
     chainRight,
     cannonLeft,
     cannonRight,
-    ram
+    ram,
+    plunder,
+    ellipsis
 }

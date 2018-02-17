@@ -18,7 +18,7 @@ public class BuyCommodity extends CommodityTransaction {
     }
 
     @Override
-    public void performOnTargetInternal() {
+    public void performOnShipInternal() {
         //price has already been paid by the caller
         getRelatedShip().getTeam().getOwnedResource().add(this.getCommodities());
     }

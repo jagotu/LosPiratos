@@ -2,7 +2,6 @@ package com.vztekoverflow.lospiratos.viewmodel.actions.transactions;
 
 import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
 import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
-import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipType;
 
 public class RepairShipViaRepayment extends RepairShip {
     @Override
@@ -11,13 +10,8 @@ public class RepairShipViaRepayment extends RepairShip {
     }
 
     @Override
-    public void performOnTargetInternal() {
+    public void performOnShipInternal() {
         getRelatedShip().repairShip();
-    }
-
-    @Override
-    protected boolean recomputePlannable() {
-        return super.recomputePlannable() && ShipType.decrement(getRelatedShip().getShipType().getClass()) != null;
     }
 
     @Override

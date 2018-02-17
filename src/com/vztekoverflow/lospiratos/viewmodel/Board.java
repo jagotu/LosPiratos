@@ -3,16 +3,14 @@ package com.vztekoverflow.lospiratos.viewmodel;
 import com.vztekoverflow.lospiratos.model.Map;
 import com.vztekoverflow.lospiratos.model.MapTile;
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
-import com.vztekoverflow.lospiratos.util.FxUtils;
 import com.vztekoverflow.lospiratos.util.Warnings;
 import javafx.beans.property.*;
 import javafx.collections.*;
-import javafx.scene.paint.Color;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Board /* I want my Burd */ {
+public class Board /* I want my Burd */ implements OnNextRoundStartedListener {
 
     //initializers:
 
@@ -20,6 +18,7 @@ public class Board /* I want my Burd */ {
         this.game = game;
         this.modelMap = modelMap;
         bindToModel();
+        game.addOnNextRoundStartedListener(this);
     }
 
     private void bindToModel() {
@@ -54,24 +53,11 @@ public class Board /* I want my Burd */ {
                 Warnings.panic("Board.figuresProperty listener of " + toString(), "unreachable code?!");
             }
         });
-        //todo color binding
 
-    }
-
-    private void trySettingColor(String color) {
-        if (color == null || color.isEmpty()) {
-            Warnings.makeWarning(toString(), "Invalid color (null or empty).");
-            return;
-        }
-        try {
-            this.backgroundColor.set(Color.web(color));
-        } catch (IllegalArgumentException | NullPointerException e) {
-            Warnings.makeWarning(toString(), "Invalid color: " + color);
-        }
     }
 
     private boolean tryAddingTile(MapTile modelTile) {
-        BoardTile t = BoardTile.createInstanceFromPersistentName(modelTile.getContent(), modelTile.getLocation());
+        BoardTile t = BoardTile.createInstanceFromPersistentName(modelTile.getContent(), modelTile.getLocation(), this);
         if (t == null) return false;
         if (tiles.containsKey(t.getLocation())) return false;
         tiles.put(modelTile.getLocation(), t);
@@ -84,10 +70,7 @@ public class Board /* I want my Burd */ {
     //properties:
 
     private MapProperty<AxialCoordinate, BoardTile> tiles = new SimpleMapProperty<>(FXCollections.observableHashMap());
-    private ListProperty<MovableFigure> figures = new SimpleListProperty<MovableFigure>(FXCollections.observableArrayList()) {
-
-    };
-    private ObjectProperty<Color> backgroundColor;
+    private ListProperty<MovableFigure> figures = new SimpleListProperty<>(FXCollections.observableArrayList());
 
     public ObservableMap<AxialCoordinate, BoardTile> getTiles() {
         return tiles.get();
@@ -113,19 +96,6 @@ public class Board /* I want my Burd */ {
         return figures;
     }
 
-    public Color getBackgroundColor() {
-        return backgroundColor.get();
-    }
-
-    public ObjectProperty<Color> backgroundColorProperty() {
-        return backgroundColor;
-    }
-
-    public void setBackgroundColor(Color color) {
-        modelMap.backgroundColorProperty().set(FxUtils.toRGBCode(color));
-    }
-    //todo tady vubec nefunguje binding to model
-
     private MovableFigure findFigure(AxialCoordinate position) {
         //todo is this not too slow? It is a trivial O(figureCount) implementation
         List<MovableFigure> f = this.figures.stream().filter(p -> p.getPosition().equals(position)).collect(Collectors.toList());
@@ -137,17 +107,46 @@ public class Board /* I want my Burd */ {
         return f.get(0);
     }
 
-    //public API:
+    //public functions:
+
+    public Game getGame() {
+        return game;
+    }
+
+    public boolean canStepOn(AxialCoordinate location){
+        BoardTile b = tiles.get(location);
+        return b != null && b.mayBeSteppedOn();
+    }
+
+    @Override
+    public void onNextRoundStarted(int roundNo) {
+
+    }
 
     /**
      * Returns a DamageableFigure located at given @position
      *
      * @return null if no figure is located at given @position
      */
-    public Ship getDamageableFigure(AxialCoordinate position) {
+    public DamageableFigure getDamageableFigure(AxialCoordinate position) {
         MovableFigure f = findFigure(position);
-        if (f instanceof Ship)
-            return (Ship) f;
+        if (f instanceof DamageableFigure)
+            return (DamageableFigure) f;
+        else return null;
+    }
+
+    /**
+     * Returns a Plunderable located at given @position
+     *
+     * @return null if no plunderable is located at given @position
+     */
+    public Plunderable getPlunderable(AxialCoordinate position) {
+        if (tiles.get(position) instanceof Plunderable)
+            return (Plunderable) tiles.get(position);
+
+        MovableFigure f = findFigure(position);
+        if (f instanceof Plunderable)
+            return (Plunderable) f;
         else return null;
     }
 

@@ -24,7 +24,7 @@ public class CannonsHeavyBallVolley extends CannonsAbstractVolley {
     }
 
     @Override
-    public void performOnTargetInternal() {
+    public void performOnShipInternal() {
         applyDamageToCannonsTargets((int) Math.round(getRelatedShip().getCannonsCount() * HEAVY_BALL_DAMAGE_COEFFICIENT));
     }
 

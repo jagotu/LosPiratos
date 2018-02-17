@@ -10,7 +10,7 @@ import javafx.beans.property.SimpleBooleanProperty;
  * Moreover, when planned, then all other planned actions will be performed without any cost.
  */
 public class ActivatePrivilegedMode extends Action {
-    public static final BooleanProperty available = new SimpleBooleanProperty();
+    public static final BooleanProperty available = new SimpleBooleanProperty(true);
 
     public ActivatePrivilegedMode() {
         available.addListener(__ -> visible.invalidate());
@@ -37,7 +37,7 @@ public class ActivatePrivilegedMode extends Action {
     }
 
     @Override
-    protected void performOnTargetInternal() {
+    protected void performOnShipInternal() {
         //void
     }
 

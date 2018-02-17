@@ -16,7 +16,7 @@ public class CannonsSimpleVolley extends CannonsAbstractVolley {
     }
 
     @Override
-    public void performOnTargetInternal() {
+    public void performOnShipInternal() {
         applyDamageToCannonsTargets(getRelatedShip().getCannonsCount());
     }
 

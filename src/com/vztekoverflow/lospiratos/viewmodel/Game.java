@@ -21,7 +21,9 @@ import javafx.collections.ObservableList;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Game {
@@ -111,15 +113,15 @@ public class Game {
 
     //region evaluate
     private int roundNo = 0;
-    GameEvaluator evaluator = GameEvaluator.createInstance(this);
+    private GameEvaluator evaluator = GameEvaluator.createInstance(this);
 
     public void closeRoundAndEvaluate() {
 
         evaluator.evaluateRound(roundNo);
         logger.logRoundHasEnded(roundNo);
         ++roundNo;
-        for (Ship s : getAllShips().values()) {
-            s.onNextRoundStarted(roundNo);
+        for (OnNextRoundStartedListener l : onNextRoundStartedListeners) {
+            l.onNextRoundStarted(roundNo);
         }
     }
 
@@ -177,6 +179,7 @@ public class Game {
             return;
         }
         allShips.put(ship.getName(), ship);
+        addOnNextRoundStartedListener(ship);
         board.figuresProperty().add(ship);
     }
 
@@ -186,6 +189,7 @@ public class Game {
             if (!removedFromBoard) {
                 Warnings.panic(toString() + ".unregisterShip()", "Attempt to remove a ship which is in allShips but not in board.figures: " + shipName);
             }
+            removeOnNextRoundStartedListener(allShips.get(shipName));
             allShips.remove(shipName);
         } else {
             Warnings.makeStrongWarning(toString() + ".unregisterShip()", "Attempt to remove a ship whose name is unknown: " + shipName);
@@ -209,6 +213,29 @@ public class Game {
         }
         if (size > 1) Warnings.panic(toString(), "More teams (" + size + ") with the same name: " + teamName);
         return result.get(0);
+    }
+
+    private Set<OnNextRoundStartedListener> onNextRoundStartedListeners = new HashSet<>();
+    public void addOnNextRoundStartedListener(OnNextRoundStartedListener listener){
+        onNextRoundStartedListeners.add(listener);
+    }
+    public void removeOnNextRoundStartedListener(OnNextRoundStartedListener listener){
+        onNextRoundStartedListeners.remove(listener);
+    }
+
+    public Shipwreck createAndAddNewShipwreck(){
+        return createAndAddNewShipwreck(AxialCoordinate.ZERO, ResourceReadOnly.ZERO);
+    }
+
+    public Shipwreck createAndAddNewShipwreck(AxialCoordinate position, ResourceReadOnly resource){
+            Shipwreck w = new Shipwreck(position,this);
+            w.setResource(resource);
+            board.figuresProperty().add(w);
+            return w;
+    }
+
+    void remove(Shipwreck w){
+        board.figuresProperty().remove(w);
     }
 
     public static Game LoadFromModel(com.vztekoverflow.lospiratos.model.Game gameModel) {
@@ -252,6 +279,7 @@ public class Game {
             "Jack and Jill",
             "Big Jack",
             "Hit the Road Jack",
+            "Víťa BoJack"
     };
     private static Class<?>[] shipTypes = {
             Schooner.class,
@@ -298,7 +326,7 @@ public class Game {
         team5_shipPositions.add(new AxialCoordinate(-3,  5));
         team5_shipPositions.add(new AxialCoordinate(-1,  3));
         team5_shipPositions.add(new AxialCoordinate( 3,  1));
-        team5_shipPositions.add(new AxialCoordinate( 5,  1));
+        team5_shipPositions.add(new AxialCoordinate( 6, -1));
         team5_shipPositions.add(new AxialCoordinate(-2,  2));
 
         List<List<AxialCoordinate>> teamsShipPositions = new ArrayList<>();
@@ -339,14 +367,21 @@ public class Game {
                     Class<ShipEnhancement> enh = (Class<ShipEnhancement>) shipEnhancements[k];
                     s.addNewEnhancement(enh);
                 }
-                if ((i == 3 && j == 2)) { //random values
-                    //s.destroyShipAndEnhancements();
-                }
-                if (i == 2) { //random value
-                    // s.destroyShipAndEnhancements();
-                    //s.repairShip();
+                if ((position.getQ() == -2 && position.getR() == -2)) { //second ship of second team
+                    s.destroyShipAndEnhancements();
                 }
             }
+        }
+
+        List<AxialCoordinate> shipwrecks = new ArrayList<>();
+        shipwrecks.add(new AxialCoordinate(-2, 0));
+        shipwrecks.add(new AxialCoordinate( 3, 0));
+        shipwrecks.add(new AxialCoordinate( 5, 0));
+        shipwrecks.add(new AxialCoordinate( 2,-4));
+
+        ResourceReadOnly r = new ResourceReadOnly(100,10,10,10,10,10);
+        for(AxialCoordinate c : shipwrecks){
+            g.createAndAddNewShipwreck(c, r);
         }
 
         //tiles position are according to the bitmap game map (by Bratr)
@@ -379,12 +414,8 @@ public class Game {
         shores.add(new AxialCoordinate(-3,  0));
         shores.add(new AxialCoordinate(-1, -3));
 
-        List<AxialCoordinate> shipwrecks = new ArrayList<>();
-        //shipwrecks.add(new AxialCoordinate(-6, 0));
-        //there are no predefined shipwrecks yet
-
         List<AxialCoordinate> plantations = new ArrayList<>();
-        plantations.add(new AxialCoordinate( 0,  0));
+        //plantations.add(new AxialCoordinate( 0,  0));
         plantations.add(new AxialCoordinate( 3,  1));
         plantations.add(new AxialCoordinate( 6, -5));
         plantations.add(new AxialCoordinate( 1, -5));
@@ -403,19 +434,19 @@ public class Game {
 
                 BoardTile tile;
                 if (shores.contains(c)) {
-                    tile = new Shore(c);
+                    tile = new Shore(c,b);
                 } else if (ports.contains(c)) {
-                    tile = new Port(c);
-                } else if (shipwrecks.contains(c)) {
-                    tile = new Shipwreck(c);
+                    tile = new Port(c,b);
                 } else if (plantations.contains(c)) {
-                    tile = new Plantation(c);
+                    tile = new Plantation(c,b);
                 } else {
-                    tile = new Sea(c);
+                    tile = new Sea(c,b);
                 }
                 b.tilesProperty().put(c, tile);
+
             }
         }
+        b.tilesProperty().put(AxialCoordinate.ZERO, new PlantationExtra(AxialCoordinate.ZERO, b));
 
         return g;
     }

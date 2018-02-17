@@ -26,6 +26,8 @@ import java.util.HashMap;
 
 public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
 
+    private static Font bigFont = new Font("Consolas",30);
+
     private ObjectProperty<AxialCoordinateActionParameter> axialSelector;
     private HashMap<AxialCoordinate, PiratosHexTileContents> current = new HashMap<>();
     private double tileWidth, tileHeight;
@@ -164,7 +166,7 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
 
         private void tonikuvHack(AxialCoordinate coords) {
             tondaHack = new Label(coords.toString());
-            tondaHack.setFont(new Font("Consolas",50));
+            tondaHack.setFont(bigFont);
             s.getChildren().add(tondaHack);
         }
 
@@ -248,7 +250,9 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
                 s.maxHeightProperty().bind(tileHeight);
                 n = s;
             } else {
-                n = new Label(f.getClass().getSimpleName());
+                Label l = new Label(f.getClass().getSimpleName());
+                l.setFont(bigFont);
+                n = l;
             }
 
             addFigure(f, n);

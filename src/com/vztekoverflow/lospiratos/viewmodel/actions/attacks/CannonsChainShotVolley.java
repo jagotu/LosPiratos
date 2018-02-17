@@ -24,7 +24,7 @@ public class CannonsChainShotVolley extends CannonsAbstractVolley {
     }
 
     @Override
-    public void performOnTargetInternal() {
+    public void performOnShipInternal() {
         for (AxialCoordinate target : getCannonsTargets()) {
             applyMechanicsTo(new Chained(), target);
         }

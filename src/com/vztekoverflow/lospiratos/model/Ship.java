@@ -58,6 +58,7 @@ public class Ship {
     private StringProperty type = new SimpleStringProperty("");
     private BooleanProperty destroyed = new SimpleBooleanProperty(false);
 
+    private IntegerProperty XP = new SimpleIntegerProperty(0);
     private IntegerProperty HP = new SimpleIntegerProperty(0);
 
     private IntegerProperty orientationDeg = new SimpleIntegerProperty(0);
@@ -137,6 +138,14 @@ public class Ship {
 
     public IntegerProperty HPProperty() {
         return HP;
+    }
+
+    public int getXP() {
+        return XP.get();
+    }
+
+    public IntegerProperty XPProperty() {
+        return XP;
     }
 
     public int getOrientationDeg() {

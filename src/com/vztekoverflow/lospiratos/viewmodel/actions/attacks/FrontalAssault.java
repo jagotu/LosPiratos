@@ -25,7 +25,7 @@ public class FrontalAssault extends Attack {
     }
 
     @Override
-    public void performOnTargetInternal() {
+    public void performOnShipInternal() {
         int damage = FrontalAssaultBasicDamage;
         int selfDamage = FrontalAssaultBasicSelfDamage;
         Position p = getRelatedShip().getPosition().createCopy();

@@ -24,7 +24,7 @@ class BoardTest {
         Assertions.assertEquals(0, modelTiles.size());
 
         //add via viemodel:
-        tiles.put(new AxialCoordinate(1,1),new Shore(new AxialCoordinate(1,1)));
+        tiles.put(new AxialCoordinate(1,1),new Shore(new AxialCoordinate(1,1),b));
         Assertions.assertEquals(1, modelTiles.size());
         Assertions.assertEquals(1, tiles.size());
         MapTile modelTile = modelTiles.get(0);

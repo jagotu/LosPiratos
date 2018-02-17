@@ -22,7 +22,7 @@ public class BuyNewEnhancement extends EnhancementAbstractTransaction {
     }
 
     @Override
-    public void performOnTargetInternal() {
+    public void performOnShipInternal() {
         getRelatedShip().addNewEnhancement(getEnhancement());
     }
 

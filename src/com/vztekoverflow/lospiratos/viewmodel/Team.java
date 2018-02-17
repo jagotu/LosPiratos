@@ -11,7 +11,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.scene.paint.Color;
 
-public class Team {
+public class Team implements OnNextRoundStartedListener{
 
     public static final int INITIAL_MONEY = 500;
 
@@ -37,6 +37,7 @@ public class Team {
         this.teamModel = teamModel;
         this.game = owner;
         bindToModel();
+        owner.addOnNextRoundStartedListener(this);
     }
 
     private void bindToModel() {
@@ -156,7 +157,7 @@ public class Team {
      */
     public Ship createAndAddNewDefaultShip() {
         Ship s = null;
-        int i = 0;
+        int i = ships.getSize();
         while (s == null) {
             String name = "Loď #" + ++i + " týmu " + getName();
             s = createAndAddNewShip(Schooner.class, name, "kapitán", AxialCoordinate.ZERO);
@@ -205,6 +206,11 @@ public class Team {
         }
         Warnings.makeWarning(toString(), "No ship with this name found: " + shipName);
         return null;
+    }
+
+    @Override
+    public void onNextRoundStarted(int roundNo) {
+        //do nothing
     }
 
     //private methods:

@@ -2,6 +2,7 @@ package com.vztekoverflow.lospiratos.viewmodel.actions;
 
 import com.vztekoverflow.lospiratos.util.SimpleObservable;
 import com.vztekoverflow.lospiratos.util.Warnings;
+import com.vztekoverflow.lospiratos.viewmodel.Position;
 import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
 import com.vztekoverflow.lospiratos.viewmodel.logs.EventLogger;
@@ -112,6 +113,14 @@ public abstract class Action implements PerformableAction, PlannableAction {
 
     //region inheritors' API
 
+    protected Position getRelatedShipsFuturePosition(){
+        Position p = getRelatedShip().getPosition().createCopy();
+        getRelatedShip().getPlannedActions().stream().
+                filter(a -> Maneuver.class.isAssignableFrom(a.getClass())).
+                map(a -> (Maneuver) a).forEach(a -> a.performOn(p));
+        return p;
+    }
+
     protected final EventLogger getEventLogger(){
         return getRelatedShip().getTeam().getGame().getLogger();
     }
@@ -190,20 +199,23 @@ public abstract class Action implements PerformableAction, PlannableAction {
     }
 
     @Override
-    public final void performOnTarget() {
+    public final void performOnShip() {
         if (isPrivilegedModeActive())
-            performOnTargetInternal();
+            performOnShipInternal();
         else if (performPayment())
-            performOnTargetInternal();
-        else
-            Warnings.makeWarning(toString() + ".performOnTarget()", "Action has not been performed because there is not enough resource");
+            performOnShipInternal();
+        else{
+            Warnings.makeWarning(toString() + ".performOnShip()", "Action has not been performed because there is not enough resource");
+            getEventLogger().logActionFailed(this, getRelatedShip(), "nedostatek surovin");
+
+        }
         //todo tell also some info to game user?
     }
 
     /**
      * Should be overridden by inheritors to add custom behaviour.
      */
-    protected abstract void performOnTargetInternal();
+    protected abstract void performOnShipInternal();
 
     //endregion
 

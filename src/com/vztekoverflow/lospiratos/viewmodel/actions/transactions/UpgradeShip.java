@@ -16,7 +16,7 @@ public class UpgradeShip extends ChangeShipAbstractTransaction {
     }
 
     @Override
-    public void performOnTargetInternal() {
+    public void performOnShipInternal() {
         getRelatedShip().setShipType(ShipType.increment(getRelatedShip().getShipType().getClass()));
     }
 

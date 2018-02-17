@@ -43,6 +43,10 @@ public class EventLogger {
         });
     }
 
+    public void logActionFailed(Action a, Ship owner, String reason){
+        events.add(new ActionFailed(a, owner, reason));
+    }
+
     public void logMessage(String sender, String message){
         events.add(new MessageLoggedEvent(sender, message));
     }

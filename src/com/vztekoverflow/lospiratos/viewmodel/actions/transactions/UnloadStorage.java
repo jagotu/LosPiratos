@@ -33,7 +33,7 @@ public class UnloadStorage extends Transaction {
     }
 
     @Override
-    public void performOnTargetInternal() {
+    public void performOnShipInternal() {
         Ship s = getRelatedShip();
         Team t = s.getTeam();
         t.getOwnedResource().add(s.getStorage());

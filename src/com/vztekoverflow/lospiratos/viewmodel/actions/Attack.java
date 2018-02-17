@@ -7,9 +7,8 @@ import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipMechanics;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public abstract class Attack extends Action {
 
@@ -39,24 +38,23 @@ public abstract class Attack extends Action {
      * @return value indicating whether the target has been destroyed, or null if there is no ship on the @targetPosition
      */
     protected final DamageSufferedResponse applyDamageTo(int damageValue, AxialCoordinate targetPosition) {
-        Ship target = getRelatedShip().getTeam().getGame().getBoard().getDamageableFigure(targetPosition);
+        Ship target = getRelatedShip().getTeam().getGame().getBoard().getShip(targetPosition);
         if (target == null) return null;
 
         DamageSufferedResponse result = target.takeDamage(damageValue);
-        for(WeakReference<OnDamageDoneListener> wl : onDamageDoneListeners){
-            OnDamageDoneListener l = wl.get();
-            if(l!=null){
-                l.onDamageDone(this, target, damageValue, result);
-            }
+        for (OnDamageDoneListener l : onDamageDoneListeners) {
+            l.onDamageDone(this, target, damageValue, result);
         }
         return result;
     }
 
-    public void addOnDamageDoneListener(OnDamageDoneListener listener){
-        onDamageDoneListeners.add(new WeakReference<>(listener));
+    public void addOnDamageDoneListener(OnDamageDoneListener listener) {
+        onDamageDoneListeners.add(listener);
     }
-    public void removeOnDamageDoneListener(OnDamageDoneListener listener){
-        onDamageDoneListeners.removeIf(p -> listener.equals(p.get()));
+
+    public void removeOnDamageDoneListener(OnDamageDoneListener listener) {
+        onDamageDoneListeners.remove(listener);
     }
-    private List<WeakReference<OnDamageDoneListener>> onDamageDoneListeners = new ArrayList<>();
+
+    private Set<OnDamageDoneListener> onDamageDoneListeners = new HashSet<>();
 }

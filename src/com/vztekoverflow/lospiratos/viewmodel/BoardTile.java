@@ -4,23 +4,37 @@ import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.util.Warnings;
 import com.vztekoverflow.lospiratos.viewmodel.boardTiles.*;
 
-public abstract class BoardTile {
+public abstract class BoardTile implements OnNextRoundStartedListener {
 
     private AxialCoordinate location;
+    private Board board;
 
-    protected BoardTile(AxialCoordinate location) {
+    protected BoardTile(AxialCoordinate location, Board board) {
         this.location = location;
+        this.board = board;
+        board.getGame().addOnNextRoundStartedListener(this);
     }
 
     public AxialCoordinate getLocation() {
         return location;
     }
+
+    public Board getBoard() {
+        return board;
+    }
+
+    @Override
+    public void onNextRoundStarted(int roundNo) {
+        //do nothing, may be overridden by inheritors
+    }
+
+    public abstract boolean mayBeSteppedOn();
+
     //static:
 
     private static String persistentNamePlantation = "Plantation";
     private static String persistentNamePort = "Port";
     private static String persistentNameSea = "Sea";
-    private static String persistentNameShipwreck = "Shipwreck";
     private static String persistentNameShore = "Shore";
 
     public static String getPersistentName(Class<? extends BoardTile> tileType) {
@@ -33,9 +47,6 @@ public abstract class BoardTile {
         if (tileType.equals(Sea.class)) {
             return persistentNameSea;
         }
-        if (tileType.equals(Shipwreck.class)) {
-            return persistentNameShipwreck;
-        }
         if (tileType.equals(Shore.class)) {
             return persistentNameShore;
         }
@@ -47,29 +58,27 @@ public abstract class BoardTile {
     /**
      * @return null if the {@code tileName} is unknown
      */
-    public static BoardTile createInstanceFromPersistentName(String tileName, AxialCoordinate location) {
+    static BoardTile createInstanceFromPersistentName(String tileName, AxialCoordinate location, Board owner) {
         if (tileName == null || tileName.isEmpty()) {
             Warnings.makeWarning("BoardTile.createInstanceFromPersistentName()", "Empty or null tile name: " + tileName);
             return null;
         }
         if (tileName.equalsIgnoreCase(persistentNamePlantation)) {
-            return new Plantation(location);
+            return new Plantation(location, owner);
         }
         if (tileName.equalsIgnoreCase(persistentNamePort)) {
-            return new Port(location);
+            return new Port(location, owner);
         }
         if (tileName.equalsIgnoreCase(persistentNameSea)) {
-            return new Sea(location);
-        }
-        if (tileName.equalsIgnoreCase(persistentNameShipwreck)) {
-            return new Shipwreck(location);
+            return new Sea(location, owner);
         }
         if (tileName.equalsIgnoreCase(persistentNameShore)) {
-            return new Shore(location);
+            return new Shore(location, owner);
         }
         //else
         Warnings.makeWarning("ShipEnhancement.createInstanceFromPersistentName()", "Unknown enhancement: " + tileName);
         return null;
 
     }
+
 }

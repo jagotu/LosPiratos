@@ -1,11 +1,10 @@
 package com.vztekoverflow.lospiratos.viewmodel.shipEntitites;
 
 import com.vztekoverflow.lospiratos.util.Translatable;
+import com.vztekoverflow.lospiratos.viewmodel.OnNextRoundStartedListener;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
 
-public abstract class ShipEntity implements Translatable {
-
-    //this is just a proof of concept and should be later specialized into more specific classes:
+public abstract class ShipEntity implements Translatable, OnNextRoundStartedListener {
 
 
     protected ShipEntity() {
@@ -41,6 +40,7 @@ public abstract class ShipEntity implements Translatable {
      * Can be inherited to add custom implementation.
      * Overridden implementations should always call super.onNextRoundStarted() first.
      */
+    @Override
     public void onNextRoundStarted(int roundNo) {
     }
 
@@ -63,5 +63,7 @@ public abstract class ShipEntity implements Translatable {
     public int getBonusSpeed() {
         return 0;
     }
+
+
 
 }

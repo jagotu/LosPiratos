@@ -18,7 +18,7 @@ public class SellCommodity extends CommodityTransaction {
     }
 
     @Override
-    public void performOnTargetInternal() {
+    public void performOnShipInternal() {
         //price (negative value, ie. gain) has already been paid by the caller
         getRelatedShip().getTeam().getOwnedResource().subtract(this.getCommodities());
     }

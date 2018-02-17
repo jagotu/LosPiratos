@@ -22,7 +22,7 @@ public class RepairEnhancement extends EnhancementAbstractTransaction {
     }
 
     @Override
-    public void performOnTargetInternal() {
+    public void performOnShipInternal() {
         getRelatedShip().getEnhancement(getEnhancement()).setDestroyed(false);
     }
 

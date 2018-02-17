@@ -24,7 +24,7 @@ public class MortarShot extends Attack implements ParameterizedAction {
     }
 
     @Override
-    public void performOnTargetInternal() {
+    public void performOnShipInternal() {
         if (getTarget() == null) throw new IllegalArgumentException("target must be set before Mortar can shoot.");
         applyDamageTo(MORTAR_DAMAGE, getTarget());
     }

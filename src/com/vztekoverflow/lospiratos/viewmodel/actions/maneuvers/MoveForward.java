@@ -21,11 +21,15 @@ public class MoveForward extends Maneuver {
             shipSpecificCondition = shipHasPlannedLessThan(2, MoveForward.class);
         if (getRelatedShip().getShipType().getClass().equals(Galleon.class))
             shipSpecificCondition = shipHasPlannedLessThan(1, MoveForward.class);
-        return super.recomputePlannable() && shipSpecificCondition;
+        Position futurePosition = getRelatedShipsFuturePosition();
+        futurePosition.moveForward();
+        return super.recomputePlannable() && shipSpecificCondition &&
+                getRelatedShip().getTeam().getGame().getBoard().canStepOn(futurePosition.getCoordinate());
+
     }
 
     @Override
-    public void performOnTargetInternal() {
+    public void performOnShipInternal() {
         performOn(getRelatedShip().getPosition());
     }
 
