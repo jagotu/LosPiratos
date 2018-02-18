@@ -114,7 +114,7 @@ public class OrgStage {
         actionSelector.setOnActionSelectedListener(this::parametrizeAndPlan);
         mouseBlocker.prefWidthProperty().bind(mainPane.widthProperty());
         mouseBlocker.prefHeightProperty().bind(mainPane.heightProperty());
-        mouseBlocker.visibleProperty().bind(parametersPopOver.showingProperty().or(createShipPopOver.showingProperty()));
+        mouseBlocker.visibleProperty().bind(parametersPopOver.showingProperty().or(createShipPopOver.showingProperty()).or(createWreckPopOver.showingProperty()));
         parametersPopOver.setOnRequestAxialCoordinateListener(((par) -> {
             axialCoordinateActionParameterPending.set(par);
             final Node parametersPopOverOwnerCache = parametersPopOver.getOwnerNode();

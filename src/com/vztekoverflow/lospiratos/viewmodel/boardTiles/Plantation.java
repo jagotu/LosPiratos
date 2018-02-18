@@ -8,8 +8,8 @@ public class Plantation extends BoardTile implements Plunderable {
         super(location, b);
     }
 
-    public final ResourceReadOnly PLANTATION_GENERAL_CAPACITY = new ResourceReadOnly();
-    public final ResourceReadOnly PLANTATION_GENERAL_INCREASE = new ResourceReadOnly();
+    public final ResourceReadOnly PLANTATION_GENERAL_CAPACITY = new ResourceReadOnly(999, 0, 0, 0, 0, 0);
+    public final ResourceReadOnly PLANTATION_GENERAL_INCREASE =new ResourceReadOnly(10, 0, 0, 0, 0, 0);
 
     protected final Resource resource = new Resource();
 

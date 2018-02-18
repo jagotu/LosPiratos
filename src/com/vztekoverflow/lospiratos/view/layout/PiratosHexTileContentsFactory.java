@@ -179,6 +179,14 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
             if (bt instanceof com.vztekoverflow.lospiratos.viewmodel.boardTiles.Plantation) {
                 s.getChildren().add(new ImageView("/com/vztekoverflow/lospiratos/view/plantation.png"));
             }
+            if(bt instanceof Plunderable)
+            {
+                ResourceView rv = new ResourceView();
+                rv.resourceProperty().set(((Plunderable)bt).getResource());
+                rv.getStyleClass().add("inmap-resources");
+                rv.maxWidthProperty().bind(tileWidth.multiply(0.7));
+                s.getChildren().add(rv);
+            }
             if (onMouseClick != null) {
                 s.setOnMouseClicked(e -> {
                     if (e.isStillSincePress() && e.getButton().equals(MouseButton.PRIMARY)) {
