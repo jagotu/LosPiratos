@@ -1,6 +1,7 @@
 package com.vztekoverflow.lospiratos.view.controls;
 
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
+import com.vztekoverflow.lospiratos.view.PopOverSkin;
 import com.vztekoverflow.lospiratos.viewmodel.Game;
 import com.vztekoverflow.lospiratos.viewmodel.Team;
 import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.AxialCoordinateActionParameter;
@@ -104,6 +105,7 @@ public class CreateShipPopOver extends PopOver {
     private Game game;
 
     public CreateShipPopOver() {
+        setSkin(new PopOverSkin(this));
         fxmlLoader.setController(this);
 
         getStyleClass().add("create-ship");

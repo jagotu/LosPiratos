@@ -1,6 +1,7 @@
 package com.vztekoverflow.lospiratos.view.controls;
 
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
+import com.vztekoverflow.lospiratos.view.PopOverSkin;
 import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
 import com.vztekoverflow.lospiratos.viewmodel.actions.ActionParameter;
 import com.vztekoverflow.lospiratos.viewmodel.actions.ActionsCatalog;
@@ -117,6 +118,7 @@ public class ActionParametersPopOver extends PopOver {
 
     public ActionParametersPopOver() {
 
+        setSkin(new PopOverSkin(this));
         ButtonBar buttons = new ButtonBar();
 
         Button cancelButton = new Button(ButtonType.CANCEL.getText());
