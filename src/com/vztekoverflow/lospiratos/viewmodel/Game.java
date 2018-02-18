@@ -216,25 +216,27 @@ public class Game {
     }
 
     private Set<OnNextRoundStartedListener> onNextRoundStartedListeners = new HashSet<>();
-    public void addOnNextRoundStartedListener(OnNextRoundStartedListener listener){
+
+    public void addOnNextRoundStartedListener(OnNextRoundStartedListener listener) {
         onNextRoundStartedListeners.add(listener);
     }
-    public void removeOnNextRoundStartedListener(OnNextRoundStartedListener listener){
+
+    public void removeOnNextRoundStartedListener(OnNextRoundStartedListener listener) {
         onNextRoundStartedListeners.remove(listener);
     }
 
-    public Shipwreck createAndAddNewShipwreck(){
+    public Shipwreck createAndAddNewShipwreck() {
         return createAndAddNewShipwreck(AxialCoordinate.ZERO, ResourceReadOnly.ZERO);
     }
 
-    public Shipwreck createAndAddNewShipwreck(AxialCoordinate position, ResourceReadOnly resource){
-            Shipwreck w = new Shipwreck(position,this);
-            w.setResource(resource);
-            board.figuresProperty().add(w);
-            return w;
+    public Shipwreck createAndAddNewShipwreck(AxialCoordinate position, ResourceReadOnly resource) {
+        Shipwreck w = new Shipwreck(position, this);
+        w.setResource(resource);
+        board.figuresProperty().add(w);
+        return w;
     }
 
-    void remove(Shipwreck w){
+    void remove(Shipwreck w) {
         board.figuresProperty().remove(w);
     }
 
@@ -281,12 +283,18 @@ public class Game {
             "Hit the Road Jack",
             "Víťa BoJack"
     };
-    private static Class<?>[] shipTypes = {
+
+    public static Class<? extends ShipType>[] getShipTypes() {
+        return shipTypes;
+    }
+
+    private static Class[] shipTypes = new Class[]{
             Schooner.class,
             Brig.class,
             Frigate.class,
             Galleon.class
     };
+
     private static Class<?>[] shipEnhancements = {
             CannonUpgrade.class,
             ChainShot.class,
@@ -312,22 +320,22 @@ public class Game {
         team2_shipPositions.add(new AxialCoordinate(-2, -1));
 
         List<AxialCoordinate> team3_shipPositions = new ArrayList<>();
-        team3_shipPositions.add(new AxialCoordinate( 0, -3));
-        team3_shipPositions.add(new AxialCoordinate( 0, -2));
-        team3_shipPositions.add(new AxialCoordinate( 0, -1));
+        team3_shipPositions.add(new AxialCoordinate(0, -3));
+        team3_shipPositions.add(new AxialCoordinate(0, -2));
+        team3_shipPositions.add(new AxialCoordinate(0, -1));
 
         List<AxialCoordinate> team4_shipPositions = new ArrayList<>();
-        team4_shipPositions.add(new AxialCoordinate( 1, -3));
-        team4_shipPositions.add(new AxialCoordinate( 2, -3));
-        team4_shipPositions.add(new AxialCoordinate( 4, -4));
-        team4_shipPositions.add(new AxialCoordinate( 6, -5));
+        team4_shipPositions.add(new AxialCoordinate(1, -3));
+        team4_shipPositions.add(new AxialCoordinate(2, -3));
+        team4_shipPositions.add(new AxialCoordinate(4, -4));
+        team4_shipPositions.add(new AxialCoordinate(6, -5));
 
         List<AxialCoordinate> team5_shipPositions = new ArrayList<>();
-        team5_shipPositions.add(new AxialCoordinate(-3,  5));
-        team5_shipPositions.add(new AxialCoordinate(-1,  3));
-        team5_shipPositions.add(new AxialCoordinate( 3,  1));
-        team5_shipPositions.add(new AxialCoordinate( 6, -1));
-        team5_shipPositions.add(new AxialCoordinate(-2,  2));
+        team5_shipPositions.add(new AxialCoordinate(-3, 5));
+        team5_shipPositions.add(new AxialCoordinate(-1, 3));
+        team5_shipPositions.add(new AxialCoordinate(3, 1));
+        team5_shipPositions.add(new AxialCoordinate(6, -1));
+        team5_shipPositions.add(new AxialCoordinate(-2, 2));
 
         List<List<AxialCoordinate>> teamsShipPositions = new ArrayList<>();
         teamsShipPositions.add(team1_shipPositions);
@@ -348,7 +356,7 @@ public class Game {
             team.getOwnedResource().setWood(40 * i);
             //Create ships:
             for (int j = 0; j < i; j++) {
-                AxialCoordinate position = teamsShipPositions.get(i-1).get(j);
+                AxialCoordinate position = teamsShipPositions.get(i - 1).get(j);
                 //AxialCoordinate position = AxialCoordinate.ZERO;
                 name = "Tým" + i + "_Loď" + (j + 1);
                 String captain = captainNames[captainIdx++];
@@ -375,12 +383,12 @@ public class Game {
 
         List<AxialCoordinate> shipwrecks = new ArrayList<>();
         shipwrecks.add(new AxialCoordinate(-2, 0));
-        shipwrecks.add(new AxialCoordinate( 3, 0));
-        shipwrecks.add(new AxialCoordinate( 5, 0));
-        shipwrecks.add(new AxialCoordinate( 2,-4));
+        shipwrecks.add(new AxialCoordinate(3, 0));
+        shipwrecks.add(new AxialCoordinate(5, 0));
+        shipwrecks.add(new AxialCoordinate(2, -4));
 
-        ResourceReadOnly r = new ResourceReadOnly(100,10,10,10,10,10);
-        for(AxialCoordinate c : shipwrecks){
+        ResourceReadOnly r = new ResourceReadOnly(100, 10, 10, 10, 10, 10);
+        for (AxialCoordinate c : shipwrecks) {
             g.createAndAddNewShipwreck(c, r);
         }
 
@@ -388,40 +396,40 @@ public class Game {
 
         List<AxialCoordinate> ports = new ArrayList<>();
         ports.add(new AxialCoordinate(-2, -3));
-        ports.add(new AxialCoordinate( 2, -3));
-        ports.add(new AxialCoordinate( 6, -2));
-        ports.add(new AxialCoordinate(-4,  1));
-        ports.add(new AxialCoordinate(-6,  6));
-        ports.add(new AxialCoordinate(-3,  5));
-        ports.add(new AxialCoordinate( 2,  4));
+        ports.add(new AxialCoordinate(2, -3));
+        ports.add(new AxialCoordinate(6, -2));
+        ports.add(new AxialCoordinate(-4, 1));
+        ports.add(new AxialCoordinate(-6, 6));
+        ports.add(new AxialCoordinate(-3, 5));
+        ports.add(new AxialCoordinate(2, 4));
 
 
         List<AxialCoordinate> shores = new ArrayList<>();
-        shores.add(new AxialCoordinate( 3, -6));
-        shores.add(new AxialCoordinate( 1, -2));
-        shores.add(new AxialCoordinate( 2, -2));
-        shores.add(new AxialCoordinate( 3, -3));
-        shores.add(new AxialCoordinate( 5, -2));
-        shores.add(new AxialCoordinate( 1,  1));
-        shores.add(new AxialCoordinate( 2,  1));
-        shores.add(new AxialCoordinate( 2,  3));
-        shores.add(new AxialCoordinate( 3,  3));
-        shores.add(new AxialCoordinate(-2,  6));
-        shores.add(new AxialCoordinate(-4,  5));
-        shores.add(new AxialCoordinate(-3,  4));
-        shores.add(new AxialCoordinate(-6,  4));
-        shores.add(new AxialCoordinate(-3,  1));
-        shores.add(new AxialCoordinate(-3,  0));
+        shores.add(new AxialCoordinate(3, -6));
+        shores.add(new AxialCoordinate(1, -2));
+        shores.add(new AxialCoordinate(2, -2));
+        shores.add(new AxialCoordinate(3, -3));
+        shores.add(new AxialCoordinate(5, -2));
+        shores.add(new AxialCoordinate(1, 1));
+        shores.add(new AxialCoordinate(2, 1));
+        shores.add(new AxialCoordinate(2, 3));
+        shores.add(new AxialCoordinate(3, 3));
+        shores.add(new AxialCoordinate(-2, 6));
+        shores.add(new AxialCoordinate(-4, 5));
+        shores.add(new AxialCoordinate(-3, 4));
+        shores.add(new AxialCoordinate(-6, 4));
+        shores.add(new AxialCoordinate(-3, 1));
+        shores.add(new AxialCoordinate(-3, 0));
         shores.add(new AxialCoordinate(-1, -3));
 
         List<AxialCoordinate> plantations = new ArrayList<>();
         //plantations.add(new AxialCoordinate( 0,  0));
-        plantations.add(new AxialCoordinate( 3,  1));
-        plantations.add(new AxialCoordinate( 6, -5));
-        plantations.add(new AxialCoordinate( 1, -5));
+        plantations.add(new AxialCoordinate(3, 1));
+        plantations.add(new AxialCoordinate(6, -5));
+        plantations.add(new AxialCoordinate(1, -5));
         plantations.add(new AxialCoordinate(-5, -1));
-        plantations.add(new AxialCoordinate(-5,  4));
-        plantations.add(new AxialCoordinate(-1,  5));
+        plantations.add(new AxialCoordinate(-5, 4));
+        plantations.add(new AxialCoordinate(-1, 5));
 
 
         //board:
@@ -434,13 +442,13 @@ public class Game {
 
                 BoardTile tile;
                 if (shores.contains(c)) {
-                    tile = new Shore(c,b);
+                    tile = new Shore(c, b);
                 } else if (ports.contains(c)) {
-                    tile = new Port(c,b);
+                    tile = new Port(c, b);
                 } else if (plantations.contains(c)) {
-                    tile = new Plantation(c,b);
+                    tile = new Plantation(c, b);
                 } else {
-                    tile = new Sea(c,b);
+                    tile = new Sea(c, b);
                 }
                 b.tilesProperty().put(c, tile);
 

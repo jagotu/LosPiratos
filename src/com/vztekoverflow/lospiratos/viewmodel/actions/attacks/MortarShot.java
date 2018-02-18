@@ -38,6 +38,7 @@ public class MortarShot extends Attack implements ParameterizedAction {
     protected Action createCopyAndResetThis() {
         MortarShot result = new MortarShot();
         result.setTarget(this.getTarget());
+        target.property().unbind();
         this.setTarget(null);
         return result;
     }
@@ -71,7 +72,7 @@ public class MortarShot extends Attack implements ParameterizedAction {
     private RangedAxialCoordinateActionParameter target = new RangedAxialCoordinateActionParameter() {
         @Override
         public String getČeskéJméno() {
-            return "cíl";
+            return "Cíl";
         }
     };
 

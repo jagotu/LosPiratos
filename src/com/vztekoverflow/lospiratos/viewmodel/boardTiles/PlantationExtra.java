@@ -14,7 +14,6 @@ public class PlantationExtra extends Plantation {
     }
 
     /**
-     *
      * @return final object representing the resource hold by this board. The returned value is always the same.
      */
     @Override
@@ -23,12 +22,12 @@ public class PlantationExtra extends Plantation {
     }
 
     @Override
-    public ResourceReadOnly getCapacity(){
+    public ResourceReadOnly getCapacity() {
         return PLANTATION_EXTRA_CAPACITY;
     }
 
     @Override
-    public ResourceReadOnly getIncrease(){
-        return  PLANTATION_EXTRA_INCREASE;
+    public ResourceReadOnly getIncrease() {
+        return PLANTATION_EXTRA_INCREASE;
     }
 }

@@ -13,7 +13,7 @@ public class ResourceGained extends LoggedEvent {
     public String getTextualDescription(LogFormatter f) {
         String s = f.space();
         String thanksTo = "";
-        if(cause != null){
+        if (cause != null) {
             thanksTo = s + f.const_ThanksTo() + s + f.format(cause);
         }
         return f.format(subject) + s + f.const_Gains() + s + f.format(amount)
@@ -35,7 +35,6 @@ public class ResourceGained extends LoggedEvent {
     }
 
     /**
-     *
      * @return null if the cause is unknown or couldn't be unambiguously determined
      */
     public Action getCause() {

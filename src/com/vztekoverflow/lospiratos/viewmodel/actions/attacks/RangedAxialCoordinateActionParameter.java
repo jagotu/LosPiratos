@@ -39,8 +39,11 @@ public abstract class RangedAxialCoordinateActionParameter extends AxialCoordina
 
     @Override
     public BooleanExpression validValueProperty(ObservableValue<AxialCoordinate> value) {
-        return Bindings.createBooleanBinding(() ->
-            value.getValue().distanceTo(groundZero.get()) <= range.get()
-        , groundZeroProperty(), rangeProperty(), value);
+
+        return Bindings.createBooleanBinding(() -> {
+                    if (value.getValue() == null) return false;
+                    return value.getValue().distanceTo(groundZero.get()) <= range.get();
+                }
+                , groundZeroProperty(), rangeProperty(), value);
     }
 }

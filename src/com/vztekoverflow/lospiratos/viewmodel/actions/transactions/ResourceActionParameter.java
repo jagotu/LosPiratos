@@ -9,7 +9,7 @@ public class ResourceActionParameter implements ActionParameter<Resource> {
 
     @Override
     public String getČeskéJméno() {
-        return "suroviny";
+        return "Suroviny";
     }
 
     @Override
@@ -27,6 +27,6 @@ public class ResourceActionParameter implements ActionParameter<Resource> {
         return r;
     }
 
-    final ObjectProperty<Resource> r = new SimpleObjectProperty<>();
+    final ObjectProperty<Resource> r = new SimpleObjectProperty<>(new Resource());
 
 }

@@ -8,6 +8,7 @@ public class Port extends BoardTile {
     public Port(AxialCoordinate location, Board b) {
         super(location, b);
     }
+
     @Override
     public boolean mayBeSteppedOn() {
         return true;

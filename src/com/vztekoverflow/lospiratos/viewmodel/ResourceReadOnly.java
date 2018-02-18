@@ -5,7 +5,7 @@ import com.vztekoverflow.lospiratos.util.PartialOrdering;
 public class ResourceReadOnly {
 
     public static final ResourceReadOnly ZERO = new ResourceReadOnly();
-    public static final ResourceReadOnly MAX = new ResourceReadOnly(Integer.MAX_VALUE,Integer.MAX_VALUE,Integer.MAX_VALUE,Integer.MAX_VALUE,Integer.MAX_VALUE,Integer.MAX_VALUE);
+    public static final ResourceReadOnly MAX = new ResourceReadOnly(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
 
     private final int money;
     private final int cloth;
@@ -99,15 +99,16 @@ public class ResourceReadOnly {
 
     /**
      * Compares two resources component wise and returns a PartialOrdering that holds for each of the component
-     *
+     * <p>
      * The function tries to find the most precise result (in the sense of inclusion)
      * I.e., if, in every component, the object's value > argument's value, returns GreaterThan
      * Then, if, in every component, the object's value equals, returns Equals
      * Then, if, in every component, the object's value >= argument's value, returns GreaterThanOrEqual
-     *
+     * <p>
      * Thus, result GreaterThanOrEqual means that in at least one component, but not in all, the value is equal.
      * If you want to compare for >= in the usual sense, you have to test if (result == GreaterThan || result == GreaterThanOrEqual || result == Equal)
      * (Or use the method isGreaterThanOrEqual). Similarly for < and <=.
+     *
      * @return A PartialOrdering. Uncomparable if in one component holds '>' and in some other '<'.
      */
     public PartialOrdering compare(ResourceReadOnly r) {
@@ -121,43 +122,44 @@ public class ResourceReadOnly {
 
     /**
      * Compares two resources component wise and returns a PartialOrdering that holds for each of the component
-     *
+     * <p>
      * The function tries to find the most precise result (in the sense of inclusion)
      * I.e., if, in every component, the object's value > argument's value, returns GreaterThan
      * Then, if, in every component, the object's value equals, returns Equals
      * Then, if, in every component, the object's value >= argument's value, returns GreaterThanOrEqual
-     *
+     * <p>
      * Thus, result GreaterThanOrEqual means that in at least one component, but not in all, the value is equal.
      * If you want to compare for >= in the usual sense, you have to test if (result == GreaterThan || result == GreaterThanOrEqual || result == Equal)
      * (Or use the method isGreaterThanOrEqual). Similarly for < and <=.
+     *
      * @return A PartialOrdering. Uncomparable if in one component holds '>' and in some other '<'.
      */
     public PartialOrdering compare(int money, int cloth, int metal, int wood, int rum, int tobacco) {
         if (this.equals(money, cloth, metal, wood, rum, tobacco)) return PartialOrdering.Equal;
         if (this.getMoney() > money &&
-                this.getCloth()   > cloth &&
-                this.getMetal()   > metal &&
-                this.getRum()     > rum &&
+                this.getCloth() > cloth &&
+                this.getMetal() > metal &&
+                this.getRum() > rum &&
                 this.getTobacco() > tobacco &&
-                this.getRum()     > wood) return PartialOrdering.GreaterThan;
+                this.getRum() > wood) return PartialOrdering.GreaterThan;
         if (this.getMoney() >= money &&
-                this.getCloth()   >= cloth &&
-                this.getMetal()   >= metal &&
-                this.getRum()     >= rum &&
+                this.getCloth() >= cloth &&
+                this.getMetal() >= metal &&
+                this.getRum() >= rum &&
                 this.getTobacco() >= tobacco &&
-                this.getRum()     >= wood) return PartialOrdering.GreaterThanOrEqual;
+                this.getRum() >= wood) return PartialOrdering.GreaterThanOrEqual;
         if (this.getMoney() < money &&
-                this.getCloth()    < cloth &&
-                this.getMetal()    < metal &&
-                this.getRum()      < rum &&
-                this.getTobacco()  < tobacco &&
-                this.getRum()      < wood) return PartialOrdering.LessThan;
+                this.getCloth() < cloth &&
+                this.getMetal() < metal &&
+                this.getRum() < rum &&
+                this.getTobacco() < tobacco &&
+                this.getRum() < wood) return PartialOrdering.LessThan;
         if (this.getMoney() <= money &&
-                this.getCloth()    <= cloth &&
-                this.getMetal()    <= metal &&
-                this.getRum()      <= rum &&
-                this.getTobacco()  <= tobacco &&
-                this.getRum()      <= wood) return PartialOrdering.LessThanOrEqual;
+                this.getCloth() <= cloth &&
+                this.getMetal() <= metal &&
+                this.getRum() <= rum &&
+                this.getTobacco() <= tobacco &&
+                this.getRum() <= wood) return PartialOrdering.LessThanOrEqual;
         //otherwise
         return PartialOrdering.Uncomparable;
     }
@@ -202,12 +204,12 @@ public class ResourceReadOnly {
      * fluent syntax for creating new ResourceReadOnly form arithmetic expressions
      */
     public ResourceReadOnly times(double value) {
-        int money = ((int) (getMoney()   * value));
-        int cloth = ((int) (getCloth()   * value));
-        int metal = ((int) (getMetal()   * value));
-        int rum   = ((int) (getRum()     * value));
+        int money = ((int) (getMoney() * value));
+        int cloth = ((int) (getCloth() * value));
+        int metal = ((int) (getMetal() * value));
+        int rum = ((int) (getRum() * value));
         int tobco = ((int) (getTobacco() * value));
-        int wood  = ((int) (getWood()    * value));
+        int wood = ((int) (getWood() * value));
         ResourceReadOnly v = new ResourceReadOnly(money, cloth, metal, rum, tobco, wood);
         return v;
     }
@@ -216,12 +218,12 @@ public class ResourceReadOnly {
      * fluent syntax for creating new ResourceReadOnly form arithmetic expressions
      */
     public ResourceReadOnly plus(ResourceReadOnly rightOperand) {
-        int money = (this.getMoney()    + rightOperand.getMoney()   );
-        int cloth = (this.getCloth()    + rightOperand.getCloth()   );
-        int metal = (this.getMetal()    + rightOperand.getMetal()   );
-        int rum   = (this.getRum()      + rightOperand.getRum()     );
-        int tobco = (this.getTobacco()  + rightOperand.getTobacco() );
-        int wood  = (this.getWood()     + rightOperand.getWood()    );
+        int money = (this.getMoney() + rightOperand.getMoney());
+        int cloth = (this.getCloth() + rightOperand.getCloth());
+        int metal = (this.getMetal() + rightOperand.getMetal());
+        int rum = (this.getRum() + rightOperand.getRum());
+        int tobco = (this.getTobacco() + rightOperand.getTobacco());
+        int wood = (this.getWood() + rightOperand.getWood());
         ResourceReadOnly v = new ResourceReadOnly(money, cloth, metal, rum, tobco, wood);
         return v;
     }
@@ -230,12 +232,12 @@ public class ResourceReadOnly {
      * fluent syntax for creating new ResourceReadOnly form arithmetic expressions
      */
     public ResourceReadOnly timesComponenWise(ResourceReadOnly rightOperand) {
-        int money = (this.getMoney()    * rightOperand.getMoney()   );
-        int cloth = (this.getCloth()    * rightOperand.getCloth()   );
-        int metal = (this.getMetal()    * rightOperand.getMetal()   );
-        int rum   = (this.getRum()      * rightOperand.getRum()     );
-        int tobco = (this.getTobacco()  * rightOperand.getTobacco() );
-        int wood  = (this.getWood()     * rightOperand.getWood()    );
+        int money = (this.getMoney() * rightOperand.getMoney());
+        int cloth = (this.getCloth() * rightOperand.getCloth());
+        int metal = (this.getMetal() * rightOperand.getMetal());
+        int rum = (this.getRum() * rightOperand.getRum());
+        int tobco = (this.getTobacco() * rightOperand.getTobacco());
+        int wood = (this.getWood() * rightOperand.getWood());
         ResourceReadOnly v = new ResourceReadOnly(money, cloth, metal, rum, tobco, wood);
         return v;
     }

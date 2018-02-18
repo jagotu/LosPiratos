@@ -8,7 +8,7 @@ public interface ParameterizedAction extends PlannableAction {
     /**
      * Indicates whether all parameters are set and valid (i.e. their values are correct, e.g. in allowed range).
      */
-    default boolean isSatisfied(){
+    default boolean isSatisfied() {
         return satisfiedProperty().get();
     }
 

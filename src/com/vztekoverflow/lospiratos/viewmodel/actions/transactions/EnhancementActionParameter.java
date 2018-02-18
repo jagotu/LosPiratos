@@ -9,7 +9,7 @@ public abstract class EnhancementActionParameter implements ValidableActionParam
 
     @Override
     public String getČeskéJméno() {
-        return "rozšíření";
+        return "Vylepšení";
     }
 
     @Override

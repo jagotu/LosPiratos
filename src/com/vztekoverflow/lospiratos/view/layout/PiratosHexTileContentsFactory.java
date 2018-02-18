@@ -1,11 +1,9 @@
 package com.vztekoverflow.lospiratos.view.layout;
 
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
+import com.vztekoverflow.lospiratos.view.controls.ResourceView;
 import com.vztekoverflow.lospiratos.view.controls.figures.ShipFigure;
-import com.vztekoverflow.lospiratos.viewmodel.Board;
-import com.vztekoverflow.lospiratos.viewmodel.BoardTile;
-import com.vztekoverflow.lospiratos.viewmodel.MovableFigure;
-import com.vztekoverflow.lospiratos.viewmodel.Ship;
+import com.vztekoverflow.lospiratos.viewmodel.*;
 import com.vztekoverflow.lospiratos.viewmodel.actions.ActionsCatalog;
 import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.AxialCoordinateActionParameter;
 import javafx.beans.binding.Bindings;
@@ -22,17 +20,18 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
 
-    private static Font bigFont = new Font("Consolas",30);
+    private static Font bigFont = new Font("Consolas", 30);
 
     private ObjectProperty<AxialCoordinateActionParameter> axialSelector;
     private HashMap<AxialCoordinate, PiratosHexTileContents> current = new HashMap<>();
     private double tileWidth, tileHeight;
     private OnClickEventHandler onMouseClick;
-    private ObservableList<AxialCoordinate> highlightedCoordinates;
+    private ObservableList<AxialCoordinate> highlightedCoordinates[];
 
     private ChangeListener<? super AxialCoordinate> highlightedMoveListener = (observable, oldValue, newValue) -> {
         if (oldValue != null && current.get(oldValue) != null) {
@@ -43,7 +42,7 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
         }
     };
 
-    public PiratosHexTileContentsFactory(Board board, double edgeLength, boolean pointy, OnClickEventHandler onMouseClick, ObjectProperty<AxialCoordinateActionParameter> axialSelector, ObservableList<AxialCoordinate> highlightedCoordinates) {
+    public PiratosHexTileContentsFactory(Board board, double edgeLength, boolean pointy, OnClickEventHandler onMouseClick, ObjectProperty<AxialCoordinateActionParameter> axialSelector, ObservableList<AxialCoordinate>... highlightedCoordinates) {
         this.onMouseClick = onMouseClick;
         this.edgeLength = edgeLength;
         this.pointy = pointy;
@@ -137,7 +136,7 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
             }
 
             if (highlightedCoordinates != null) {
-                ht.highlightedProperty.bind(Bindings.createBooleanBinding(() -> highlightedCoordinates.contains(coords), highlightedCoordinates));
+                ht.highlightedProperty.bind(Bindings.createBooleanBinding(() -> Arrays.stream(highlightedCoordinates).anyMatch(x -> x.contains(coords)), highlightedCoordinates));
             }
 
             return ht;
@@ -249,6 +248,19 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
                 s.maxWidthProperty().bind(tileWidth);
                 s.maxHeightProperty().bind(tileHeight);
                 n = s;
+            } else if (f.getClass().equals(Shipwreck.class)) {
+                StackPane sp = new StackPane();
+                ImageView iv = new ImageView("/com/vztekoverflow/lospiratos/view/wreck.png");
+                iv.fitWidthProperty().bind(tileWidth.multiply(0.7));
+                iv.fitHeightProperty().bind(tileHeight.multiply(0.7));
+                iv.setPreserveRatio(true);
+                sp.getChildren().add(iv);
+                ResourceView rv = new ResourceView();
+                rv.resourceProperty().set(((Shipwreck) f).getResource());
+                rv.getStyleClass().add("inmap-resources");
+                rv.maxWidthProperty().bind(tileWidth.multiply(0.7));
+                sp.getChildren().add(rv);
+                n = sp;
             } else {
                 Label l = new Label(f.getClass().getSimpleName());
                 l.setFont(bigFont);

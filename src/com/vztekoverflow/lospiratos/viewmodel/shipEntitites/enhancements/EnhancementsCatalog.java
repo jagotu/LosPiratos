@@ -12,7 +12,7 @@ import java.util.List;
  * static class providing API for accesing available ship enhancements
  */
 public class EnhancementsCatalog {
-    public final static Iterable<Class<? extends ShipEnhancement>> allPossibleEnhancements;
+    public final static List<Class<? extends ShipEnhancement>> allPossibleEnhancements;
     private final static BijectiveMap<Class<? extends ShipEnhancement>, EnhancementIcon> icons = new BijectiveMap<>();
 
     static {
@@ -114,13 +114,13 @@ public class EnhancementsCatalog {
 
     }
 
-    public static ShipEnhancement createInstance(Class<? extends ShipEnhancement> enh){
+    public static ShipEnhancement createInstance(Class<? extends ShipEnhancement> enh) {
         return createInstanceFromPersistentName(getPersistentName(enh));
     }
 
     public static boolean isAcquirableBy(Class<? extends ShipEnhancement> enh, Class<? extends ShipType> type) {
         ShipEnhancement e = createInstance(enh);
-        if(e == null) return false;
+        if (e == null) return false;
         return e.isAcquirableBy(ShipType.createInstance(type));
     }
 

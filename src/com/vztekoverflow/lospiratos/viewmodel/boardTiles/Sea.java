@@ -8,6 +8,7 @@ public class Sea extends BoardTile {
     public Sea(AxialCoordinate location, Board b) {
         super(location, b);
     }
+
     @Override
     public boolean mayBeSteppedOn() {
         return true;

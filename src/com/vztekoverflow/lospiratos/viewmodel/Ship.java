@@ -262,7 +262,7 @@ public class Ship implements MovableFigure, DamageableFigure, OnNextRoundStarted
     }
 
     public void incrementXP() {
-        this.XP.set(this.XP.get() +1);
+        this.XP.set(this.XP.get() + 1);
     }
 
     //endregion
@@ -377,7 +377,7 @@ public class Ship implements MovableFigure, DamageableFigure, OnNextRoundStarted
     @Override
     public DamageSufferedResponse takeDamage(int value) {
         if (isDestroyed()) return DamageSufferedResponse.alreadyDestroyed;
-        currentHP.set(currentHP.get()-value);
+        currentHP.set(currentHP.get() - value);
         if (currentHP.get() <= 0) {
             return DamageSufferedResponse.hasJustBeenDestroyed;
         } else

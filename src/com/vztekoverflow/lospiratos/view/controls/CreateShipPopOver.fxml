@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.vztekoverflow.lospiratos.view.controls.ResourceView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.controlsfx.glyphfont.Glyph?>
+<BorderPane fx:id="root" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+    <center>
+        <GridPane BorderPane.alignment="CENTER">
+            <Label text="Tým:" GridPane.rowIndex="0"/>
+            <ComboBox fx:id="teamSelect" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+            <Label text="Typ lodi:" GridPane.rowIndex="1"/>
+            <ComboBox fx:id="shipTypeSelect" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+            <Label text="Jméno lodi:" GridPane.rowIndex="2"/>
+            <TextField fx:id="shipName" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            <Label text="Kapitán:" GridPane.rowIndex="3"/>
+            <TextField fx:id="captainName" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+            <Label text="Přístav:" GridPane.rowIndex="4"/>
+            <HBox GridPane.columnIndex="1" GridPane.rowIndex="4">
+                <Label fx:id="targetPortLabel">
+                    <padding>
+                        <Insets right="4.0"/>
+                    </padding>
+                </Label>
+                <Button fx:id="targetPortButton">
+                    <graphic>
+                        <Glyph fontFamily="FontAwesome" icon="bullseye"/>
+                    </graphic>
+                </Button>
+            </HBox>
+            <Label text="Cena:" GridPane.rowIndex="5"/>
+            <ResourceView fx:id="cost" prefWrapLength="0" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+            <columnConstraints>
+                <ColumnConstraints/>
+                <ColumnConstraints/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+            </rowConstraints>
+        </GridPane>
+    </center>
+    <padding>
+        <Insets bottom="6.0" left="6.0" right="6.0" top="6.0"/>
+    </padding>
+</BorderPane>

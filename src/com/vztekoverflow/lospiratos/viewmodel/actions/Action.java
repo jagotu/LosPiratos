@@ -68,7 +68,7 @@ public abstract class Action implements PerformableAction, PlannableAction {
     protected final BooleanBinding visible = new BooleanBinding() {
         @Override
         protected boolean computeValue() {
-            if(getRelatedShip() == null)
+            if (getRelatedShip() == null)
                 return false;
             return recomputeVisible();
         }
@@ -76,7 +76,7 @@ public abstract class Action implements PerformableAction, PlannableAction {
     protected final BooleanBinding plannable = new BooleanBinding() {
         @Override
         protected boolean computeValue() {
-            if(getRelatedShip() == null)
+            if (getRelatedShip() == null)
                 return false;
             if (isPrivilegedModeActive())
                 return true;
@@ -113,7 +113,7 @@ public abstract class Action implements PerformableAction, PlannableAction {
 
     //region inheritors' API
 
-    protected Position getRelatedShipsFuturePosition(){
+    protected Position getRelatedShipsFuturePosition() {
         Position p = getRelatedShip().getPosition().createCopy();
         getRelatedShip().getPlannedActions().stream().
                 filter(a -> Maneuver.class.isAssignableFrom(a.getClass())).
@@ -121,7 +121,7 @@ public abstract class Action implements PerformableAction, PlannableAction {
         return p;
     }
 
-    protected final EventLogger getEventLogger(){
+    protected final EventLogger getEventLogger() {
         return getRelatedShip().getTeam().getGame().getLogger();
     }
 
@@ -171,7 +171,7 @@ public abstract class Action implements PerformableAction, PlannableAction {
     protected final ObjectBinding<ResourceReadOnly> cost = new ObjectBinding<ResourceReadOnly>() {
         @Override
         protected ResourceReadOnly computeValue() {
-            if(getRelatedShip() == null)
+            if (getRelatedShip() == null)
                 return ResourceReadOnly.ZERO;
             return recomputeCost();
         }
@@ -204,7 +204,7 @@ public abstract class Action implements PerformableAction, PlannableAction {
             performOnShipInternal();
         else if (performPayment())
             performOnShipInternal();
-        else{
+        else {
             Warnings.makeWarning(toString() + ".performOnShip()", "Action has not been performed because there is not enough resource");
             getEventLogger().logActionFailed(this, getRelatedShip(), "nedostatek surovin");
 

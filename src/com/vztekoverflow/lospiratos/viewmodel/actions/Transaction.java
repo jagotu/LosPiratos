@@ -27,7 +27,7 @@ public abstract class Transaction extends Action {
         Position p = getRelatedShipsFuturePosition();
         Board b = getRelatedShip().getTeam().getGame().getBoard();
         BoardTile t = b.getTiles().get(p.getCoordinate());
-        if(t == null) return false;
+        if (t == null) return false;
         return t.getClass().equals(Port.class);
     }
 

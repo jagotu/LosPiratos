@@ -118,7 +118,7 @@ public class TeamView extends StackPane {
             }
         });
 
-        ResourceView rw = new ResourceView(t.getOwnedResource());
+        ResourceEdit rw = new ResourceEdit(t.getOwnedResource());
 
         BorderPane shipsCount = new BorderPane();
         shipsCount.setMinWidth(40);
@@ -189,6 +189,11 @@ public class TeamView extends StackPane {
 
 
         HBox hb = new HBox();
+        Label noActionsPlanned = new Label();
+        noActionsPlanned.setGraphic(new Glyph("FontAwesome", FontAwesome.Glyph.EXCLAMATION_TRIANGLE));
+        noActionsPlanned.visibleProperty().bind(s.plannedActionsProperty().sizeProperty().isEqualTo(0));
+        hb.getChildren().add(noActionsPlanned);
+
         Button center = new Button();
         center.setGraphic(centerGlyph);
         center.getStyleClass().add("mini-button");
@@ -233,7 +238,7 @@ public class TeamView extends StackPane {
 
     @FXML
     private void delete() {
-        Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Opravdu chcete smazat " + t.getName() + "?", ButtonType.YES, ButtonType.NO);
+        Alert a = new Alert(Alert.AlertType.CONFIRMATION, "ja se s tim prcat nechci - Anton Teichmann", ButtonType.YES, ButtonType.NO);
         a.showAndWait().filter(response -> response == ButtonType.YES).ifPresent(x ->
         {
             if (requestDeleteListener != null) {

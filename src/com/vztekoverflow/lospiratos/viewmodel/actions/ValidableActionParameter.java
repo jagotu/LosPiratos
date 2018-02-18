@@ -8,7 +8,7 @@ public interface ValidableActionParameter<T> extends ActionParameter<T> {
     /**
      * Indicates whether @value is valid and thus could be assigned as this object's property's value.
      */
-    default boolean isValidValue(T value){
+    default boolean isValidValue(T value) {
         return validValueProperty(new SimpleObjectProperty<>(value)).get();
     }
 
@@ -29,7 +29,7 @@ public interface ValidableActionParameter<T> extends ActionParameter<T> {
      * Returns BooleanExpression indicating whether the value that has already been set is valid.
      * If some dependencies change, expression will be invalidated.
      */
-    default BooleanExpression validProperty(){
+    default BooleanExpression validProperty() {
         return validValueProperty(property());
     }
 

@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -23,6 +24,8 @@ public class ShipView extends StackPane {
     private EditableStringText shipName;
     @FXML
     private VBox vbox;
+    @FXML
+    private Label noActionsPlanned;
 
     private Ship s;
 
@@ -98,9 +101,11 @@ public class ShipView extends StackPane {
         vbox.getChildren().add(ssv);
 
 
-        ResourceView rw = new ResourceView(s.getStorage());
+        ResourceEdit rw = new ResourceEdit(s.getStorage());
         VBox.setMargin(rw, new Insets(0, 4, 4, 4));
         vbox.getChildren().add(rw);
+
+        noActionsPlanned.visibleProperty().bind(s.plannedActionsProperty().sizeProperty().isEqualTo(0));
 
 
     }

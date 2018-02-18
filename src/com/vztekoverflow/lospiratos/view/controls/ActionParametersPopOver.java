@@ -1,11 +1,16 @@
 package com.vztekoverflow.lospiratos.view.controls;
 
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
+import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
 import com.vztekoverflow.lospiratos.viewmodel.actions.ActionParameter;
 import com.vztekoverflow.lospiratos.viewmodel.actions.ActionsCatalog;
 import com.vztekoverflow.lospiratos.viewmodel.actions.ParameterizedAction;
 import com.vztekoverflow.lospiratos.viewmodel.actions.PlannableAction;
 import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.AxialCoordinateActionParameter;
+import com.vztekoverflow.lospiratos.viewmodel.actions.transactions.EnhancementActionParameter;
+import com.vztekoverflow.lospiratos.viewmodel.actions.transactions.ResourceActionParameter;
+import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
+import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.EnhancementsCatalog;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
@@ -16,22 +21,23 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.util.Callback;
 import org.controlsfx.control.PopOver;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
+
+import java.util.stream.Collectors;
 
 public class ActionParametersPopOver extends PopOver {
 
 
     public interface OnRequestAxialCoordinateListener {
-        void onRequestAxialCoordinate(PlannableAction action, AxialCoordinateActionParameter par);
+        void onRequestAxialCoordinate(AxialCoordinateActionParameter par);
     }
 
     private OnRequestAxialCoordinateListener onRequestAxialCoordinateListener = null;
@@ -88,21 +94,26 @@ public class ActionParametersPopOver extends PopOver {
         this.action = action;
         ParameterizedAction par = (ParameterizedAction) action;
 
-        BooleanBinding okEnabledBinding = Bindings.createBooleanBinding(() -> true);
-
         int i = 0;
         for (ActionParameter a : par.getAvailableParameters()) {
             Label l = new Label(a.getČeskéJméno() + ":");
             l.setPadding(new Insets(0, 4, 0, 0));
             gp.add(l, 0, i);
             gp.add(getNodeFor(a), 1, i);
-            //okEnabledBinding = okEnabledBinding.and(a.isSatisfied()); //todo rozlisit ActionParameter ParametrizedActionParameter
             i++;
         }
 
-        okButton.disableProperty().bind(okEnabledBinding.not());
+        okButton.disableProperty().bind(Bindings.not(par.satisfiedProperty()));
+        costView.setPrefWrapLength(0);
+        BooleanBinding notZeroPrice = Bindings.createBooleanBinding(() -> par.getCost() != null && !par.getCost().equals(ResourceReadOnly.ZERO), par.costProperty());
+        cost.visibleProperty().bind(notZeroPrice);
+        cost.managedProperty().bind(notZeroPrice);
+        costView.resourceProperty().bind(par.costProperty());
 
     }
+
+    private ResourceView costView;
+    private HBox cost;
 
     public ActionParametersPopOver() {
 
@@ -111,8 +122,8 @@ public class ActionParametersPopOver extends PopOver {
         Button cancelButton = new Button(ButtonType.CANCEL.getText());
         ButtonBar.setButtonData(cancelButton, ButtonBar.ButtonData.CANCEL_CLOSE);
         cancelButton.setOnAction(e -> {
-            setAction(null);
             hide();
+            setAction(null);
         });
 
         buttons.getButtons().add(cancelButton);
@@ -121,8 +132,8 @@ public class ActionParametersPopOver extends PopOver {
         ButtonBar.setButtonData(okButton, ButtonBar.ButtonData.OK_DONE);
         okButton.setOnAction(e -> {
             ActionsCatalog.relatedShip.get().planAction(action);
-            setAction(null);
             hide();
+            setAction(null);
         });
         okButton.visibleProperty().bind(readOnly.not());
         buttons.getButtons().add(okButton);
@@ -131,14 +142,24 @@ public class ActionParametersPopOver extends PopOver {
         gp = new GridPane();
         gp.setPadding(new Insets(0, 0, 6, 0));
 
+
+        VBox vb = new VBox();
+        cost = new HBox();
+        cost.getChildren().add(new Label("Cena:"));
+        costView = new ResourceView();
+
+        cost.getChildren().add(costView);
+        vb.getChildren().add(cost);
+        vb.getChildren().add(buttons);
+
         BorderPane root = new BorderPane();
-        root.setBottom(buttons);
+        root.setBottom(vb);
         root.setCenter(gp);
         root.setPadding(new Insets(6));
 
 
         setDetachable(false);
-        setCloseButtonEnabled(true);
+        setCloseButtonEnabled(false);
         setContentNode(root);
         autoHideProperty().bind(readOnly);
         setAutoFix(false);
@@ -159,7 +180,7 @@ public class ActionParametersPopOver extends PopOver {
             h.getChildren().addAll(l, b);
             b.setOnAction(e -> {
                 if (onRequestAxialCoordinateListener != null) {
-                    onRequestAxialCoordinateListener.onRequestAxialCoordinate(action, ap);
+                    onRequestAxialCoordinateListener.onRequestAxialCoordinate(ap);
                     hide();
                 }
             });
@@ -176,8 +197,64 @@ public class ActionParametersPopOver extends PopOver {
                 highlightedTiles.add(ap.get());
             }
             return h;
+        } else if (p instanceof EnhancementActionParameter) {
+            HBox hb = new HBox();
+            EnhancementActionParameter eap = (EnhancementActionParameter) p;
+            ComboBox<Class<? extends ShipEnhancement>> cb = new ComboBox<Class<? extends ShipEnhancement>>(EnhancementsCatalog.allPossibleEnhancements.stream().filter(eap::isValidValue).collect((Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList))));
+
+            Callback<ListView<Class<? extends ShipEnhancement>>, ListCell<Class<? extends ShipEnhancement>>> cellFactory = new Callback<ListView<Class<? extends ShipEnhancement>>, ListCell<Class<? extends ShipEnhancement>>>() {
+                @Override
+                public ListCell<Class<? extends ShipEnhancement>> call(ListView<Class<? extends ShipEnhancement>> l) {
+                    return new ListCell<Class<? extends ShipEnhancement>>() {
+                        @Override
+                        protected void updateItem(Class<? extends ShipEnhancement> item, boolean empty) {
+                            super.updateItem(item, empty);
+                            if (item == null || empty) {
+                                setGraphic(null);
+                                setText("");
+                            } else {
+                                setText(EnhancementsCatalog.createInstanceFromPersistentName(EnhancementsCatalog.getPersistentName(item)).getČeskéJméno());
+                            }
+                        }
+                    };
+                }
+            };
+            cb.setButtonCell(cellFactory.call(null));
+            cb.setCellFactory(cellFactory);
+            cb.getSelectionModel().select(eap.get());
+            eap.property().bind(cb.getSelectionModel().selectedItemProperty());
+
+            Label l = new Label();
+            l.textProperty().bind(cb.getButtonCell().textProperty());
+            l.visibleProperty().bind(readOnly);
+            l.managedProperty().bind(readOnly);
+            cb.visibleProperty().bind(readOnly.not());
+            cb.managedProperty().bind(readOnly.not());
+
+
+            hb.getChildren().add(cb);
+            hb.getChildren().add(l);
+            return hb;
+        } else if (p instanceof ResourceActionParameter) {
+            ResourceActionParameter rap = (ResourceActionParameter) p;
+            HBox hb = new HBox();
+
+            ResourceEdit re = new ResourceEdit(rap.get());
+            ResourceView rw = new ResourceView();
+            rw.resourceProperty().bind(rap.property());
+
+            rw.visibleProperty().bind(readOnly);
+            rw.managedProperty().bind(readOnly);
+            re.visibleProperty().bind(readOnly.not());
+            re.managedProperty().bind(readOnly.not());
+
+
+            hb.getChildren().add(re);
+            hb.getChildren().add(rw);
+            return hb;
+
         }
-        return new Label("TODO");
+        return new Label("TODO " + p.getClass().getSimpleName());
     }
 
 }

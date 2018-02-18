@@ -1,11 +1,9 @@
 package com.vztekoverflow.lospiratos.view.controls;
 
-import com.vztekoverflow.lospiratos.model.ShipEnhancementStatus;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.EnhancementIcon;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.EnhancementsCatalog;
-import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -44,6 +42,8 @@ public class ShipStatsView extends VBox {
     private Label shipType;
     @FXML
     private HBox shipEnhancements;
+    @FXML
+    private EditableIntegerText xp;
 
     static FXMLLoader fxmlLoader = new FXMLLoader(ShipStatsView.class.getResource(
             "ShipStatsView.fxml"));
@@ -70,18 +70,23 @@ public class ShipStatsView extends VBox {
         HPBar.progressProperty().bind(s.currentHPProperty().add(0.0).divide(s.maxHPProperty()));
         maxHP.textProperty().bind(s.maxHPProperty().asString());
         captain.textProperty().bindBidirectional(s.captainNameProperty());
+        xp.valueProperty().bindBidirectional(s.XPProperty());
         s.shipTypeProperty().addListener((observable, oldValue, newValue) ->
                 shipType.setText(newValue.getČeskéJméno()));
         shipType.setText(s.getShipType().getČeskéJméno());
 
         for (Class<? extends ShipEnhancement> enh : EnhancementsCatalog.allPossibleEnhancements) {
             Node n = getNodeFor(EnhancementsCatalog.getIcon(enh));
-            n.opacityProperty().bind(Bindings.when(s.enhancementStatusProperty(enh).isEqualTo(ShipEnhancementStatus.active)).then(1).otherwise(0.3));
+            s.enhancementStatusProperty(enh).addListener((observable, oldValue, newValue) -> {
+                n.getStyleClass().remove(oldValue.toString());
+                n.getStyleClass().add(newValue.toString());
+            });
+            n.getStyleClass().add(s.enhancementStatusProperty(enh).get().toString());
             shipEnhancements.getChildren().add(n);
         }
     }
 
-    private Node getNodeFor(EnhancementIcon enhancementIcon) {
+    public static Node getNodeFor(EnhancementIcon enhancementIcon) {
         if (enhancementIcon == null) {
             return new Label("NULL");
         }

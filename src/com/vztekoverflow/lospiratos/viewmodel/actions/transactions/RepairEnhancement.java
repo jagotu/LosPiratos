@@ -17,6 +17,7 @@ public class RepairEnhancement extends EnhancementAbstractTransaction {
     protected Action createCopyAndResetThis() {
         RepairEnhancement result = new RepairEnhancement();
         result.setEnhancement(this.getEnhancement());
+        this.enhancementProperty().unbind();
         this.setEnhancement(null);
         return result;
     }
@@ -52,9 +53,9 @@ public class RepairEnhancement extends EnhancementAbstractTransaction {
 
     @Override
     protected ResourceReadOnly recomputeCost() {
-        if(!isSatisfied()) return null;
+        if (!isSatisfied()) return null;
         ShipEnhancement e = EnhancementsCatalog.createInstanceFromPersistentName(EnhancementsCatalog.getPersistentName(getEnhancement()));
-        if(e == null) return null;
+        if (e == null) return null;
         return e.getCostUniversal().times(repairCostCoefficient);
     }
 

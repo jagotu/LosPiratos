@@ -11,7 +11,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.scene.paint.Color;
 
-public class Team implements OnNextRoundStartedListener{
+public class Team implements OnNextRoundStartedListener {
 
     public static final int INITIAL_MONEY = 500;
 
@@ -164,6 +164,21 @@ public class Team implements OnNextRoundStartedListener{
         }
         return s;
     }
+
+    /**
+     * Substracts ship cost, creates a new ship owned by the team and adds it to its list of ships
+     *
+     * @return null if a ship with the same {@code shipName} name already exists or if it's empty or null
+     */
+    public <T extends ShipType> Ship buyNewShip(Class<T> shipType, String shipName, String captainName, AxialCoordinate position) {
+
+        Ship s = createAndAddNewShip(shipType, shipName, captainName, position);
+        if (s != null) {
+            ownedResource.subtract(ShipType.createInstance(shipType).getCostUniversal());
+        }
+        return s;
+    }
+
 
     /**
      * Creates a new ship owned by the team and adds it to its list of ships

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.vztekoverflow.lospiratos.view.controls.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.glyphfont.*?>
-<fx:root alignment="BOTTOM_CENTER" type="javafx.scene.layout.FlowPane" xmlns="http://javafx.com/javafx/8.0.121"
-         xmlns:fx="http://javafx.com/fxml/1">
-    <BorderPane fx:id="moneyPane">
+<fx:root maxWidth="300.0" prefWidth="300.0" type="javafx.scene.layout.FlowPane"
+         xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+    <BorderPane minWidth="40.0">
         <left>
             <Label>
                 <graphic>
@@ -18,10 +19,10 @@
             </Label>
         </left>
         <center>
-            <Label fx:id="money"/>
+            <EditableIntegerText fx:id="money"/>
         </center>
     </BorderPane>
-    <BorderPane fx:id="metalPane">
+    <BorderPane minWidth="40.0">
         <left>
             <Label>
                 <graphic>
@@ -34,10 +35,10 @@
 
         </left>
         <center>
-            <Label fx:id="metal"/>
+            <EditableIntegerText fx:id="metal"/>
         </center>
     </BorderPane>
-    <BorderPane fx:id="woodPane">
+    <BorderPane minWidth="40.0">
         <left>
             <Label>
                 <graphic>
@@ -49,10 +50,10 @@
             </Label>
         </left>
         <center>
-            <Label fx:id="wood"/>
+            <EditableIntegerText fx:id="wood"/>
         </center>
     </BorderPane>
-    <BorderPane fx:id="clothPane">
+    <BorderPane minWidth="40.0">
         <left>
             <Label>
                 <graphic>
@@ -64,10 +65,10 @@
             </Label>
         </left>
         <center>
-            <Label fx:id="cloth"/>
+            <EditableIntegerText fx:id="cloth"/>
         </center>
     </BorderPane>
-    <BorderPane fx:id="rumPane">
+    <BorderPane minWidth="40.0">
         <left>
             <Label>
                 <graphic>
@@ -79,7 +80,7 @@
             </Label>
         </left>
         <center>
-            <Label fx:id="rum"/>
+            <EditableIntegerText fx:id="rum"/>
         </center>
     </BorderPane>
 

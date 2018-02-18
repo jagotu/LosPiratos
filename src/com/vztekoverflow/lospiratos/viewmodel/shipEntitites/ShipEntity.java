@@ -65,5 +65,4 @@ public abstract class ShipEntity implements Translatable, OnNextRoundStartedList
     }
 
 
-
 }

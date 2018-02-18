@@ -14,7 +14,6 @@ public class Plantation extends BoardTile implements Plunderable {
     protected final Resource resource = new Resource();
 
     /**
-     *
      * @return final object representing the resource hold by this board. The returned value is always the same.
      */
     @Override
@@ -22,12 +21,12 @@ public class Plantation extends BoardTile implements Plunderable {
         return resource;
     }
 
-    public ResourceReadOnly getCapacity(){
+    public ResourceReadOnly getCapacity() {
         return PLANTATION_GENERAL_CAPACITY;
     }
 
-    public ResourceReadOnly getIncrease(){
-        return  PLANTATION_GENERAL_INCREASE;
+    public ResourceReadOnly getIncrease() {
+        return PLANTATION_GENERAL_INCREASE;
     }
 
     @Override

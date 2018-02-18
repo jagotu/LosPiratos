@@ -2,6 +2,7 @@ package com.vztekoverflow.lospiratos.view.controls;
 
 import com.vztekoverflow.lospiratos.viewmodel.actions.ActionIcon;
 import com.vztekoverflow.lospiratos.viewmodel.actions.ActionsCatalog;
+import com.vztekoverflow.lospiratos.viewmodel.actions.ParameterizedAction;
 import com.vztekoverflow.lospiratos.viewmodel.actions.PlannableAction;
 import javafx.animation.TranslateTransition;
 import javafx.beans.property.ObjectProperty;
@@ -12,6 +13,7 @@ import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.TextAlignment;
@@ -74,39 +76,39 @@ public class ActionSelector extends Pane {
         }
         for (ActionsCatalog.Node n : currentNode.get().getChildren()) {
             final Button b = new Button();
+            StackPane sp = new StackPane();
+            b.setGraphic(sp);
             Node graphic;
             if ((graphic = getGraphicFor(n.getIcon())) != null) {
-                b.setGraphic(graphic);
+                sp.getChildren().add(graphic);
             } else {
                 //This is bullshit. Everything should have a distinct icon
+                //hack for improper long names
+                Label l = new Label();
+                l.setWrapText(true);
+                l.setTextAlignment(TextAlignment.CENTER);
                 if (n.isLeaf()) {
-                    b.setText(n.getAction().getČeskéJméno());
+                    l.setText(n.getAction().getČeskéJméno());
                 } else {
-                    b.setText(n.getIcon().toString());
+                    l.setText(n.getIcon().toString());
                 }
+                sp.getChildren().add(l);
             }
-            b.wrapTextProperty().set(true);
-            b.textAlignmentProperty().set(TextAlignment.CENTER);
 
             b.setMaxWidth(Double.MAX_VALUE);
             b.setMaxHeight(Double.MAX_VALUE);
             b.setMinWidth(0);
             b.setMinHeight(0);
-            //hack for improper long names
-            b.wrapTextProperty().set(true);
-            b.textAlignmentProperty().set(TextAlignment.CENTER);
+
+
+            if (!n.isLeaf() || n.getAction() instanceof ParameterizedAction) {
+                //Add ellipsis
+                Glyph ellipsis = new Glyph("FontAwesome", FontAwesome.Glyph.ELLIPSIS_H);
+                StackPane.setAlignment(ellipsis, Pos.BOTTOM_RIGHT);
+                sp.getChildren().add(ellipsis);
+            }
+
             if (!n.isLeaf()) {
-                //Show three dots
-                if (b.getGraphic() != null) {
-                    StackPane sp = new StackPane();
-                    sp.getChildren().add(b.getGraphic());
-                    Glyph ellipsis = new Glyph("FontAwesome", FontAwesome.Glyph.ELLIPSIS_H);
-                    StackPane.setAlignment(ellipsis, Pos.BOTTOM_RIGHT);
-                    sp.getChildren().add(ellipsis);
-                    b.setGraphic(sp);
-                }
-
-
                 b.setOnAction(e -> {
                     previousCenters.push(center);
                     center = new Point2D(b.getLayoutX() + b.getTranslateX(), b.getLayoutY() + b.getTranslateY());
@@ -122,6 +124,11 @@ public class ActionSelector extends Pane {
                         onActionSelectedListener.onActionSelected(n.getAction(), b);
                     }
                 });
+                if (!(n.getAction() instanceof ParameterizedAction)) {
+                    ResourceView costView = new ResourceView();
+                    costView.resourceProperty().bind(n.getAction().costProperty());
+                    sp.getChildren().add(costView);
+                }
             }
             b.relocate(center.getX(), center.getY());
             getChildren().add(b);

@@ -113,7 +113,7 @@ public class Board /* I want my Burd */ implements OnNextRoundStartedListener {
         return game;
     }
 
-    public boolean canStepOn(AxialCoordinate location){
+    public boolean canStepOn(AxialCoordinate location) {
         BoardTile b = tiles.get(location);
         return b != null && b.mayBeSteppedOn();
     }

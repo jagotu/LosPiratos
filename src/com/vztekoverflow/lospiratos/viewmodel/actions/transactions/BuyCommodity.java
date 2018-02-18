@@ -13,6 +13,7 @@ public class BuyCommodity extends CommodityTransaction {
     protected Action createCopyAndResetThis() {
         BuyCommodity result = new BuyCommodity();
         result.setCommodities(this.getCommodities().createMutableCopy());
+        this.commoditiesProperty().unbind();
         this.setCommodities(new Resource());
         return result;
     }
@@ -30,15 +31,19 @@ public class BuyCommodity extends CommodityTransaction {
 
     @Override
     protected ResourceReadOnly recomputeCost() {
+        if (getCommodities() == null) return ResourceReadOnly.ZERO;
         return ResourceReadOnly.fromMoney(getCommodities().scalarProduct(purchaseCoefficients));
     }
 
     @Override
     public BooleanExpression satisfiedProperty() {
         return Bindings.createBooleanBinding(() ->
-                        !getCommodities().compare(Resource.ZERO).equals(PartialOrdering.Equal)
-                                && getCommodities().getMetal() == 0
-                                && getCommodities().getMoney() == 0
+                {
+                    if (getCommodities() == null) return false;
+                    return !getCommodities().compare(Resource.ZERO).equals(PartialOrdering.Equal)
+                            && getCommodities().getMetal() == 0
+                            && getCommodities().getMoney() == 0;
+                }
                 , commoditiesProperty(), relatedShipProperty());
     }
 

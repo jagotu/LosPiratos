@@ -154,12 +154,12 @@ public class Resource extends ResourceReadOnly {
      * Clamps all contained resources component-wise to be between min (inclusive) and max (inclusive)
      */
     public void clamp(ResourceReadOnly min, ResourceReadOnly max) {
-        money.set(clampInt(min.getMoney()   , money.get(), max.getMoney()   ));
-        cloth.set(clampInt(min.getCloth()   , cloth.get(), max.getCloth()   ));
-        metal.set(clampInt(min.getMetal()   , metal.get(), max.getMetal()   ));
-        rum__.set(clampInt(min.getRum()     , rum__.get(), max.getRum()     ));
-        tobco.set(clampInt(min.getTobacco() , tobco.get(), max.getTobacco() ));
-        wood_.set(clampInt(min.getWood()    , wood_.get(), max.getWood()    ));
+        money.set(clampInt(min.getMoney(), money.get(), max.getMoney()));
+        cloth.set(clampInt(min.getCloth(), cloth.get(), max.getCloth()));
+        metal.set(clampInt(min.getMetal(), metal.get(), max.getMetal()));
+        rum__.set(clampInt(min.getRum(), rum__.get(), max.getRum()));
+        tobco.set(clampInt(min.getTobacco(), tobco.get(), max.getTobacco()));
+        wood_.set(clampInt(min.getWood(), wood_.get(), max.getWood()));
     }
 
     private int clampInt(int lower, int value, int upper) {

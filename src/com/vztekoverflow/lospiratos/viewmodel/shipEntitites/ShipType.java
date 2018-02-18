@@ -7,6 +7,9 @@ import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Frigate;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Galleon;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Schooner;
 
+import java.util.Arrays;
+import java.util.List;
+
 
 public abstract class ShipType extends ShipEntity {
 
@@ -14,6 +17,8 @@ public abstract class ShipType extends ShipEntity {
      * Returns universal cost of this ship type that is same for all instances.
      */
     abstract public ResourceReadOnly getCostUniversal();
+
+    public static List<Class<? extends ShipType>> allShipTypes = Arrays.asList(Schooner.class, Brig.class, Frigate.class, Galleon.class);
 
     //static:
 
@@ -66,7 +71,7 @@ public abstract class ShipType extends ShipEntity {
         return null;
     }
 
-    public static ShipType createInstance(Class<? extends ShipType> type){
+    public static ShipType createInstance(Class<? extends ShipType> type) {
         return createInstanceFromPersistentName(ShipType.getPersistentName(type));
     }
 

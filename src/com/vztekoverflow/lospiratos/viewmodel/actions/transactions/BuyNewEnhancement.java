@@ -17,6 +17,7 @@ public class BuyNewEnhancement extends EnhancementAbstractTransaction {
     protected Action createCopyAndResetThis() {
         BuyNewEnhancement result = new BuyNewEnhancement();
         result.setEnhancement(this.getEnhancement());
+        this.enhancementProperty().unbind();
         this.setEnhancement(null);
         return result;
     }
@@ -35,7 +36,7 @@ public class BuyNewEnhancement extends EnhancementAbstractTransaction {
                 @Override
                 public BooleanExpression validValueProperty(ObservableValue<Class<? extends ShipEnhancement>> value) {
                     return Bindings.createBooleanBinding(() -> {
-                                if (getRelatedShip() == null) return false;
+                                if (getRelatedShip() == null || value.getValue() == null) return false;
                                 return EnhancementsCatalog.isAcquirableBy(value.getValue(), getRelatedShip().getShipType());
                             }, relatedShipProperty(), value
                     );
@@ -52,6 +53,7 @@ public class BuyNewEnhancement extends EnhancementAbstractTransaction {
 
     @Override
     protected ResourceReadOnly recomputeCost() {
+        if (getEnhancement() == null) return ResourceReadOnly.ZERO;
         return EnhancementsCatalog.createInstanceFromPersistentName(EnhancementsCatalog.getPersistentName(getEnhancement())).getCostUniversal();
     }
 

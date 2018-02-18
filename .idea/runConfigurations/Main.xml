@@ -12,6 +12,9 @@
     <option name="PASS_PARENT_ENVS" value="true" />
     <module name="LosPiratos" />
     <envs />
+    <RunnerSettings RunnerId="Debug with VisualVM">
+      <option name="visualVMId" value="207213676446814" />
+    </RunnerSettings>
     <method />
   </configuration>
 </component>

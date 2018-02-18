@@ -30,11 +30,11 @@ public class EventLogger {
         events.add(new ShipDied(deadShip, attackers));
     }
 
-    public void logCollisionSolved(AxialCoordinate collisionPosition,Map<Ship, AxialCoordinate> newPositions, int iteration) {
+    public void logCollisionSolved(AxialCoordinate collisionPosition, Map<Ship, AxialCoordinate> newPositions, int iteration) {
         events.add(new CollisionSolved(collisionPosition, newPositions, iteration));
     }
 
-    public void logRoundHasEnded(int roundNo){
+    public void logRoundHasEnded(int roundNo) {
         events.add(new LoggedEvent() {
             @Override
             public String getTextualDescription(LogFormatter f) {
@@ -43,11 +43,11 @@ public class EventLogger {
         });
     }
 
-    public void logActionFailed(Action a, Ship owner, String reason){
+    public void logActionFailed(Action a, Ship owner, String reason) {
         events.add(new ActionFailed(a, owner, reason));
     }
 
-    public void logMessage(String sender, String message){
+    public void logMessage(String sender, String message) {
         events.add(new MessageLoggedEvent(sender, message));
     }
 

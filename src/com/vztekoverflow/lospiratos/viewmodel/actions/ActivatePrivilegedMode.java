@@ -48,6 +48,6 @@ public class ActivatePrivilegedMode extends Action {
 
     @Override
     public String getČeskéJméno() {
-        return "Privilegovaný org";
+        return "privilegovaný org";
     }
 }

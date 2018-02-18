@@ -2,8 +2,10 @@
 
 <?import com.vztekoverflow.lospiratos.view.controls.ActionSelector?>
 <?import com.vztekoverflow.lospiratos.view.controls.PlannedActionsBar?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
 <?import org.controlsfx.glyphfont.Glyph?>
 <SplitPane fx:id="root" dividerPositions="0.5" stylesheets="@common.css" xmlns="http://javafx.com/javafx/8.0.121"
            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vztekoverflow.lospiratos.view.stages.OrgStage">
@@ -12,6 +14,17 @@
             <Pane fx:id="mainPane">
                 <ActionSelector fx:id="actionSelector"/>
                 <Region fx:id="mouseBlocker" visible="false"/>
+                <HBox fx:id="axialSelectorMessage" visible="false">
+                    <Label fx:id="messageLabel" textFill="RED">
+                        <font>
+                            <Font name="System Bold" size="22.0"/>
+                        </font>
+                    </Label>
+                    <Button fx:id="cancelAxialSelection"/>
+                    <padding>
+                        <Insets top="10.0"/>
+                    </padding>
+                </HBox>
 
             </Pane>
         </center>
@@ -19,47 +32,63 @@
             <PlannedActionsBar fx:id="actionsBar" prefHeight="40.0"/>
         </bottom>
     </BorderPane>
-    <TabPane fx:id="tabPane" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
-        <Tab text="Týmy">
-            <BorderPane>
-                <center>
-                    <ScrollPane fitToWidth="true" hbarPolicy="NEVER">
-                        <FlowPane fx:id="teamsBox"/>
-                    </ScrollPane>
-                </center>
-                <bottom>
-                    <Button mnemonicParsing="false" onAction="#addTeam" text="+" BorderPane.alignment="BOTTOM_RIGHT"/>
-                </bottom>
-            </BorderPane>
-        </Tab>
-        <Tab fx:id="shipsTab" text="Lodě">
-            <BorderPane>
-                <center>
-                    <ScrollPane fx:id="shipsScroll" fitToWidth="true" hbarPolicy="NEVER">
-                        <FlowPane fx:id="shipsBox"/>
-                    </ScrollPane>
-                </center>
-                <bottom>
-                    <Button mnemonicParsing="false" onAction="#addTeam" text="+" BorderPane.alignment="BOTTOM_RIGHT"/>
-                </bottom>
-            </BorderPane>
-        </Tab>
-        <Tab>
-            <graphic>
-                <Glyph fontFamily="FontAwesome" icon="save"/>
-            </graphic>
-            <VBox>
-                <Button maxWidth="1.7976931348623157E308" text="Načíst hru"/>
-                <Button maxWidth="1.7976931348623157E308" text="Uložit hru"/>
-                <Button maxWidth="1.7976931348623157E308" onAction="#loremIpsum" text="Lorem Ipsum"/>
-                <Button maxWidth="1.7976931348623157E308" onAction="#evaluateRound" text="Vyhodnotit kolo"/>
-                <Button maxWidth="1.7976931348623157E308" onAction="#createShip" text="Debug vyrobit novou loď"/>
-            </VBox>
-        </Tab>
-        <Tab text="log">
-            <ListView fx:id="logListView">
+    <BorderPane>
+        <center>
+            <TabPane fx:id="tabPane" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
+                <Tab text="Týmy">
+                    <BorderPane>
+                        <center>
+                            <ScrollPane fitToWidth="true" hbarPolicy="NEVER">
+                                <FlowPane fx:id="teamsBox"/>
+                            </ScrollPane>
+                        </center>
+                        <bottom>
+                            <Button mnemonicParsing="false" onAction="#addTeam" text="+"
+                                    BorderPane.alignment="BOTTOM_RIGHT"/>
+                        </bottom>
+                    </BorderPane>
+                </Tab>
+                <Tab fx:id="shipsTab" text="Lodě">
+                    <BorderPane>
+                        <center>
+                            <ScrollPane fx:id="shipsScroll" fitToWidth="true" hbarPolicy="NEVER">
+                                <FlowPane fx:id="shipsBox"/>
+                            </ScrollPane>
+                        </center>
+                        <bottom>
+                            <HBox BorderPane.alignment="BOTTOM_RIGHT">
+                                <Button fx:id="createWreckButton" mnemonicParsing="false" onAction="#createWreck"
+                                        text="+Wreck"/>
+                                <Button fx:id="createShipButton" mnemonicParsing="false" onAction="#createShip"
+                                        text="+Loď"/>
+                            </HBox>
 
-            </ListView>
-        </Tab>
-    </TabPane>
+                        </bottom>
+                    </BorderPane>
+                </Tab>
+                <Tab>
+                    <graphic>
+                        <Glyph fontFamily="FontAwesome" icon="save"/>
+                    </graphic>
+                    <VBox>
+                        <Button maxWidth="1.7976931348623157E308" text="Načíst hru"/>
+                        <Button maxWidth="1.7976931348623157E308" text="Uložit hru"/>
+                        <Button maxWidth="1.7976931348623157E308" onAction="#loremIpsum" text="Lorem Ipsum"/>
+                        <Button maxWidth="1.7976931348623157E308" onAction="#evaluateRound" text="Vyhodnotit kolo"/>
+                        <Button maxWidth="1.7976931348623157E308" onAction="#createShip"
+                                text="Debug vyrobit novou loď"/>
+                    </VBox>
+                </Tab>
+                <Tab text="log">
+                    <ListView fx:id="logListView">
+
+                    </ListView>
+                </Tab>
+            </TabPane>
+        </center>
+        <bottom>
+            <Button fx:id="evaluateRoundButton" onAction="#evaluateRound" prefHeight="48.0" text="Button"
+                    textAlignment="CENTER" BorderPane.alignment="CENTER_RIGHT"/>
+        </bottom>
+    </BorderPane>
 </SplitPane>

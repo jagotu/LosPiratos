@@ -24,7 +24,6 @@ public class Shipwreck implements Plunderable, MovableFigure, OnNextRoundStarted
     }
 
     /**
-     *
      * @return final object representing the resource hold by this board. The returned value is always the same.
      */
     @Override
@@ -34,7 +33,7 @@ public class Shipwreck implements Plunderable, MovableFigure, OnNextRoundStarted
 
     @Override
     public void onNextRoundStarted(int roundNo) {
-        if(getResource().isLesserThanOrEqual(ResourceReadOnly.ZERO)){
+        if (getResource().isLesserThanOrEqual(ResourceReadOnly.ZERO)) {
             owner.remove(this);
             owner.removeOnNextRoundStartedListener(this);
         }

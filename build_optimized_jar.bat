@@ -1,1 +1,1 @@
-javapackager -createjar -appclass com.vztekoverflow.lospiratos.Main -srcdir out\production\LosPiratos -outfile LosPiratos -classpath "lib\controlsfx-8.40.14.jar;lib\fx-gson-3.1.0.jar;lib\gson-2.8.2.jar" -v
+javapackager -createjar -appclass com.vztekoverflow.lospiratos.Main -srcdir out\production\LosPiratos -outfile LosPiratos -classpath "lib/controlsfx-8.40.14.jar;lib/fx-gson-3.1.0.jar;lib/gson-2.8.2.jar" -v

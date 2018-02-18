@@ -15,7 +15,10 @@ import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.AxialCoordinateAct
 import com.vztekoverflow.lospiratos.viewmodel.logs.LogFormatter;
 import com.vztekoverflow.lospiratos.viewmodel.logs.LoggedEvent;
 import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.LongBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
@@ -65,6 +68,18 @@ public class OrgStage {
     private Region mouseBlocker;
     @FXML
     private ListView<LoggedEvent> logListView;
+    @FXML
+    private Button evaluateRoundButton;
+    @FXML
+    private Button createShipButton;
+    @FXML
+    private Button createWreckButton;
+    @FXML
+    private Label messageLabel;
+    @FXML
+    private Button cancelAxialSelection;
+    @FXML
+    private HBox axialSelectorMessage;
 
 
     private ActionParametersPopOver parametersPopOver = new ActionParametersPopOver();
@@ -99,24 +114,55 @@ public class OrgStage {
         actionSelector.setOnActionSelectedListener(this::parametrizeAndPlan);
         mouseBlocker.prefWidthProperty().bind(mainPane.widthProperty());
         mouseBlocker.prefHeightProperty().bind(mainPane.heightProperty());
-        mouseBlocker.visibleProperty().bind(parametersPopOver.showingProperty());
-        parametersPopOver.setOnRequestAxialCoordinateListener(((action, par) -> {
+        mouseBlocker.visibleProperty().bind(parametersPopOver.showingProperty().or(createShipPopOver.showingProperty()));
+        parametersPopOver.setOnRequestAxialCoordinateListener(((par) -> {
             axialCoordinateActionParameterPending.set(par);
-            parametersPopOverOwnerCache = parametersPopOver.getOwnerNode();
+            final Node parametersPopOverOwnerCache = parametersPopOver.getOwnerNode();
+            restoreStateAfterAxialSelection = () -> {
+                actionSelector.setVisible(true);
+                actionSelector.setMouseTransparent(false);
+                parametersPopOver.show(parametersPopOverOwnerCache);
+            };
             parametersPopOver.hide();
             actionSelector.setVisible(false);
             actionSelector.setMouseTransparent(true);
+        }));
+        createShipPopOver.setOnRequestAxialCoordinateListener(((par) -> {
+            axialCoordinateActionParameterPending.set(par);
+            final Node parametersPopOverOwnerCache = createShipPopOver.getOwnerNode();
+            restoreStateAfterAxialSelection = () -> {
+                createShipPopOver.show(parametersPopOverOwnerCache);
+            };
+            createShipPopOver.hide();
+        }));
+        createWreckPopOver.setOnRequestAxialCoordinateListener(((par) -> {
+            axialCoordinateActionParameterPending.set(par);
+            final Node parametersPopOverOwnerCache = createWreckPopOver.getOwnerNode();
+            restoreStateAfterAxialSelection = () -> {
+                createWreckPopOver.show(parametersPopOverOwnerCache);
+            };
+            createWreckPopOver.hide();
         }));
         actionsBar.setOnActionDetailsListener((action, sender) -> {
             parametersPopOver.setAction(action);
             parametersPopOver.setReadOnly(true);
             parametersPopOver.show(sender);
         });
+        messageLabel.textProperty().bind(Bindings.createStringBinding(() -> String.format("Vyberte %s!", axialCoordinateActionParameterPending.get() == null ? "null" : axialCoordinateActionParameterPending.get().getČeskéJméno()), axialCoordinateActionParameterPending));
+        cancelAxialSelection.setText(ButtonType.CANCEL.getText());
+        cancelAxialSelection.setOnAction(e -> {
+            axialCoordinateActionParameterPending.set(null);
+            if (restoreStateAfterAxialSelection != null) {
+                restoreStateAfterAxialSelection.run();
+            }
+        });
+        axialSelectorMessage.layoutXProperty().bind(mainPane.widthProperty().subtract(axialSelectorMessage.widthProperty()).divide(2));
+        axialSelectorMessage.visibleProperty().bind(axialCoordinateActionParameterPending.isNotNull());
         connectToGame();
     }
 
     private ObjectProperty<AxialCoordinateActionParameter> axialCoordinateActionParameterPending = new SimpleObjectProperty<>(null);
-    private Node parametersPopOverOwnerCache = null;
+    private Runnable restoreStateAfterAxialSelection = null;
 
 
     private void parametrizeAndPlan(PlannableAction act, Node n) {
@@ -142,9 +188,9 @@ public class OrgStage {
             if (axialCoordinateActionParameterPending.get() != null && axialCoordinateActionParameterPending.get().isValidValue(ac)) {
                 axialCoordinateActionParameterPending.get().set(ac);
                 axialCoordinateActionParameterPending.set(null);
-                actionSelector.setVisible(true);
-                actionSelector.setMouseTransparent(false);
-                parametersPopOver.show(parametersPopOverOwnerCache);
+                if (restoreStateAfterAxialSelection != null) {
+                    restoreStateAfterAxialSelection.run();
+                }
                 return;
             }
             for (MovableFigure f : figures) {
@@ -159,7 +205,7 @@ public class OrgStage {
                     return;
                 }
             }
-        }, axialCoordinateActionParameterPending, parametersPopOver.getHighlightedTiles()));
+        }, axialCoordinateActionParameterPending, parametersPopOver.getHighlightedTiles(), createShipPopOver.getHighlightedTiles(), createWreckPopOver.getHighlightedTiles()));
         hexPane.setOnMouseClicked(e -> {
             if (relocateActionSelector) {
                 double hexPaneX = hexPane.getXOffset() + e.getX() * hexPane.getScale();
@@ -229,8 +275,10 @@ public class OrgStage {
                 return new ListCell<LoggedEvent>() {
                     @Override
                     protected void updateItem(LoggedEvent item, boolean empty) {
+
+                        //Co je tohle? Proč setGraphic(text) a ne setText()???
                         super.updateItem(item, empty);
-                        if (empty){
+                        if (empty) {
                             setGraphic(new Text(""));
                             return;
                         }
@@ -244,9 +292,23 @@ public class OrgStage {
         });
 
 
+        updateEvaluateButton();
+
+        game.get().allShipsProperty().addListener((InvalidationListener) i -> {
+            updateEvaluateButton();
+        });
+
+        createShipPopOver.setGame(game.get());
+        createWreckPopOver.setGame(game.get());
+
         Platform.runLater(() -> hexPane.centerInParent(new AxialCoordinate(0, 0)));
     }
 
+    private void updateEvaluateButton() {
+        Observable[] shipaction = game.get().getAllShips().values().stream().map(Ship::plannedActionsProperty).toArray(Observable[]::new);
+        LongBinding unplannedCountBinding = Bindings.createLongBinding(() -> game.get().getAllShips().values().stream().filter(x -> x.getPlannedActions().size() == 0).count(), shipaction);
+        evaluateRoundButton.textProperty().bind(Bindings.format("Vyhodnotit kolo\n(%d lodí nemá nastavenou akci)", unplannedCountBinding));
+    }
 
     private void addTeamView(Team t) {
         TeamView tv = new TeamView(t);
@@ -320,10 +382,19 @@ public class OrgStage {
         game.get().closeRoundAndEvaluate();
     }
 
+    CreateShipPopOver createShipPopOver = new CreateShipPopOver();
+    CreateWreckPopOver createWreckPopOver = new CreateWreckPopOver();
+
     @FXML
     private void createShip() {
-        game.get().getTeams().get(0).createAndAddNewDefaultShip();
+        createShipPopOver.show(createShipButton);
     }
+
+    @FXML
+    private void createWreck() {
+        createWreckPopOver.show(createWreckButton);
+    }
+
 
     @FXML
     private void addTeam() {

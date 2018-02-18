@@ -17,27 +17,27 @@ public abstract class LogFormatter {
 
             @Override
             String format(Ship s) {
-                if(s == null) return "loď null";
+                if (s == null) return "loď null";
                 return "loď " + quotesL + s.getName() + quotesR
-                        + space() + braceL  + "pod vedením " + quotesL + s.getCaptainName() + quotesR + braceR
+                        + space() + braceL + "pod vedením " + quotesL + s.getCaptainName() + quotesR + braceR
                         ;
             }
 
             @Override
             String format(AxialCoordinate c) {
-                if(c == null) return "null";
+                if (c == null) return "null";
                 return c.toString();
             }
 
             @Override
             String format(Action a) {
-                if(a == null) return "akce null";
+                if (a == null) return "akce null";
                 return "akce " + quotesL + a.getČeskéJméno() + quotesR;
             }
 
             @Override
             String format(Team t) {
-                if(t == null) return "tým null";
+                if (t == null) return "tým null";
                 return "tým " + quotesL + t.getName() + quotesR;
             }
 
@@ -100,37 +100,37 @@ public abstract class LogFormatter {
 
     }
 
-    public static LogFormatter stručně(){
+    public static LogFormatter stručně() {
         return new LogFormatter() {
             @Override
             String format(Ship s) {
-                if(s == null || s.getName() == null) return "null";
+                if (s == null || s.getName() == null) return "null";
                 int length = Math.min(10, s.getName().length());
                 return s.getName().substring(0, length);
             }
 
             @Override
             String format(AxialCoordinate c) {
-                if(c == null) return "null";
+                if (c == null) return "null";
                 return c.toString();
             }
 
             @Override
             String format(Action a) {
-                if(a == null) return "null";
+                if (a == null) return "null";
                 return a.getČeskéJméno();
             }
 
             @Override
             String format(Team t) {
-                if(t == null || t.getName() == null) return "null";
+                if (t == null || t.getName() == null) return "null";
                 int length = Math.min(10, t.getName().length());
-                return t.getName().substring(0,length);
+                return t.getName().substring(0, length);
             }
 
             @Override
             String format(ResourceReadOnly r) {
-                if(r == null) return "null";
+                if (r == null) return "null";
                 return r.toString();
             }
 
@@ -141,7 +141,7 @@ public abstract class LogFormatter {
 
             @Override
             String formatIteration(int i) {
-                return "i "+ i;
+                return "i " + i;
             }
 
             @Override

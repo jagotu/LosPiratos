@@ -7,16 +7,16 @@ public class ShipDied extends LoggedEvent {
     @Override
     public String getTextualDescription(LogFormatter f) {
         String s = f.space();
-        StringBuilder attackers  = new StringBuilder();
+        StringBuilder attackers = new StringBuilder();
         boolean firstGoThrough = true;
-        for(Ship a: this.attackers){
-            if(!firstGoThrough)
+        for (Ship a : this.attackers) {
+            if (!firstGoThrough)
                 attackers.append(f.const_And());
             attackers.append(f.format(a));
             firstGoThrough = false;
         }
 
-        return f.format(deadShip) + s + f.const_Dies() +s
+        return f.format(deadShip) + s + f.const_Dies() + s
                 + f.const_ThanksTo() + s + "{" + attackers.toString() + "}";
     }
 

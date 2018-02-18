@@ -98,6 +98,20 @@ public class VirtualizingHexGridPane extends Pane {
         requestLayout();
     }
 
+    private BooleanProperty showCoordinateLabels = new SimpleBooleanProperty(false);
+
+    public boolean isShowCoordinateLabels() {
+        return showCoordinateLabels.get();
+    }
+
+    public BooleanProperty showCoordinateLabelsProperty() {
+        return showCoordinateLabels;
+    }
+
+    public void setShowCoordinateLabels(boolean showCoordinateLabels) {
+        this.showCoordinateLabels.set(showCoordinateLabels);
+    }
+
     public VirtualizingHexGridPane(double edgeLength, boolean pointy, HexTileContentsFactory factory) {
 
         backgroundTransform.setPivotX(0);

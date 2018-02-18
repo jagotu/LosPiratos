@@ -4,16 +4,20 @@ import com.vztekoverflow.lospiratos.viewmodel.Ship;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
+import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.FillRule;
 import javafx.scene.shape.SVGPath;
+import javafx.scene.text.Font;
 
 public class ShipFigure extends Pane {
 
     private SVGPath shipPath;
     private ProgressBar hpBar;
+    private Label shipType;
+    private double widthMultiplier = 0.6;
 
     public ShipFigure(Ship s, boolean pointy) {
         getStyleClass().add("ship-figure");
@@ -28,22 +32,41 @@ public class ShipFigure extends Pane {
         shipPath.scaleYProperty().bind(shipPath.scaleXProperty());
         getChildren().add(shipPath);
 
+        shipType = new Label();
+        shipType.textProperty().bind(Bindings.createStringBinding(() -> s.getShipType().getČeskéJméno().substring(0, 1), s.shipTypeProperty()));
+        shipType.setFont(new Font(38));
+        shipType.getStyleClass().add("contrast");
+        getChildren().add(shipType);
+
+        s.getTeam().colorProperty().addListener(((observable, oldValue, newValue) -> updateColor(newValue)));
+        updateColor(s.getTeam().getColor());
+
         hpBar = new ProgressBar();
         hpBar.progressProperty().bind(s.currentHPProperty().add(0.0).divide(s.maxHPProperty()));
-        hpBar.prefWidthProperty().bind(widthProperty().multiply(0.7).multiply(s.maxHPProperty()).divide(120));
+        hpBar.prefWidthProperty().bind(widthProperty().multiply(widthMultiplier).multiply(s.maxHPProperty()).divide(120));
         hpBar.prefHeightProperty().set(18);
         getChildren().add(hpBar);
 
         int rotationNormalisation = 120;
-        if(!pointy)
+        if (!pointy)
             rotationNormalisation -= 30;
         shipPath.rotateProperty().bind(s.getPosition().rotationProperty().subtract(rotationNormalisation));
+    }
+
+    private void updateColor(Color color) {
+        String style = String.format("-team-color: rgba(%d, %d, %d, %f);",
+                (int) (color.getRed() * 255),
+                (int) (color.getGreen() * 255),
+                (int) (color.getBlue() * 255),
+                color.getOpacity());
+        setStyle(style);
     }
 
 
     @Override
     protected void layoutChildren() {
         layoutInArea(shipPath, 0, 0, getWidth(), getHeight(), 0, HPos.CENTER, VPos.CENTER);
-        layoutInArea(hpBar, 0, getHeight() * 0.25, getWidth(), hpBar.prefHeight(-1), 0, HPos.CENTER, VPos.TOP);
+        layoutInArea(shipType, 0, 0, getWidth(), getHeight(), 0, HPos.CENTER, VPos.CENTER);
+        layoutInArea(hpBar, getWidth() * ((1 - widthMultiplier) / 2), getHeight() * 0.25, getWidth() * widthMultiplier, hpBar.prefHeight(-1), 0, HPos.LEFT, VPos.TOP);
     }
 }
