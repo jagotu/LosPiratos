@@ -73,17 +73,17 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
             //sc.tonikuvHack(coords);
             current.put(coords, sc);
         }
-        for (MovableFigure mf : board.getFigures()) {
+        for (Figure mf : board.getFigures()) {
             addFigure(mf);
         }
-        board.figuresProperty().addListener((ListChangeListener<MovableFigure>) c -> {
+        board.figuresProperty().addListener((ListChangeListener<Figure>) c -> {
             while (c.next()) {
                 if (c.wasAdded()) {
-                    for (MovableFigure addedItem : c.getAddedSubList()) {
+                    for (Figure addedItem : c.getAddedSubList()) {
                         addFigure(addedItem);
                     }
                 } else if (c.wasRemoved()) {
-                    for (MovableFigure removedItem : c.getRemoved()) {
+                    for (Figure removedItem : c.getRemoved()) {
                         removeFigure(removedItem);
                     }
                 }
@@ -100,27 +100,30 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
     private double edgeLength;
 
 
-    private void addFigure(MovableFigure f) {
-        if (!current.containsKey(f.getPosition().getCoordinate())) {
+    private void addFigure(Figure f) {
+        if (!current.containsKey(f.getCoordinate())) {
             throw new UnsupportedOperationException("Figure out of bounds or not on a tile!");
         }
-        current.get(f.getPosition().getCoordinate()).addFigure(f);
-        f.getPosition().coordinateProperty().addListener((observable, oldValue, newValue) ->
-        {
-            if (!current.containsKey(oldValue) || !current.containsKey(newValue)) {
-                throw new UnsupportedOperationException("Figure out of bounds or not on a tile!");
-            }
+        current.get(f.getCoordinate()).addFigure(f);
+        if(f instanceof MovableFigure){
+            ((MovableFigure) f).getPosition().coordinateProperty().addListener((observable, oldValue, newValue) ->
+            {
+                if (!current.containsKey(oldValue) || !current.containsKey(newValue)) {
+                    throw new UnsupportedOperationException("Figure out of bounds or not on a tile!");
+                }
 
-            current.get(newValue).addFigure(f, current.get(oldValue).removeFigure(f));
-        });
+                current.get(newValue).addFigure(f, current.get(oldValue).removeFigure(f));
+            });
+        }
+
     }
 
-    private void removeFigure(MovableFigure f) {
-        if (!current.containsKey(f.getPosition().getCoordinate())) {
+    private void removeFigure(Figure f) {
+        if (!current.containsKey(f.getCoordinate())) {
             throw new UnsupportedOperationException("Figure out of bounds or not on a tile!");
         }
 
-        current.get(f.getPosition().getCoordinate()).removeFigure(f);
+        current.get(f.getCoordinate()).removeFigure(f);
     }
 
 
@@ -146,13 +149,13 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
     }
 
     public interface OnClickEventHandler {
-        void OnClick(Iterable<MovableFigure> figures, AxialCoordinate ac, MouseEvent e);
+        void OnClick(Iterable<Figure> figures, AxialCoordinate ac, MouseEvent e);
     }
 
     private class PiratosHexTileContents implements HexTileContents {
         StackPane s = new StackPane();
         ObjectProperty<Node> contents = new ReadOnlyObjectWrapper<>(s);
-        HashMap<MovableFigure, Node> internalNodes = new HashMap<>();
+        HashMap<Figure, Node> internalNodes = new HashMap<>();
         BoardTile bt;
         ListProperty<MovableFigure> figures = new SimpleListProperty<>();
         DoubleProperty tileWidth = new SimpleDoubleProperty();
@@ -238,7 +241,7 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
          * @param f
          * @return The internal node representing the figure,
          */
-        Node removeFigure(MovableFigure f) {
+        Node removeFigure(Figure f) {
             if (!internalNodes.containsKey(f)) {
                 throw new UnsupportedOperationException("Cannot remove figure that's not in this tile!");
             }
@@ -249,7 +252,7 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
         }
 
 
-        void addFigure(MovableFigure f) {
+        void addFigure(Figure f) {
 
             Node n;
             if (f.getClass().equals(Ship.class)) {
@@ -282,7 +285,7 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
 
         }
 
-        void addFigure(MovableFigure f, Node n) {
+        void addFigure(Figure f, Node n) {
             internalNodes.put(f, n);
             s.getChildren().add(n);
             if (tondaHack != null) {

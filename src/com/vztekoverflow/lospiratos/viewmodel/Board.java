@@ -70,7 +70,7 @@ public class Board /* I want my Burd */ implements OnNextRoundStartedListener {
     //properties:
 
     private MapProperty<AxialCoordinate, BoardTile> tiles = new SimpleMapProperty<>(FXCollections.observableHashMap());
-    private ListProperty<MovableFigure> figures = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private ListProperty<Figure> figures = new SimpleListProperty<>(FXCollections.observableArrayList());
 
     public ObservableMap<AxialCoordinate, BoardTile> getTiles() {
         return tiles.get();
@@ -84,7 +84,7 @@ public class Board /* I want my Burd */ implements OnNextRoundStartedListener {
      * !!! Adding a new figure to the figures list won't add it to the game.
      * Use add() method on the figures list only if you want to add an item just to the Board.
      */
-    public ObservableList<MovableFigure> getFigures() {
+    public ObservableList<Figure> getFigures() {
         return figures.get();
     }
 
@@ -92,17 +92,21 @@ public class Board /* I want my Burd */ implements OnNextRoundStartedListener {
      * !!! Adding a new figure to the figures list won't add it to the game.
      * Use add() method on the figures list only if you want to add an item just to the Board.
      */
-    public ReadOnlyListProperty<MovableFigure> figuresProperty() {
+    public ReadOnlyListProperty<Figure> figuresProperty() {
         return figures;
     }
 
-    private MovableFigure findFigure(AxialCoordinate position) {
+    private List<Figure> findFigures(AxialCoordinate position) {
+        return this.figures.stream().filter(p -> p.getCoordinate().equals(position)).collect(Collectors.toList());
+    }
+
+    private Figure findFigure(AxialCoordinate position) {
         //todo is this not too slow? It is a trivial O(figureCount) implementation
-        List<MovableFigure> f = this.figures.stream().filter(p -> p.getPosition().equals(position)).collect(Collectors.toList());
+        List<Figure> f = findFigures(position);
         if (f.size() == 0)
             return null;
         if (f.size() > 1) {
-            Warnings.panic(toString(), "more figures (" + f.size() + ") at the same position: " + position);
+            Warnings.makeWarning(toString(), "returning just first figure, when more (" + f.size() + ") are at the same position: " + position);
         }
         return f.get(0);
     }
@@ -129,7 +133,7 @@ public class Board /* I want my Burd */ implements OnNextRoundStartedListener {
      * @return null if no figure is located at given @position
      */
     public DamageableFigure getDamageableFigure(AxialCoordinate position) {
-        MovableFigure f = findFigure(position);
+        Figure f = findFigure(position);
         if (f instanceof DamageableFigure)
             return (DamageableFigure) f;
         else return null;
@@ -137,6 +141,7 @@ public class Board /* I want my Burd */ implements OnNextRoundStartedListener {
 
     /**
      * Returns a Plunderable located at given @position
+     * If more plunderables are located at the position, return just one of them
      *
      * @return null if no plunderable is located at given @position
      */
@@ -144,10 +149,12 @@ public class Board /* I want my Burd */ implements OnNextRoundStartedListener {
         if (tiles.get(position) instanceof Plunderable)
             return (Plunderable) tiles.get(position);
 
-        MovableFigure f = findFigure(position);
-        if (f instanceof Plunderable)
-            return (Plunderable) f;
-        else return null;
+        List<Plunderable> plunderables = findFigures(position).stream().filter(f -> f instanceof Plunderable).map(f -> (Plunderable) f).collect(Collectors.toList());
+        if (plunderables.size() >= 1) {
+            if (plunderables.size() > 1)
+                Warnings.makeWarning(toString() + ".getPlunderable()", "more (" + plunderables.size() + ") are at the same position: " + position + ")");
+            return plunderables.get(0);
+        } else return null;
     }
 
     /**
@@ -156,7 +163,7 @@ public class Board /* I want my Burd */ implements OnNextRoundStartedListener {
      * @return null if no ship is located at given @position
      */
     public Ship getShip(AxialCoordinate position) {
-        MovableFigure f = findFigure(position);
+        Figure f = findFigure(position);
         if (f instanceof Ship)
             return (Ship) f;
         else return null;

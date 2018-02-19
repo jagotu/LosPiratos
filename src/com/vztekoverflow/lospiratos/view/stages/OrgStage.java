@@ -5,8 +5,8 @@ import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.view.controls.*;
 import com.vztekoverflow.lospiratos.view.layout.PiratosHexTileContentsFactory;
 import com.vztekoverflow.lospiratos.view.layout.VirtualizingHexGridPane;
+import com.vztekoverflow.lospiratos.viewmodel.Figure;
 import com.vztekoverflow.lospiratos.viewmodel.Game;
-import com.vztekoverflow.lospiratos.viewmodel.MovableFigure;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
 import com.vztekoverflow.lospiratos.viewmodel.Team;
 import com.vztekoverflow.lospiratos.viewmodel.actions.ActionsCatalog;
@@ -200,7 +200,7 @@ public class OrgStage {
                 }
                 return;
             }
-            for (MovableFigure f : figures) {
+            for (Figure f : figures) {
                 if (f instanceof Ship) {
                     Ship s = (Ship) f;
                     ActionsCatalog.relatedShip.set(s);
