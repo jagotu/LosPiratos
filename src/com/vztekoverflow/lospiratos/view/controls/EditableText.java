@@ -47,6 +47,20 @@ public abstract class EditableText extends StackPane {
         getStyleClass().add("editable-text");
         this.rightToLeft = rightToLeft;
 
+
+        editing.addListener((observable, oldValue, newValue) -> {
+            if(mode.get().equals(Mode.EDITABLE))
+            {
+                if (newValue) {
+                    this.getChildren().add(editMode);
+                    this.getChildren().remove(showMode);
+                } else {
+                    this.getChildren().remove(editMode);
+                    this.getChildren().add(showMode);
+                }
+            }
+        });
+
         mode.addListener(i -> {
             createControls(mode.get());
         });
@@ -111,15 +125,6 @@ public abstract class EditableText extends StackPane {
 
             contentShow.textProperty().bindBidirectional(text);
             contentEdit.textProperty().bindBidirectional(contentShow.textProperty());
-            editing.addListener((observable, oldValue, newValue) -> {
-                if (newValue) {
-                    this.getChildren().add(editMode);
-                    this.getChildren().remove(showMode);
-                } else {
-                    this.getChildren().remove(editMode);
-                    this.getChildren().add(showMode);
-                }
-            });
 
             showMode.setOnMouseEntered(e -> edit.setVisible(true));
             showMode.setOnMouseExited(e -> edit.setVisible(false));

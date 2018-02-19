@@ -71,8 +71,8 @@
                         <Glyph fontFamily="FontAwesome" icon="save"/>
                     </graphic>
                     <VBox>
-                        <Button maxWidth="1.7976931348623157E308" text="Načíst hru"/>
-                        <Button maxWidth="1.7976931348623157E308" text="Uložit hru"/>
+                        <Button maxWidth="1.7976931348623157E308" onAction="#load" text="Načíst hru"/>
+                        <Button maxWidth="1.7976931348623157E308" onAction="#save" text="Uložit hru"/>
                         <Button maxWidth="1.7976931348623157E308" onAction="#loremIpsum" text="Lorem Ipsum"/>
                         <Button maxWidth="1.7976931348623157E308" onAction="#evaluateRound" text="Vyhodnotit kolo"/>
                         <Button maxWidth="1.7976931348623157E308" onAction="#createShip"

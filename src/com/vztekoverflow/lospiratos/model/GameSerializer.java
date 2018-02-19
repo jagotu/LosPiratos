@@ -12,14 +12,15 @@ public class GameSerializer {
     /**
      * @return null if the loading was unsuccessful due to IOError or invalid JSON
      */
-    public static Game LoadGameFromFile(String inputFilePath) {
+    public static Game LoadGameFromFile(File inputFile) {
 
         Game game = null;
         Gson gson = FxGson.create();
 
-        try (Reader f = new FileReader(inputFilePath); Reader reader = new BufferedReader(f)) {
+        try (Reader f = new FileReader(inputFile); Reader reader = new BufferedReader(f)) {
             game = gson.fromJson(reader, Game.class);
         } catch (IOException | JsonParseException e) {
+            e.printStackTrace();
             Warnings.makeWarning("Game.LoadGameFromFile", e.getMessage());
         }
         return game;
@@ -28,18 +29,20 @@ public class GameSerializer {
     /**
      * @return boolean indicating whether the game has been successfully saved
      */
-    public static boolean SaveGameToFile(String outputFilePath, Game game, boolean append) {
+    public static boolean SaveGameToFile(File outputFile, Game game, boolean append) {
         Gson gson = FxGson.coreBuilder().setPrettyPrinting().create();
         String gameInGson;
         try {
             gameInGson = gson.toJson(game);
         } catch (JsonParseException e) {
+            e.printStackTrace();
             return false;
         }
 
-        try (Writer f = new FileWriter(outputFilePath, append); Writer writer = new BufferedWriter(f)) {
+        try (Writer f = new FileWriter(outputFile, append); Writer writer = new BufferedWriter(f)) {
             writer.write(gameInGson);
         } catch (IOException e) {
+            e.printStackTrace();
             return false;
         }
         return true;
@@ -54,6 +57,7 @@ public class GameSerializer {
             Gson gson = FxGson.create();
             g = gson.fromJson(inputJson, Game.class);
         } catch (JsonParseException e) {
+            e.printStackTrace();
             return null;
         }
         return g;

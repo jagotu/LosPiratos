@@ -1,5 +1,6 @@
 package com.vztekoverflow.lospiratos.view.stages;
 
+import com.vztekoverflow.lospiratos.model.GameSerializer;
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.view.controls.*;
 import com.vztekoverflow.lospiratos.view.layout.PiratosHexTileContentsFactory;
@@ -23,6 +24,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
@@ -33,8 +35,11 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -110,6 +115,7 @@ public class OrgStage {
 
     @FXML
     private void initialize() {
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("JSON files", "*.json"), new FileChooser.ExtensionFilter("All files", "*.*"));
         root.setDividerPosition(0, 0.75);
         actionSelector.setOnActionSelectedListener(this::parametrizeAndPlan);
         mouseBlocker.prefWidthProperty().bind(mainPane.widthProperty());
@@ -180,6 +186,7 @@ public class OrgStage {
     private boolean pointy = false; //DON'T SET TO FALSE
 
     private void connectToGame() {
+        mainPane.getChildren().remove(hexPane);
         if (hexPane != null) {
             root.getItems().remove(hexPane);
         }
@@ -437,6 +444,38 @@ public class OrgStage {
         double result = node.getBoundsInParent().getMinY() / (height - pane.getHeight());
 
         pane.setVvalue(Math.min(result, 1));
+    }
+
+    FileChooser fileChooser = new FileChooser();
+
+    private Stage parentStage;
+
+    public Stage getParentStage() {
+        return parentStage;
+    }
+
+    public void setParentStage(Stage parentStage) {
+        this.parentStage = parentStage;
+    }
+
+    @FXML
+    private void load() {
+        fileChooser.setTitle("Load game...");
+        File file = fileChooser.showOpenDialog(parentStage);
+        if (file != null) {
+            fileChooser.setInitialDirectory(file.getParentFile());
+            game.set(Game.LoadFromModel(GameSerializer.LoadGameFromFile(file)));
+        }
+    }
+
+    @FXML
+    private void save() {
+        fileChooser.setTitle("Save game...");
+        File file = fileChooser.showSaveDialog(parentStage);
+        if (file != null) {
+            fileChooser.setInitialDirectory(file.getParentFile());
+            GameSerializer.SaveGameToFile(file, game.get().getGameModel(), false);
+        }
     }
 }
 
