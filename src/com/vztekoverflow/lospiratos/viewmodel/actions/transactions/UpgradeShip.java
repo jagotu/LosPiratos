@@ -1,6 +1,5 @@
 package com.vztekoverflow.lospiratos.viewmodel.actions.transactions;
 
-import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
 import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipType;
 
@@ -22,12 +21,11 @@ public class UpgradeShip extends ChangeShipAbstractTransaction {
 
     @Override
     public String getČeskéJméno() {
-        return "upgrade lodě";
+        return "vylepšení typu lodi";
     }
 
     @Override
-    protected ResourceReadOnly recomputeCost() {
-        //todo tady by to asi melo byt jinak?
-        return getRelatedShip().getShipType().getCostUniversal();
+    protected void recomputeCost() {
+        cost.setAll(getRelatedShip().getShipType().getUpgradeCost());
     }
 }

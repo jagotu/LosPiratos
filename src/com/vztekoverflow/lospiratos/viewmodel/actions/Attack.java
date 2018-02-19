@@ -2,7 +2,6 @@ package com.vztekoverflow.lospiratos.viewmodel.actions;
 
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.viewmodel.DamageSufferedResponse;
-import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipMechanics;
 
@@ -18,8 +17,8 @@ public abstract class Attack extends Action {
     }
 
     @Override
-    protected ResourceReadOnly recomputeCost() {
-        return new ResourceReadOnly();
+    protected void recomputeCost() {
+        //nothing, there this actions costs nothing
     }
 
     protected final void applyMechanicsTo(ShipMechanics mechanics, AxialCoordinate targetPosition) {

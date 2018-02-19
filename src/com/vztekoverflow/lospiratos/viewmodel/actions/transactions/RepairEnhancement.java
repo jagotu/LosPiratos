@@ -1,7 +1,6 @@
 package com.vztekoverflow.lospiratos.viewmodel.actions.transactions;
 
 import com.vztekoverflow.lospiratos.model.ShipEnhancementStatus;
-import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
 import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.EnhancementsCatalog;
@@ -52,11 +51,13 @@ public class RepairEnhancement extends EnhancementAbstractTransaction {
     }
 
     @Override
-    protected ResourceReadOnly recomputeCost() {
-        if (!isSatisfied()) return null;
-        ShipEnhancement e = EnhancementsCatalog.createInstanceFromPersistentName(EnhancementsCatalog.getPersistentName(getEnhancement()));
-        if (e == null) return null;
-        return e.getCostUniversal().times(repairCostCoefficient);
+    protected void recomputeCost() {
+        cost.clear();
+        if(isSatisfied()){
+            ShipEnhancement e = EnhancementsCatalog.createInstance(getEnhancement());
+            if(e != null)
+                cost.setAll(e.getCostUniversal().times(repairCostCoefficient));
+        }
     }
 
     @Override

@@ -9,12 +9,13 @@ import javafx.beans.binding.BooleanExpression;
 
 public class SellCommodity extends CommodityTransaction {
 
+    static final ResourceReadOnly sellCoefficients = new ResourceReadOnly(1, 2, 2, 2, 2, 2);
+
     @Override
     protected Action createCopyAndResetThis() {
         SellCommodity result = new SellCommodity();
-        result.setCommodities(this.getCommodities().createMutableCopy());
-        this.commoditiesProperty().unbind();
-        this.setCommodities(new Resource());
+        result.getCommodities().setAll(this.getCommodities());
+        getCommodities().clear();
         return result;
     }
 
@@ -30,10 +31,12 @@ public class SellCommodity extends CommodityTransaction {
     }
 
     @Override
-    protected ResourceReadOnly recomputeCost() {
-        if (getCommodities() == null) return ResourceReadOnly.ZERO;
-        return ResourceReadOnly.fromMoney(getCommodities().scalarProduct(sellCoefficients) * -1);
-        //return negative value, because this cost is actually a gain (we are selling something)
+    protected void recomputeCost() {
+        cost.clear();
+        if (getCommodities() != null){
+            cost.setAll( ResourceReadOnly.fromMoney(getCommodities().scalarProduct(sellCoefficients) * -1));
+            //set negative value, because this cost is actually a gain (we are selling something)
+        }
     }
 
     @Override
@@ -43,9 +46,7 @@ public class SellCommodity extends CommodityTransaction {
                     return !getCommodities().compare(Resource.ZERO).equals(PartialOrdering.Equal)
                             && getCommodities().getMoney() == 0;
                 }
-                , commoditiesProperty(), relatedShipProperty());
+                , getCommodities(), relatedShipProperty());
     }
 
-    //todo opravdickou hodnotu
-    static final ResourceReadOnly sellCoefficients = new ResourceReadOnly(1, 2, 2, 2, 2, 2);
 }

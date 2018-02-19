@@ -34,7 +34,7 @@
 }
 
 .hex-tile.disabled {
-    -fx-fill: rgba(20, 0, 0, 0.30);
+    -fx-fill: rgba(20, 0, 0, 0.40);
 }
 
 .hex-tile.highlighted {

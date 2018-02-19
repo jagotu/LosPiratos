@@ -14,9 +14,19 @@ import java.util.List;
 public abstract class ShipType extends ShipEntity {
 
     /**
-     * Returns universal cost of this ship type that is same for all instances.
+     * Returns cost of buying new ship with this type. The value should be same for all instances.
      */
-    abstract public ResourceReadOnly getCostUniversal();
+    abstract public ResourceReadOnly getBuyingCost();
+
+    /**
+     * Returns cost of repairing fully damaged ship with this type. The value should be same for all instances.
+     */
+    abstract public ResourceReadOnly getBasicRepairCost();
+
+    /**
+     * Returns cost of upgrading to this ship type. The value should be same for all instances.
+     */
+    abstract public ResourceReadOnly getUpgradeCost();
 
     public static List<Class<? extends ShipType>> allShipTypes = Arrays.asList(Schooner.class, Brig.class, Frigate.class, Galleon.class);
 

@@ -174,7 +174,7 @@ public class Team implements OnNextRoundStartedListener {
 
         Ship s = createAndAddNewShip(shipType, shipName, captainName, position);
         if (s != null) {
-            ownedResource.subtract(ShipType.createInstance(shipType).getCostUniversal());
+            ownedResource.subtract(ShipType.createInstance(shipType).getBuyingCost());
         }
         return s;
     }

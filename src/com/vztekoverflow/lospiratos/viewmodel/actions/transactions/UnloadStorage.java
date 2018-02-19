@@ -1,6 +1,5 @@
 package com.vztekoverflow.lospiratos.viewmodel.actions.transactions;
 
-import com.vztekoverflow.lospiratos.viewmodel.Resource;
 import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
 import com.vztekoverflow.lospiratos.viewmodel.Team;
@@ -23,8 +22,7 @@ public class UnloadStorage extends Transaction {
     }
 
     @Override
-    protected Resource recomputeCost() {
-        return new Resource();
+    protected void recomputeCost() {
     }
 
     @Override

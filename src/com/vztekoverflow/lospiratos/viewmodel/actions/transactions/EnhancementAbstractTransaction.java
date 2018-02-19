@@ -13,7 +13,7 @@ public abstract class EnhancementAbstractTransaction extends ChangeShipAbstractT
 
     protected EnhancementAbstractTransaction() {
         params.add(getEnhancementParameter());
-        getEnhancementParameter().property().addListener(__ -> cost.invalidate());
+        getEnhancementParameter().property().addListener(__ -> recomputeCost());
     }
 
     // concrete implementation of parameter should be supported by inheritors

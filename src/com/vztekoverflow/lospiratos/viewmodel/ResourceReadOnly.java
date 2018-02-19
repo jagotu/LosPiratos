@@ -5,8 +5,9 @@ import com.vztekoverflow.lospiratos.util.PartialOrdering;
 public class ResourceReadOnly {
 
     public static final ResourceReadOnly ZERO = new ResourceReadOnly();
-    public static final ResourceReadOnly ONE = new ResourceReadOnly(1,1,1,1,1,1);
+    public static final ResourceReadOnly ONE = new ResourceReadOnly(1, 1, 1, 1, 1, 1);
     public static final ResourceReadOnly MAX = new ResourceReadOnly(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
+    public static final ResourceReadOnly MOCK_VALUE = new ResourceReadOnly(1092, 42, 42, 42, 42, 42);
 
     private final int money;
     private final int cloth;
@@ -248,12 +249,12 @@ public class ResourceReadOnly {
      */
     public int scalarProduct(ResourceReadOnly rightOperand) {
         int result = 0;
-        result += (this.money * rightOperand.money);
-        result += (this.cloth * rightOperand.cloth);
-        result += (this.metal * rightOperand.metal);
-        result += (this.rum__ * rightOperand.rum__);
-        result += (this.tobco * rightOperand.tobco);
-        result += (this.wood_ * rightOperand.wood_);
+        result += (this.getMoney() * rightOperand.getMoney());
+        result += (this.getCloth() * rightOperand.getCloth());
+        result += (this.getMetal() * rightOperand.getMetal());
+        result += (this.getRum() * rightOperand.getRum());
+        result += (this.getTobacco() * rightOperand.getTobacco());
+        result += (this.getWood() * rightOperand.getWood());
         return result;
     }
 

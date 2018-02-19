@@ -45,8 +45,17 @@ public class Galleon extends ShipType {
     }
 
     @Override
-    public ResourceReadOnly getCostUniversal() {
+    public ResourceReadOnly getBuyingCost() {
         return getCost();
     }
 
+    @Override
+    public ResourceReadOnly getBasicRepairCost() {
+        return ResourceReadOnly.MOCK_VALUE;
+    }
+
+    @Override
+    public ResourceReadOnly getUpgradeCost() {
+        return ResourceReadOnly.MOCK_VALUE;
+    }
 }

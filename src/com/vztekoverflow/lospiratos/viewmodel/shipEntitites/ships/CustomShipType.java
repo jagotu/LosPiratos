@@ -10,7 +10,7 @@ public class CustomShipType extends ShipType {
     }
 
     @Override
-    public ResourceReadOnly getCostUniversal() {
+    public ResourceReadOnly getBuyingCost() {
         return getCost();
     }
 
@@ -22,5 +22,15 @@ public class CustomShipType extends ShipType {
     public int getWeight() {
         return ShipType.BASIC_SHIP_WEIGHT * 5;
         //todo jak tezka je custom lod?
+    }
+
+    @Override
+    public ResourceReadOnly getBasicRepairCost() {
+        return ResourceReadOnly.MOCK_VALUE;
+    }
+
+    @Override
+    public ResourceReadOnly getUpgradeCost() {
+        return ResourceReadOnly.MOCK_VALUE;
     }
 }

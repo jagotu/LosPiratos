@@ -21,6 +21,13 @@ public class Resource extends ResourceReadOnly implements Observable {
     protected IntegerProperty tobco = new SimpleIntegerProperty(0);
     protected IntegerProperty wood_ = new SimpleIntegerProperty(0);
 
+    /**
+     * sets all values to 0
+     */
+    public void clear(){
+        setAll(ResourceReadOnly.ZERO);
+    }
+
     public void setAll(ResourceReadOnly value) {
         setMoney(value.getMoney());
         setCloth(value.getCloth());

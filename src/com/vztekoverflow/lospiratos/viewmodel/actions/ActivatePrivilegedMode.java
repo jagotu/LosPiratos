@@ -1,6 +1,5 @@
 package com.vztekoverflow.lospiratos.viewmodel.actions;
 
-import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
@@ -32,8 +31,8 @@ public class ActivatePrivilegedMode extends Action {
     }
 
     @Override
-    protected ResourceReadOnly recomputeCost() {
-        return new ResourceReadOnly();
+    protected void recomputeCost() {
+
     }
 
     @Override

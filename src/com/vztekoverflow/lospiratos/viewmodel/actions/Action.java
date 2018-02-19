@@ -3,6 +3,7 @@ package com.vztekoverflow.lospiratos.viewmodel.actions;
 import com.vztekoverflow.lospiratos.util.SimpleObservable;
 import com.vztekoverflow.lospiratos.util.Warnings;
 import com.vztekoverflow.lospiratos.viewmodel.Position;
+import com.vztekoverflow.lospiratos.viewmodel.Resource;
 import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
 import com.vztekoverflow.lospiratos.viewmodel.logs.EventLogger;
@@ -10,7 +11,6 @@ import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.BooleanExpression;
-import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
@@ -143,9 +143,9 @@ public abstract class Action implements PerformableAction, PlannableAction {
     protected final void invalidateBindings() {
         visible.invalidate();
         plannable.invalidate();
-        cost.invalidate();
         privilegedModeActive.invalidate();
         ((SimpleObservable) relatedShipJustChanged).fireListenerChange();
+        recomputeCost();
     }
 
     final protected boolean shipHasPlannedLessThan(int count, Class<? extends Action> action) {
@@ -166,24 +166,15 @@ public abstract class Action implements PerformableAction, PlannableAction {
     //endregion
     //region performable
 
-    protected abstract ResourceReadOnly recomputeCost();
+    protected abstract void recomputeCost();
 
-    protected final ObjectBinding<ResourceReadOnly> cost = new ObjectBinding<ResourceReadOnly>() {
-        @Override
-        protected ResourceReadOnly computeValue() {
-            if (getRelatedShip() == null)
-                return ResourceReadOnly.ZERO;
-            return recomputeCost();
-        }
-    };
-
-    public final ResourceReadOnly getCost() {
-        return cost.get();
-    }
-
-    public final ObjectBinding<ResourceReadOnly> costProperty() {
+    public final Resource getCost() {
         return cost;
     }
+
+    protected final Resource cost = new Resource();
+
+
 
     /**
      * @return true if action's cost has successfully been paid.

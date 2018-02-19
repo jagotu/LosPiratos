@@ -12,9 +12,8 @@ public class BuyCommodity extends CommodityTransaction {
     @Override
     protected Action createCopyAndResetThis() {
         BuyCommodity result = new BuyCommodity();
-        result.setCommodities(this.getCommodities().createMutableCopy());
-        this.commoditiesProperty().unbind();
-        this.setCommodities(new Resource());
+        result.getCommodities().setAll(this.getCommodities());
+        getCommodities().clear();
         return result;
     }
 
@@ -30,9 +29,10 @@ public class BuyCommodity extends CommodityTransaction {
     }
 
     @Override
-    protected ResourceReadOnly recomputeCost() {
-        if (getCommodities() == null) return ResourceReadOnly.ZERO;
-        return ResourceReadOnly.fromMoney(getCommodities().scalarProduct(purchaseCoefficients));
+    protected void recomputeCost() {
+        if (getCommodities() == null) cost.clear();
+        else
+            cost.setAll(ResourceReadOnly.fromMoney(getCommodities().scalarProduct(purchaseCoefficients)));
     }
 
     @Override
@@ -44,7 +44,7 @@ public class BuyCommodity extends CommodityTransaction {
                             && getCommodities().getMetal() == 0
                             && getCommodities().getMoney() == 0;
                 }
-                , commoditiesProperty(), relatedShipProperty());
+                , getCommodities(), relatedShipProperty());
     }
 
     //todo opravdickou hodnotu

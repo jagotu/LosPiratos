@@ -1,7 +1,6 @@
 package com.vztekoverflow.lospiratos.viewmodel.actions.transactions;
 
 import com.vztekoverflow.lospiratos.util.Warnings;
-import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
 import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipType;
 
@@ -33,7 +32,7 @@ public class RepairShipViaDowngrade extends RepairShip {
     }
 
     @Override
-    protected ResourceReadOnly recomputeCost() {
-        return ResourceReadOnly.ZERO;
+    protected void recomputeCost() {
+        //nothing
     }
 }

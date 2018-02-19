@@ -1,6 +1,5 @@
 package com.vztekoverflow.lospiratos.viewmodel.actions.transactions;
 
-import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
 import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.EnhancementsCatalog;
@@ -52,9 +51,10 @@ public class BuyNewEnhancement extends EnhancementAbstractTransaction {
     }
 
     @Override
-    protected ResourceReadOnly recomputeCost() {
-        if (getEnhancement() == null) return ResourceReadOnly.ZERO;
-        return EnhancementsCatalog.createInstanceFromPersistentName(EnhancementsCatalog.getPersistentName(getEnhancement())).getCostUniversal();
+    protected void recomputeCost() {
+        if (getEnhancement() == null) cost.clear();
+        else
+            cost.setAll(EnhancementsCatalog.createInstance(getEnhancement()).getCostUniversal());
     }
 
     @Override

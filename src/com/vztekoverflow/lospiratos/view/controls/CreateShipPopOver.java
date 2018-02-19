@@ -97,11 +97,10 @@ public class CreateShipPopOver extends PopOver {
         teamSelect.setItems(g.getTeams());
         shipTypeSelect.getItems().addAll(Game.getShipTypes());
         cost.setMode(EditableText.Mode.EDITOR);
-        //TODO: ResourceReadOnly
-        /*cost.resourceProperty().bind(Bindings.createObjectBinding(() -> {
+        cost.resourceProperty().bind(Bindings.createObjectBinding(() -> {
             if (shipTypeSelect.getSelectionModel().getSelectedItem() == null) return null;
-            return ShipType.createInstance(shipTypeSelect.getSelectionModel().getSelectedItem()).getCostUniversal();
-        }, shipTypeSelect.getSelectionModel().selectedItemProperty()));*/
+            return ShipType.createInstance(shipTypeSelect.getSelectionModel().getSelectedItem()).getBuyingCost().createMutableCopy();
+        }, shipTypeSelect.getSelectionModel().selectedItemProperty()));
     }
 
     private Game game;

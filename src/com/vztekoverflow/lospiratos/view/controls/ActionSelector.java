@@ -127,8 +127,7 @@ public class ActionSelector extends Pane {
                 if (!(n.getAction() instanceof ParameterizedAction)) {
                     ResourceEdit costView = new ResourceEdit();
                     costView.setMode(EditableText.Mode.READONLY);
-                    //TODO: ResourceReadOnly
-                    //costView.resourceProperty().bind(n.getAction().costProperty());
+                    costView.resourceProperty().set(n.getAction().getCost());
                     sp.getChildren().add(costView);
                 }
             }

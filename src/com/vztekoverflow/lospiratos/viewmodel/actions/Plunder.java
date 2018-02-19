@@ -4,7 +4,6 @@ import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.viewmodel.Plunderable;
 import com.vztekoverflow.lospiratos.viewmodel.Position;
 import com.vztekoverflow.lospiratos.viewmodel.Resource;
-import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
 import com.vztekoverflow.lospiratos.viewmodel.actions.transactions.ResourceActionParameter;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanExpression;
@@ -17,7 +16,10 @@ import java.util.Set;
 public class Plunder extends Action implements ParameterizedAction {
     @Override
     protected Action createCopyAndResetThis() {
-        return new Plunder();
+        Plunder result = new Plunder();
+        result.getCommodities().setAll(this.getCommodities());
+        getCommodities().clear();
+        return result;
     }
 
     @Override
@@ -33,8 +35,8 @@ public class Plunder extends Action implements ParameterizedAction {
     }
 
     @Override
-    protected ResourceReadOnly recomputeCost() {
-        return ResourceReadOnly.ZERO;
+    protected void recomputeCost() {
+        //nothing, there this actions costs nothing
     }
 
     @Override
@@ -53,9 +55,9 @@ public class Plunder extends Action implements ParameterizedAction {
 
     private List<ActionParameter> params = new ArrayList<>();
 
-    protected Plunder() {
+    Plunder() {
         params.add(commodities);
-        getCommodities().addListener(__ -> cost.invalidate());
+        getCommodities().addListener(__ -> recomputeCost());
     }
 
     @Override

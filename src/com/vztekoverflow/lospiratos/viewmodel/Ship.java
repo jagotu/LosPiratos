@@ -655,7 +655,7 @@ public class Ship implements MovableFigure, DamageableFigure, OnNextRoundStarted
                 continue;
             result.add(e.getCostUniversal());
         }
-        result.add(getShipType().getCostUniversal());
+        result.add(getShipType().getBuyingCost());
         return result;
     }
 

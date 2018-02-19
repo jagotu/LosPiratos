@@ -106,12 +106,11 @@ public class ActionParametersPopOver extends PopOver {
 
         okButton.disableProperty().bind(Bindings.not(par.satisfiedProperty()));
         costView.setPrefWrapLength(0);
-        BooleanBinding notZeroPrice = Bindings.createBooleanBinding(() -> par.getCost() != null && !par.getCost().equals(ResourceReadOnly.ZERO), par.costProperty());
+        BooleanBinding notZeroPrice = Bindings.createBooleanBinding(() -> par.getCost() != null && !par.getCost().equals(ResourceReadOnly.ZERO), par.getCost());
         cost.visibleProperty().bind(notZeroPrice);
         cost.managedProperty().bind(notZeroPrice);
         costView.setMode(EditableText.Mode.READONLY);
-        //TODO: was ResourceReadOnly
-        //costView.resourceProperty().bind(par.costProperty());
+        costView.resourceProperty().set(par.getCost());
 
 
     }

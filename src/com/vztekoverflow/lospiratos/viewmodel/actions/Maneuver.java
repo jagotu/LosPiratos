@@ -1,7 +1,6 @@
 package com.vztekoverflow.lospiratos.viewmodel.actions;
 
 import com.vztekoverflow.lospiratos.viewmodel.Position;
-import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
 
 public abstract class Maneuver extends Action {
     //this should still be overridden by concrete classes
@@ -32,7 +31,7 @@ public abstract class Maneuver extends Action {
     }
 
     @Override
-    protected ResourceReadOnly recomputeCost() {
-        return new ResourceReadOnly();
+    protected void recomputeCost() {
+        //nothing, there this actions costs nothing
     }
 }
