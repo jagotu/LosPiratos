@@ -17,4 +17,10 @@ public class CustomShipType extends ShipType {
     public static ResourceReadOnly getCost() {
         return new ResourceReadOnly();
     }
+
+    @Override
+    public int getWeight() {
+        return ShipType.BASIC_SHIP_WEIGHT * 5;
+        //todo jak tezka je custom lod?
+    }
 }

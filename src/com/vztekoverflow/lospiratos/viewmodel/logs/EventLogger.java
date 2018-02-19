@@ -51,6 +51,11 @@ public class EventLogger {
         events.add(new MessageLoggedEvent(sender, message));
     }
 
+    public void logActionNotPerformed(Action sender, String reason) {
+        events.add(new MessageLoggedEvent("akce " + sender.getČeskéJméno() + " na lodi " + sender.getRelatedShip().getName() + " se neprovedla", reason));
+        //todo udelat systemovejsi reseni, s vlastnim LoggedEvent objektem, formaterem atd
+    }
+
     public void clearLoggedEvents() {
         events.clear();
     }

@@ -1,11 +1,12 @@
 package com.vztekoverflow.lospiratos.viewmodel;
 
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
+import com.vztekoverflow.lospiratos.util.Translatable;
 
-public class Shipwreck implements Plunderable, MovableFigure, OnNextRoundStartedListener {
+public class Shipwreck implements Plunderable, Figure, OnNextRoundStartedListener, Translatable {
 
     private final Resource resource = new Resource();
-    private final Position position = new Position();
+    private final AxialCoordinate coordinate;
     private final Game owner;
 
     public Game getOwner() {
@@ -13,12 +14,12 @@ public class Shipwreck implements Plunderable, MovableFigure, OnNextRoundStarted
     }
 
     @Override
-    public Position getPosition() {
-        return position;
+    public AxialCoordinate getCoordinate() {
+        return coordinate;
     }
 
-    Shipwreck(AxialCoordinate position, Game owner) {
-        this.position.setCoordinate(position);
+    Shipwreck(AxialCoordinate coordinate, Game owner) {
+        this.coordinate = coordinate;
         this.owner = owner;
         owner.addOnNextRoundStartedListener(this);
     }
@@ -37,5 +38,10 @@ public class Shipwreck implements Plunderable, MovableFigure, OnNextRoundStarted
             owner.remove(this);
             owner.removeOnNextRoundStartedListener(this);
         }
+    }
+
+    @Override
+    public String getČeskéJméno() {
+        return "vrak";
     }
 }

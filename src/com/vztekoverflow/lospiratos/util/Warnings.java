@@ -46,6 +46,12 @@ public class Warnings {
         output.println("Los WARNINGos Piratos: " + sender + ": " + message);
         if(soundEnabled) beep();
     }
+    public static void exceptionCaught(String sender, Exception e){
+        if(!enabled) return;
+        output.println("  !!! Exception caught by " + sender);
+        e.printStackTrace();
+        if(soundEnabled) beep();
+    }
     public static void makeStrongWarning(String sender, String message){
         if(!enabled) return;
         output.println("  !!! Strong warning: " + sender + ": " + message + " !!! ");

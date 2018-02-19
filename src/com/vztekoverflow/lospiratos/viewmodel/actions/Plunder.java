@@ -1,5 +1,6 @@
 package com.vztekoverflow.lospiratos.viewmodel.actions;
 
+import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.viewmodel.Plunderable;
 import com.vztekoverflow.lospiratos.viewmodel.Position;
 import com.vztekoverflow.lospiratos.viewmodel.Resource;
@@ -7,10 +8,11 @@ import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
 import com.vztekoverflow.lospiratos.viewmodel.actions.transactions.ResourceActionParameter;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanExpression;
-import javafx.beans.property.ObjectProperty;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Plunder extends Action implements ParameterizedAction {
     @Override
@@ -37,7 +39,15 @@ public class Plunder extends Action implements ParameterizedAction {
 
     @Override
     protected void performOnShipInternal() {
-        //todo ?? fakt nevim jak
+        AxialCoordinate position = getRelatedShip().getPosition().getCoordinate();
+        Plunderable target = getRelatedShip().getTeam().getGame().getBoard().getPlunderable(position);
+        if(target == null){
+            getEventLogger().logActionNotPerformed(this,"na políčku " + position + " nelze plundrovat");
+            return;
+        }
+        for(OnPlunderRequestedListener l : onPlunderRequestedListeners){
+            l.onPlunderRequested(target,this);
+        }
     }
 
 
@@ -45,7 +55,7 @@ public class Plunder extends Action implements ParameterizedAction {
 
     protected Plunder() {
         params.add(commodities);
-        commoditiesProperty().addListener(__ -> cost.invalidate());
+        getCommodities().addListener(__ -> cost.invalidate());
     }
 
     @Override
@@ -64,14 +74,6 @@ public class Plunder extends Action implements ParameterizedAction {
         return commodities.get();
     }
 
-    public ObjectProperty<Resource> commoditiesProperty() {
-        return commodities.property();
-    }
-
-    public void setCommodities(Resource commodities) {
-        this.commodities.set(commodities);
-    }
-
     @Override
     public BooleanExpression satisfiedProperty() {
         return Bindings.createBooleanBinding(() -> true);
@@ -87,4 +89,14 @@ public class Plunder extends Action implements ParameterizedAction {
     public String getČeskéJméno() {
         return "plundrování";
     }
+
+    public void addListener(OnPlunderRequestedListener listener) {
+        onPlunderRequestedListeners.add(listener);
+    }
+
+    public void removeListener(OnPlunderRequestedListener listener) {
+        onPlunderRequestedListeners.remove(listener);
+    }
+
+    private Set<OnPlunderRequestedListener> onPlunderRequestedListeners = new HashSet<>();
 }

@@ -12,6 +12,7 @@ import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipType;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.EnhancementsCatalog;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Brig;
 import javafx.beans.binding.Binding;
+import javafx.beans.binding.Bindings;
 import javafx.beans.binding.IntegerBinding;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.*;
@@ -53,6 +54,7 @@ public class Ship implements MovableFigure, DamageableFigure, OnNextRoundStarted
                 shipModel.carriesMoneyProperty(),
                 maxCargo
         );
+        storage.addListener(__ -> weight.invalidate());
         position = new Position(shipModel.positionProperty(), shipModel.orientationDegProperty());
     }
     //endregion
@@ -283,6 +285,7 @@ public class Ship implements MovableFigure, DamageableFigure, OnNextRoundStarted
         speed.invalidate();
         maxCargo.invalidate();
         garrisonSize.invalidate();
+        weight.invalidate();
     }
 
     private IntegerBinding maxHP = new IntegerBinding() {
@@ -335,6 +338,19 @@ public class Ship implements MovableFigure, DamageableFigure, OnNextRoundStarted
             return val;
         }
     };
+
+    private IntegerBinding weight = Bindings.createIntegerBinding(() ->
+                getShipType().getWeight() + getStorage().scalarProduct(ResourceReadOnly.ONE)
+            , shipType //also depends on storage, see constructor
+    );
+
+    public int getWeight() {
+        return weight.get();
+    }
+
+    public IntegerBinding weightProperty() {
+        return weight;
+    }
 
     public int getMaxHP() {
         return maxHP.get();

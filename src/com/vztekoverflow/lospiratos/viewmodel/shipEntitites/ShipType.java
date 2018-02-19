@@ -20,7 +20,11 @@ public abstract class ShipType extends ShipEntity {
 
     public static List<Class<? extends ShipType>> allShipTypes = Arrays.asList(Schooner.class, Brig.class, Frigate.class, Galleon.class);
 
+    abstract public int getWeight();
+
     //static:
+
+    protected static final int BASIC_SHIP_WEIGHT = 10000;
 
     private static String persistentNameSchooner = "Schooner";
     private static String persistentNameBrig = "Brig";

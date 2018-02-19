@@ -1,9 +1,11 @@
 package com.vztekoverflow.lospiratos.viewmodel;
 
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
-public class Resource extends ResourceReadOnly {
+public class Resource extends ResourceReadOnly implements Observable {
     public Resource(int money, int cloth, int metal, int rum, int tobacco, int wood) {
         super(money, cloth, metal, rum, tobacco, wood);
     }
@@ -99,6 +101,27 @@ public class Resource extends ResourceReadOnly {
 
     public void addWood(int value) {
         wood_.set(wood_.get() + value);
+    }
+
+    /**
+     * The listener will listen for changes on any of the resources' component
+     * @param listener
+     */
+    public void addListener(InvalidationListener listener){
+        moneyProperty().addListener(listener);
+        clothProperty().addListener(listener);
+        metalProperty().addListener(listener);
+        rumProperty().addListener(listener);
+        tobaccoProperty().addListener(listener);
+        woodProperty().addListener(listener);
+    }
+    public void removeListener(InvalidationListener listener){
+        moneyProperty().removeListener(listener);
+        clothProperty().removeListener(listener);
+        metalProperty().removeListener(listener);
+        rumProperty().removeListener(listener);
+        tobaccoProperty().removeListener(listener);
+        woodProperty().removeListener(listener);
     }
 
     /**

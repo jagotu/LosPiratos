@@ -29,6 +29,11 @@ public class Frigate extends ShipType {
         return 3;
     }
 
+    @Override
+    public int getWeight() {
+        return ShipType.BASIC_SHIP_WEIGHT * 3;
+    }
+
     public static ResourceReadOnly getCost() {
         return new ResourceReadOnly();
     }

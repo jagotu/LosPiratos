@@ -30,6 +30,11 @@ public class Schooner extends ShipType {
         return 4;
     }
 
+    @Override
+    public int getWeight() {
+        return ShipType.BASIC_SHIP_WEIGHT;
+    }
+
 
     public static ResourceReadOnly getCost() {
         return new ResourceReadOnly();

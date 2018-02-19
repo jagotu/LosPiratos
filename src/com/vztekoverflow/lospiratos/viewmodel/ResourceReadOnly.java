@@ -5,6 +5,7 @@ import com.vztekoverflow.lospiratos.util.PartialOrdering;
 public class ResourceReadOnly {
 
     public static final ResourceReadOnly ZERO = new ResourceReadOnly();
+    public static final ResourceReadOnly ONE = new ResourceReadOnly(1,1,1,1,1,1);
     public static final ResourceReadOnly MAX = new ResourceReadOnly(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
 
     private final int money;

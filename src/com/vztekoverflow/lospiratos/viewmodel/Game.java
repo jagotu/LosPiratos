@@ -229,7 +229,7 @@ public class Game {
         onNextRoundStartedListeners.remove(listener);
     }
 
-    public Shipwreck createAndAddNewShipwreck() {
+    public Shipwreck createAndAddNewDefaultShipwreck() {
         return createAndAddNewShipwreck(AxialCoordinate.ZERO, ResourceReadOnly.ZERO);
     }
 

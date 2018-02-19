@@ -1,6 +1,7 @@
 package com.vztekoverflow.lospiratos.evaluator;
 
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
+import com.vztekoverflow.lospiratos.util.RandomStatic;
 import com.vztekoverflow.lospiratos.util.Warnings;
 import com.vztekoverflow.lospiratos.viewmodel.*;
 import com.vztekoverflow.lospiratos.viewmodel.actions.*;
@@ -41,15 +42,18 @@ class StandardGameEvaluator extends GameEvaluator {
 
         reinitialize();
         performOnAllActions(a -> {
-            if (a instanceof Attack) ((Attack) a).addOnDamageDoneListener(onDamageDoneListener);
+            if (a instanceof Attack) ((Attack) a).addListener(onDamageDoneListener);
+            if (a instanceof Plunder) ((Plunder) a).addListener(onPlunderRequestedListener);
         });
         evaluateVolleys();
         evaluate(Maneuver.class);
+        //destroyDamagedShips(); //patri to i sem? ma se zabijet i po manevrech?
         evaluate(MortarShot.class);
         evaluate(Transaction.class);
         evaluatePlundering();
         performOnAllActions(a -> {
-            if (a instanceof Attack) ((Attack) a).removeOnDamageDoneListener(onDamageDoneListener);
+            if (a instanceof Attack) ((Attack) a).removeListener(onDamageDoneListener);
+            if (a instanceof Plunder) ((Plunder) a).removeListener(onPlunderRequestedListener);
         });
         destroyDamagedShips();
         solveCollisions(0);
@@ -61,6 +65,7 @@ class StandardGameEvaluator extends GameEvaluator {
         collisionSolverManueverIndex = new HashMap<>();
         killedShips = new HashSet<>();
         attackers = new HashMap<>();
+        plunderers = new HashMap<>();
     }
 
     /**
@@ -73,6 +78,7 @@ class StandardGameEvaluator extends GameEvaluator {
      * Key represents target, Value (List) represents all its attackers from this round
      */
     private Map<Ship, Set<Ship>> attackers = new HashMap<>();
+    private Map<Plunderable, Set<Plunder>> plunderers = new HashMap<>();
 
     private OnDamageDoneListener onDamageDoneListener = (Attack sender, Ship target, int damageAmount, DamageSufferedResponse response) -> {
 
@@ -89,12 +95,21 @@ class StandardGameEvaluator extends GameEvaluator {
         g.getLogger().logAttack(attacker, sender, target, damageAmount);
     };
 
+    private OnPlunderRequestedListener onPlunderRequestedListener = (Plunderable target, Plunder sender) -> {
+        plunderers.putIfAbsent(target, new HashSet<>());
+        plunderers.get(target).add(sender);
+    };
+
     private void evaluateVolleys() {
         for (Ship s : g.getAllShips().values()) {
             Position oldPosition = s.getPosition().createCopy();
             for (PerformableAction a : s.getPlannedActions()) {
                 if (a instanceof Maneuver || a instanceof CannonsAbstractVolley || a instanceof FrontalAssault) {
-                    a.performOnShip();
+                   try {
+                       a.performOnShip();
+                   }catch (Exception e){
+                       Warnings.exceptionCaught(toString()+".evaluateVolleys()",e);
+                   }
                 }
             }
             s.getPosition().setFrom(oldPosition);
@@ -104,37 +119,52 @@ class StandardGameEvaluator extends GameEvaluator {
     private void evaluate(Class<? extends Action> action) {
         performOnAllActions(a -> {
             if (action.isAssignableFrom(a.getClass())) {
-                a.performOnShip();
+                try {
+                    a.performOnShip();
+                }catch (Exception e){
+                    Warnings.exceptionCaught(toString()+".evaluate(" + action + ")",e);
+                }
             }
         });
     }
 
     private void evaluatePlundering(){
-        //predtim si musim do Plunder action ulozit listenery "tedka pludruju tady"
-        //projdu listenery, sestavim si mapu <plunderable, set<ship>>
-        //pro kazdou pluderable polozku provedu rozdeleni koristi (haha, na to uz mam funkci z deleni)
+        evaluate(Plunder.class);
+        for(Map.Entry<Plunderable, Set<Plunder>> e : plunderers.entrySet()){
+            try {
+                e.getKey().getPlunderedBy(e.getValue());
+            }catch (Exception ex){
+                Warnings.exceptionCaught(toString()+".evaluatePlundering()",ex);
+            }
+
+        }
     }
 
     private void damageCollisionAttendees(){
         for(Ship s: collisionAttendees){
             DamageSufferedResponse response = s.takeDamage(FrontalAssault.FrontalAssaultBasicSelfDamage);
             if(response.equals(DamageSufferedResponse.hasJustBeenDestroyed)){
-                s.destroyShipAndEnhancements();
-                g.getLogger().logShipHasDied(s, null);
-                //todo vyrobit vrak nebo tak neco
+                destroyShip(s,null);
             }
         }
     }
 
     private void destroyDamagedShips() {
         for (Ship s : killedShips) {
-            //dividePlunderedTreasure(s, attackers.get(s)); //currently not supported by the game rules
-            s.destroyShipAndEnhancements();
-            g.getLogger().logShipHasDied(s, attackers.get(s));
+            destroyShip(s, attackers.get(s));
             for (Ship a : attackers.get(s)){
                 a.incrementXP();
             }
         }
+        killedShips.clear();
+        attackers.clear();
+    }
+
+    private void destroyShip(Ship s, Iterable<Ship> attackers){
+        //dividePlunderedTreasure(s, attackers); //currently not supported by the game rules
+        g.createAndAddNewShipwreck(s.getPosition().getCoordinate(), s.getStorage());
+        s.destroyShipAndEnhancements();
+        g.getLogger().logShipHasDied(s, attackers);
     }
 
     private void dividePlunderedTreasure(Ship from, Set<Ship> to) {
@@ -192,7 +222,7 @@ class StandardGameEvaluator extends GameEvaluator {
         Map<Ship, AxialCoordinate> newPositions = new HashMap<>();
 
         //following should never be null, thanks to check on the beginning of the function
-        Ship heaviest = ships.stream().max(Comparator.comparingInt(this::shipWeight)).get();
+        Ship heaviest = ships.stream().max(this::compareShips).get();
         for (Ship s : ships) {
             if (s.equals(heaviest))
                 continue;
@@ -220,9 +250,22 @@ class StandardGameEvaluator extends GameEvaluator {
         g.getLogger().logCollisionSolved(collisionPosition, newPositions, iteration);
     }
 
-    private int shipWeight(Ship s) {
-        return s.getStorage().getMoney();
-        //todo this is mock implementation only
+    private int compareShips(Ship a, Ship b){
+        int weight_a = a.getWeight();
+        int weight_b = b.getWeight();
+
+        //if the figure has stayed od this position in the last round, it should win the contest
+        if(a.getPlannedActions().stream().noneMatch(p-> p instanceof MoveForward))
+            weight_a = Integer.MAX_VALUE;
+        if(b.getPlannedActions().stream().noneMatch(p-> p instanceof MoveForward))
+            weight_b = Integer.MAX_VALUE;
+
+        if(weight_a == weight_b){
+            if(weight_a == Integer.MAX_VALUE)
+                Warnings.makeWarning(toString()+".compareShips()","both ships seem to have stayed on the tile "+ a.getCoordinate() +" in the last round");
+            return RandomStatic.instance.nextInt(3) -1; // {-1, 0, 1}
+        }else return weight_a - weight_b;
+
     }
 
     private void performOnAllActions(Consumer<Action> c) {

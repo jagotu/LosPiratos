@@ -30,6 +30,11 @@ public class Galleon extends ShipType {
         return 2;
     }
 
+    @Override
+    public int getWeight() {
+        return ShipType.BASIC_SHIP_WEIGHT * 4;
+    }
+
     public static ResourceReadOnly getCost() {
         return new ResourceReadOnly(42, 0, 0, 0, 0, 0);
     }

@@ -1,6 +1,5 @@
 package com.vztekoverflow.lospiratos.viewmodel.actions;
 
-import com.vztekoverflow.lospiratos.evaluator.OnDamageDoneListener;
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.viewmodel.DamageSufferedResponse;
 import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
@@ -48,11 +47,11 @@ public abstract class Attack extends Action {
         return result;
     }
 
-    public void addOnDamageDoneListener(OnDamageDoneListener listener) {
+    public void addListener(OnDamageDoneListener listener) {
         onDamageDoneListeners.add(listener);
     }
 
-    public void removeOnDamageDoneListener(OnDamageDoneListener listener) {
+    public void removeListener(OnDamageDoneListener listener) {
         onDamageDoneListeners.remove(listener);
     }
 

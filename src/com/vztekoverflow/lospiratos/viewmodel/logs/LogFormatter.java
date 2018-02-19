@@ -18,7 +18,7 @@ public abstract class LogFormatter {
             @Override
             String format(Ship s) {
                 if (s == null) return "loď null";
-                return "loď " + quotesL + s.getName() + quotesR
+                return s.getShipType().getČeskéJméno() + s + quotesL + s.getName() + quotesR
                         + space() + braceL + "pod vedením " + quotesL + s.getCaptainName() + quotesR + braceR
                         ;
             }
