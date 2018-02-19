@@ -109,11 +109,14 @@ public class ActionParametersPopOver extends PopOver {
         BooleanBinding notZeroPrice = Bindings.createBooleanBinding(() -> par.getCost() != null && !par.getCost().equals(ResourceReadOnly.ZERO), par.costProperty());
         cost.visibleProperty().bind(notZeroPrice);
         cost.managedProperty().bind(notZeroPrice);
-        costView.resourceProperty().bind(par.costProperty());
+        costView.setMode(EditableText.Mode.READONLY);
+        //TODO: was ResourceReadOnly
+        //costView.resourceProperty().bind(par.costProperty());
+
 
     }
 
-    private ResourceView costView;
+    private ResourceEdit costView;
     private HBox cost;
 
     public ActionParametersPopOver() {
@@ -148,7 +151,7 @@ public class ActionParametersPopOver extends PopOver {
         VBox vb = new VBox();
         cost = new HBox();
         cost.getChildren().add(new Label("Cena:"));
-        costView = new ResourceView();
+        costView = new ResourceEdit();
 
         cost.getChildren().add(costView);
         vb.getChildren().add(cost);
@@ -239,21 +242,12 @@ public class ActionParametersPopOver extends PopOver {
             return hb;
         } else if (p instanceof ResourceActionParameter) {
             ResourceActionParameter rap = (ResourceActionParameter) p;
-            HBox hb = new HBox();
 
-            ResourceEdit re = new ResourceEdit(rap.get());
-            ResourceView rw = new ResourceView();
-            rw.resourceProperty().bind(rap.property());
+            ResourceEdit re = new ResourceEdit();
+            re.resourceProperty().bind(rap.property());
+            re.modeProperty().bind(Bindings.when(readOnly).then(EditableText.Mode.READONLY).otherwise(EditableText.Mode.EDITOR));
 
-            rw.visibleProperty().bind(readOnly);
-            rw.managedProperty().bind(readOnly);
-            re.visibleProperty().bind(readOnly.not());
-            re.managedProperty().bind(readOnly.not());
-
-
-            hb.getChildren().add(re);
-            hb.getChildren().add(rw);
-            return hb;
+            return re;
 
         }
         return new Label("TODO " + p.getClass().getSimpleName());

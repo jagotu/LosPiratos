@@ -1,7 +1,8 @@
 package com.vztekoverflow.lospiratos.view.layout;
 
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
-import com.vztekoverflow.lospiratos.view.controls.ResourceView;
+import com.vztekoverflow.lospiratos.view.controls.EditableText;
+import com.vztekoverflow.lospiratos.view.controls.ResourceEdit;
 import com.vztekoverflow.lospiratos.view.controls.figures.ShipFigure;
 import com.vztekoverflow.lospiratos.viewmodel.*;
 import com.vztekoverflow.lospiratos.viewmodel.actions.ActionsCatalog;
@@ -179,13 +180,13 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
             if (bt instanceof com.vztekoverflow.lospiratos.viewmodel.boardTiles.Plantation) {
                 s.getChildren().add(new ImageView("/com/vztekoverflow/lospiratos/view/plantation.png"));
             }
-            if(bt instanceof Plunderable)
-            {
-                ResourceView rv = new ResourceView();
-                rv.resourceProperty().set(((Plunderable)bt).getResource());
-                rv.getStyleClass().add("inmap-resources");
-                rv.maxWidthProperty().bind(tileWidth.multiply(0.7));
-                s.getChildren().add(rv);
+            if (bt instanceof Plunderable) {
+                ResourceEdit re = new ResourceEdit();
+                re.setMode(EditableText.Mode.READONLY);
+                re.setResource(((Plunderable) bt).getResource());
+                re.getStyleClass().add("inmap-resources");
+                re.maxWidthProperty().bind(tileWidth.multiply(0.7));
+                s.getChildren().add(re);
             }
             if (onMouseClick != null) {
                 s.setOnMouseClicked(e -> {
@@ -263,11 +264,12 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
                 iv.fitHeightProperty().bind(tileHeight.multiply(0.7));
                 iv.setPreserveRatio(true);
                 sp.getChildren().add(iv);
-                ResourceView rv = new ResourceView();
-                rv.resourceProperty().set(((Shipwreck) f).getResource());
-                rv.getStyleClass().add("inmap-resources");
-                rv.maxWidthProperty().bind(tileWidth.multiply(0.7));
-                sp.getChildren().add(rv);
+                ResourceEdit re = new ResourceEdit();
+                re.setMode(EditableText.Mode.READONLY);
+                re.resourceProperty().set(((Shipwreck) f).getResource());
+                re.getStyleClass().add("inmap-resources");
+                re.maxWidthProperty().bind(tileWidth.multiply(0.7));
+                sp.getChildren().add(re);
                 n = sp;
             } else {
                 Label l = new Label(f.getClass().getSimpleName());

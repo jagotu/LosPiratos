@@ -1,18 +1,18 @@
 /**
  * Copyright (c) 2013 - 2015, ControlsFX
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *     * Redistributions of source code must retain the above copyright
+ * * Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
+ * * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *     * Neither the name of ControlsFX, any associated website, nor the
+ * * Neither the name of ControlsFX, any associated website, nor the
  * names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -26,29 +26,6 @@
  */
 
 package com.vztekoverflow.lospiratos.view;
-
-import static java.lang.Double.MAX_VALUE;
-import static javafx.geometry.Pos.CENTER_LEFT;
-import static javafx.scene.control.ContentDisplay.GRAPHIC_ONLY;
-import static javafx.scene.paint.Color.YELLOW;
-import static org.controlsfx.control.PopOver.ArrowLocation.BOTTOM_CENTER;
-import static org.controlsfx.control.PopOver.ArrowLocation.BOTTOM_LEFT;
-import static org.controlsfx.control.PopOver.ArrowLocation.BOTTOM_RIGHT;
-import static org.controlsfx.control.PopOver.ArrowLocation.LEFT_BOTTOM;
-import static org.controlsfx.control.PopOver.ArrowLocation.LEFT_CENTER;
-import static org.controlsfx.control.PopOver.ArrowLocation.LEFT_TOP;
-import static org.controlsfx.control.PopOver.ArrowLocation.RIGHT_BOTTOM;
-import static org.controlsfx.control.PopOver.ArrowLocation.RIGHT_CENTER;
-import static org.controlsfx.control.PopOver.ArrowLocation.RIGHT_TOP;
-import static org.controlsfx.control.PopOver.ArrowLocation.TOP_CENTER;
-import static org.controlsfx.control.PopOver.ArrowLocation.TOP_LEFT;
-import static org.controlsfx.control.PopOver.ArrowLocation.TOP_RIGHT;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.controlsfx.control.PopOver;
-import org.controlsfx.control.PopOver.ArrowLocation;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
@@ -64,16 +41,19 @@ import javafx.scene.control.Skin;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.HLineTo;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.LineTo;
-import javafx.scene.shape.MoveTo;
-import javafx.scene.shape.Path;
-import javafx.scene.shape.PathElement;
-import javafx.scene.shape.QuadCurveTo;
-import javafx.scene.shape.VLineTo;
+import javafx.scene.shape.*;
 import javafx.stage.Window;
+import org.controlsfx.control.PopOver;
+import org.controlsfx.control.PopOver.ArrowLocation;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.lang.Double.MAX_VALUE;
+import static javafx.geometry.Pos.CENTER_LEFT;
+import static javafx.scene.control.ContentDisplay.GRAPHIC_ONLY;
+import static javafx.scene.paint.Color.YELLOW;
+import static org.controlsfx.control.PopOver.ArrowLocation.*;
 
 public class PopOverSkin implements Skin<PopOver> {
 
@@ -181,20 +161,20 @@ public class PopOverSkin implements Skin<PopOver> {
                         content.setTop(titlePane);
 
                         switch (getSkinnable().getArrowLocation()) {
-                        case LEFT_TOP:
-                        case LEFT_CENTER:
-                        case LEFT_BOTTOM:
-                            popOver.setAnchorX(
-                                    popOver.getAnchorX() + popOver.getArrowSize());
-                            break;
-                        case TOP_LEFT:
-                        case TOP_CENTER:
-                        case TOP_RIGHT:
-                            popOver.setAnchorY(
-                                    popOver.getAnchorY() + popOver.getArrowSize());
-                            break;
-                        default:
-                            break;
+                            case LEFT_TOP:
+                            case LEFT_CENTER:
+                            case LEFT_BOTTOM:
+                                popOver.setAnchorX(
+                                        popOver.getAnchorX() + popOver.getArrowSize());
+                                break;
+                            case TOP_LEFT:
+                            case TOP_CENTER:
+                            case TOP_RIGHT:
+                                popOver.setAnchorY(
+                                        popOver.getAnchorY() + popOver.getArrowSize());
+                                break;
+                            default:
+                                break;
                         }
                     } else {
                         popOver.getStyleClass().remove(DETACHED_STYLE_CLASS);

@@ -118,7 +118,8 @@ public class TeamView extends StackPane {
             }
         });
 
-        ResourceEdit rw = new ResourceEdit(t.getOwnedResource());
+        ResourceEdit rw = new ResourceEdit();
+        rw.setResource(t.getOwnedResource());
 
         BorderPane shipsCount = new BorderPane();
         shipsCount.setMinWidth(40);

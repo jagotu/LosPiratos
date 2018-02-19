@@ -101,7 +101,8 @@ public class ShipView extends StackPane {
         vbox.getChildren().add(ssv);
 
 
-        ResourceEdit rw = new ResourceEdit(s.getStorage());
+        ResourceEdit rw = new ResourceEdit();
+        rw.setResource(s.getStorage());
         VBox.setMargin(rw, new Insets(0, 4, 4, 4));
         vbox.getChildren().add(rw);
 

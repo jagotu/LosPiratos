@@ -7,7 +7,7 @@
 <?import org.controlsfx.glyphfont.*?>
 <fx:root maxWidth="300.0" prefWidth="300.0" type="javafx.scene.layout.FlowPane"
          xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
-    <BorderPane minWidth="40.0">
+    <BorderPane fx:id="moneyPane">
         <left>
             <Label>
                 <graphic>
@@ -22,7 +22,7 @@
             <EditableIntegerText fx:id="money"/>
         </center>
     </BorderPane>
-    <BorderPane minWidth="40.0">
+    <BorderPane fx:id="metalPane">
         <left>
             <Label>
                 <graphic>
@@ -38,7 +38,7 @@
             <EditableIntegerText fx:id="metal"/>
         </center>
     </BorderPane>
-    <BorderPane minWidth="40.0">
+    <BorderPane fx:id="woodPane">
         <left>
             <Label>
                 <graphic>
@@ -53,7 +53,7 @@
             <EditableIntegerText fx:id="wood"/>
         </center>
     </BorderPane>
-    <BorderPane minWidth="40.0">
+    <BorderPane fx:id="clothPane">
         <left>
             <Label>
                 <graphic>
@@ -68,7 +68,7 @@
             <EditableIntegerText fx:id="cloth"/>
         </center>
     </BorderPane>
-    <BorderPane minWidth="40.0">
+    <BorderPane fx:id="rumPane">
         <left>
             <Label>
                 <graphic>

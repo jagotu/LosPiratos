@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.vztekoverflow.lospiratos.view.controls.ResourceView?>
+<?import com.vztekoverflow.lospiratos.view.controls.ResourceEdit?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -30,7 +30,7 @@
                 </Button>
             </HBox>
             <Label text="Cena:" GridPane.rowIndex="5"/>
-            <ResourceView fx:id="cost" prefWrapLength="0" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+            <ResourceEdit fx:id="cost" prefWrapLength="0" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
             <columnConstraints>
                 <ColumnConstraints/>
                 <ColumnConstraints/>

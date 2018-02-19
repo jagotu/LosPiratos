@@ -138,7 +138,9 @@ public class CreateWreckPopOver extends PopOver {
             highlightedTiles.add(targetParameter.get());
         }
 
-        ResourceEdit re = new ResourceEdit(resources);
+        ResourceEdit re = new ResourceEdit();
+        re.setMode(EditableText.Mode.EDITOR);
+        re.setResource(resources);
         GridPane.setColumnIndex(re, 1);
         GridPane.setRowIndex(re, 1);
         gp.getChildren().add(re);

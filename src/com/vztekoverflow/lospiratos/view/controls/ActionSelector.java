@@ -125,8 +125,10 @@ public class ActionSelector extends Pane {
                     }
                 });
                 if (!(n.getAction() instanceof ParameterizedAction)) {
-                    ResourceView costView = new ResourceView();
-                    costView.resourceProperty().bind(n.getAction().costProperty());
+                    ResourceEdit costView = new ResourceEdit();
+                    costView.setMode(EditableText.Mode.READONLY);
+                    //TODO: ResourceReadOnly
+                    //costView.resourceProperty().bind(n.getAction().costProperty());
                     sp.getChildren().add(costView);
                 }
             }
