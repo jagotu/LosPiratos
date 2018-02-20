@@ -12,6 +12,7 @@ import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
@@ -186,6 +187,7 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
             if (bt instanceof Plunderable) {
                 ResourceEdit re = new ResourceEdit();
                 re.setMode(EditableText.Mode.READONLY);
+                re.setAlignment(Pos.TOP_CENTER);
                 re.setResource(((Plunderable) bt).getResource());
                 re.getStyleClass().add("inmap-resources");
                 re.maxWidthProperty().bind(tileWidth.multiply(0.7));
@@ -268,6 +270,7 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
                 iv.setPreserveRatio(true);
                 sp.getChildren().add(iv);
                 ResourceEdit re = new ResourceEdit();
+                re.setAlignment(Pos.TOP_CENTER);
                 re.setMode(EditableText.Mode.READONLY);
                 re.resourceProperty().set(((Shipwreck) f).getResource());
                 re.getStyleClass().add("inmap-resources");
