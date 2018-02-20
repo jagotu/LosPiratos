@@ -3,13 +3,13 @@ package com.vztekoverflow.lospiratos.viewmodel.boardTiles;
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.viewmodel.*;
 
+import static com.vztekoverflow.lospiratos.viewmodel.GameConstants.PLANTATION_GENERAL_CAPACITY;
+import static com.vztekoverflow.lospiratos.viewmodel.GameConstants.PLANTATION_GENERAL_INCREASE;
+
 public class Plantation extends BoardTile implements Plunderable {
     public Plantation(AxialCoordinate location, Board b) {
         super(location, b);
     }
-
-    final static ResourceReadOnly PLANTATION_GENERAL_CAPACITY = new ResourceReadOnly(100, 0, 0, 0, 0, 0);
-    final static ResourceReadOnly PLANTATION_GENERAL_INCREASE = new ResourceReadOnly(30, 0, 0, 0, 0, 0);
 
     protected final Resource resource = ResourceReadOnly.MOCK_VALUE.createMutableCopy();
 

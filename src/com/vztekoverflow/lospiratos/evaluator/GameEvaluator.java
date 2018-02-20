@@ -15,6 +15,8 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import static com.vztekoverflow.lospiratos.viewmodel.GameConstants.COLLISION_DAMAGE;
+
 abstract public class GameEvaluator {
 
     abstract public void evaluateRound(int roundNo);
@@ -142,7 +144,7 @@ class StandardGameEvaluator extends GameEvaluator {
 
     private void damageCollisionAttendees(){
         for(Ship s: collisionAttendees){
-            DamageSufferedResponse response = s.takeDamage(FrontalAssault.FrontalAssaultBasicSelfDamage);
+            DamageSufferedResponse response = s.takeDamage(COLLISION_DAMAGE);
             if(response.equals(DamageSufferedResponse.hasJustBeenDestroyed)){
                 destroyShip(s,null);
             }

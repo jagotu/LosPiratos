@@ -7,9 +7,9 @@ import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanExpression;
 
-public class SellCommodity extends CommodityTransaction {
+import static com.vztekoverflow.lospiratos.viewmodel.GameConstants.SELL_COEFFICIENTS;
 
-    static final ResourceReadOnly sellCoefficients = new ResourceReadOnly(1, 2, 2, 2, 2, 2);
+public class SellCommodity extends CommodityTransaction {
 
     @Override
     protected Action createCopyAndResetThis() {
@@ -34,7 +34,7 @@ public class SellCommodity extends CommodityTransaction {
     protected void recomputeCost() {
         cost.clear();
         if (getCommodities() != null){
-            cost.setAll( ResourceReadOnly.fromMoney(getCommodities().scalarProduct(sellCoefficients) * -1));
+            cost.setAll( ResourceReadOnly.fromMoney(getCommodities().scalarProduct(SELL_COEFFICIENTS) * -1));
             //set negative value, because this cost is actually a gain (we are selling something)
         }
     }

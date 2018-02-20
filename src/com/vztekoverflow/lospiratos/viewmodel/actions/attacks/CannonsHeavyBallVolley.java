@@ -4,9 +4,11 @@ import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
 import com.vztekoverflow.lospiratos.viewmodel.actions.ActionIcon;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.HeavyShot;
 
+import static com.vztekoverflow.lospiratos.viewmodel.GameConstants.HEAVY_BALL_DAMAGE_COEFFICIENT;
+
 public class CannonsHeavyBallVolley extends CannonsAbstractVolley {
 
-    public static final double HEAVY_BALL_DAMAGE_COEFFICIENT = 1.5;
+
 
     public CannonsHeavyBallVolley(boolean leftCannons) {
         super(leftCannons);

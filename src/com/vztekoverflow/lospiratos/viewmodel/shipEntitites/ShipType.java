@@ -34,8 +34,6 @@ public abstract class ShipType extends ShipEntity {
 
     //static:
 
-    protected static final int BASIC_SHIP_WEIGHT = 10000;
-
     private static String persistentNameSchooner = "Schooner";
     private static String persistentNameBrig = "Brig";
     private static String persistentNameFrigate = "Frigate";

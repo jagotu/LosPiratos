@@ -3,6 +3,8 @@ package com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships;
 import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipType;
 
+import static com.vztekoverflow.lospiratos.viewmodel.GameConstants.BASIC_SHIP_WEIGHT;
+
 public class Brig extends ShipType {
 
     @Override
@@ -32,7 +34,7 @@ public class Brig extends ShipType {
 
     @Override
     public int getWeight() {
-        return ShipType.BASIC_SHIP_WEIGHT * 2;
+        return BASIC_SHIP_WEIGHT * 2;
     }
 
     public static ResourceReadOnly getCost() {

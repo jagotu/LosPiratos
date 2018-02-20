@@ -9,6 +9,9 @@ import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Frigate;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Galleon;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Schooner;
 
+import static com.vztekoverflow.lospiratos.viewmodel.GameConstants.FRONTAL_ASSAULT_BONUS_DAMAGE_FRIGATE;
+import static com.vztekoverflow.lospiratos.viewmodel.GameConstants.FRONTAL_ASSAULT_BONUS_DAMAGE_GALLEON;
+
 public final class Ram extends ShipEnhancement {
 
     @Override
@@ -43,9 +46,9 @@ public final class Ram extends ShipEnhancement {
         } else if (ship.getShipType() instanceof Brig) {
             ship.removeEnhancement(this.getClass());
         } else if (ship.getShipType() instanceof Frigate) {
-            frontalAssaultBonusDamage = frontalAssaultBonusDamageFrigate;
+            frontalAssaultBonusDamage = FRONTAL_ASSAULT_BONUS_DAMAGE_FRIGATE;
         } else if (ship.getShipType() instanceof Galleon) {
-            frontalAssaultBonusDamage = frontalAssaultBonusDamageGalleon;
+            frontalAssaultBonusDamage = FRONTAL_ASSAULT_BONUS_DAMAGE_GALLEON;
         } else {
             Warnings.makeStrongWarning(toString() + "onShipTypeJustChanged()", "unknown ship type: " + ship.getShipType());
         }
@@ -57,8 +60,7 @@ public final class Ram extends ShipEnhancement {
         recompute();
     }
 
-    private static final int frontalAssaultBonusDamageFrigate = 5;
-    private static final int frontalAssaultBonusDamageGalleon = 10;
+
 
     private int frontalAssaultBonusDamage = 0;
 

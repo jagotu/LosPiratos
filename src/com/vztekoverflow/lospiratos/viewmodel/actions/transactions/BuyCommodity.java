@@ -7,6 +7,8 @@ import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanExpression;
 
+import static com.vztekoverflow.lospiratos.viewmodel.GameConstants.PURCHASE_COEFFICIENTS;
+
 public class BuyCommodity extends CommodityTransaction {
 
     @Override
@@ -32,7 +34,7 @@ public class BuyCommodity extends CommodityTransaction {
     protected void recomputeCost() {
         if (getCommodities() == null) cost.clear();
         else
-            cost.setAll(ResourceReadOnly.fromMoney(getCommodities().scalarProduct(purchaseCoefficients)));
+            cost.setAll(ResourceReadOnly.fromMoney(getCommodities().scalarProduct(PURCHASE_COEFFICIENTS)));
     }
 
     @Override
@@ -47,6 +49,4 @@ public class BuyCommodity extends CommodityTransaction {
                 , getCommodities(), relatedShipProperty());
     }
 
-    //todo opravdickou hodnotu
-    static final ResourceReadOnly purchaseCoefficients = new ResourceReadOnly(1, 2, 2, 2, 2, 2);
 }

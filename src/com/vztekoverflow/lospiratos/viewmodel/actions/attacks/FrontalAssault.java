@@ -8,11 +8,11 @@ import com.vztekoverflow.lospiratos.viewmodel.actions.Attack;
 import com.vztekoverflow.lospiratos.viewmodel.actions.maneuvers.MoveForward;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.Ram;
 
-public class FrontalAssault extends Attack {
+import static com.vztekoverflow.lospiratos.viewmodel.GameConstants.FRONTAL_ASSAULT_BASIC_DAMAGE;
+import static com.vztekoverflow.lospiratos.viewmodel.GameConstants.FRONTAL_ASSAULT_BASIC_SELF_DAMAGE;
+import static com.vztekoverflow.lospiratos.viewmodel.GameConstants.FRONTAL_ASSAULT_SPEED_BONUS_DAMAGE;
 
-    public static final int FrontalAssaultBasicDamage = 10;
-    public static final int FrontalAssaultSpeedBonusDamage = 5;
-    public static final int FrontalAssaultBasicSelfDamage = 5;
+public class FrontalAssault extends Attack {
 
     @Override
     protected boolean recomputeVisible() {
@@ -26,8 +26,8 @@ public class FrontalAssault extends Attack {
 
     @Override
     public void performOnShipInternal() {
-        int damage = FrontalAssaultBasicDamage;
-        int selfDamage = FrontalAssaultBasicSelfDamage;
+        int damage = FRONTAL_ASSAULT_BASIC_DAMAGE;
+        int selfDamage = FRONTAL_ASSAULT_BASIC_SELF_DAMAGE;
         Position p = getRelatedShip().getPosition().createCopy();
         p.moveForward();
 
@@ -46,7 +46,7 @@ public class FrontalAssault extends Attack {
             lastAction = a;
         }
         if (lastAction instanceof MoveForward) {
-            damage += FrontalAssaultSpeedBonusDamage;
+            damage += FRONTAL_ASSAULT_SPEED_BONUS_DAMAGE;
         }
 
         if (getRelatedShip().hasActiveEnhancement(Ram.class)) {

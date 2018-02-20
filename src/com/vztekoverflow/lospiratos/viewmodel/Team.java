@@ -13,7 +13,6 @@ import javafx.scene.paint.Color;
 
 public class Team implements OnNextRoundStartedListener {
 
-    public static final int INITIAL_MONEY = 500;
 
     //initializers:
 
@@ -22,7 +21,7 @@ public class Team implements OnNextRoundStartedListener {
      * Should be called only after the object has been created.
      */
     public void initialize() {
-        ownedResource.money.set(Team.INITIAL_MONEY);
+        ownedResource.setAll(GameConstants.TEAM_INITIAL_RESOURCE);
     }
 
     private com.vztekoverflow.lospiratos.model.Team teamModel;

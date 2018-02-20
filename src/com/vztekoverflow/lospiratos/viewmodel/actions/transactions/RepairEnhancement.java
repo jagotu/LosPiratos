@@ -8,9 +8,11 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanExpression;
 import javafx.beans.value.ObservableValue;
 
+import static com.vztekoverflow.lospiratos.viewmodel.GameConstants.REPAIR_ENHANCEMENT_COST_COEFFICIENT;
+
 public class RepairEnhancement extends EnhancementAbstractTransaction {
 
-    static final double repairCostCoefficient = 0.1;
+
 
     @Override
     protected Action createCopyAndResetThis() {
@@ -56,7 +58,7 @@ public class RepairEnhancement extends EnhancementAbstractTransaction {
         if(isSatisfied()){
             ShipEnhancement e = EnhancementsCatalog.createInstance(getEnhancement());
             if(e != null)
-                cost.setAll(e.getCostUniversal().times(repairCostCoefficient));
+                cost.setAll(e.getCostUniversal().times(REPAIR_ENHANCEMENT_COST_COEFFICIENT));
         }
     }
 

@@ -9,8 +9,9 @@ import javafx.beans.value.ObservableValue;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.vztekoverflow.lospiratos.viewmodel.GameConstants.MORTAR_DAMAGE;
+
 public class MortarShot extends Attack implements ParameterizedAction {
-    public static final int MORTAR_DAMAGE = 10;
 
     @Override
     protected boolean recomputeVisible() {

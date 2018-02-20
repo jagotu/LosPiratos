@@ -3,6 +3,8 @@ package com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships;
 import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipType;
 
+import static com.vztekoverflow.lospiratos.viewmodel.GameConstants.BASIC_SHIP_WEIGHT;
+
 public class Frigate extends ShipType {
     @Override
     public int getBonusMaxHP() {
@@ -31,11 +33,11 @@ public class Frigate extends ShipType {
 
     @Override
     public int getWeight() {
-        return ShipType.BASIC_SHIP_WEIGHT * 3;
+        return BASIC_SHIP_WEIGHT * 3;
     }
 
     public static ResourceReadOnly getCost() {
-        return new ResourceReadOnly();
+        return ResourceReadOnly.MOCK_VALUE;
     }
 
     @Override
@@ -50,12 +52,12 @@ public class Frigate extends ShipType {
 
     @Override
     public ResourceReadOnly getBasicRepairCost() {
-        return ResourceReadOnly.MOCK_VALUE;
+        return ResourceReadOnly.MOCK_VALUE.times(1/10);
     }
 
     @Override
     public ResourceReadOnly getUpgradeCost() {
-        return ResourceReadOnly.MOCK_VALUE;
+        return ResourceReadOnly.MOCK_VALUE.times(1/2);
     }
 
 }
