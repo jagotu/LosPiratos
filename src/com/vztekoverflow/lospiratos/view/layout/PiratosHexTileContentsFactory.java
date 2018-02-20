@@ -12,14 +12,21 @@ import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
+import javafx.scene.transform.Scale;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -175,6 +182,8 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
         }
 
         private PiratosHexTileContents(BoardTile bt) {
+            s.prefWidthProperty().bind(tileWidth);
+            s.prefHeightProperty().bind(tileHeight);
             classes.add(bt.getClass().getSimpleName());
             updateClasses();
             this.bt = bt;
@@ -185,12 +194,8 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
                 s.getChildren().add(new ImageView("/com/vztekoverflow/lospiratos/view/plantation.png"));
             }
             if (bt instanceof Plunderable) {
-                ResourceEdit re = new ResourceEdit();
-                re.setMode(EditableText.Mode.READONLY);
-                re.setAlignment(Pos.TOP_CENTER);
+                ResourceEdit re = getResourceEdit();
                 re.setResource(((Plunderable) bt).getResource());
-                re.getStyleClass().add("inmap-resources");
-                re.maxWidthProperty().bind(tileWidth.multiply(0.7));
                 s.getChildren().add(re);
             }
             if (onMouseClick != null) {
@@ -269,12 +274,8 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
                 iv.fitHeightProperty().bind(tileHeight.multiply(0.7));
                 iv.setPreserveRatio(true);
                 sp.getChildren().add(iv);
-                ResourceEdit re = new ResourceEdit();
-                re.setAlignment(Pos.TOP_CENTER);
-                re.setMode(EditableText.Mode.READONLY);
-                re.resourceProperty().set(((Shipwreck) f).getResource());
-                re.getStyleClass().add("inmap-resources");
-                re.maxWidthProperty().bind(tileWidth.multiply(0.7));
+                ResourceEdit re = getResourceEdit();
+                re.setResource(((Shipwreck)f).getResource());
                 sp.getChildren().add(re);
                 n = sp;
             } else {
@@ -286,6 +287,19 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
             addFigure(f, n);
 
 
+        }
+
+        private ResourceEdit getResourceEdit()
+        {
+            ResourceEdit re = new ResourceEdit();
+            StackPane.setAlignment(re, Pos.CENTER);
+            re.setAlignment(Pos.CENTER);
+            re.setMode(EditableText.Mode.READONLY);
+            re.getStyleClass().add("inmap-resources");
+            re.setScaleY(2.2);
+            re.setScaleX(2.2);
+            re.maxWidthProperty().bind(tileWidth.multiply(0.6).divide(2.2));
+            return re;
         }
 
         void addFigure(Figure f, Node n) {

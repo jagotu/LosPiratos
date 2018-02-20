@@ -142,8 +142,7 @@
 }
 
 .inmap-resources {
-    -fx-font-size: 40px;
-    -fx-effect: dropshadow(gaussian, white, 6, 0.9, 0, 0);
+    -fx-effect: dropshadow(gaussian, white, 4, 0.9, 0, 0);
 }
 
 .action-selector-cost .editable-text .text {
