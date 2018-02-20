@@ -1,5 +1,6 @@
 package com.vztekoverflow.lospiratos.viewmodel;
 
+import com.vztekoverflow.lospiratos.model.ResourceM;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.property.IntegerProperty;
@@ -224,6 +225,38 @@ public class Resource extends ResourceReadOnly implements Observable {
 
     public IntegerProperty woodProperty() {
         return wood_;
+    }
+
+    public void bindBidirectional(Resource other){
+        this.moneyProperty()  .bindBidirectional(other.moneyProperty()   );
+        this.clothProperty()  .bindBidirectional(other.clothProperty()   );
+        this.metalProperty()  .bindBidirectional(other.metalProperty()   );
+        this.rumProperty()    .bindBidirectional(other.rumProperty()     );
+        this.tobaccoProperty().bindBidirectional(other.tobaccoProperty() );
+        this.woodProperty()   .bindBidirectional(other.woodProperty()   );
+    }
+
+    public void bindBidirectional(ResourceM other){
+        this.moneyProperty()  .bindBidirectional(other.money   );
+        this.clothProperty()  .bindBidirectional(other.cloth   );
+        this.metalProperty()  .bindBidirectional(other.metal   );
+        this.rumProperty()    .bindBidirectional(other.rum     );
+        this.woodProperty()   .bindBidirectional(other.wood );
+        //tobbaco is not present in resourceM
+    }
+
+    /**
+     * Same as bindBidirectional but in opposite binding order.
+     * I.e. this function will do other.property().bindBidirectioal(this.property())
+     * @param other
+     */
+    public void bindBidirectionalFrom(ResourceM other){
+         other.money.bindBidirectional(this.moneyProperty() );
+         other.cloth.bindBidirectional(this.clothProperty() );
+         other.metal.bindBidirectional(this.metalProperty() );
+         other.rum  .bindBidirectional(this.rumProperty()   );
+         other.wood .bindBidirectional(this.woodProperty()  );
+        //tobbaco is not present in resourceM
     }
 
 }

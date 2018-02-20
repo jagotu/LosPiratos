@@ -5,6 +5,7 @@ import com.vztekoverflow.lospiratos.model.ShipEnhancementStatus;
 import com.vztekoverflow.lospiratos.util.Warnings;
 import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
 import com.vztekoverflow.lospiratos.viewmodel.actions.PlannableAction;
+import com.vztekoverflow.lospiratos.viewmodel.boardTiles.Port;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEntity;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipMechanics;
@@ -18,7 +19,6 @@ import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.*;
 import javafx.collections.*;
 
-import java.lang.ref.WeakReference;
 import java.util.*;
 
 
@@ -270,15 +270,11 @@ public class Ship implements MovableFigure, DamageableFigure, OnNextRoundStarted
     //endregion
     //region stats
 
-    private final List<WeakReference<Binding>> entityInvalidatedListeners = new ArrayList<>();
+    private final List<Binding> entityInvalidatedListeners = new ArrayList<>();
 
     private void onEntityInvalidated() {
-        for (WeakReference<Binding> wb : entityInvalidatedListeners) {
-            Binding b = wb.get();
-            if (b != null)
-                b.invalidate();
-            else
-                entityInvalidatedListeners.remove(wb);
+        for (Binding binding : entityInvalidatedListeners) {
+            binding.invalidate();
         }
         maxHP.invalidate();
         cannonsCount.invalidate();
@@ -455,7 +451,7 @@ public class Ship implements MovableFigure, DamageableFigure, OnNextRoundStarted
                 return getEnhancementStatus(enhancement);
             }
         };
-        entityInvalidatedListeners.add(new WeakReference<>(b));
+        entityInvalidatedListeners.add(b);
         return b;
     }
 
@@ -634,7 +630,7 @@ public class Ship implements MovableFigure, DamageableFigure, OnNextRoundStarted
     }
 
     private void translocateToNearestPort() {
-        //todo
+        getPosition().setCoordinate(getTeam().getGame().getBoard().getNearestTile(getCoordinate(), Port.class).getLocation());
     }
 
     /**

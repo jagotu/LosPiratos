@@ -7,7 +7,7 @@ public class ResourceReadOnly {
     public static final ResourceReadOnly ZERO = new ResourceReadOnly();
     public static final ResourceReadOnly ONE = new ResourceReadOnly(1, 1, 1, 1, 1, 1);
     public static final ResourceReadOnly MAX = new ResourceReadOnly(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
-    public static final ResourceReadOnly MOCK_VALUE = new ResourceReadOnly(1092, 42, 42, 42, 42, 42);
+    public static final ResourceReadOnly MOCK_VALUE = new ResourceReadOnly(1092, 42, 42, 42, 0, 42);
 
     private final int money;
     private final int cloth;

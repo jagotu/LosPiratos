@@ -2,10 +2,7 @@ package com.vztekoverflow.lospiratos.viewmodel;
 
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.util.Warnings;
-import com.vztekoverflow.lospiratos.viewmodel.boardTiles.Plantation;
-import com.vztekoverflow.lospiratos.viewmodel.boardTiles.Port;
-import com.vztekoverflow.lospiratos.viewmodel.boardTiles.Sea;
-import com.vztekoverflow.lospiratos.viewmodel.boardTiles.Shore;
+import com.vztekoverflow.lospiratos.viewmodel.boardTiles.*;
 
 public abstract class BoardTile implements OnNextRoundStartedListener {
 
@@ -36,11 +33,15 @@ public abstract class BoardTile implements OnNextRoundStartedListener {
     //static:
 
     private static String persistentNamePlantation = "Plantation";
+    private static String persistentNamePlantationExtra = "PlantationExtra";
     private static String persistentNamePort = "Port";
     private static String persistentNameSea = "Sea";
     private static String persistentNameShore = "Shore";
 
     public static String getPersistentName(Class<? extends BoardTile> tileType) {
+        if (tileType.equals(PlantationExtra.class)) {
+            return persistentNamePlantationExtra;
+        }
         if (tileType.equals(Plantation.class)) {
             return persistentNamePlantation;
         }
@@ -68,6 +69,9 @@ public abstract class BoardTile implements OnNextRoundStartedListener {
         }
         if (tileName.equalsIgnoreCase(persistentNamePlantation)) {
             return new Plantation(location, owner);
+        }
+        if (tileName.equalsIgnoreCase(persistentNamePlantationExtra)) {
+            return new PlantationExtra(location, owner);
         }
         if (tileName.equalsIgnoreCase(persistentNamePort)) {
             return new Port(location, owner);

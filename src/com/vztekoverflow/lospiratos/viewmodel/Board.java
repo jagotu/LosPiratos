@@ -2,12 +2,16 @@ package com.vztekoverflow.lospiratos.viewmodel;
 
 import com.vztekoverflow.lospiratos.model.Map;
 import com.vztekoverflow.lospiratos.model.MapTile;
+import com.vztekoverflow.lospiratos.model.ResourceM;
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.util.Warnings;
+import com.vztekoverflow.lospiratos.viewmodel.boardTiles.Plantation;
 import javafx.beans.property.*;
 import javafx.collections.*;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class Board /* I want my Burd */ implements OnNextRoundStartedListener {
@@ -44,9 +48,16 @@ public class Board /* I want my Burd */ implements OnNextRoundStartedListener {
         tiles.addListener((MapChangeListener<AxialCoordinate, BoardTile>) c -> {
             if (c.wasAdded()) {
                 //if this is circular call:
+                //todo bug, this not only prevents circular calls, but also prevents updating a tiles content
                 if (modelMap.tilesProperty().stream().anyMatch(tile -> tile.getLocation().equals(c.getKey())))
                     return;
-                modelMap.tilesProperty().add(new MapTile(c.getKey(), BoardTile.getPersistentName(c.getValueAdded().getClass())));
+                if(c.getValueAdded() instanceof Plantation){
+                    Plantation p = (Plantation) c.getValueAdded();
+                    ResourceM r = new ResourceM();
+                    p.getResource().bindBidirectional(r);
+                    modelMap.tilesProperty().add(new MapTile(c.getKey(), BoardTile.getPersistentName(c.getValueAdded().getClass()), r));
+                }else
+                    modelMap.tilesProperty().add(new MapTile(c.getKey(), BoardTile.getPersistentName(c.getValueAdded().getClass())));
             } else if (c.wasRemoved()) {
                 modelMap.tilesProperty().removeIf(tile -> tile.getLocation().equals(c.getKey()));
             } else {
@@ -59,6 +70,9 @@ public class Board /* I want my Burd */ implements OnNextRoundStartedListener {
     private boolean tryAddingTile(MapTile modelTile) {
         BoardTile t = BoardTile.createInstanceFromPersistentName(modelTile.getContent(), modelTile.getLocation(), this);
         if (t == null) return false;
+        if(t instanceof Plantation){
+            ((Plantation) t).getResource().bindBidirectional(modelTile.plantationsResource);
+        }
         if (tiles.containsKey(t.getLocation())) return false;
         tiles.put(modelTile.getLocation(), t);
         return true;
@@ -167,5 +181,17 @@ public class Board /* I want my Burd */ implements OnNextRoundStartedListener {
         if (f instanceof Ship)
             return (Ship) f;
         else return null;
+    }
+
+    /**
+     *
+     * @param from
+     * @param type
+     * @return nearest Tile or null if there is no Tile of such type
+     */
+    public BoardTile getNearestTile(AxialCoordinate from, Class<? extends BoardTile> type){
+        Optional<BoardTile> o = tilesProperty().values().stream().filter(t -> type.isAssignableFrom(t.getClass())).
+                min(Comparator.comparingInt(t -> from.distanceTo(t.getLocation())));
+        return o.isPresent() ? o.get() : null;
     }
 }

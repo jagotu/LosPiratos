@@ -56,6 +56,10 @@ public class EventLogger {
         //todo udelat systemovejsi reseni, s vlastnim LoggedEvent objektem, formaterem atd
     }
 
+    public void logShipTranslocated(Ship ship, AxialCoordinate target){
+        events.add(new MessageLoggedEvent(null,LogFormatter.hezkyČesky().format(ship) + " byla teleportována na " + target));
+    }
+
     public void clearLoggedEvents() {
         events.clear();
     }

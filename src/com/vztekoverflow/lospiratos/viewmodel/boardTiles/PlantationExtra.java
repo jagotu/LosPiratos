@@ -6,8 +6,8 @@ import com.vztekoverflow.lospiratos.viewmodel.Resource;
 import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
 
 public class PlantationExtra extends Plantation {
-    public final ResourceReadOnly PLANTATION_EXTRA_CAPACITY = new ResourceReadOnly();
-    public final ResourceReadOnly PLANTATION_EXTRA_INCREASE = new ResourceReadOnly();
+    static final ResourceReadOnly PLANTATION_EXTRA_CAPACITY = Plantation.PLANTATION_GENERAL_CAPACITY.times(2);
+    static final ResourceReadOnly PLANTATION_EXTRA_INCREASE = Plantation.PLANTATION_GENERAL_INCREASE.times(2);
 
     public PlantationExtra(AxialCoordinate location, Board b) {
         super(location, b);

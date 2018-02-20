@@ -8,10 +8,10 @@ public class Plantation extends BoardTile implements Plunderable {
         super(location, b);
     }
 
-    public final ResourceReadOnly PLANTATION_GENERAL_CAPACITY = new ResourceReadOnly(999, 0, 0, 0, 0, 0);
-    public final ResourceReadOnly PLANTATION_GENERAL_INCREASE = new ResourceReadOnly(10, 0, 0, 0, 0, 0);
+    final static ResourceReadOnly PLANTATION_GENERAL_CAPACITY = new ResourceReadOnly(100, 0, 0, 0, 0, 0);
+    final static ResourceReadOnly PLANTATION_GENERAL_INCREASE = new ResourceReadOnly(30, 0, 0, 0, 0, 0);
 
-    protected final Resource resource = new Resource();
+    protected final Resource resource = ResourceReadOnly.MOCK_VALUE.createMutableCopy();
 
     /**
      * @return final object representing the resource hold by this board. The returned value is always the same.

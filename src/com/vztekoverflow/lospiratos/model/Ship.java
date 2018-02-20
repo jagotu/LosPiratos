@@ -9,43 +9,7 @@ import javafx.collections.ObservableSet;
 
 
 public class Ship {
-    public Ship(String name, String teamId, String captain, String type,
-                int HP, int additionalHPmax, int additionalCannons, int additionalSpeed, int positionQ, int positionR, int orientationDeg,
-                ShipEnhancementStatus upgradeCannon,
-                ShipEnhancementStatus upgradeHull,
-                ShipEnhancementStatus enhMortar,
-                ShipEnhancementStatus enhChainShot,
-                ShipEnhancementStatus enhHeavyShot,
-                ShipEnhancementStatus enhRam,
-                int capacityLeft /*not used, historical reasons*/, int carriesMetalUnits, int carriesWoodUnits, int carriesClothUnits, int carriesRumUnits,
-                int carriesTobaccoUnits, int carriesMoney
-    ) {
-        this.name.set(name);
-        this.teamId.set(teamId);
-        this.captain.set(captain);
-        this.type.set(type);
-
-        this.HP.set(HP);
-        this.position.set( new AxialCoordinate(positionQ, positionR));
-        this.orientationDeg.set(orientationDeg);
-
-        this.customAdditionalHPmax.set(additionalHPmax);
-        this.customAdditionalCannons.set(additionalCannons);
-        this.customAdditionalSpeed.set(additionalSpeed);
-
-        this.enhancements.put("com.vztekoverflow.lospiratos.viewmodel.shipEntities.enhancements.CannonUpgrade", upgradeCannon);
-        this.enhancements.put("com.vztekoverflow.lospiratos.viewmodel.shipEntities.enhancements.HullUpgrade", upgradeHull);
-
-        this.carriesMetalUnits.setValue(carriesMetalUnits);
-        this.carriesWoodUnits.setValue(carriesWoodUnits);
-        this.carriesClothUnits.setValue(carriesClothUnits);
-        this.carriesRumUnits.setValue(carriesRumUnits);
-        this.carriesTobaccoUnits.setValue(carriesTobaccoUnits);
-        this.carriesMoney.setValue(carriesMoney);
-
-    }
-
-    public Ship() {
+        public Ship() {
 
     }
 

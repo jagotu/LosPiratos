@@ -2,7 +2,7 @@ package com.vztekoverflow.lospiratos.viewmodel;
 
 import com.sun.javafx.collections.UnmodifiableObservableMap;
 import com.vztekoverflow.lospiratos.evaluator.GameEvaluator;
-import com.vztekoverflow.lospiratos.model.GameSerializer;
+import com.vztekoverflow.lospiratos.model.ShipwreckM;
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.util.FxUtils;
 import com.vztekoverflow.lospiratos.util.Warnings;
@@ -21,8 +21,6 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.paint.Color;
 
-import java.io.File;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -119,14 +117,13 @@ public class Game {
     private GameEvaluator evaluator = GameEvaluator.createInstance(this);
 
     public void closeRoundAndEvaluate() {
-
+        //GameSerializer.SaveGameToFile(new File(Instant.now().toString().replace(':', '-') + "_round" + roundNo + ".json"), gameModel, false);
         evaluator.evaluateRound(roundNo);
         logger.logRoundHasEnded(roundNo);
         ++roundNo;
         for (OnNextRoundStartedListener l : onNextRoundStartedListeners) {
             l.onNextRoundStarted(roundNo);
         }
-        GameSerializer.SaveGameToFile(new File(Instant.now().toString().replace(':', '-') + "_round" + roundNo + ".json"), gameModel, false);
     }
 
     //endregion
@@ -234,7 +231,10 @@ public class Game {
     }
 
     public Shipwreck createAndAddNewShipwreck(AxialCoordinate position, ResourceReadOnly resource) {
-        Shipwreck w = new Shipwreck(position, this);
+        ShipwreckM model = new ShipwreckM(position);
+        Shipwreck w = new Shipwreck(position, this, model);
+        getGameModel().getShipwrecks().add(model);
+
         w.setResource(resource);
         board.figuresProperty().add(w);
         return w;
@@ -248,6 +248,10 @@ public class Game {
         Game g = new Game(gameModel);
         for (com.vztekoverflow.lospiratos.model.Team teamModel : gameModel.getTeams()) {
             g.addNewTeamFromModel(teamModel);
+        }
+        for (ShipwreckM wreckModel : gameModel.getShipwrecks()) {
+            g.board.figuresProperty().add(Shipwreck.loadFrom(wreckModel, g));
+            //todo ukldani a nacitani wrecku je spis zprasene, slo by ucesat
         }
         return g;
     }
@@ -314,10 +318,77 @@ public class Game {
         int captainIdx = 0;
         Game g = new Game();
 
+
+        //tiles position are according to the bitmap game map (by Bratr)
+
+        List<AxialCoordinate> ports = new ArrayList<>();
+        ports.add(new AxialCoordinate(-2, -3));
+        ports.add(new AxialCoordinate(2, -3));
+        ports.add(new AxialCoordinate(6, -2));
+        ports.add(new AxialCoordinate(-4, 1));
+        ports.add(new AxialCoordinate(-6, 6));
+        ports.add(new AxialCoordinate(-3, 5));
+        ports.add(new AxialCoordinate(2, 4));
+
+
+        List<AxialCoordinate> shores = new ArrayList<>();
+        shores.add(new AxialCoordinate(3, -6));
+        shores.add(new AxialCoordinate(1, -2));
+        shores.add(new AxialCoordinate(2, -2));
+        shores.add(new AxialCoordinate(3, -3));
+        shores.add(new AxialCoordinate(5, -2));
+        shores.add(new AxialCoordinate(1, 1));
+        shores.add(new AxialCoordinate(2, 1));
+        shores.add(new AxialCoordinate(2, 3));
+        shores.add(new AxialCoordinate(3, 3));
+        shores.add(new AxialCoordinate(-2, 6));
+        shores.add(new AxialCoordinate(-4, 5));
+        shores.add(new AxialCoordinate(-3, 4));
+        shores.add(new AxialCoordinate(-6, 4));
+        shores.add(new AxialCoordinate(-3, 1));
+        shores.add(new AxialCoordinate(-3, 0));
+        shores.add(new AxialCoordinate(-1, -3));
+
+        List<AxialCoordinate> plantations = new ArrayList<>();
+        //plantations.add(new AxialCoordinate( 0,  0));
+        plantations.add(new AxialCoordinate(3, 1));
+        plantations.add(new AxialCoordinate(6, -5));
+        plantations.add(new AxialCoordinate(1, -5));
+        plantations.add(new AxialCoordinate(-5, -1));
+        plantations.add(new AxialCoordinate(-5, 4));
+        plantations.add(new AxialCoordinate(-1, 5));
+
+
+        //board:
+        Board b = g.getBoard();
+        int boardDiameter = 7;
+        for (int i = -boardDiameter; i <= boardDiameter; i++) {
+            for (int j = -boardDiameter; j <= boardDiameter; j++) {
+                AxialCoordinate c = new AxialCoordinate(i, j);
+                if (c.distanceTo(0, 0) >= boardDiameter) continue;
+
+                BoardTile tile;
+                if (shores.contains(c)) {
+                    tile = new Shore(c, b);
+                } else if (ports.contains(c)) {
+                    tile = new Port(c, b);
+                } else if (plantations.contains(c)) {
+                    tile = new Plantation(c, b);
+                } else if (c.equals(AxialCoordinate.ZERO)) {
+                    tile = new PlantationExtra(c, b);
+                } else {
+                    tile = new Sea(c, b);
+                }
+                b.tilesProperty().put(c, tile);
+
+            }
+        }
+
+
         //ships' positions:
 
         List<AxialCoordinate> team1_shipPositions = new ArrayList<>();
-        team1_shipPositions.add(new AxialCoordinate(-2, -3));
+        team1_shipPositions.add(new AxialCoordinate(-3, -3));
 
         List<AxialCoordinate> team2_shipPositions = new ArrayList<>();
         team2_shipPositions.add(new AxialCoordinate(-2, -2));
@@ -377,10 +448,11 @@ public class Game {
                 for (int k = 0; k < j + i; k++) {
                     if (k >= shipEnhancements.length) continue;
                     Class<ShipEnhancement> enh = (Class<ShipEnhancement>) shipEnhancements[k];
-                    s.addNewEnhancement(enh);
+                    // s.addNewEnhancement(enh);
                 }
                 if ((position.getQ() == -2 && position.getR() == -2)) { //second ship of second team
                     s.destroyShipAndEnhancements();
+                    s.incrementXP(); //does not make sense according to the rules, is for test only
                 }
             }
         }
@@ -395,70 +467,6 @@ public class Game {
         for (AxialCoordinate c : shipwrecks) {
             g.createAndAddNewShipwreck(c, r);
         }
-
-        //tiles position are according to the bitmap game map (by Bratr)
-
-        List<AxialCoordinate> ports = new ArrayList<>();
-        ports.add(new AxialCoordinate(-2, -3));
-        ports.add(new AxialCoordinate(2, -3));
-        ports.add(new AxialCoordinate(6, -2));
-        ports.add(new AxialCoordinate(-4, 1));
-        ports.add(new AxialCoordinate(-6, 6));
-        ports.add(new AxialCoordinate(-3, 5));
-        ports.add(new AxialCoordinate(2, 4));
-
-
-        List<AxialCoordinate> shores = new ArrayList<>();
-        shores.add(new AxialCoordinate(3, -6));
-        shores.add(new AxialCoordinate(1, -2));
-        shores.add(new AxialCoordinate(2, -2));
-        shores.add(new AxialCoordinate(3, -3));
-        shores.add(new AxialCoordinate(5, -2));
-        shores.add(new AxialCoordinate(1, 1));
-        shores.add(new AxialCoordinate(2, 1));
-        shores.add(new AxialCoordinate(2, 3));
-        shores.add(new AxialCoordinate(3, 3));
-        shores.add(new AxialCoordinate(-2, 6));
-        shores.add(new AxialCoordinate(-4, 5));
-        shores.add(new AxialCoordinate(-3, 4));
-        shores.add(new AxialCoordinate(-6, 4));
-        shores.add(new AxialCoordinate(-3, 1));
-        shores.add(new AxialCoordinate(-3, 0));
-        shores.add(new AxialCoordinate(-1, -3));
-
-        List<AxialCoordinate> plantations = new ArrayList<>();
-        //plantations.add(new AxialCoordinate( 0,  0));
-        plantations.add(new AxialCoordinate(3, 1));
-        plantations.add(new AxialCoordinate(6, -5));
-        plantations.add(new AxialCoordinate(1, -5));
-        plantations.add(new AxialCoordinate(-5, -1));
-        plantations.add(new AxialCoordinate(-5, 4));
-        plantations.add(new AxialCoordinate(-1, 5));
-
-
-        //board:
-        Board b = g.getBoard();
-        int boardDiameter = 7;
-        for (int i = -boardDiameter; i <= boardDiameter; i++) {
-            for (int j = -boardDiameter; j <= boardDiameter; j++) {
-                AxialCoordinate c = new AxialCoordinate(i, j);
-                if (c.distanceTo(0, 0) >= boardDiameter) continue;
-
-                BoardTile tile;
-                if (shores.contains(c)) {
-                    tile = new Shore(c, b);
-                } else if (ports.contains(c)) {
-                    tile = new Port(c, b);
-                } else if (plantations.contains(c)) {
-                    tile = new Plantation(c, b);
-                } else {
-                    tile = new Sea(c, b);
-                }
-                b.tilesProperty().put(c, tile);
-
-            }
-        }
-        b.tilesProperty().put(AxialCoordinate.ZERO, new PlantationExtra(AxialCoordinate.ZERO, b));
 
         return g;
     }
