@@ -95,6 +95,7 @@ public class CreateShipPopOver extends PopOver {
 
     private void bindTo(Game g) {
         teamSelect.setItems(g.getTeams());
+        shipTypeSelect.getItems().clear();
         shipTypeSelect.getItems().addAll(Game.getShipTypes());
         cost.setMode(EditableText.Mode.EDITOR);
         cost.resourceProperty().bind(Bindings.createObjectBinding(() -> {
