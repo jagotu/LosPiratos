@@ -8,22 +8,27 @@
 }
 
 .hex-tile.Sea {
+    -fx-fill: rgba(0, 0, 128, 0.35)
 }
 
 .hex-tile.Shore {
-    /* -fx-fill: rgba(255, 125, 40, 0.3)  /*debug color, for debug only*/
+     /* -fx-fill: rgba(255, 125, 40, 0.5)  /*debug color, for debug only*/
 }
 
 .hex-tile.Plantation {
-    /* -fx-fill: rgba(0, 200, 0, 0.2)  /*debug color, for debug only*/
+     /* -fx-fill: rgba(0, 200, 0, 0.5)  /*debug color, for debug only*/
+}
+
+.hex-tile.PlantationExtra {
+     /* -fx-fill: rgba(0, 200, 0, 0.5)  /*debug color, for debug only*/
+}
+
+.hex-tile.Port {
+    /* -fx-fill: rgba(20, 20, 225, 0.5) /*debug color, for debug only*/
 }
 
 .hex-tile.Shipwreck {
     -fx-fill: rgba(255, 255, 0, 1)
-}
-
-.hex-tile.Port {
-    /* -fx-fill: rgba(20, 20, 225, 0.2) /*debug color, for debug only*/
 }
 
 .hex-tile.selected {

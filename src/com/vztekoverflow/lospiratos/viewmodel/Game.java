@@ -329,19 +329,18 @@ public class Game {
         ports.add(new AxialCoordinate(-6, 6));
         ports.add(new AxialCoordinate(-3, 5));
         ports.add(new AxialCoordinate(2, 4));
-
+        ports.add(new AxialCoordinate(3, -6));
 
         List<AxialCoordinate> shores = new ArrayList<>();
-        shores.add(new AxialCoordinate(3, -6));
+        shores.add(new AxialCoordinate(2, -6));
         shores.add(new AxialCoordinate(1, -2));
         shores.add(new AxialCoordinate(2, -2));
         shores.add(new AxialCoordinate(3, -3));
         shores.add(new AxialCoordinate(5, -2));
         shores.add(new AxialCoordinate(1, 1));
         shores.add(new AxialCoordinate(2, 1));
-        shores.add(new AxialCoordinate(2, 3));
+        shores.add(new AxialCoordinate(1, 5));
         shores.add(new AxialCoordinate(3, 3));
-        shores.add(new AxialCoordinate(-2, 6));
         shores.add(new AxialCoordinate(-4, 5));
         shores.add(new AxialCoordinate(-3, 4));
         shores.add(new AxialCoordinate(-6, 4));
@@ -351,12 +350,15 @@ public class Game {
 
         List<AxialCoordinate> plantations = new ArrayList<>();
         //plantations.add(new AxialCoordinate( 0,  0));
-        plantations.add(new AxialCoordinate(3, 1));
-        plantations.add(new AxialCoordinate(6, -5));
-        plantations.add(new AxialCoordinate(1, -5));
-        plantations.add(new AxialCoordinate(-5, -1));
+        plantations.add(new AxialCoordinate(2, 2));
+        plantations.add(new AxialCoordinate(0, 6));
         plantations.add(new AxialCoordinate(-5, 4));
-        plantations.add(new AxialCoordinate(-1, 5));
+        plantations.add(new AxialCoordinate(-5, -1));
+        plantations.add(new AxialCoordinate(0, 0));
+        plantations.add(new AxialCoordinate(0, -6));
+        plantations.add(new AxialCoordinate(6, -5));
+        plantations.add(new AxialCoordinate(6, -6));
+
 
 
         //board:
