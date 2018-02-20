@@ -149,7 +149,10 @@ public class ActionParametersPopOver extends PopOver {
 
         VBox vb = new VBox();
         cost = new HBox();
-        cost.getChildren().add(new Label("Cena:"));
+        Label priceLabel = new Label("Cena:");
+        priceLabel.setPadding(new Insets(0, 4, 0, 0));
+        cost.getChildren().add(priceLabel);
+
         costView = new ResourceEdit();
 
         cost.getChildren().add(costView);

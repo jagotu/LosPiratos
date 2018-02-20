@@ -7,10 +7,7 @@ import com.vztekoverflow.lospiratos.viewmodel.actions.PlannableAction;
 import javafx.animation.TranslateTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.geometry.HPos;
-import javafx.geometry.Point2D;
-import javafx.geometry.Pos;
-import javafx.geometry.VPos;
+import javafx.geometry.*;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -28,7 +25,7 @@ import java.util.stream.Collectors;
 public class ActionSelector extends Pane {
 
     private Stack<Point2D> previousCenters = new Stack<>();
-    public static final double BUTTON_SIZE = 64;
+    public static final double BUTTON_SIZE = 80;
     private static final Point2D defaultCenter = new Point2D(-BUTTON_SIZE / 2, -BUTTON_SIZE / 2);
 
 
@@ -128,6 +125,9 @@ public class ActionSelector extends Pane {
                     ResourceEdit costView = new ResourceEdit();
                     costView.setMode(EditableText.Mode.READONLY);
                     costView.resourceProperty().set(n.getAction().getCost());
+                    StackPane.setAlignment(costView, Pos.BOTTOM_CENTER);
+                    costView.getStyleClass().add("action-selector-cost");
+                    costView.setAlignment(Pos.TOP_CENTER);
                     sp.getChildren().add(costView);
                 }
             }
@@ -135,7 +135,9 @@ public class ActionSelector extends Pane {
             getChildren().add(b);
         }
         back = new Button();
-        back.setGraphic(new Glyph("FontAwesome", FontAwesome.Glyph.TIMES));
+        Glyph backGlyph = new Glyph("FontAwesome", FontAwesome.Glyph.TIMES);
+        backGlyph.setFontSize(40);
+        back.setGraphic(backGlyph);
         final ActionsCatalog.Node parent = currentNode.get().getParent();
         back.setMaxWidth(Double.MAX_VALUE);
         back.setMaxHeight(Double.MAX_VALUE);
@@ -181,7 +183,7 @@ public class ActionSelector extends Pane {
 
         double angle = 0;
         double toAdd = (2 * Math.PI) / childCount;
-        double radius = 100;
+        double radius = 130;
 
         for (Node c : visibleChildren) {
             final double cangle = angle;
@@ -205,15 +207,15 @@ public class ActionSelector extends Pane {
 
             case turnLeft:
                 g = new Glyph("FontAwesome", FontAwesome.Glyph.UNDO);
-                g.setFontSize(24);
+                g.setFontSize(40);
                 return g;
             case turnRight:
                 g = new Glyph("FontAwesome", '\uf01e');
-                g.setFontSize(24);
+                g.setFontSize(40);
                 return g;
             case moveForward:
                 g = new Glyph("FontAwesome", FontAwesome.Glyph.ANGLE_DOUBLE_UP);
-                g.setFontSize(32);
+                g.setFontSize(48);
                 return g;
             case mortar:
                 g = new Glyph("piratos", 'K');
@@ -277,7 +279,50 @@ public class ActionSelector extends Pane {
                 return s;
             case attackGenericIcon:
                 g = new Glyph("piratos", 'E');
-                g.setFontSize(32);
+                g.setFontSize(40);
+                return g;
+            case buyCommodity:
+                g = new Glyph("piratostrans", 'A');
+                g.setFontSize(54);
+                return g;
+            case buyEnhancement:
+                g = new Glyph("piratostrans", 'B');
+                g.setFontSize(54);
+                return g;
+            case transactionGenericIcon:
+                g = new Glyph("piratostrans", 'C');
+                g.setFontSize(54);
+                return g;
+            case plunder:
+                g = new Glyph("piratostrans", 'D');
+                g.setFontSize(54);
+                return g;
+            case repairViaDowngrade:
+                g = new Glyph("piratostrans", 'E');
+                g.setFontSize(54);
+                return g;
+            case repairViaPayment:
+                g = new Glyph("piratostrans", 'F');
+                StackPane.setAlignment(g, Pos.TOP_CENTER);
+                g.setFontSize(42);
+                g.setPadding(new Insets(-10, 0, 0, 0));
+                return g;
+            case repairEnhnacement:
+                g = new Glyph("piratostrans", 'G');
+                g.setFontSize(54);
+                return g;
+            case sellCommodity:
+                g = new Glyph("piratostrans", 'H');
+                g.setFontSize(54);
+                return g;
+            case upgradeShip:
+                g = new Glyph("piratostrans", 'J');
+                g.setFontSize(20);
+                StackPane.setAlignment(g, Pos.TOP_CENTER);
+                return g;
+            case unload:
+                g = new Glyph("piratostrans", 'K');
+                g.setFontSize(54);
                 return g;
             default:
                 return null;

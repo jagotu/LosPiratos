@@ -421,7 +421,9 @@ public class VirtualizingHexGridPane extends Pane {
             st.setPivotX(0);
             st.setPivotY(0);
 
-            tileShape.setOnMouseEntered(e -> toFront());
+
+            //TODO
+            //tileShape.setOnMouseEntered(e -> toFront());
 
             contentNode.addListener((observable, oldValue, newValue) ->
             {

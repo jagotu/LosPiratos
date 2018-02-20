@@ -130,4 +130,9 @@ public class ResourceEdit extends FlowPane {
         rumPane.managedProperty().bind(visibleProperty());
         rum.modeProperty().bind(mode);
     }
+
+    @Override
+    protected double computeMaxHeight(double width) {
+        return super.computePrefHeight(width);
+    }
 }

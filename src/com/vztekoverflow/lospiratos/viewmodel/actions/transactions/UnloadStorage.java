@@ -4,6 +4,7 @@ import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
 import com.vztekoverflow.lospiratos.viewmodel.Team;
 import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
+import com.vztekoverflow.lospiratos.viewmodel.actions.ActionIcon;
 import com.vztekoverflow.lospiratos.viewmodel.actions.Transaction;
 
 public class UnloadStorage extends Transaction {
@@ -41,5 +42,10 @@ public class UnloadStorage extends Transaction {
     @Override
     public String getČeskéJméno() {
         return "vyložení nákladu";
+    }
+
+    @Override
+    public ActionIcon getIcon() {
+        return ActionIcon.unload;
     }
 }

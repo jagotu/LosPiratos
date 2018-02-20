@@ -1,6 +1,7 @@
 package com.vztekoverflow.lospiratos.viewmodel.actions.transactions;
 
 import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
+import com.vztekoverflow.lospiratos.viewmodel.actions.ActionIcon;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.EnhancementsCatalog;
 import javafx.beans.binding.Bindings;
@@ -60,5 +61,10 @@ public class BuyNewEnhancement extends EnhancementAbstractTransaction {
     @Override
     public BooleanExpression satisfiedProperty() {
         return parameter.validProperty();
+    }
+
+    @Override
+    public ActionIcon getIcon() {
+        return ActionIcon.buyEnhancement;
     }
 }

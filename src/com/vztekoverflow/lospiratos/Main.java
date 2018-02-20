@@ -26,6 +26,10 @@ public class Main extends Application {
         GlyphFont piratosFont = new GlyphFont("piratos", 16, inputStream);
         GlyphFontRegistry.register(piratosFont);
 
+        inputStream = getClass().getResourceAsStream("/piratostrans.ttf");
+        GlyphFont piratosTransFont = new GlyphFont("piratostrans", 16, inputStream);
+        GlyphFontRegistry.register(piratosTransFont);
+
         Parent root = FXMLLoader.load(OrgStage.class.getResource("OrgStage.fxml"));
         primaryStage.setTitle("OrgStage");
         primaryStage.setScene(new Scene(root, 1024, 600));

@@ -2,6 +2,7 @@ package com.vztekoverflow.lospiratos.viewmodel.actions.transactions;
 
 import com.vztekoverflow.lospiratos.util.Warnings;
 import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
+import com.vztekoverflow.lospiratos.viewmodel.actions.ActionIcon;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipType;
 
 public class RepairShipViaDowngrade extends RepairShip {
@@ -34,5 +35,10 @@ public class RepairShipViaDowngrade extends RepairShip {
     @Override
     protected void recomputeCost() {
         //nothing
+    }
+
+    @Override
+    public ActionIcon getIcon() {
+        return ActionIcon.repairViaDowngrade;
     }
 }

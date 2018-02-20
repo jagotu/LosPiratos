@@ -1,6 +1,7 @@
 package com.vztekoverflow.lospiratos.viewmodel.actions.transactions;
 
 import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
+import com.vztekoverflow.lospiratos.viewmodel.actions.ActionIcon;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipType;
 
 public class UpgradeShip extends ChangeShipAbstractTransaction {
@@ -27,5 +28,10 @@ public class UpgradeShip extends ChangeShipAbstractTransaction {
     @Override
     protected void recomputeCost() {
         cost.setAll(getRelatedShip().getShipType().getUpgradeCost());
+    }
+
+    @Override
+    public ActionIcon getIcon() {
+        return ActionIcon.upgradeShip;
     }
 }

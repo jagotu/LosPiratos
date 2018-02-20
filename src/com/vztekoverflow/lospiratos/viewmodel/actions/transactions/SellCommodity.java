@@ -4,6 +4,7 @@ import com.vztekoverflow.lospiratos.util.PartialOrdering;
 import com.vztekoverflow.lospiratos.viewmodel.Resource;
 import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
 import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
+import com.vztekoverflow.lospiratos.viewmodel.actions.ActionIcon;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanExpression;
 
@@ -47,6 +48,11 @@ public class SellCommodity extends CommodityTransaction {
                             && getCommodities().getMoney() == 0;
                 }
                 , getCommodities(), relatedShipProperty());
+    }
+
+    @Override
+    public ActionIcon getIcon() {
+        return ActionIcon.sellCommodity;
     }
 
 }

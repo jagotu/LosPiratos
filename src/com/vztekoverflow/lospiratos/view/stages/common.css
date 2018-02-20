@@ -145,3 +145,7 @@
     -fx-font-size: 40px;
     -fx-effect: dropshadow(gaussian, grey, 11, 0.715, 1, 1);
 }
+
+.action-selector-cost .editable-text .text {
+    -fx-font-weight: bold;
+}

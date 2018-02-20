@@ -17,5 +17,13 @@ public enum ActionIcon {
     cannonRight,
     ram,
     plunder,
-    ellipsis
+    ellipsis,
+    buyCommodity,
+    sellCommodity,
+    buyEnhancement,
+    repairViaDowngrade,
+    repairViaPayment,
+    repairEnhnacement,
+    upgradeShip,
+    unload
 }

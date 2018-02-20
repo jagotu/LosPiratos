@@ -2,6 +2,7 @@ package com.vztekoverflow.lospiratos.viewmodel.actions.transactions;
 
 import com.vztekoverflow.lospiratos.model.ShipEnhancementStatus;
 import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
+import com.vztekoverflow.lospiratos.viewmodel.actions.ActionIcon;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.EnhancementsCatalog;
 import javafx.beans.binding.Bindings;
@@ -65,6 +66,11 @@ public class RepairEnhancement extends EnhancementAbstractTransaction {
     @Override
     public BooleanExpression satisfiedProperty() {
         return getEnhancementParameter().validProperty();
+    }
+
+    @Override
+    public ActionIcon getIcon() {
+        return ActionIcon.repairEnhnacement;
     }
 
 }
