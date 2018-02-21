@@ -24,13 +24,11 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -183,7 +181,7 @@ public class OrgStage {
 
     private boolean relocateActionSelector = false;
     private double edgeLength = 107.312;
-    private boolean pointy = false; //DON'T SET TO FALSE
+    private boolean pointy = true; //DON'T SET TO FALSE
 
     private void connectToGame() {
         mainPane.getChildren().remove(hexPane);
@@ -232,7 +230,7 @@ public class OrgStage {
         hexPane.maxWidthProperty().bind(mainPane.widthProperty());
         hexPane.maxHeightProperty().bind(mainPane.heightProperty());
         hexPane.relocate(0, 0);
-        hexPane.setBackgroundGraphic(new ImageView("/cad.png"));
+        //hexPane.setBackgroundGraphic(new ImageView("/cad.png"));
         hexPane.setBackgroundGraphicOffset(new Point2D(-1000, -1208));
         mainPane.getChildren().add(0, hexPane);
 

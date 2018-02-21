@@ -12,21 +12,14 @@ import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
-import javafx.scene.transform.Scale;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -78,7 +71,7 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
                 throw new UnsupportedOperationException("Cannot have the same tile defined twice!");
             }
             PiratosHexTileContents sc = new PiratosHexTileContents(board.getTiles().get(coords));
-            sc.tonikuvHack(coords);
+            //sc.tonikuvHack(coords);
             current.put(coords, sc);
         }
         for (Figure mf : board.getFigures()) {

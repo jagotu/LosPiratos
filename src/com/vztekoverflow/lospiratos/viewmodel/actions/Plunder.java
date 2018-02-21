@@ -4,6 +4,7 @@ import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.viewmodel.Plunderable;
 import com.vztekoverflow.lospiratos.viewmodel.Position;
 import com.vztekoverflow.lospiratos.viewmodel.Resource;
+import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
 import com.vztekoverflow.lospiratos.viewmodel.actions.transactions.ResourceActionParameter;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanExpression;
@@ -58,6 +59,7 @@ public class Plunder extends Action implements ParameterizedAction {
     Plunder() {
         params.add(commodities);
         getCommodities().addListener(__ -> recomputeCost());
+        commodities.get().setAll(ResourceReadOnly.MAX);
     }
 
     @Override
@@ -70,7 +72,8 @@ public class Plunder extends Action implements ParameterizedAction {
         public String getČeskéJméno() {
             return "kolik vyplundrovat";
         }
-    };
+    }
+    ;
 
     public Resource getCommodities() {
         return commodities.get();
