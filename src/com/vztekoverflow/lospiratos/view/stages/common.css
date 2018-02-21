@@ -31,7 +31,7 @@
     -fx-fill: rgba(255, 255, 0, 1)
 }
 
-.hex-tile.selected {
+#main-map .hex-tile.selected {
     -fx-fill: rgba(255, 255, 0, 0.6)
 }
 
@@ -132,6 +132,10 @@
 .ship-figure .progress-bar {
     -fx-effect: dropshadow(gaussian, grey, 25, 0.4, 1, 1);
     -fx-opacity: 1;
+}
+
+.ship-view.related {
+    -fx-background-color: yellow;
 }
 
 #mouseBlocker {

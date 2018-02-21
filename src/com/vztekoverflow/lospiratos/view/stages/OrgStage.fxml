@@ -7,6 +7,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.glyphfont.Glyph?>
+<?import com.vztekoverflow.lospiratos.view.layout.TeamsBox?>
+<?import com.vztekoverflow.lospiratos.view.layout.ShipsBox?>
 <SplitPane fx:id="root" dividerPositions="0.5" stylesheets="@common.css" xmlns="http://javafx.com/javafx/8.0.121"
            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vztekoverflow.lospiratos.view.stages.OrgStage">
     <BorderPane>
@@ -39,7 +41,7 @@
                     <BorderPane>
                         <center>
                             <ScrollPane fitToWidth="true" hbarPolicy="NEVER">
-                                <FlowPane fx:id="teamsBox"/>
+                                <TeamsBox fx:id="teamsBox"/>
                             </ScrollPane>
                         </center>
                         <bottom>
@@ -52,7 +54,7 @@
                     <BorderPane>
                         <center>
                             <ScrollPane fx:id="shipsScroll" fitToWidth="true" hbarPolicy="NEVER">
-                                <FlowPane fx:id="shipsBox"/>
+                                <ShipsBox fx:id="shipsBox"/>
                             </ScrollPane>
                         </center>
                         <bottom>

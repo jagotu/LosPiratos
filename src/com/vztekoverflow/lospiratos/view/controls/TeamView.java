@@ -49,37 +49,29 @@ public class TeamView extends StackPane {
         this.requestDeleteListener = requestDeleteListener;
     }
 
-    RequestDeleteListener requestDeleteListener = null;
+    private RequestDeleteListener requestDeleteListener = null;
 
     private BooleanProperty expanded = new SimpleBooleanProperty(false);
 
-    public interface CenterShipListener {
-        void CenterShip(Ship s);
+    private OnCenterShipListener onCenterShipListener;
+
+    public OnCenterShipListener getOnCenterShipListener() {
+        return onCenterShipListener;
     }
 
-    public CenterShipListener getOnCenterShip() {
-        return onCenterShip;
+    public void setOnCenterShipListener(OnCenterShipListener onCenterShipListener) {
+        this.onCenterShipListener = onCenterShipListener;
     }
 
-    public void setOnCenterShip(CenterShipListener onCenterShip) {
-        this.onCenterShip = onCenterShip;
+    public OnShipDetailsListener getOnShipDetailsListener() {
+        return onShipDetailsListener;
     }
 
-    private CenterShipListener onCenterShip;
-
-    public interface ShipDetailsListener {
-        void ShipDetails(Ship s);
+    public void setOnShipDetailsListener(OnShipDetailsListener onShipDetailsListener) {
+        this.onShipDetailsListener = onShipDetailsListener;
     }
 
-    public ShipDetailsListener getOnShipDetails() {
-        return onShipDetails;
-    }
-
-    public void setOnShipDetails(ShipDetailsListener onShipDetails) {
-        this.onShipDetails = onShipDetails;
-    }
-
-    private ShipDetailsListener onShipDetails;
+    private OnShipDetailsListener onShipDetailsListener;
 
     static FXMLLoader fxmlLoader = new FXMLLoader(TeamView.class.getResource(
             "TeamView.fxml"));
@@ -199,8 +191,8 @@ public class TeamView extends StackPane {
         center.setGraphic(centerGlyph);
         center.getStyleClass().add("mini-button");
         center.setOnAction(e -> {
-            if (onCenterShip != null) {
-                onCenterShip.CenterShip(s);
+            if (onCenterShipListener != null) {
+                onCenterShipListener.onCenterShip(s);
             }
         });
         hb.getChildren().add(center);
@@ -208,8 +200,8 @@ public class TeamView extends StackPane {
         details.setGraphic(detailsGlyph);
         details.getStyleClass().add("mini-button");
         details.setOnAction(e -> {
-            if (onShipDetails != null) {
-                onShipDetails.ShipDetails(s);
+            if (onShipDetailsListener != null) {
+                onShipDetailsListener.onShipDetails(s);
             }
         });
         details.setMinWidth(16);

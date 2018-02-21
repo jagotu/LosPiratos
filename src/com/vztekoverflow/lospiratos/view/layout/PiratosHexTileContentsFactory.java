@@ -78,7 +78,7 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
                 throw new UnsupportedOperationException("Cannot have the same tile defined twice!");
             }
             PiratosHexTileContents sc = new PiratosHexTileContents(board.getTiles().get(coords));
-            sc.tonikuvHack(coords);
+            //sc.tonikuvHack(coords);
             current.put(coords, sc);
         }
         for (Figure mf : board.getFigures()) {

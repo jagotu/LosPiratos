@@ -2,6 +2,7 @@ package com.vztekoverflow.lospiratos;
 
 import com.vztekoverflow.lospiratos.view.stages.OrgStage;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -11,8 +12,17 @@ import org.controlsfx.glyphfont.GlyphFont;
 import org.controlsfx.glyphfont.GlyphFontRegistry;
 
 import java.io.InputStream;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Main extends Application {
+
+    public static final ExecutorService viewCreator = Executors.newSingleThreadExecutor(r -> {
+        Thread thread = Executors.defaultThreadFactory().newThread(r);
+        thread.setDaemon(true);
+        thread.setUncaughtExceptionHandler((t, e) -> e.printStackTrace());
+        return thread;
+    });
 
 
 
@@ -33,7 +43,9 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(OrgStage.class.getResource("OrgStage.fxml"));
         primaryStage.setTitle("OrgStage");
         primaryStage.setScene(new Scene(root, 1024, 600));
+        primaryStage.setOnCloseRequest(e -> Platform.exit());
         primaryStage.show();
+
 
     }
 

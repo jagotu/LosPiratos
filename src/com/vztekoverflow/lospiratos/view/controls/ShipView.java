@@ -45,33 +45,24 @@ public class ShipView extends StackPane {
 
     private BooleanProperty expanded = new SimpleBooleanProperty(false);
 
-    public interface CenterShipListener {
-        void CenterShip(Ship s);
+    public OnCenterShipListener getOnCenterShipListener() {
+        return onCenterShipListener;
     }
 
-    public CenterShipListener getOnCenterShip() {
-        return onCenterShip;
+    public void setOnCenterShipListener(OnCenterShipListener onCenterShipListener) {
+        this.onCenterShipListener = onCenterShipListener;
     }
 
-    public void setOnCenterShip(CenterShipListener onCenterShip) {
-        this.onCenterShip = onCenterShip;
+    public OnShipDetailsListener getOnShipDetailsListener() {
+        return onShipDetailsListener;
     }
 
-    private CenterShipListener onCenterShip;
-
-    public interface ShipDetailsListener {
-        void ShipDetails(Ship s);
+    public void setOnShipDetailsListener(OnShipDetailsListener onShipDetailsListener) {
+        this.onShipDetailsListener = onShipDetailsListener;
     }
 
-    ShipDetailsListener onShipDetails;
-
-    public ShipDetailsListener getOnShipDetails() {
-        return onShipDetails;
-    }
-
-    public void setOnShipDetails(ShipDetailsListener onShipDetails) {
-        this.onShipDetails = onShipDetails;
-    }
+    private OnCenterShipListener onCenterShipListener;
+    private OnShipDetailsListener onShipDetailsListener;
 
     static FXMLLoader fxmlLoader = new FXMLLoader(ShipView.class.getResource(
             "ShipView.fxml"));
@@ -136,15 +127,15 @@ public class ShipView extends StackPane {
 
     @FXML
     private void center() {
-        if (onCenterShip != null) {
-            onCenterShip.CenterShip(s);
+        if (onCenterShipListener != null) {
+            onCenterShipListener.onCenterShip(s);
         }
     }
 
     @FXML
     private void info() {
-        if (onShipDetails != null) {
-            onShipDetails.ShipDetails(s);
+        if (onShipDetailsListener != null) {
+            onShipDetailsListener.onShipDetails(s);
         }
     }
 
