@@ -107,6 +107,9 @@ public class ShipStatsView extends VBox {
             case heavyBall:
                 n = new Glyph("piratos", 'I');
                 break;
+            case ram:
+                n = new Glyph("piratoslastminute", 'A');
+                break;
             default:
                 n = new Label(enhancementIcon.toString());
         }

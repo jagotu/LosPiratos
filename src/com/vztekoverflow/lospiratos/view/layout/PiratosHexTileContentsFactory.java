@@ -12,21 +12,14 @@ import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
-import javafx.scene.transform.Scale;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -113,7 +106,7 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
             throw new UnsupportedOperationException("Figure out of bounds or not on a tile!");
         }
         current.get(f.getCoordinate()).addFigure(f);
-        if(f instanceof MovableFigure){
+        if (f instanceof MovableFigure) {
             ((MovableFigure) f).getPosition().coordinateProperty().addListener((observable, oldValue, newValue) ->
             {
                 if (!current.containsKey(oldValue) || !current.containsKey(newValue)) {
@@ -275,7 +268,7 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
                 iv.setPreserveRatio(true);
                 sp.getChildren().add(iv);
                 ResourceEdit re = getResourceEdit();
-                re.setResource(((Shipwreck)f).getResource());
+                re.setResource(((Shipwreck) f).getResource());
                 sp.getChildren().add(re);
                 n = sp;
             } else {
@@ -289,8 +282,7 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
 
         }
 
-        private ResourceEdit getResourceEdit()
-        {
+        private ResourceEdit getResourceEdit() {
             ResourceEdit re = new ResourceEdit();
             StackPane.setAlignment(re, Pos.CENTER);
             re.setAlignment(Pos.CENTER);

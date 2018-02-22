@@ -4,23 +4,14 @@ import com.vztekoverflow.lospiratos.Main;
 import com.vztekoverflow.lospiratos.view.controls.OnCenterShipListener;
 import com.vztekoverflow.lospiratos.view.controls.OnShipDetailsListener;
 import com.vztekoverflow.lospiratos.view.controls.ShipView;
-import com.vztekoverflow.lospiratos.view.controls.TeamView;
 import com.vztekoverflow.lospiratos.viewmodel.Game;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
-import com.vztekoverflow.lospiratos.viewmodel.actions.ActionsCatalog;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
 import javafx.collections.MapChangeListener;
 import javafx.geometry.Insets;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.paint.Color;
 
 import java.util.HashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class ShipsBox extends FlowPane {
 
@@ -28,27 +19,25 @@ public class ShipsBox extends FlowPane {
     private Game game;
 
     private OnCenterShipListener onCenterShipListener = null;
-    public void setOnCenterShipListener(OnCenterShipListener onCenterShipListener)
-    {
+
+    public void setOnCenterShipListener(OnCenterShipListener onCenterShipListener) {
         this.onCenterShipListener = onCenterShipListener;
-        for(ShipView tv : shipViews.values())
-        {
+        for (ShipView tv : shipViews.values()) {
             tv.setOnCenterShipListener(onCenterShipListener);
         }
     }
 
 
     private OnShipDetailsListener onShipDetailsListener = null;
+
     public void setOnShipDetailsListener(OnShipDetailsListener onShipDetailsListener) {
         this.onShipDetailsListener = onShipDetailsListener;
-        for(ShipView tv : shipViews.values())
-        {
+        for (ShipView tv : shipViews.values()) {
             tv.setOnShipDetailsListener(onShipDetailsListener);
         }
     }
 
-    public void bindToGame(Game game)
-    {
+    public void bindToGame(Game game) {
         this.game = game;
         getChildren().clear();
         shipViews.clear();
@@ -77,17 +66,6 @@ public class ShipsBox extends FlowPane {
         sv.setOnCenterShipListener(onCenterShipListener);
         sv.setOnShipDetailsListener(onShipDetailsListener);
 
-        ActionsCatalog.relatedShip.isEqualTo(s).addListener((observable, oldValue, newValue) -> {
-            if(oldValue)
-            {
-                sv.getStyleClass().remove("related");
-            }
-            if(newValue)
-            {
-                sv.getStyleClass().add("related");
-            }
-        });
-
         shipViews.put(s, sv);
     }
 
@@ -96,8 +74,7 @@ public class ShipsBox extends FlowPane {
         shipViews.remove(s);
     }
 
-    public ShipView getShipViewFor(Ship s)
-    {
+    public ShipView getShipViewFor(Ship s) {
         return shipViews.get(s);
     }
 }

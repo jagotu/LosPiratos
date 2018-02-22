@@ -1,6 +1,8 @@
 package com.vztekoverflow.lospiratos.view.controls;
 
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
+import com.vztekoverflow.lospiratos.viewmodel.actions.ActionsCatalog;
+import javafx.beans.binding.BooleanExpression;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
@@ -67,6 +69,8 @@ public class ShipView extends StackPane {
     static FXMLLoader fxmlLoader = new FXMLLoader(ShipView.class.getResource(
             "ShipView.fxml"));
 
+    private BooleanExpression isSelected;
+
     public ShipView(Ship s) {
         this.s = s;
 
@@ -98,6 +102,17 @@ public class ShipView extends StackPane {
         vbox.getChildren().add(rw);
 
         noActionsPlanned.visibleProperty().bind(s.plannedActionsProperty().sizeProperty().isEqualTo(0));
+
+
+        isSelected = ActionsCatalog.relatedShip.isEqualTo(s);
+        isSelected.addListener((observable, oldValue, newValue) -> {
+            if (oldValue) {
+                getStyleClass().remove("related");
+            }
+            if (newValue) {
+                getStyleClass().add("related");
+            }
+        });
 
 
     }

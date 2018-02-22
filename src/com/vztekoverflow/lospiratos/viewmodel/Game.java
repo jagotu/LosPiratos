@@ -2,6 +2,7 @@ package com.vztekoverflow.lospiratos.viewmodel;
 
 import com.sun.javafx.collections.UnmodifiableObservableMap;
 import com.vztekoverflow.lospiratos.evaluator.GameEvaluator;
+import com.vztekoverflow.lospiratos.model.GameSerializer;
 import com.vztekoverflow.lospiratos.model.ShipwreckM;
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.util.FxUtils;
@@ -21,6 +22,8 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.paint.Color;
 
+import java.io.File;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -117,7 +120,7 @@ public class Game {
     private GameEvaluator evaluator = GameEvaluator.createInstance(this);
 
     public void closeRoundAndEvaluate() {
-        //GameSerializer.SaveGameToFile(new File(Instant.now().toString().replace(':', '-') + "_round" + roundNo + ".json"), gameModel, false);
+        GameSerializer.SaveGameToFile(new File(Instant.now().toString().replace(':', '-') + "_round" + roundNo + ".json"), gameModel, false);
         evaluator.evaluateRound(roundNo);
         logger.logRoundHasEnded(roundNo);
         ++roundNo;

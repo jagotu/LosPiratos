@@ -12,37 +12,33 @@ import javafx.geometry.Insets;
 import javafx.scene.layout.FlowPane;
 
 import java.util.HashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-public class TeamsBox extends FlowPane{
+public class TeamsBox extends FlowPane {
 
     private HashMap<Team, TeamView> teamViews = new HashMap<>();
     private Game game;
 
     private OnCenterShipListener onCenterShipListener = null;
-    public void setOnCenterShipListener(OnCenterShipListener onCenterShipListener)
-    {
+
+    public void setOnCenterShipListener(OnCenterShipListener onCenterShipListener) {
         this.onCenterShipListener = onCenterShipListener;
-        for(TeamView tv : teamViews.values())
-        {
+        for (TeamView tv : teamViews.values()) {
             tv.setOnCenterShipListener(onCenterShipListener);
         }
     }
 
 
     private OnShipDetailsListener onShipDetailsListener = null;
+
     public void setOnShipDetailsListener(OnShipDetailsListener onShipDetailsListener) {
         this.onShipDetailsListener = onShipDetailsListener;
-        for(TeamView tv : teamViews.values())
-        {
+        for (TeamView tv : teamViews.values()) {
             tv.setOnShipDetailsListener(onShipDetailsListener);
         }
     }
 
 
-    public void bindToGame(Game game)
-    {
+    public void bindToGame(Game game) {
         this.game = game;
         getChildren().clear();
         teamViews.clear();

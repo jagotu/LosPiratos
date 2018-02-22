@@ -23,6 +23,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.LongBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.geometry.Orientation;
@@ -30,8 +31,9 @@ import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.*;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -40,7 +42,6 @@ import javafx.util.Callback;
 import java.io.File;
 
 public class OrgStage {
-
 
     private ObjectProperty<Game> game;
 
@@ -80,6 +81,8 @@ public class OrgStage {
     private Button cancelAxialSelection;
     @FXML
     private HBox axialSelectorMessage;
+    @FXML
+    private Button evaluateRelatedShip;
 
 
     private ActionParametersPopOver parametersPopOver = new ActionParametersPopOver();
@@ -155,12 +158,15 @@ public class OrgStage {
         OnCenterShipListener onCenterShipListener = s -> {
             hexPane.centerInParent(s.getPosition().getCoordinate());
             hexPane.highlightTile(s.getPosition().getCoordinate());
+            publicHexPane.highlightTile(s.getPosition().getCoordinate());
         };
         shipsBox.setOnCenterShipListener(onCenterShipListener);
         teamsBox.setOnCenterShipListener(onCenterShipListener);
 
         shipsBox.setOnShipDetailsListener(this::showShipDetails);
         teamsBox.setOnShipDetailsListener(this::showShipDetails);
+
+        evaluateRelatedShip.disableProperty().bind(ActionsCatalog.relatedShip.isNull());
 
         connectToGame();
     }
@@ -185,37 +191,36 @@ public class OrgStage {
     private Stage publicMapStage = null;
     private Stage publicStatStage = null;
 
-    private void setCADBackground(VirtualizingHexGridPane hexPane)
-    {
+    private void setCADBackground(VirtualizingHexGridPane hexPane) {
         //hexPane.setBackgroundGraphic(new ImageView("/cad.png"));
         hexPane.setBackgroundGraphicOffset(new Point2D(-1000, -1208));
     }
 
     private VirtualizingHexGridPane publicHexPane;
 
-    private VirtualizingHexGridPane createMainHexPane()
-    {
-        VirtualizingHexGridPane hexPane = new VirtualizingHexGridPane(edgeLength, pointy, new PiratosHexTileContentsFactory(game.get().getBoard(), edgeLength, pointy, (figures, ac, e) -> {        if (axialCoordinateActionParameterPending.get() != null && axialCoordinateActionParameterPending.get().isValidValue(ac)) {
-            axialCoordinateActionParameterPending.get().set(ac);
-            axialCoordinateActionParameterPending.set(null);
-            if (restoreStateAfterAxialSelection != null) {
-                restoreStateAfterAxialSelection.run();
-            }
-            return;
-        }
-        for (Figure f : figures) {
-            if (f instanceof Ship) {
-                Ship s = (Ship) f;
-                ActionsCatalog.relatedShip.set(s);
-                actionSelector.setCurrentNode(ActionsCatalog.allPossiblePlannableActions);
-                final ShipView sv = shipsBox.getShipViewFor(s);
-                ensureVisible(shipsScroll, sv);
-
-                relocateActionSelector = true;
+    private VirtualizingHexGridPane createMainHexPane() {
+        VirtualizingHexGridPane hexPane = new VirtualizingHexGridPane(edgeLength, pointy, new PiratosHexTileContentsFactory(game.get().getBoard(), edgeLength, pointy, (figures, ac, e) -> {
+            if (axialCoordinateActionParameterPending.get() != null && axialCoordinateActionParameterPending.get().isValidValue(ac)) {
+                axialCoordinateActionParameterPending.get().set(ac);
+                axialCoordinateActionParameterPending.set(null);
+                if (restoreStateAfterAxialSelection != null) {
+                    restoreStateAfterAxialSelection.run();
+                }
                 return;
             }
-        }
-    }, axialCoordinateActionParameterPending, parametersPopOver.getHighlightedTiles(), createShipPopOver.getHighlightedTiles(), createWreckPopOver.getHighlightedTiles()));
+            for (Figure f : figures) {
+                if (f instanceof Ship) {
+                    Ship s = (Ship) f;
+                    ActionsCatalog.relatedShip.set(s);
+                    actionSelector.setCurrentNode(ActionsCatalog.allPossiblePlannableActions);
+                    final ShipView sv = shipsBox.getShipViewFor(s);
+                    ensureVisible(shipsScroll, sv);
+
+                    relocateActionSelector = true;
+                    return;
+                }
+            }
+        }, axialCoordinateActionParameterPending, parametersPopOver.getHighlightedTiles(), createShipPopOver.getHighlightedTiles(), createWreckPopOver.getHighlightedTiles()));
         hexPane.setId("main-map");
         hexPane.setOnMouseClicked(e -> {
             if (relocateActionSelector) {
@@ -229,10 +234,10 @@ public class OrgStage {
                 relocateActionSelector = false;
             }
         });
-        Rectangle clipRect = new Rectangle(hexPane.getWidth(), hexPane.getHeight());
+        /*Rectangle clipRect = new Rectangle(hexPane.getWidth(), hexPane.getHeight());
         clipRect.widthProperty().bind(hexPane.widthProperty());
         clipRect.heightProperty().bind(hexPane.heightProperty());
-        mainPane.setClip(clipRect);
+        mainPane.setClip(clipRect);*/
         hexPane.maxWidthProperty().bind(mainPane.widthProperty());
         hexPane.maxHeightProperty().bind(mainPane.heightProperty());
         hexPane.relocate(0, 0);
@@ -241,10 +246,8 @@ public class OrgStage {
         return hexPane;
     }
 
-    private void updatePublicMapStage()
-    {
-        if(publicMapStage == null)
-        {
+    private void updatePublicMapStage() {
+        if (publicMapStage == null) {
             publicMapStage = new Stage();
             publicMapStage.setTitle("Public map");
             publicMapStage.setOnCloseRequest(Event::consume);
@@ -262,11 +265,9 @@ public class OrgStage {
     private ShipsBox publicShipsBox;
     private TeamsBox publicTeamsBox;
 
-    private void updatePublicStatStage()
-    {
+    private void updatePublicStatStage() {
         //Create public stat stage
-        if(publicStatStage == null)
-        {
+        if (publicStatStage == null) {
             publicStatStage = new Stage();
             publicStatStage.setTitle("Public stats");
             publicStatStage.setOnCloseRequest(Event::consume);
@@ -354,7 +355,6 @@ public class OrgStage {
         final ShipView sv = shipsBox.getShipViewFor(s);
         ensureVisible(shipsScroll, sv);
     }
-
 
 
     @FXML
@@ -456,5 +456,8 @@ public class OrgStage {
         }
     }
 
+    public void evaluateShip(ActionEvent actionEvent) {
+        ActionsCatalog.relatedShip.get().evaluateActions();
+    }
 }
 

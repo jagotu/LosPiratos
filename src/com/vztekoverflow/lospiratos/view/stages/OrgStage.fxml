@@ -2,13 +2,13 @@
 
 <?import com.vztekoverflow.lospiratos.view.controls.ActionSelector?>
 <?import com.vztekoverflow.lospiratos.view.controls.PlannedActionsBar?>
+<?import com.vztekoverflow.lospiratos.view.layout.ShipsBox?>
+<?import com.vztekoverflow.lospiratos.view.layout.TeamsBox?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.glyphfont.Glyph?>
-<?import com.vztekoverflow.lospiratos.view.layout.TeamsBox?>
-<?import com.vztekoverflow.lospiratos.view.layout.ShipsBox?>
 <SplitPane fx:id="root" dividerPositions="0.5" stylesheets="@common.css" xmlns="http://javafx.com/javafx/8.0.121"
            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vztekoverflow.lospiratos.view.stages.OrgStage">
     <BorderPane>
@@ -89,8 +89,12 @@
             </TabPane>
         </center>
         <bottom>
-            <Button fx:id="evaluateRoundButton" onAction="#evaluateRound" prefHeight="48.0" text="Button"
-                    textAlignment="CENTER" BorderPane.alignment="CENTER_RIGHT"/>
+            <HBox alignment="CENTER_RIGHT" fillHeight="false">
+                <Button fx:id="evaluateRelatedShip" onAction="#evaluateShip" prefHeight="48.0" text="Vyhodnotit loď"
+                        textAlignment="CENTER"/>
+                <Button fx:id="evaluateRoundButton" onAction="#evaluateRound" prefHeight="48.0" text="Button"
+                        textAlignment="CENTER"/>
+            </HBox>
         </bottom>
     </BorderPane>
 </SplitPane>

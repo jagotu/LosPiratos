@@ -49,8 +49,7 @@ public abstract class EditableText extends StackPane {
 
 
         editing.addListener((observable, oldValue, newValue) -> {
-            if(mode.get().equals(Mode.EDITABLE))
-            {
+            if (mode.get().equals(Mode.EDITABLE)) {
                 if (newValue) {
                     this.getChildren().add(editMode);
                     this.getChildren().remove(showMode);
