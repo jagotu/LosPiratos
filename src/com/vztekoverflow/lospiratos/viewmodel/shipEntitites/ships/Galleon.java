@@ -38,7 +38,7 @@ public class Galleon extends ShipType {
     }
 
     public static ResourceReadOnly getCost() {
-        return new ResourceReadOnly(800,250, 250, 0, 0, 400);
+        return new ResourceReadOnly(8000,250, 250, 0, 0, 400);
     }
 
     @Override

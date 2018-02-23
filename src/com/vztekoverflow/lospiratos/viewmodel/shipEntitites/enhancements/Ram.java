@@ -20,7 +20,7 @@ public final class Ram extends ShipEnhancement {
     }
 
     public static ResourceReadOnly getCost() {
-        return new ResourceReadOnly(25,0,10,0,0,75);
+        return new ResourceReadOnly(250,0,10,0,0,75);
     }
 
     public String getČeskéJméno() {

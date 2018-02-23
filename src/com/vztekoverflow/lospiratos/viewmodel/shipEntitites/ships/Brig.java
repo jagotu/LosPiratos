@@ -38,7 +38,7 @@ public class Brig extends ShipType {
     }
 
     public static ResourceReadOnly getCost() {
-        return new ResourceReadOnly(200, 150, 0, 0, 0, 200);
+        return new ResourceReadOnly(2000, 150, 0, 0, 0, 200);
     }
 
     @Override

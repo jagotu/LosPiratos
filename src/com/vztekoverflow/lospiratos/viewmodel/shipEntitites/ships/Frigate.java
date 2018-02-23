@@ -37,7 +37,7 @@ public class Frigate extends ShipType {
     }
 
     public static ResourceReadOnly getCost() {
-        return new ResourceReadOnly(400,200, 130, 0, 0, 300);
+        return new ResourceReadOnly(4000,200, 130, 0, 0, 300);
     }
 
     @Override

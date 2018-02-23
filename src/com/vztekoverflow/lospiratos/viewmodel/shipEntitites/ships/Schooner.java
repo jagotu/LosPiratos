@@ -39,7 +39,7 @@ public class Schooner extends ShipType {
 
 
     public static ResourceReadOnly getCost() {
-        return new ResourceReadOnly(100, 100, 0, 0, 0, 100);
+        return new ResourceReadOnly(1000, 100, 0, 0, 0, 100);
     }
 
     @Override

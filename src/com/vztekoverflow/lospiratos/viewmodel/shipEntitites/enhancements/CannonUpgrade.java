@@ -58,7 +58,7 @@ public final class CannonUpgrade extends ShipEnhancement {
 
 
     public static ResourceReadOnly getCost() {
-        return new ResourceReadOnly(50,0,50,0,0,50);
+        return new ResourceReadOnly(500,0,50,0,0,50);
     }
 
     @Override

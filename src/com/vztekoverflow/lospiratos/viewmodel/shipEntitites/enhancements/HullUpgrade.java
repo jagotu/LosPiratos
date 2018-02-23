@@ -41,7 +41,7 @@ public final class HullUpgrade extends ShipEnhancement {
 
 
     public static ResourceReadOnly getCost() {
-        return new ResourceReadOnly(50,0,10,0,0,100);
+        return new ResourceReadOnly(500,0,10,0,0,100);
     }
 
     @Override

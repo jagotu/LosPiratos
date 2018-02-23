@@ -13,7 +13,7 @@ public final class HeavyShot extends ShipEnhancement {
     }
 
     public static ResourceReadOnly getCost() {
-        return new ResourceReadOnly(100,0,75,0,0,0);
+        return new ResourceReadOnly(1000,0,75,0,0,0);
     }
 
     @Override
