@@ -4,11 +4,12 @@ import com.vztekoverflow.lospiratos.model.GameSerializer;
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.view.controls.*;
 import com.vztekoverflow.lospiratos.view.layout.PiratosHexTileContentsFactory;
+import com.vztekoverflow.lospiratos.view.layout.ShipsBox;
+import com.vztekoverflow.lospiratos.view.layout.TeamsBox;
 import com.vztekoverflow.lospiratos.view.layout.VirtualizingHexGridPane;
 import com.vztekoverflow.lospiratos.viewmodel.Figure;
 import com.vztekoverflow.lospiratos.viewmodel.Game;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
-import com.vztekoverflow.lospiratos.viewmodel.Team;
 import com.vztekoverflow.lospiratos.viewmodel.actions.ActionsCatalog;
 import com.vztekoverflow.lospiratos.viewmodel.actions.ParameterizedAction;
 import com.vztekoverflow.lospiratos.viewmodel.actions.PlannableAction;
@@ -22,36 +23,33 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.LongBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.ListChangeListener;
-import javafx.collections.MapChangeListener;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class OrgStage {
-
 
     private ObjectProperty<Game> game;
 
     //Controls
     @FXML
-    private FlowPane teamsBox;
+    private TeamsBox teamsBox;
     @FXML
-    private FlowPane shipsBox;
+    private ShipsBox shipsBox;
     @FXML
     private SplitPane root;
     private VirtualizingHexGridPane hexPane = null;
@@ -83,20 +81,14 @@ public class OrgStage {
     private Button cancelAxialSelection;
     @FXML
     private HBox axialSelectorMessage;
+    @FXML
+    private Button evaluateRelatedShip;
 
 
     private ActionParametersPopOver parametersPopOver = new ActionParametersPopOver();
 
-    private final ExecutorService viewCreator = Executors.newSingleThreadExecutor(r -> {
-        Thread thread = Executors.defaultThreadFactory().newThread(r);
-        thread.setDaemon(true);
-        return thread;
-    });
-
     //Internal working helpers
     private Point2D lastMouse;
-    private HashMap<Team, TeamView> teamViews = new HashMap<>();
-    private HashMap<Ship, ShipView> shipViews = new HashMap<>();
     private static final int minMove = -4000;
     private static final int maxMove = 1000;
 
@@ -162,6 +154,20 @@ public class OrgStage {
         });
         axialSelectorMessage.layoutXProperty().bind(mainPane.widthProperty().subtract(axialSelectorMessage.widthProperty()).divide(2));
         axialSelectorMessage.visibleProperty().bind(axialCoordinateActionParameterPending.isNotNull());
+
+        OnCenterShipListener onCenterShipListener = s -> {
+            hexPane.centerInParent(s.getPosition().getCoordinate());
+            hexPane.highlightTile(s.getPosition().getCoordinate());
+            publicHexPane.highlightTile(s.getPosition().getCoordinate());
+        };
+        shipsBox.setOnCenterShipListener(onCenterShipListener);
+        teamsBox.setOnCenterShipListener(onCenterShipListener);
+
+        shipsBox.setOnShipDetailsListener(this::showShipDetails);
+        teamsBox.setOnShipDetailsListener(this::showShipDetails);
+
+        evaluateRelatedShip.disableProperty().bind(ActionsCatalog.relatedShip.isNull());
+
         connectToGame();
     }
 
@@ -182,14 +188,18 @@ public class OrgStage {
     private boolean relocateActionSelector = false;
     private double edgeLength = 107.312;
     private boolean pointy = true; //DON'T SET TO FALSE
+    private Stage publicMapStage = null;
+    private Stage publicStatStage = null;
 
-    private void connectToGame() {
-        mainPane.getChildren().remove(hexPane);
-        if (hexPane != null) {
-            root.getItems().remove(hexPane);
-        }
+    private void setCADBackground(VirtualizingHexGridPane hexPane) {
+        //hexPane.setBackgroundGraphic(new ImageView("/cad.png"));
+        hexPane.setBackgroundGraphicOffset(new Point2D(-1000, -1208));
+    }
 
-        hexPane = new VirtualizingHexGridPane(edgeLength, pointy, new PiratosHexTileContentsFactory(game.get().getBoard(), edgeLength, pointy, (figures, ac, e) -> {
+    private VirtualizingHexGridPane publicHexPane;
+
+    private VirtualizingHexGridPane createMainHexPane() {
+        VirtualizingHexGridPane hexPane = new VirtualizingHexGridPane(edgeLength, pointy, new PiratosHexTileContentsFactory(game.get().getBoard(), edgeLength, pointy, (figures, ac, e) -> {
             if (axialCoordinateActionParameterPending.get() != null && axialCoordinateActionParameterPending.get().isValidValue(ac)) {
                 axialCoordinateActionParameterPending.get().set(ac);
                 axialCoordinateActionParameterPending.set(null);
@@ -203,7 +213,7 @@ public class OrgStage {
                     Ship s = (Ship) f;
                     ActionsCatalog.relatedShip.set(s);
                     actionSelector.setCurrentNode(ActionsCatalog.allPossiblePlannableActions);
-                    final ShipView sv = shipViews.get(s);
+                    final ShipView sv = shipsBox.getShipViewFor(s);
                     ensureVisible(shipsScroll, sv);
 
                     relocateActionSelector = true;
@@ -211,6 +221,7 @@ public class OrgStage {
                 }
             }
         }, axialCoordinateActionParameterPending, parametersPopOver.getHighlightedTiles(), createShipPopOver.getHighlightedTiles(), createWreckPopOver.getHighlightedTiles()));
+        hexPane.setId("main-map");
         hexPane.setOnMouseClicked(e -> {
             if (relocateActionSelector) {
                 double hexPaneX = hexPane.getXOffset() + e.getX() * hexPane.getScale();
@@ -223,55 +234,72 @@ public class OrgStage {
                 relocateActionSelector = false;
             }
         });
-        Rectangle clipRect = new Rectangle(hexPane.getWidth(), hexPane.getHeight());
+        /*Rectangle clipRect = new Rectangle(hexPane.getWidth(), hexPane.getHeight());
         clipRect.widthProperty().bind(hexPane.widthProperty());
         clipRect.heightProperty().bind(hexPane.heightProperty());
-        mainPane.setClip(clipRect);
+        mainPane.setClip(clipRect);*/
         hexPane.maxWidthProperty().bind(mainPane.widthProperty());
         hexPane.maxHeightProperty().bind(mainPane.heightProperty());
         hexPane.relocate(0, 0);
-        //hexPane.setBackgroundGraphic(new ImageView("/cad.png"));
-        hexPane.setBackgroundGraphicOffset(new Point2D(-1000, -1208));
+        setCADBackground(hexPane);
+        setHexPanePanAndZoom(hexPane, 1.005);
+        return hexPane;
+    }
+
+    private void updatePublicMapStage() {
+        if (publicMapStage == null) {
+            publicMapStage = new Stage();
+            publicMapStage.setTitle("Public map");
+            publicMapStage.setOnCloseRequest(Event::consume);
+            publicMapStage.show();
+        }
+
+        publicHexPane = new VirtualizingHexGridPane(edgeLength, pointy, new PiratosHexTileContentsFactory(game.get().getBoard(), edgeLength, pointy));
+        publicHexPane.getStylesheets().add("/com/vztekoverflow/lospiratos/view/stages/common.css");
+        publicHexPane.setId("public-map");
+        publicMapStage.setScene(new Scene(publicHexPane, 800, 600));
+        setCADBackground(publicHexPane);
+        setHexPanePanAndZoom(publicHexPane, 1.001);
+    }
+
+    private ShipsBox publicShipsBox;
+    private TeamsBox publicTeamsBox;
+
+    private void updatePublicStatStage() {
+        //Create public stat stage
+        if (publicStatStage == null) {
+            publicStatStage = new Stage();
+            publicStatStage.setTitle("Public stats");
+            publicStatStage.setOnCloseRequest(Event::consume);
+            publicShipsBox = new ShipsBox();
+            publicTeamsBox = new TeamsBox();
+            SplitPane sp = new SplitPane();
+            sp.setOrientation(Orientation.VERTICAL);
+            sp.getItems().addAll(publicTeamsBox, publicShipsBox);
+            sp.getStylesheets().add("/com/vztekoverflow/lospiratos/view/stages/common.css");
+            publicStatStage.setScene(new Scene(sp, 800, 600));
+            publicStatStage.show();
+        }
+
+        publicTeamsBox.bindToGame(game.get());
+        publicShipsBox.bindToGame(game.get());
+
+    }
+
+    private void connectToGame() {
+        //Update hexPane
+        mainPane.getChildren().remove(hexPane);
+        if (hexPane != null) {
+            root.getItems().remove(hexPane);
+        }
+        hexPane = createMainHexPane();
         mainPane.getChildren().add(0, hexPane);
 
-        setHexPanePanAndZoom();
+        updatePublicMapStage();
+        updatePublicStatStage();
 
-        teamsBox.getChildren().clear();
-        teamViews.clear();
-
-        for (final Team t : game.get().getTeams()) {
-            viewCreator.submit(() -> addTeamView(t));
-        }
-
-        game.get().getTeams().addListener((ListChangeListener.Change<? extends Team> c) -> {
-            while (c.next()) {
-                if (!(c.wasPermutated() || c.wasUpdated())) {
-                    for (Team t : c.getAddedSubList()) {
-                        viewCreator.submit(() -> addTeamView(t));
-                    }
-                    for (Team t : c.getRemoved()) {
-                        removeTeamView(t);
-                    }
-                }
-            }
-        });
-
-        shipsBox.getChildren().clear();
-        shipViews.clear();
-
-        for (final Ship s : game.get().getAllShips().values()) {
-            viewCreator.submit(() -> addShipView(s));
-        }
-
-        game.get().allShipsProperty().addListener((MapChangeListener<? super String, ? super Ship>) change -> {
-            if (change.wasRemoved()) {
-                removeShipView(change.getValueRemoved());
-            }
-            if (change.wasAdded()) {
-                viewCreator.submit(() -> addShipView(change.getValueAdded()));
-            }
-
-        });
+        teamsBox.bindToGame(game.get());
+        shipsBox.bindToGame(game.get());
 
         logListView.setItems(game.get().getLogger().getLoggedEvents());
         logListView.setCellFactory(new Callback<ListView<LoggedEvent>, ListCell<LoggedEvent>>() {
@@ -315,26 +343,6 @@ public class OrgStage {
         evaluateRoundButton.textProperty().bind(Bindings.format("Vyhodnotit kolo\n(%d lodí nemá nastavenou akci)", unplannedCountBinding));
     }
 
-    private void addTeamView(Team t) {
-        TeamView tv = new TeamView(t);
-        FlowPane.setMargin(tv, new Insets(2, 2, 2, 2));
-        tv.setRequestDeleteListener(team -> game.get().getTeams().remove(team));
-        tv.setOnCenterShip(s -> {
-            hexPane.centerInParent(s.getPosition().getCoordinate());
-            hexPane.highlightTile(s.getPosition().getCoordinate());
-
-        });
-        tv.setOnShipDetails(this::showShipDetails);
-        Platform.runLater(() -> teamsBox.getChildren().add(tv));
-
-        teamViews.put(t, tv);
-    }
-
-    private void removeTeamView(Team t) {
-        teamsBox.getChildren().remove(teamViews.get(t));
-        teamViews.remove(t);
-
-    }
 
     private void showShipDetails(Ship s) {
         ActionsCatalog.relatedShip.set(s);
@@ -344,38 +352,10 @@ public class OrgStage {
         actionSelector.layoutXProperty().bind(hexPane.XOffsetProperty().negate().add(shippos.getX() + hexPane.getTileWidth() / 2).divide(hexPane.scaleProperty()));
         actionSelector.layoutYProperty().bind(hexPane.YOffsetProperty().negate().add(shippos.getY() + hexPane.getTileHeight() / 2).divide(hexPane.scaleProperty()));
         actionSelector.setCurrentNode(ActionsCatalog.allPossiblePlannableActions);
-        final ShipView sv = shipViews.get(s);
+        final ShipView sv = shipsBox.getShipViewFor(s);
         ensureVisible(shipsScroll, sv);
     }
 
-
-    private static final Background yellow = new Background(new BackgroundFill(Color.YELLOW, CornerRadii.EMPTY, Insets.EMPTY));
-    private static final Background transparent = new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY));
-
-    private void addShipView(Ship s) {
-        ShipView sv = new ShipView(s);
-        FlowPane.setMargin(sv, new Insets(2, 2, 2, 2));
-        sv.setRequestDeleteListener(ship -> s.getTeam().removeShip(s.getName()));
-
-        Platform.runLater(() -> shipsBox.getChildren().add(sv));
-        sv.setOnCenterShip(sh -> {
-            hexPane.centerInParent(sh.getPosition().getCoordinate());
-            hexPane.highlightTile(sh.getPosition().getCoordinate());
-
-        });
-
-        sv.setOnShipDetails(this::showShipDetails);
-
-        sv.backgroundProperty().bind(Bindings.when(ActionsCatalog.relatedShip.isEqualTo(s)).then(yellow).otherwise(transparent));
-
-        shipViews.put(s, sv);
-    }
-
-    private void removeShipView(Ship s) {
-        shipsBox.getChildren().remove(shipViews.get(s));
-        shipViews.remove(s);
-
-    }
 
     @FXML
     private void loremIpsum() {
@@ -406,7 +386,7 @@ public class OrgStage {
         game.get().createAndAddNewDefaultTeam();
     }
 
-    private void setHexPanePanAndZoom() {
+    private void setHexPanePanAndZoom(VirtualizingHexGridPane hexPane, double zoomRatio) {
         hexPane.setOnMousePressed(MouseEvent -> {
             lastMouse = new Point2D(MouseEvent.getX(), MouseEvent.getY());
         });
@@ -418,7 +398,7 @@ public class OrgStage {
         });
 
         hexPane.setOnScroll(ScrollEvent -> {
-            double scale = Math.pow(1.005, -ScrollEvent.getDeltaY());
+            double scale = Math.pow(zoomRatio, -ScrollEvent.getDeltaY());
             double newScale = scale * hexPane.getScale();
             if (newScale > 4) {
                 newScale = 4;
@@ -474,6 +454,10 @@ public class OrgStage {
             fileChooser.setInitialDirectory(file.getParentFile());
             GameSerializer.SaveGameToFile(file, game.get().getGameModel(), false);
         }
+    }
+
+    public void evaluateShip(ActionEvent actionEvent) {
+        ActionsCatalog.relatedShip.get().evaluateActions();
     }
 }
 

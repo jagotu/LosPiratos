@@ -106,7 +106,7 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
             throw new UnsupportedOperationException("Figure out of bounds or not on a tile!");
         }
         current.get(f.getCoordinate()).addFigure(f);
-        if(f instanceof MovableFigure){
+        if (f instanceof MovableFigure) {
             ((MovableFigure) f).getPosition().coordinateProperty().addListener((observable, oldValue, newValue) ->
             {
                 if (!current.containsKey(oldValue) || !current.containsKey(newValue)) {
@@ -268,7 +268,7 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
                 iv.setPreserveRatio(true);
                 sp.getChildren().add(iv);
                 ResourceEdit re = getResourceEdit();
-                re.setResource(((Shipwreck)f).getResource());
+                re.setResource(((Shipwreck) f).getResource());
                 sp.getChildren().add(re);
                 n = sp;
             } else {
@@ -282,8 +282,7 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
 
         }
 
-        private ResourceEdit getResourceEdit()
-        {
+        private ResourceEdit getResourceEdit() {
             ResourceEdit re = new ResourceEdit();
             StackPane.setAlignment(re, Pos.CENTER);
             re.setAlignment(Pos.CENTER);

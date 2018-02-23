@@ -667,4 +667,9 @@ public class Ship implements MovableFigure, DamageableFigure, OnNextRoundStarted
     }
     //endregion
 
+    public void evaluateActions()
+    {
+        throw new IllegalStateException();
+    }
+
 }

@@ -5,7 +5,6 @@ import com.vztekoverflow.lospiratos.view.PopOverSkin;
 import com.vztekoverflow.lospiratos.viewmodel.Game;
 import com.vztekoverflow.lospiratos.viewmodel.Team;
 import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.AxialCoordinateActionParameter;
-import com.vztekoverflow.lospiratos.viewmodel.boardTiles.Port;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipType;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanExpression;
@@ -65,10 +64,11 @@ public class CreateShipPopOver extends PopOver {
     private AxialCoordinateActionParameter targetPortParameter = new AxialCoordinateActionParameter() {
         @Override
         public BooleanExpression validValueProperty(ObservableValue<AxialCoordinate> value) {
-            return Bindings.createBooleanBinding(() -> {
+            return Bindings.createBooleanBinding(() -> true);
+            /*return Bindings.createBooleanBinding(() -> {
                 if (value.getValue() == null) return false;
                 return game.getBoard().getTiles().get(value.getValue()) instanceof Port;
-            }, value, game.getBoard().tilesProperty());
+            }, value, game.getBoard().tilesProperty());*/
         }
 
         @Override

@@ -324,6 +324,10 @@ public class ActionSelector extends Pane {
                 g = new Glyph("piratostrans", 'K');
                 g.setFontSize(54);
                 return g;
+            case ram:
+                g = new Glyph("piratoslastminute", 'A');
+                g.setFontSize(54);
+                return g;
             default:
                 return null;
         }
