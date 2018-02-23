@@ -19,13 +19,13 @@ public final class HullUpgrade extends ShipEnhancement {
     public int getBonusMaxHP() {
         if (this.isDestroyed()) return 0;
         if (ship.getShipType() instanceof Schooner) {
-            return 5;
-        } else if (ship.getShipType() instanceof Brig) {
             return 10;
-        } else if (ship.getShipType() instanceof Frigate) {
-            return 15;
-        } else if (ship.getShipType() instanceof Galleon) {
+        } else if (ship.getShipType() instanceof Brig) {
             return 20;
+        } else if (ship.getShipType() instanceof Frigate) {
+            return 30;
+        } else if (ship.getShipType() instanceof Galleon) {
+            return 40;
         } else {
             Warnings.makeWarning("CannonUpgrade", " Unknown ship type: " + ship.getShipType());
             return 0;
@@ -36,12 +36,12 @@ public final class HullUpgrade extends ShipEnhancement {
      * Returns universal cost of this enhancement that is same for all instances, by calling a static method getCost().
      */
     public ResourceReadOnly getCostUniversal() {
-        return new ResourceReadOnly();
+        return getCost();
     }
 
 
     public static ResourceReadOnly getCost() {
-        return getCost();
+        return new ResourceReadOnly(50,0,10,0,0,100);
     }
 
     @Override

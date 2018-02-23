@@ -4,14 +4,14 @@ import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.viewmodel.*;
 
 import static com.vztekoverflow.lospiratos.viewmodel.GameConstants.PLANTATION_GENERAL_CAPACITY;
-import static com.vztekoverflow.lospiratos.viewmodel.GameConstants.PLANTATION_GENERAL_INCREASE;
+import static com.vztekoverflow.lospiratos.viewmodel.GameConstants.PLANTATION_GENERAL_QUOTIENT;
 
 public class Plantation extends BoardTile implements Plunderable {
     public Plantation(AxialCoordinate location, Board b) {
         super(location, b);
     }
 
-    protected final Resource resource = ResourceReadOnly.MOCK_VALUE.createMutableCopy();
+    protected final Resource resource = new Resource();
 
     /**
      * @return final object representing the resource hold by this board. The returned value is always the same.
@@ -25,15 +25,17 @@ public class Plantation extends BoardTile implements Plunderable {
         return PLANTATION_GENERAL_CAPACITY;
     }
 
-    public ResourceReadOnly getIncrease() {
-        return PLANTATION_GENERAL_INCREASE;
+    public float getQuotient() {
+        return PLANTATION_GENERAL_QUOTIENT;
     }
 
     @Override
     public void onNextRoundStarted(int roundNo) {
         super.onNextRoundStarted(roundNo);
-        getResource().add(getIncrease());
-        getResource().clamp(ResourceReadOnly.ZERO, getCapacity());
+        ResourceReadOnly H = getCapacity().plus(getResource().times(getQuotient())).timesComponentWise(getCapacity());
+        ResourceReadOnly L = getCapacity().times(getQuotient()).plus(getResource());
+        getResource().setAll(H.divideComponentWise(L));
+        //getResource().clamp(ResourceReadOnly.ZERO, getCapacity());
     }
 
     @Override

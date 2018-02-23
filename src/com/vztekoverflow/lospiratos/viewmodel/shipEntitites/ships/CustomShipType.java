@@ -29,13 +29,5 @@ public class CustomShipType extends ShipType {
         //ja za nic nemuzu
     }
 
-    @Override
-    public ResourceReadOnly getBasicRepairCost() {
-        return ResourceReadOnly.MOCK_VALUE;
-    }
 
-    @Override
-    public ResourceReadOnly getUpgradeCost() {
-        return ResourceReadOnly.MOCK_VALUE;
-    }
 }

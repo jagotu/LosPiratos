@@ -9,7 +9,7 @@ import static com.vztekoverflow.lospiratos.viewmodel.GameConstants.BASIC_SHIP_WE
 public class Schooner extends ShipType {
     @Override
     public int getBonusMaxHP() {
-        return 30;
+        return 60;
     }
 
     @Override
@@ -19,7 +19,7 @@ public class Schooner extends ShipType {
 
     @Override
     public int getBonusCargoSpace() {
-        return 250;
+        return 150;
     }
 
     @Override
@@ -39,7 +39,7 @@ public class Schooner extends ShipType {
 
 
     public static ResourceReadOnly getCost() {
-        return new ResourceReadOnly();
+        return new ResourceReadOnly(100, 100, 0, 0, 0, 100);
     }
 
     @Override
@@ -52,14 +52,5 @@ public class Schooner extends ShipType {
         return getCost();
     }
 
-    @Override
-    public ResourceReadOnly getBasicRepairCost() {
-        return ResourceReadOnly.MOCK_VALUE;
-    }
-
-    @Override
-    public ResourceReadOnly getUpgradeCost() {
-        return ResourceReadOnly.MOCK_VALUE;
-    }
 
 }

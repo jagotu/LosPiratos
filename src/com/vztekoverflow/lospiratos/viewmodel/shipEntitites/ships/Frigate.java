@@ -8,7 +8,7 @@ import static com.vztekoverflow.lospiratos.viewmodel.GameConstants.BASIC_SHIP_WE
 public class Frigate extends ShipType {
     @Override
     public int getBonusMaxHP() {
-        return 70;
+        return 140;
     }
 
     @Override
@@ -18,7 +18,7 @@ public class Frigate extends ShipType {
 
     @Override
     public int getBonusCargoSpace() {
-        return 800;
+        return 300;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class Frigate extends ShipType {
     }
 
     public static ResourceReadOnly getCost() {
-        return ResourceReadOnly.MOCK_VALUE;
+        return new ResourceReadOnly(400,200, 130, 0, 0, 300);
     }
 
     @Override
@@ -50,15 +50,6 @@ public class Frigate extends ShipType {
         return getCost();
     }
 
-    @Override
-    public ResourceReadOnly getBasicRepairCost() {
-        return ResourceReadOnly.MOCK_VALUE.times(1/10);
-    }
-
-    @Override
-    public ResourceReadOnly getUpgradeCost() {
-        return ResourceReadOnly.MOCK_VALUE.times(1/2);
-    }
 
 }
 

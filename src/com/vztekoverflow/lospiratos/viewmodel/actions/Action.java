@@ -181,7 +181,10 @@ public abstract class Action implements PerformableAction, PlannableAction {
      */
     protected final boolean performPayment() {
         ResourceReadOnly cost = getCost();
-        if (cost.isLesserThanOrEqual(getRelatedShip().getTeam().getOwnedResource())) {
+        Resource teamMoney = getRelatedShip().getTeam().getOwnedResource().createMutableCopy();
+        teamMoney.clamp(ResourceReadOnly.ZERO, ResourceReadOnly.MAX);
+
+        if (cost.isLesserThanOrEqual(teamMoney)) {
             getRelatedShip().getTeam().getOwnedResource().subtract(cost);
             return true;
         } else {

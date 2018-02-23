@@ -45,6 +45,8 @@ public class BuyCommodity extends CommodityTransaction {
                     if (getCommodities() == null) return false;
                     return !getCommodities().compare(Resource.ZERO).equals(PartialOrdering.Equal)
                             && getCommodities().getMetal() == 0
+                            && getCommodities().getRum() == 0
+                            && getCommodities().getTobacco() == 0
                             && getCommodities().getMoney() == 0;
                 }
                 , getCommodities(), relatedShipProperty());

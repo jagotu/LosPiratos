@@ -23,6 +23,6 @@ public final class ChainShot extends ShipEnhancement {
     }
 
     public static ResourceReadOnly getCost() {
-        return new ResourceReadOnly();
+        return new ResourceReadOnly(50,0,30,0,0,0);
     }
 }

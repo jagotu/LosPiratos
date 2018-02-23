@@ -15,18 +15,17 @@ public final class CannonUpgrade extends ShipEnhancement {
         return EnhancementIcon.cannon;
     }
 
-    //todo pouzivat u rozsireni pattern jako u CannonUpgrade nebo pattern jako u HullUpgrade?
     private int bonusCannons = 0;
 
     private void recomputeBonusCannons() {
         if (ship.getShipType() instanceof Schooner) {
             bonusCannons = 2;
         } else if (ship.getShipType() instanceof Brig) {
-            bonusCannons = 3;
+            bonusCannons = 4;
         } else if (ship.getShipType() instanceof Frigate) {
-            bonusCannons = 5;
+            bonusCannons = 6;
         } else if (ship.getShipType() instanceof Galleon) {
-            bonusCannons = 7;
+            bonusCannons = 8;
         } else {
             Warnings.makeWarning("CannonUpgrade:", "Unknown ship type: " + ship.getShipType());
         }
@@ -57,8 +56,9 @@ public final class CannonUpgrade extends ShipEnhancement {
         return getCost();
     }
 
+
     public static ResourceReadOnly getCost() {
-        return new ResourceReadOnly(1, 2, 3, 4, 5, 6);
+        return new ResourceReadOnly(50,0,50,0,0,50);
     }
 
     @Override

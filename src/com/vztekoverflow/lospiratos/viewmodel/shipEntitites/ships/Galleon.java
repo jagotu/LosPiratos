@@ -9,7 +9,7 @@ public class Galleon extends ShipType {
 
     @Override
     public int getBonusMaxHP() {
-        return 100;
+        return 200;
     }
 
     @Override
@@ -19,7 +19,7 @@ public class Galleon extends ShipType {
 
     @Override
     public int getBonusCargoSpace() {
-        return 1200;
+        return 600;
     }
 
     @Override
@@ -38,7 +38,7 @@ public class Galleon extends ShipType {
     }
 
     public static ResourceReadOnly getCost() {
-        return new ResourceReadOnly(42, 0, 0, 0, 0, 0);
+        return new ResourceReadOnly(800,250, 250, 0, 0, 400);
     }
 
     @Override
@@ -51,13 +51,4 @@ public class Galleon extends ShipType {
         return getCost();
     }
 
-    @Override
-    public ResourceReadOnly getBasicRepairCost() {
-        return ResourceReadOnly.MOCK_VALUE;
-    }
-
-    @Override
-    public ResourceReadOnly getUpgradeCost() {
-        return ResourceReadOnly.MOCK_VALUE;
-    }
 }

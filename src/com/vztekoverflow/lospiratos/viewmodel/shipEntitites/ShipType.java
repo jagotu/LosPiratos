@@ -21,12 +21,18 @@ public abstract class ShipType extends ShipEntity {
     /**
      * Returns cost of repairing fully damaged ship with this type. The value should be same for all instances.
      */
-    abstract public ResourceReadOnly getBasicRepairCost();
+    public ResourceReadOnly getBasicRepairCost(){
+        return getBuyingCost().times(1/5f);
+    }
 
     /**
      * Returns cost of upgrading to this ship type. The value should be same for all instances.
      */
-    abstract public ResourceReadOnly getUpgradeCost();
+    public ResourceReadOnly getUpgradeCost(){
+        ShipType instance = createInstance(increment(getClass()));
+        if(instance == null) return  ResourceReadOnly.MAX;
+        return instance.getBuyingCost().times(1/2f);
+    }
 
     public static List<Class<? extends ShipType>> allShipTypes = Arrays.asList(Schooner.class, Brig.class, Frigate.class, Galleon.class);
 

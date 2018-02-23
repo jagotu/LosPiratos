@@ -18,21 +18,21 @@ public class GameConstants {
     public static final double HEAVY_BALL_DAMAGE_COEFFICIENT = 1.5;
     public static final int FRONTAL_ASSAULT_BONUS_DAMAGE_FRIGATE = 5;
     public static final int FRONTAL_ASSAULT_BONUS_DAMAGE_GALLEON = 10;
-    public static final int FRONTAL_ASSAULT_BASIC_DAMAGE = 10;
+    public static final int FRONTAL_ASSAULT_BASIC_DAMAGE = 8;
     public static final int FRONTAL_ASSAULT_SPEED_BONUS_DAMAGE = 5;
     public static final int FRONTAL_ASSAULT_BASIC_SELF_DAMAGE = 5;
-    public static final int MORTAR_DAMAGE = 10;
+    public static final int MORTAR_DAMAGE = 12;
 
     //endregion ship attacks
     //region transactions:
     /**
      * Purchase cost (in money) is determined as scalar product of purchase commodities and this. Neutral coefficient is 1.
      */
-    public static final ResourceReadOnly PURCHASE_COEFFICIENTS = new ResourceReadOnly(1, 2, 2, 2, 0, 2);
+    public static final ResourceReadOnly PURCHASE_COEFFICIENTS = new ResourceReadOnly(1, 6, 1000, 1000, 1000, 6);
     /**
      * Sell gain (in money) is determined as scalar product of sold commodities and this. Neutral coefficient is 1.
      */
-    public static final ResourceReadOnly SELL_COEFFICIENTS = new ResourceReadOnly(1, 2, 2, 2, 0, 2);
+    public static final ResourceReadOnly SELL_COEFFICIENTS = new ResourceReadOnly(1, 4, 10, 10, 0, 4);
     public static final double REPAIR_ENHANCEMENT_COST_COEFFICIENT = 0.1;
     //endregion transactions
 
@@ -44,10 +44,10 @@ public class GameConstants {
 
     //game board:
 
-    public static final ResourceReadOnly PLANTATION_GENERAL_CAPACITY = new ResourceReadOnly(100, 0, 0, 0, 0, 0);
-    public static final ResourceReadOnly PLANTATION_GENERAL_INCREASE = new ResourceReadOnly(30, 0, 0, 0, 0, 0);
+    public static final ResourceReadOnly PLANTATION_GENERAL_CAPACITY = new ResourceReadOnly(0, 100, 0, 200, 0, 200);
+    public static final int PLANTATION_GENERAL_QUOTIENT = 5;
     public static final ResourceReadOnly PLANTATION_EXTRA_CAPACITY = PLANTATION_GENERAL_CAPACITY.times(2);
-    public static final ResourceReadOnly PLANTATION_EXTRA_INCREASE = PLANTATION_GENERAL_INCREASE.times(2);
+    public static final int PLANTATION_EXTRA_QUOTIENT = 6;
 
     //endregion
 }

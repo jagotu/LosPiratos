@@ -9,7 +9,7 @@ public class Brig extends ShipType {
 
     @Override
     public int getBonusMaxHP() {
-        return 45;
+        return 90;
     }
 
     @Override
@@ -19,7 +19,7 @@ public class Brig extends ShipType {
 
     @Override
     public int getBonusCargoSpace() {
-        return 480;
+        return 200;
     }
 
     @Override
@@ -38,7 +38,7 @@ public class Brig extends ShipType {
     }
 
     public static ResourceReadOnly getCost() {
-        return new ResourceReadOnly(69, 0, 0, 0, 0, 0);
+        return new ResourceReadOnly(200, 150, 0, 0, 0, 200);
     }
 
     @Override
@@ -49,16 +49,6 @@ public class Brig extends ShipType {
     @Override
     public ResourceReadOnly getBuyingCost() {
         return getCost();
-    }
-
-    @Override
-    public ResourceReadOnly getBasicRepairCost() {
-        return ResourceReadOnly.MOCK_VALUE;
-    }
-
-    @Override
-    public ResourceReadOnly getUpgradeCost() {
-        return ResourceReadOnly.MOCK_VALUE;
     }
 
 }

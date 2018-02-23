@@ -233,13 +233,36 @@ public class ResourceReadOnly {
     /**
      * fluent syntax for creating new ResourceReadOnly form arithmetic expressions
      */
-    public ResourceReadOnly timesComponenWise(ResourceReadOnly rightOperand) {
+    public ResourceReadOnly timesComponentWise(ResourceReadOnly rightOperand) {
         int money = (this.getMoney() * rightOperand.getMoney());
         int cloth = (this.getCloth() * rightOperand.getCloth());
         int metal = (this.getMetal() * rightOperand.getMetal());
         int rum = (this.getRum() * rightOperand.getRum());
         int tobco = (this.getTobacco() * rightOperand.getTobacco());
         int wood = (this.getWood() * rightOperand.getWood());
+        ResourceReadOnly v = new ResourceReadOnly(money, cloth, metal, rum, tobco, wood);
+        return v;
+    }
+
+    public ResourceReadOnly divideComponentWise(ResourceReadOnly rightOperand) {
+        int money = 0;
+        if (rightOperand.getMoney() != 0)
+            money = Math.round(this.getMoney() / (float) rightOperand.getMoney());
+        int cloth = 0;
+        if (rightOperand.getCloth() != 0)
+            cloth = Math.round(this.getCloth() / (float) rightOperand.getCloth());
+        int metal = 0;
+        if (rightOperand.getMetal() != 0)
+            metal = Math.round(this.getMetal() / (float) rightOperand.getMetal());
+        int rum = 0;
+        if (rightOperand.getRum() != 0)
+            rum = Math.round(this.getRum() / (float) rightOperand.getRum());
+        int tobco = 0;
+        if (rightOperand.getTobacco() != 0)
+            tobco = Math.round(this.getTobacco() / (float) rightOperand.getTobacco());
+        int wood = 0;
+        if (rightOperand.getWood() != 0)
+            wood = Math.round(this.getWood() / (float) rightOperand.getWood());
         ResourceReadOnly v = new ResourceReadOnly(money, cloth, metal, rum, tobco, wood);
         return v;
     }

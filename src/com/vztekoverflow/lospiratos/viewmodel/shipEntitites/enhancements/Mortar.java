@@ -17,7 +17,7 @@ public final class Mortar extends ShipEnhancement {
     }
 
     public static ResourceReadOnly getCost() {
-        return new ResourceReadOnly();
+        return new ResourceReadOnly(75,0,50,0,0,0);
     }
 
     public String getČeskéJméno() {

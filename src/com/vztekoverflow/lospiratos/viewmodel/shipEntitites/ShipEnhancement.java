@@ -29,6 +29,10 @@ public abstract class ShipEnhancement extends ShipEntity {
      */
     abstract public ResourceReadOnly getCostUniversal();
 
+    public ResourceReadOnly getRepairCost(){
+        return getCostUniversal().times(1/10f);
+    }
+
     //may be overridden by inheritors, to add custom acquiration politics
     public boolean isAcquirableBy(ShipType type) {
         return true;
