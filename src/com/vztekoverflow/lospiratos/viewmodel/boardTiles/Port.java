@@ -13,4 +13,9 @@ public class Port extends BoardTile {
     public boolean mayBeSteppedOn() {
         return true;
     }
+
+    @Override
+    public boolean allowsFighting() {
+        return false;
+    }
 }

@@ -8,7 +8,7 @@ import javafx.beans.property.ObjectProperty;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class EnhancementAbstractTransaction extends ChangeShipAbstractTransaction implements ParameterizedAction {
+public abstract class EnhancementAbstractTransaction extends ModifyShipTransaction implements ParameterizedAction {
     private List<ActionParameter> params = new ArrayList<>();
 
     protected EnhancementAbstractTransaction() {

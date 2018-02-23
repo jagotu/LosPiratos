@@ -120,7 +120,8 @@ public class Game {
         evaluator.evaluateRound(roundNo);
         logger.logRoundHasEnded(roundNo);
         ++roundNo;
-        for (OnNextRoundStartedListener l : onNextRoundStartedListeners) {
+        List<OnNextRoundStartedListener> copy = new ArrayList<>(onNextRoundStartedListeners);
+        for (OnNextRoundStartedListener l : copy) {
             l.onNextRoundStarted(roundNo);
         }
     }

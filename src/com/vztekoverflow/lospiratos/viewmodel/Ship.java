@@ -5,6 +5,7 @@ import com.vztekoverflow.lospiratos.model.ShipEnhancementStatus;
 import com.vztekoverflow.lospiratos.util.Warnings;
 import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
 import com.vztekoverflow.lospiratos.viewmodel.actions.PlannableAction;
+import com.vztekoverflow.lospiratos.viewmodel.actions.transactions.ModifyShipTransaction;
 import com.vztekoverflow.lospiratos.viewmodel.boardTiles.Port;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEntity;
@@ -336,7 +337,7 @@ public class Ship implements MovableFigure, DamageableFigure, OnNextRoundStarted
     };
 
     private IntegerBinding weight = Bindings.createIntegerBinding(() ->
-                getShipType().getWeight() + getStorage().scalarProduct(ResourceReadOnly.ONE)
+                    getShipType().getWeight() + getStorage().scalarProduct(ResourceReadOnly.ONE)
             , shipType //also depends on storage, see constructor
     );
 
@@ -593,6 +594,40 @@ public class Ship implements MovableFigure, DamageableFigure, OnNextRoundStarted
         }
         plannedActions.add(a);
     }
+
+    /**
+     * Performs all actions that are of type ModifyShipTransaction, with immediate effect and removes those actions from planned actions.
+     */
+    public void commitModifyingTransactions(){
+        List<Action> copy = new ArrayList<>(plannedActions);
+        for (Action a : copy) {
+            try {
+                if(a instanceof ModifyShipTransaction){
+                    a.performOnShip();
+                    plannedActions.remove(a);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        plannedActions.clear();
+    }
+
+    /**
+     * This is NOT main API for round evaluation. It will evaluate only this ship, not regarding any other ships.
+     * This function may be useful for implementing a so called 'God mode'.
+     */
+    public void evaluateAllActions() {
+        for (Action a : plannedActions) {
+            try {
+                a.performOnShip();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        plannedActions.clear();
+    }
+
     //endregion
     //region public functions
 
@@ -667,9 +702,5 @@ public class Ship implements MovableFigure, DamageableFigure, OnNextRoundStarted
     }
     //endregion
 
-    public void evaluateActions()
-    {
-        throw new IllegalStateException();
-    }
 
 }

@@ -30,6 +30,11 @@ public abstract class BoardTile implements OnNextRoundStartedListener {
 
     public abstract boolean mayBeSteppedOn();
 
+    //may be overridden by inheritors
+    public boolean allowsFighting(){
+        return true;
+    }
+
     //static:
 
     private static String persistentNamePlantation = "Plantation";

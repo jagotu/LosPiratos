@@ -52,8 +52,8 @@ public class MortarShot extends Attack implements ParameterizedAction {
                 target.setRange(0);
                 return;
             }
-            target.groundZeroProperty().unbind();
-            target.groundZeroProperty().bind(getRelatedShip().getPosition().coordinateProperty());
+
+            target.groundZeroProperty().set(getRelatedShipsFuturePosition().getCoordinate());
 
             Mortar mortar = getRelatedShip().getEnhancement(Mortar.class);
             if (mortar == null) {
@@ -70,7 +70,7 @@ public class MortarShot extends Attack implements ParameterizedAction {
     }
 
     private List<ActionParameter> params = new ArrayList<>();
-    private RangedAxialCoordinateActionParameter target = new RangedAxialCoordinateActionParameter() {
+    private RangedAxialCoordinateActionParameter target = new RangedAxialCoordinateActionParameter(this) {
         @Override
         public String getČeskéJméno() {
             return "Cíl";

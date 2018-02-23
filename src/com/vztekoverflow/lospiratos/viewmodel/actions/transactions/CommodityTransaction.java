@@ -3,12 +3,11 @@ package com.vztekoverflow.lospiratos.viewmodel.actions.transactions;
 import com.vztekoverflow.lospiratos.viewmodel.Resource;
 import com.vztekoverflow.lospiratos.viewmodel.actions.ActionParameter;
 import com.vztekoverflow.lospiratos.viewmodel.actions.ParameterizedAction;
-import com.vztekoverflow.lospiratos.viewmodel.actions.Transaction;
 
 import java.util.ArrayList;
 import java.util.List;
 
-abstract public class CommodityTransaction extends Transaction implements ParameterizedAction {
+abstract public class CommodityTransaction extends ManeuverTransaction implements ParameterizedAction {
 
     private List<ActionParameter> params = new ArrayList<>();
 

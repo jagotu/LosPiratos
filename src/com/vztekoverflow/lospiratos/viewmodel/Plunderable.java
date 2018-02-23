@@ -1,6 +1,6 @@
 package com.vztekoverflow.lospiratos.viewmodel;
 
-import com.vztekoverflow.lospiratos.viewmodel.actions.Plunder;
+import com.vztekoverflow.lospiratos.viewmodel.actions.transactions.Plunder;
 
 import java.util.ArrayList;
 import java.util.Comparator;

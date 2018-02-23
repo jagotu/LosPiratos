@@ -2,6 +2,7 @@ package com.vztekoverflow.lospiratos.viewmodel.actions;
 
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.viewmodel.DamageSufferedResponse;
+import com.vztekoverflow.lospiratos.viewmodel.DamageableFigure;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipMechanics;
 
@@ -36,8 +37,11 @@ public abstract class Attack extends Action {
      * @return value indicating whether the target has been destroyed, or null if there is no ship on the @targetPosition
      */
     protected final DamageSufferedResponse applyDamageTo(int damageValue, AxialCoordinate targetPosition) {
-        Ship target = getRelatedShip().getTeam().getGame().getBoard().getShip(targetPosition);
-        if (target == null) return null;
+        DamageableFigure t = getRelatedShip().getTeam().getGame().getBoard().getDamageableFigure(targetPosition);
+        if (t == null) return null;
+        if (!(t instanceof Ship)) return null;
+        Ship target = (Ship) t;
+
 
         DamageSufferedResponse result = target.takeDamage(damageValue);
         for (OnDamageDoneListener l : onDamageDoneListeners) {

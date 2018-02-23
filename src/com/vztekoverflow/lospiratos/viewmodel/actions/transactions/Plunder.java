@@ -1,11 +1,11 @@
-package com.vztekoverflow.lospiratos.viewmodel.actions;
+package com.vztekoverflow.lospiratos.viewmodel.actions.transactions;
 
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.viewmodel.Plunderable;
 import com.vztekoverflow.lospiratos.viewmodel.Position;
 import com.vztekoverflow.lospiratos.viewmodel.Resource;
 import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
-import com.vztekoverflow.lospiratos.viewmodel.actions.transactions.ResourceActionParameter;
+import com.vztekoverflow.lospiratos.viewmodel.actions.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanExpression;
 
@@ -14,12 +14,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Plunder extends Action implements ParameterizedAction {
+public class Plunder extends ManeuverTransaction implements ParameterizedAction {
     @Override
     protected Action createCopyAndResetThis() {
         Plunder result = new Plunder();
         result.getCommodities().setAll(this.getCommodities());
-        getCommodities().clear();
+        getCommodities().setAll(ResourceReadOnly.MAX);
         return result;
     }
 
@@ -30,9 +30,12 @@ public class Plunder extends Action implements ParameterizedAction {
 
     @Override
     protected boolean recomputePlannable() {
+        int shipSpeed = getRelatedShip().getSpeed();
+        int maneuversAlreadyPlanned = getRelatedShip().getPlannedActions().stream().mapToInt(Action::getManeuverSlotsTaken).sum();
+        boolean enoughSpeed = maneuversAlreadyPlanned < shipSpeed;
         Position pos = getRelatedShipsFuturePosition();
         Plunderable p = getRelatedShip().getTeam().getGame().getBoard().getPlunderable(pos.getCoordinate());
-        return p != null;
+        return p != null && enoughSpeed;
     }
 
     @Override
@@ -56,7 +59,7 @@ public class Plunder extends Action implements ParameterizedAction {
 
     private List<ActionParameter> params = new ArrayList<>();
 
-    Plunder() {
+    public Plunder() {
         params.add(commodities);
         getCommodities().addListener(__ -> recomputeCost());
         commodities.get().setAll(ResourceReadOnly.MAX);

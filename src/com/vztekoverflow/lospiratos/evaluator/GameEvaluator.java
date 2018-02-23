@@ -9,6 +9,8 @@ import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.CannonsAbstractVol
 import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.FrontalAssault;
 import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.MortarShot;
 import com.vztekoverflow.lospiratos.viewmodel.actions.maneuvers.MoveForward;
+import com.vztekoverflow.lospiratos.viewmodel.actions.transactions.ManeuverTransaction;
+import com.vztekoverflow.lospiratos.viewmodel.actions.transactions.Plunder;
 import com.vztekoverflow.lospiratos.viewmodel.boardTiles.Port;
 
 import java.util.*;
@@ -16,6 +18,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static com.vztekoverflow.lospiratos.viewmodel.GameConstants.COLLISION_DAMAGE;
+import static com.vztekoverflow.lospiratos.viewmodel.GameConstants.SHIPS_COST_TO_WRECK_COEFF;
 
 abstract public class GameEvaluator {
 
@@ -49,10 +52,9 @@ class StandardGameEvaluator extends GameEvaluator {
         });
         evaluateVolleys();
         evaluate(Maneuver.class);
-        //destroyDamagedShips(); //patri to i sem? ma se zabijet i po manevrech?
         evaluate(MortarShot.class);
-        evaluate(Transaction.class);
-        evaluatePlundering();
+        evaluate(ManeuverTransaction.class);
+        performPlundering();
         performOnAllActions(a -> {
             if (a instanceof Attack) ((Attack) a).removeListener(onDamageDoneListener);
             if (a instanceof Plunder) ((Plunder) a).removeListener(onPlunderRequestedListener);
@@ -64,7 +66,7 @@ class StandardGameEvaluator extends GameEvaluator {
 
     private void reinitialize() {
         collisionAttendees = new HashSet<>();
-        collisionSolverManueverIndex = new HashMap<>();
+        collisionSolverManeuverIndex = new HashMap<>();
         killedShips = new HashSet<>();
         attackers = new HashMap<>();
         plunderers = new HashMap<>();
@@ -74,7 +76,7 @@ class StandardGameEvaluator extends GameEvaluator {
      * Ships that were part of a collision and had to be shifted to solve a collision.
      */
     private Set<Ship> collisionAttendees = new HashSet<>();
-    private Map<Ship,Integer> collisionSolverManueverIndex = new HashMap<>();
+    private Map<Ship,Integer> collisionSolverManeuverIndex = new HashMap<>();
     private Set<Ship> killedShips = new HashSet<>();
     /**
      * Key represents target, Value (List) represents all its attackers from this round
@@ -130,13 +132,12 @@ class StandardGameEvaluator extends GameEvaluator {
         });
     }
 
-    private void evaluatePlundering(){
-        evaluate(Plunder.class);
+    private void performPlundering(){
         for(Map.Entry<Plunderable, Set<Plunder>> e : plunderers.entrySet()){
             try {
                 e.getKey().getPlunderedBy(e.getValue());
             }catch (Exception ex){
-                Warnings.exceptionCaught(toString()+".evaluatePlundering()",ex);
+                Warnings.exceptionCaught(toString()+".performPlundering()",ex);
             }
 
         }
@@ -164,7 +165,7 @@ class StandardGameEvaluator extends GameEvaluator {
 
     private void destroyShip(Ship s, Iterable<Ship> attackers){
         //dividePlunderedTreasure(s, attackers); //currently not supported by the game rules
-        g.createAndAddNewShipwreck(s.getPosition().getCoordinate(), s.getStorage());
+        g.createAndAddNewShipwreck(s.getPosition().getCoordinate(), s.getStorage().plus(s.getShipType().getBuyingCost().times(SHIPS_COST_TO_WRECK_COEFF)));
         s.destroyShipAndEnhancements();
         g.getLogger().logShipHasDied(s, attackers);
     }
@@ -231,8 +232,8 @@ class StandardGameEvaluator extends GameEvaluator {
             //undo maneuvers from last to first (if possible (i.e. i > 0)):
             List<Maneuver> maneuvers = s.getPlannedActions().stream().filter(a -> a instanceof Maneuver).map(a -> (Maneuver) a).collect(Collectors.toList());
             //1st skip operations that were already undone by previous iterations
-            collisionSolverManueverIndex.putIfAbsent(s,maneuvers.size()-1);
-            int i = collisionSolverManueverIndex.get(s);
+            collisionSolverManeuverIndex.putIfAbsent(s,maneuvers.size()-1);
+            int i = collisionSolverManeuverIndex.get(s);
             //2nd, undo one move and all preceding rotations
             if(i <0){
                 Warnings.makeWarning("collision solver",s + " cannot move backwards anymore, but there is still pending collision.");
@@ -243,7 +244,7 @@ class StandardGameEvaluator extends GameEvaluator {
                     break;
                 i--;
             }
-            collisionSolverManueverIndex.replace(s,i);
+            collisionSolverManeuverIndex.replace(s,i);
 
             collisionAttendees.add(s);
             newPositions.put(s, s.getPosition().getCoordinate());

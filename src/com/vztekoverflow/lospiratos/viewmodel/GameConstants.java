@@ -9,6 +9,10 @@ public class GameConstants {
     //region ships:
 
     public static final int BASIC_SHIP_WEIGHT = 10000;
+    /**
+     * How much of the ships buying cost will be part of shipwreck when the ship dies.
+     */
+    public static final float SHIPS_COST_TO_WRECK_COEFF = 0.5f;
 
     //region ship attacks:
     public static final double HEAVY_BALL_DAMAGE_COEFFICIENT = 1.5;

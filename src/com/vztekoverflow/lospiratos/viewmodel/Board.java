@@ -51,12 +51,12 @@ public class Board /* I want my Burd */ implements OnNextRoundStartedListener {
                 //todo bug, this not only prevents circular calls, but also prevents updating a tiles content
                 if (modelMap.tilesProperty().stream().anyMatch(tile -> tile.getLocation().equals(c.getKey())))
                     return;
-                if(c.getValueAdded() instanceof Plantation){
+                if (c.getValueAdded() instanceof Plantation) {
                     Plantation p = (Plantation) c.getValueAdded();
                     ResourceM r = new ResourceM();
                     p.getResource().bindBidirectional(r);
                     modelMap.tilesProperty().add(new MapTile(c.getKey(), BoardTile.getPersistentName(c.getValueAdded().getClass()), r));
-                }else
+                } else
                     modelMap.tilesProperty().add(new MapTile(c.getKey(), BoardTile.getPersistentName(c.getValueAdded().getClass())));
             } else if (c.wasRemoved()) {
                 modelMap.tilesProperty().removeIf(tile -> tile.getLocation().equals(c.getKey()));
@@ -70,7 +70,7 @@ public class Board /* I want my Burd */ implements OnNextRoundStartedListener {
     private boolean tryAddingTile(MapTile modelTile) {
         BoardTile t = BoardTile.createInstanceFromPersistentName(modelTile.getContent(), modelTile.getLocation(), this);
         if (t == null) return false;
-        if(t instanceof Plantation){
+        if (t instanceof Plantation) {
             ((Plantation) t).getResource().bindBidirectional(modelTile.plantationsResource);
         }
         if (tiles.containsKey(t.getLocation())) return false;
@@ -144,13 +144,15 @@ public class Board /* I want my Burd */ implements OnNextRoundStartedListener {
     /**
      * Returns a DamageableFigure located at given @position
      *
-     * @return null if no figure is located at given @position
+     * @return null if no figure is located at given @position or if the location does not allow fighting
      */
     public DamageableFigure getDamageableFigure(AxialCoordinate position) {
         Figure f = findFigure(position);
-        if (f instanceof DamageableFigure)
+        if (f instanceof DamageableFigure) {
+            if (!tiles.get(f.getCoordinate()).allowsFighting())
+                return null;
             return (DamageableFigure) f;
-        else return null;
+        } else return null;
     }
 
     /**
@@ -184,12 +186,11 @@ public class Board /* I want my Burd */ implements OnNextRoundStartedListener {
     }
 
     /**
-     *
      * @param from
      * @param type
      * @return nearest Tile or null if there is no Tile of such type
      */
-    public BoardTile getNearestTile(AxialCoordinate from, Class<? extends BoardTile> type){
+    public BoardTile getNearestTile(AxialCoordinate from, Class<? extends BoardTile> type) {
         Optional<BoardTile> o = tilesProperty().values().stream().filter(t -> type.isAssignableFrom(t.getClass())).
                 min(Comparator.comparingInt(t -> from.distanceTo(t.getLocation())));
         return o.isPresent() ? o.get() : null;

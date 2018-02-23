@@ -5,22 +5,8 @@ import com.vztekoverflow.lospiratos.viewmodel.Ship;
 import com.vztekoverflow.lospiratos.viewmodel.Team;
 import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
 import com.vztekoverflow.lospiratos.viewmodel.actions.ActionIcon;
-import com.vztekoverflow.lospiratos.viewmodel.actions.Transaction;
 
-public class UnloadStorage extends Transaction {
-    @Override
-    protected boolean recomputePlannable() {
-        if (!super.recomputePlannable()) return false;
-        //else
-        int shipSpeed = getRelatedShip().getSpeed();
-        int maneuversAlreadyPlanned = getRelatedShip().getPlannedActions().stream().mapToInt(Action::getManeuverSlotsTaken).sum();
-        return maneuversAlreadyPlanned < shipSpeed;
-    }
-
-    @Override
-    public int getManeuverSlotsTaken() {
-        return 1;
-    }
+public class UnloadStorage extends ManeuverTransaction {
 
     @Override
     protected void recomputeCost() {

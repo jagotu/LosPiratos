@@ -75,10 +75,9 @@
                     <VBox>
                         <Button maxWidth="1.7976931348623157E308" onAction="#load" text="Načíst hru"/>
                         <Button maxWidth="1.7976931348623157E308" onAction="#save" text="Uložit hru"/>
-                        <Button maxWidth="1.7976931348623157E308" onAction="#loremIpsum" text="Lorem Ipsum"/>
-                        <Button maxWidth="1.7976931348623157E308" onAction="#evaluateRound" text="Vyhodnotit kolo"/>
-                        <Button maxWidth="1.7976931348623157E308" onAction="#createShip"
-                                text="Debug vyrobit novou loď"/>
+                        <Button maxWidth="1.7976931348623157E308" onAction="#loremIpsum" text="Breakpoint (debug) (pozastaví hru)"/>
+                        <Button maxWidth="1.7976931348623157E308" onAction="#togglePrivilegedMode" text="Zapnout/vypnout privilegovaného orga"/>
+
                     </VBox>
                 </Tab>
                 <Tab text="log">
@@ -90,7 +89,9 @@
         </center>
         <bottom>
             <HBox alignment="CENTER_RIGHT" fillHeight="false">
-                <Button fx:id="evaluateRelatedShip" onAction="#evaluateShip" prefHeight="48.0" text="Vyhodnotit loď"
+                <Button fx:id="evaluateRelatedShip" onAction="#evaluateShip" prefHeight="48.0" text="Vyhodnotit loď" wrapText="true"
+                        textAlignment="CENTER"/>
+                <Button fx:id="commitTransactions" onAction="#commitTransactions" prefHeight="48.0" text="Potvrdit modifikující transakce" wrapText="true"
                         textAlignment="CENTER"/>
                 <Button fx:id="evaluateRoundButton" onAction="#evaluateRound" prefHeight="48.0" text="Button"
                         textAlignment="CENTER"/>

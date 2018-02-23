@@ -11,6 +11,7 @@ import com.vztekoverflow.lospiratos.viewmodel.Figure;
 import com.vztekoverflow.lospiratos.viewmodel.Game;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
 import com.vztekoverflow.lospiratos.viewmodel.actions.ActionsCatalog;
+import com.vztekoverflow.lospiratos.viewmodel.actions.ActivatePrivilegedMode;
 import com.vztekoverflow.lospiratos.viewmodel.actions.ParameterizedAction;
 import com.vztekoverflow.lospiratos.viewmodel.actions.PlannableAction;
 import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.AxialCoordinateActionParameter;
@@ -83,6 +84,8 @@ public class OrgStage {
     private HBox axialSelectorMessage;
     @FXML
     private Button evaluateRelatedShip;
+    @FXML
+    private Button commitTransactions;
 
 
     private ActionParametersPopOver parametersPopOver = new ActionParametersPopOver();
@@ -167,6 +170,7 @@ public class OrgStage {
         teamsBox.setOnShipDetailsListener(this::showShipDetails);
 
         evaluateRelatedShip.disableProperty().bind(ActionsCatalog.relatedShip.isNull());
+        commitTransactions.disableProperty().bind(ActionsCatalog.relatedShip.isNull());
 
         connectToGame();
     }
@@ -359,7 +363,13 @@ public class OrgStage {
 
     @FXML
     private void loremIpsum() {
+        Game g = ActionsCatalog.relatedShip.get().getTeam().getGame();
         int a = 0;
+    }
+
+    @FXML
+    private void togglePrivilegedMode() {
+        ActivatePrivilegedMode.available.set(! ActivatePrivilegedMode.available.get());
     }
 
     @FXML
@@ -457,7 +467,11 @@ public class OrgStage {
     }
 
     public void evaluateShip(ActionEvent actionEvent) {
-        ActionsCatalog.relatedShip.get().evaluateActions();
+        ActionsCatalog.relatedShip.get().evaluateAllActions();
+    }
+
+    public void commitTransactions(ActionEvent actionEvent) {
+        ActionsCatalog.relatedShip.get().commitModifyingTransactions();
     }
 }
 
