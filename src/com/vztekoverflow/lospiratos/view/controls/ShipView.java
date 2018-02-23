@@ -31,6 +31,10 @@ public class ShipView extends StackPane {
 
     private Ship s;
 
+    public Ship getShip() {
+        return s;
+    }
+
     public interface RequestDeleteListener {
         void RequestDelete(Ship s);
     }

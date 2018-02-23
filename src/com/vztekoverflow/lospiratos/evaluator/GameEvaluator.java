@@ -103,7 +103,7 @@ class StandardGameEvaluator extends GameEvaluator {
     };
 
     private void evaluateVolleys() {
-        for (Ship s : g.getAllShips().values()) {
+        for (Ship s : g.getAllShips()) {
             Position oldPosition = s.getPosition().createCopy();
             for (PerformableAction a : s.getPlannedActions()) {
                 if (a instanceof Maneuver || a instanceof CannonsAbstractVolley || a instanceof FrontalAssault) {
@@ -179,7 +179,7 @@ class StandardGameEvaluator extends GameEvaluator {
 
     private boolean solveCollisions(int iteration) {
         Map<AxialCoordinate, Set<Ship>> nonemptyTiles = new HashMap<>();
-        for (Ship s : g.getAllShips().values()) {
+        for (Ship s : g.getAllShips()) {
             AxialCoordinate pos = s.getPosition().getCoordinate();
             nonemptyTiles.putIfAbsent(pos, new HashSet<>());
             nonemptyTiles.get(pos).add(s);
@@ -271,7 +271,7 @@ class StandardGameEvaluator extends GameEvaluator {
     }
 
     private void performOnAllActions(Consumer<Action> c) {
-        for (Ship s : g.getAllShips().values()) {
+        for (Ship s : g.getAllShips()) {
             for (Action a : s.getPlannedActions()) {
                 c.accept(a);
             }

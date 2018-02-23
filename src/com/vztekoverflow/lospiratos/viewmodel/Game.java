@@ -1,6 +1,5 @@
 package com.vztekoverflow.lospiratos.viewmodel;
 
-import com.sun.javafx.collections.UnmodifiableObservableMap;
 import com.vztekoverflow.lospiratos.evaluator.GameEvaluator;
 import com.vztekoverflow.lospiratos.model.GameSerializer;
 import com.vztekoverflow.lospiratos.model.ShipwreckM;
@@ -24,10 +23,7 @@ import javafx.scene.paint.Color;
 
 import java.io.File;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Game {
@@ -148,27 +144,24 @@ public class Game {
         return unmodifiableTeams;
     }
 
-    private MapProperty<String, Ship> allShips = new SimpleMapProperty<>(FXCollections.observableHashMap());
-    private UnmodifiableObservableMap<String, Ship> unmodifiableAllShips = new UnmodifiableObservableMap<>(allShips.get());
-    private ReadOnlyMapProperty<String, Ship> unmodifiableAllShipsProperty = new SimpleMapProperty<>(unmodifiableAllShips);
+    private ListProperty<Ship> allShips = new SimpleListProperty<>(FXCollections.observableArrayList());
+    //private UnmO<String, Ship> unmodifiableAllShips = new UnmodifiableObservableMap<>(allShips.get());
+    private ObservableList<Ship> unmodifiableAllShips = FXCollections.unmodifiableObservableList(allShips);
 
-    public UnmodifiableObservableMap<String, Ship> getAllShips() {
+    /**
+     * The resulting List is unmodifiable and attempt to add a new ship throws an exception
+     */
+    public ObservableList<Ship> getAllShips() {
         return unmodifiableAllShips;
     }
 
-    /**
-     * The resulting Map is unmodifiable and attempt to add a new ship throws an exception
-     */
-    public ReadOnlyMapProperty<String, Ship> allShipsProperty() {
-        return unmodifiableAllShipsProperty;
-    }
 
     public boolean mayCreateShipWithName(String name) {
         if (name == null || name.isEmpty()) {
             Warnings.makeDebugWarning(toString(), "Ship's name is empty or null.");
             return false;
         }
-        return !allShips.containsKey(name);
+        return allShips.stream().noneMatch(s -> s.getName().equalsIgnoreCase(name));
     }
 
     private final Board board;
@@ -178,26 +171,23 @@ public class Game {
     }
 
     void registerShip(Ship ship) {
-        if (allShips.containsKey(ship.getName())) {
+        if (allShips.stream().anyMatch(s -> s.getName().equalsIgnoreCase(ship.getName()))) {
             Warnings.makeStrongWarning(toString(), "allShips already contains a ship with this name: " + ship.getName());
             return;
         }
-        allShips.put(ship.getName(), ship);
+        allShips.add(ship);
         addOnNextRoundStartedListener(ship);
         board.figuresProperty().add(ship);
+        //allShips.sort(Comparator.comparing(s -> s.getTeam().getName(), Comparator.naturalOrder()));
     }
 
-    void unregisterShip(String shipName) {
-        if (allShips.containsKey(shipName)) {
-            boolean removedFromBoard = board.figuresProperty().remove(allShips.get(shipName));
+    void unregisterShip(Ship s) {
+            boolean removedFromBoard = board.figuresProperty().remove(s);
             if (!removedFromBoard) {
-                Warnings.panic(toString() + ".unregisterShip()", "Attempt to remove a ship which is in allShips but not in board.figures: " + shipName);
+                Warnings.panic(toString() + ".unregisterShip()", "Attempt to remove a ship which is in allShips but not in board.figures: " + s.getName());
             }
-            removeOnNextRoundStartedListener(allShips.get(shipName));
-            allShips.remove(shipName);
-        } else {
-            Warnings.makeStrongWarning(toString() + ".unregisterShip()", "Attempt to remove a ship whose name is unknown: " + shipName);
-        }
+            removeOnNextRoundStartedListener(s);
+            allShips.remove(s);
     }
 
     public void deleteShip(Ship s) {

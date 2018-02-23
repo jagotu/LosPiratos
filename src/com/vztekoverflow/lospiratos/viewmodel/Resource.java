@@ -63,6 +63,11 @@ public class Resource extends ResourceReadOnly implements Observable {
         return wood_.get();
     }
 
+    @Override
+    public int getTobacco() {
+        return tobco.get();
+    }
+
     public void setMoney(int money) {
         this.money.set(money);
     }

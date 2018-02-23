@@ -327,7 +327,7 @@ public class OrgStage {
 
         updateEvaluateButton();
 
-        game.get().allShipsProperty().addListener((InvalidationListener) i -> {
+        game.get().getAllShips().addListener((InvalidationListener) i -> {
             updateEvaluateButton();
         });
 
@@ -338,8 +338,8 @@ public class OrgStage {
     }
 
     private void updateEvaluateButton() {
-        Observable[] shipaction = game.get().getAllShips().values().stream().map(Ship::plannedActionsProperty).toArray(Observable[]::new);
-        LongBinding unplannedCountBinding = Bindings.createLongBinding(() -> game.get().getAllShips().values().stream().filter(x -> x.getPlannedActions().size() == 0).count(), shipaction);
+        Observable[] shipaction = game.get().getAllShips().stream().map(Ship::plannedActionsProperty).toArray(Observable[]::new);
+        LongBinding unplannedCountBinding = Bindings.createLongBinding(() -> game.get().getAllShips().stream().filter(x -> x.getPlannedActions().size() == 0).count(), shipaction);
         evaluateRoundButton.textProperty().bind(Bindings.format("Vyhodnotit kolo\n(%d lodí nemá nastavenou akci)", unplannedCountBinding));
     }
 

@@ -7,7 +7,7 @@ import com.vztekoverflow.lospiratos.view.controls.ShipView;
 import com.vztekoverflow.lospiratos.viewmodel.Game;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
 import javafx.application.Platform;
-import javafx.collections.MapChangeListener;
+import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
 import javafx.scene.layout.FlowPane;
 
@@ -42,18 +42,17 @@ public class ShipsBox extends FlowPane {
         getChildren().clear();
         shipViews.clear();
 
-        for (final Ship s : game.getAllShips().values()) {
+        for (final Ship s : game.getAllShips()) {
             Main.viewCreator.submit(() -> addShipView(s));
         }
 
-        game.allShipsProperty().addListener((MapChangeListener<? super String, ? super Ship>) change -> {
-            if (change.wasRemoved()) {
-                removeShipView(change.getValueRemoved());
+        game.getAllShips().addListener((ListChangeListener<? super Ship>) c -> {
+            while (c.next()) {
+                c.getRemoved().forEach(this::removeShipView);
+                c.getAddedSubList().forEach(s ->
+                        Main.viewCreator.submit(() -> addShipView(s)
+                        ));
             }
-            if (change.wasAdded()) {
-                Main.viewCreator.submit(() -> addShipView(change.getValueAdded()));
-            }
-
         });
     }
 
@@ -62,7 +61,12 @@ public class ShipsBox extends FlowPane {
         FlowPane.setMargin(sv, new Insets(2, 2, 2, 2));
         sv.setRequestDeleteListener(ship -> s.getTeam().removeShip(s.getName()));
 
-        Platform.runLater(() -> getChildren().add(sv));
+        Platform.runLater(() -> {
+            getChildren().add(sv);
+//            getChildren().sort(
+//                    Comparator.comparing(n -> ((ShipView) n).getShip().getTeam().getName())
+//            );
+        });
         sv.setOnCenterShipListener(onCenterShipListener);
         sv.setOnShipDetailsListener(onShipDetailsListener);
 

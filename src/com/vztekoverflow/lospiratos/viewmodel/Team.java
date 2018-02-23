@@ -87,8 +87,8 @@ public class Team implements OnNextRoundStartedListener {
 
     private void removeShipFromCollections(String shipName) {
         if (ships.containsKey(shipName)) {
+            game.unregisterShip(ships.get(shipName));
             ships.remove(shipName);
-            game.unregisterShip(shipName);
         } else {
             Warnings.makeStrongWarning(toString() + ".removeShipFromCollections()", "Attempt to remove a ship whose name is unknown: " + shipName);
         }

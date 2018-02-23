@@ -143,25 +143,25 @@ public class ResourceReadOnly {
                 this.getMetal() > metal &&
                 this.getRum() > rum &&
                 this.getTobacco() > tobacco &&
-                this.getRum() > wood) return PartialOrdering.GreaterThan;
+                this.getWood() > wood) return PartialOrdering.GreaterThan;
         if (this.getMoney() >= money &&
                 this.getCloth() >= cloth &&
                 this.getMetal() >= metal &&
                 this.getRum() >= rum &&
                 this.getTobacco() >= tobacco &&
-                this.getRum() >= wood) return PartialOrdering.GreaterThanOrEqual;
+                this.getWood() >= wood) return PartialOrdering.GreaterThanOrEqual;
         if (this.getMoney() < money &&
                 this.getCloth() < cloth &&
                 this.getMetal() < metal &&
                 this.getRum() < rum &&
                 this.getTobacco() < tobacco &&
-                this.getRum() < wood) return PartialOrdering.LessThan;
+                this.getWood() < wood) return PartialOrdering.LessThan;
         if (this.getMoney() <= money &&
                 this.getCloth() <= cloth &&
                 this.getMetal() <= metal &&
                 this.getRum() <= rum &&
                 this.getTobacco() <= tobacco &&
-                this.getRum() <= wood) return PartialOrdering.LessThanOrEqual;
+                this.getWood() <= wood) return PartialOrdering.LessThanOrEqual;
         //otherwise
         return PartialOrdering.Uncomparable;
     }
