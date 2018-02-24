@@ -19,19 +19,19 @@ public class ResourceStorage extends Resource {
 
         this.capacityMaximum = capacity;
 
-        this.money.bindBidirectional(money);
-        this.cloth.bindBidirectional(cloth);
-        this.metal.bindBidirectional(metal);
-        this.rum__.bindBidirectional(rum);
-        this.tobco.bindBidirectional(tobacco);
-        this.wood_.bindBidirectional(wood);
+        this.moneyProp.bindBidirectional(money);
+        this.clothProp.bindBidirectional(cloth);
+        this.metalProp.bindBidirectional(metal);
+        this.rumProp.bindBidirectional(rum);
+        this.tobcoProp.bindBidirectional(tobacco);
+        this.woodProp.bindBidirectional(wood);
 
 
-        this.cloth.addListener(__ -> capacityLeft.invalidate());
-        this.metal.addListener(__ -> capacityLeft.invalidate());
-        this.rum__.addListener(__ -> capacityLeft.invalidate());
-        this.tobco.addListener(__ -> capacityLeft.invalidate());
-        this.wood_.addListener(__ -> capacityLeft.invalidate());
+        this.clothProp.addListener(__ -> capacityLeft.invalidate());
+        this.metalProp.addListener(__ -> capacityLeft.invalidate());
+        this.rumProp.addListener(__ -> capacityLeft.invalidate());
+        this.tobcoProp.addListener(__ -> capacityLeft.invalidate());
+        this.woodProp.addListener(__ -> capacityLeft.invalidate());
         this.capacityMaximum.addListener(__ -> capacityLeft.invalidate());
     }
 
@@ -79,7 +79,7 @@ public class ResourceStorage extends Resource {
      */
     public boolean tryAddCloth(int amount) {
         if (!canStoreMoreCloth(amount)) return false;
-        cloth.set(getCloth() + amount);
+        clothProp.set(getCloth() + amount);
         return true;
     }
 
@@ -90,7 +90,7 @@ public class ResourceStorage extends Resource {
      */
     public boolean tryAddMetal(int amount) {
         if (!canStoreMoreMetal(amount)) return false;
-        metal.set(getMetal() + amount);
+        metalProp.set(getMetal() + amount);
         return true;
     }
 
@@ -101,7 +101,7 @@ public class ResourceStorage extends Resource {
      */
     public boolean tryAddRum(int amount) {
         if (!canStoreMoreRum(amount)) return false;
-        rum__.set(getRum() + amount);
+        rumProp.set(getRum() + amount);
         return true;
     }
 
@@ -112,7 +112,7 @@ public class ResourceStorage extends Resource {
      */
     public boolean tryAddTobacco(int amount) {
         if (!canStoreMoreTobacco(amount)) return false;
-        tobco.set(getTobacco() + amount);
+        tobcoProp.set(getTobacco() + amount);
         return true;
     }
 
@@ -123,7 +123,7 @@ public class ResourceStorage extends Resource {
      */
     public boolean tryAddWood(int amount) {
         if (!canStoreMoreWood(amount)) return false;
-        wood_.set(getWood() + amount);
+        woodProp.set(getWood() + amount);
         return true;
     }
 

@@ -420,11 +420,11 @@ public class Game {
             String name = "(" + i + ") " + teamNames[i];
             Color c = Color.color((255 - (i - 1) * 49) / 255d, ((i - 1) * 49) / 255d, ((i - 1) * 49d) / 255d);
             Team team = g.createAndAddNewTeam(name, c);
-            team.getOwnedResource().setMoney(5000 + i);
-            team.getOwnedResource().setCloth(10 * i);
-            team.getOwnedResource().setMetal(20 * i);
-            team.getOwnedResource().setRum(30 * i);
-            team.getOwnedResource().setWood(40 * i);
+            team.getOwnedResource().setMoney(50000 + i);
+            team.getOwnedResource().setCloth(100 * i);
+            team.getOwnedResource().setMetal(200 * i);
+            team.getOwnedResource().setRum(300 * i);
+            team.getOwnedResource().setWood(400 * i);
             //Create ships:
             for (int j = 0; j < i; j++) {
                 AxialCoordinate position = teamsShipPositions.get(i - 1).get(j);

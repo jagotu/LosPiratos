@@ -35,6 +35,9 @@ public class Plunder extends ManeuverTransaction implements ParameterizedAction 
         boolean enoughSpeed = maneuversAlreadyPlanned < shipSpeed;
         Position pos = getRelatedShipsFuturePosition();
         Plunderable p = getRelatedShip().getTeam().getGame().getBoard().getPlunderable(pos.getCoordinate());
+
+        if(p!= null && getCommodities() != null && getCommodities().equals(ResourceReadOnly.MAX))
+            getCommodities().setAll(p.getResource());
         return p != null && enoughSpeed;
     }
 

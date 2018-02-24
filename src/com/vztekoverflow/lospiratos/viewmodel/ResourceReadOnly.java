@@ -197,9 +197,9 @@ public class ResourceReadOnly {
         return new Resource(getMoney(),
                 getCloth(),
                 getMetal(),
-                getWood(),
                 getRum(),
-                getTobacco());
+                getTobacco(),
+                getWood());
     }
 
     /**

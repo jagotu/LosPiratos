@@ -109,8 +109,8 @@ public class ResourceEdit extends FlowPane {
             rumPane.setVisible(false);
             return;
         }
-        money.valueProperty().bindBidirectional(r.moneyProperty());
-        moneyPane.visibleProperty().bind(mode.isNotEqualTo(EditableText.Mode.READONLY).or(r.moneyProperty().isNotEqualTo(0)));
+        money.valueProperty().bindBidirectional(r.moneyPropProperty());
+        moneyPane.visibleProperty().bind(mode.isNotEqualTo(EditableText.Mode.READONLY).or(r.moneyPropProperty().isNotEqualTo(0)));
         moneyPane.managedProperty().bind(visibleProperty());
         money.modeProperty().bind(mode);
         metal.valueProperty().bindBidirectional(r.metalProperty());

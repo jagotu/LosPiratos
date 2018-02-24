@@ -8,19 +8,24 @@ import javafx.beans.property.SimpleIntegerProperty;
 
 public class Resource extends ResourceReadOnly implements Observable {
     public Resource(int money, int cloth, int metal, int rum, int tobacco, int wood) {
-        super(money, cloth, metal, rum, tobacco, wood);
+        super();
+        this.moneyProp.set(money);
+        this.clothProp.set(cloth);
+        this.metalProp.set(metal);
+        this.rumProp.set(rum);
+        this.woodProp.set(wood);
     }
 
     public Resource() {
     }
 
-    protected IntegerProperty money = new SimpleIntegerProperty(0);
-    protected IntegerProperty cloth = new SimpleIntegerProperty(0);
-    protected IntegerProperty metal = new SimpleIntegerProperty(0);
+    protected IntegerProperty moneyProp = new SimpleIntegerProperty(0);
+    protected IntegerProperty clothProp = new SimpleIntegerProperty(0);
+    protected IntegerProperty metalProp = new SimpleIntegerProperty(0);
     //those weird names for rum, tobacco and wood are so that all resource have same number of characters (better code readability)
-    protected IntegerProperty rum__ = new SimpleIntegerProperty(0);
-    protected IntegerProperty tobco = new SimpleIntegerProperty(0);
-    protected IntegerProperty wood_ = new SimpleIntegerProperty(0);
+    protected IntegerProperty rumProp = new SimpleIntegerProperty(0);
+    protected IntegerProperty tobcoProp = new SimpleIntegerProperty(0);
+    protected IntegerProperty woodProp = new SimpleIntegerProperty(0);
 
     /**
      * sets all values to 0
@@ -40,80 +45,80 @@ public class Resource extends ResourceReadOnly implements Observable {
 
     @Override
     public int getMoney() {
-        return money.get();
+        return moneyProp.get();
     }
 
     @Override
     public int getCloth() {
-        return cloth.get();
+        return clothProp.get();
     }
 
     @Override
     public int getMetal() {
-        return metal.get();
+        return metalProp.get();
     }
 
     @Override
     public int getRum() {
-        return rum__.get();
+        return rumProp.get();
     }
 
     @Override
     public int getWood() {
-        return wood_.get();
+        return woodProp.get();
     }
 
     @Override
     public int getTobacco() {
-        return tobco.get();
+        return tobcoProp.get();
     }
 
-    public void setMoney(int money) {
-        this.money.set(money);
+    public void setMoney(int moneyProp) {
+        this.moneyProp.set(moneyProp);
     }
 
     public void setCloth(int cloth) {
-        this.cloth.set(cloth);
+        this.clothProp.set(cloth);
     }
 
     public void setMetal(int metal) {
-        this.metal.set(metal);
+        this.metalProp.set(metal);
     }
 
     public void setRum(int rum) {
-        this.rum__.set(rum);
+        this.rumProp.set(rum);
     }
 
     public void setTobacco(int tobacco) {
-        this.tobco.set(tobacco);
+        this.tobcoProp.set(tobacco);
     }
 
     public void setWood(int wood) {
-        this.wood_.set(wood);
+        this.woodProp.set(wood);
     }
 
     public void addMoney(int value) {
-        money.set(money.get() + value);
+        moneyProp.set(moneyProp.get() + value);
     }
 
     public void addCloth(int value) {
-        cloth.set(cloth.get() + value);
+        clothProp.set(clothProp.get() + value);
     }
 
     public void addMetal(int value) {
-        metal.set(metal.get() + value);
+        metalProp.set(metalProp.get() + value);
     }
 
     public void addRum(int value) {
-        rum__.set(rum__.get() + value);
+        rumProp.set(rumProp.get() + value);
     }
 
     public void addTobacco(int value) {
-        tobco.set(tobco.get() + value);
+        tobcoProp.set(tobcoProp.get() + value);
     }
 
     public void addWood(int value) {
-        wood_.set(wood_.get() + value);
+        woodProp.set(woodProp.get() + value);
     }
 
     /**
@@ -121,7 +126,7 @@ public class Resource extends ResourceReadOnly implements Observable {
      * @param listener
      */
     public void addListener(InvalidationListener listener){
-        moneyProperty().addListener(listener);
+        moneyPropProperty().addListener(listener);
         clothProperty().addListener(listener);
         metalProperty().addListener(listener);
         rumProperty().addListener(listener);
@@ -129,7 +134,7 @@ public class Resource extends ResourceReadOnly implements Observable {
         woodProperty().addListener(listener);
     }
     public void removeListener(InvalidationListener listener){
-        moneyProperty().removeListener(listener);
+        moneyPropProperty().removeListener(listener);
         clothProperty().removeListener(listener);
         metalProperty().removeListener(listener);
         rumProperty().removeListener(listener);
@@ -178,24 +183,24 @@ public class Resource extends ResourceReadOnly implements Observable {
      * Typical usage: clamp(0,Integer.MAX_VALUE);
      */
     public void clamp(int min, int max) {
-        money.set(clampInt(min, money.get(), max));
-        cloth.set(clampInt(min, cloth.get(), max));
-        metal.set(clampInt(min, metal.get(), max));
-        rum__.set(clampInt(min, rum__.get(), max));
-        tobco.set(clampInt(min, tobco.get(), max));
-        wood_.set(clampInt(min, wood_.get(), max));
+        moneyProp.set(clampInt(min, moneyProp.get(), max));
+        clothProp.set(clampInt(min, clothProp.get(), max));
+        metalProp.set(clampInt(min, metalProp.get(), max));
+        rumProp.set(clampInt(min, rumProp.get(), max));
+        tobcoProp.set(clampInt(min, tobcoProp.get(), max));
+        woodProp.set(clampInt(min, woodProp.get(), max));
     }
 
     /**
      * Clamps all contained resources component-wise to be between min (inclusive) and max (inclusive)
      */
     public void clamp(ResourceReadOnly min, ResourceReadOnly max) {
-        money.set(clampInt(min.getMoney(), money.get(), max.getMoney()));
-        cloth.set(clampInt(min.getCloth(), cloth.get(), max.getCloth()));
-        metal.set(clampInt(min.getMetal(), metal.get(), max.getMetal()));
-        rum__.set(clampInt(min.getRum(), rum__.get(), max.getRum()));
-        tobco.set(clampInt(min.getTobacco(), tobco.get(), max.getTobacco()));
-        wood_.set(clampInt(min.getWood(), wood_.get(), max.getWood()));
+        setMoney(clampInt(min.getMoney(), getMoney(), max.getMoney()));
+        setCloth(clampInt(min.getCloth(), getCloth(), max.getCloth()));
+        setMetal(clampInt(min.getMetal(), getMetal(), max.getMetal()));
+        setRum(clampInt(min.getRum(), getRum(), max.getRum()));
+        setTobacco(clampInt(min.getTobacco(), getTobacco(), max.getTobacco()));
+        setWood(clampInt(min.getWood(), getWood(), max.getWood()));
     }
 
     private int clampInt(int lower, int value, int upper) {
@@ -203,37 +208,37 @@ public class Resource extends ResourceReadOnly implements Observable {
     }
 
 
-    public IntegerProperty moneyProperty() {
-        return money;
+    public IntegerProperty moneyPropProperty() {
+        return moneyProp;
     }
 
 
     public IntegerProperty clothProperty() {
-        return cloth;
+        return clothProp;
     }
 
 
     public IntegerProperty metalProperty() {
-        return metal;
+        return metalProp;
     }
 
 
     public IntegerProperty rumProperty() {
-        return rum__;
+        return rumProp;
     }
 
 
     public IntegerProperty tobaccoProperty() {
-        return tobco;
+        return tobcoProp;
     }
 
 
     public IntegerProperty woodProperty() {
-        return wood_;
+        return woodProp;
     }
 
     public void bindBidirectional(Resource other){
-        this.moneyProperty()  .bindBidirectional(other.moneyProperty()   );
+        this.moneyPropProperty()  .bindBidirectional(other.moneyPropProperty()   );
         this.clothProperty()  .bindBidirectional(other.clothProperty()   );
         this.metalProperty()  .bindBidirectional(other.metalProperty()   );
         this.rumProperty()    .bindBidirectional(other.rumProperty()     );
@@ -242,7 +247,7 @@ public class Resource extends ResourceReadOnly implements Observable {
     }
 
     public void bindBidirectional(ResourceM other){
-        this.moneyProperty()  .bindBidirectional(other.money   );
+        this.moneyPropProperty()  .bindBidirectional(other.money   );
         this.clothProperty()  .bindBidirectional(other.cloth   );
         this.metalProperty()  .bindBidirectional(other.metal   );
         this.rumProperty()    .bindBidirectional(other.rum     );
@@ -256,7 +261,7 @@ public class Resource extends ResourceReadOnly implements Observable {
      * @param other
      */
     public void bindBidirectionalFrom(ResourceM other){
-         other.money.bindBidirectional(this.moneyProperty() );
+         other.money.bindBidirectional(this.moneyPropProperty() );
          other.cloth.bindBidirectional(this.clothProperty() );
          other.metal.bindBidirectional(this.metalProperty() );
          other.rum  .bindBidirectional(this.rumProperty()   );

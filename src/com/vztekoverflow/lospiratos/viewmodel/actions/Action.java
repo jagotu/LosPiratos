@@ -6,6 +6,7 @@ import com.vztekoverflow.lospiratos.viewmodel.Position;
 import com.vztekoverflow.lospiratos.viewmodel.Resource;
 import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
+import com.vztekoverflow.lospiratos.viewmodel.actions.transactions.RepairShip;
 import com.vztekoverflow.lospiratos.viewmodel.logs.EventLogger;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -84,6 +85,8 @@ public abstract class Action implements PerformableAction, PlannableAction {
                 return false;
             if (getRelatedShip().getMechanics().stream().anyMatch(m -> m.preventsFromBeingPlanned(Action.this)))
                 return false;
+            if(getRelatedShip().isDestroyed() && ! (Action.this instanceof RepairShip) && (! (Action.this instanceof ActivatePrivilegedMode)))
+                return false; //todo this is temporal workaround, should be implemented by the RepairShip class and ActivatePrivlegedMode
             return recomputePlannable();
         }
     };

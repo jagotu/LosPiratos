@@ -40,7 +40,7 @@ public class Team implements OnNextRoundStartedListener {
     }
 
     private void bindToModel() {
-        ownedResource.moneyProperty().bindBidirectional(teamModel.moneyProperty());
+        ownedResource.moneyPropProperty().bindBidirectional(teamModel.moneyProperty());
         ownedResource.clothProperty().bindBidirectional(teamModel.ownedClothProperty());
         ownedResource.metalProperty().bindBidirectional(teamModel.ownedMetalProperty());
         ownedResource.rumProperty().bindBidirectional(teamModel.ownedRumProperty());
