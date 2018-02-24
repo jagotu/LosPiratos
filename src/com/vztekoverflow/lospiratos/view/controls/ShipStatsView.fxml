@@ -6,7 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<?import org.controlsfx.glyphfont.*?>
+<?import org.controlsfx.glyphfont.Glyph?>
 <fx:root maxWidth="300.0" prefWidth="300.0" type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx/8.0.121"
          xmlns:fx="http://javafx.com/fxml/1">
     <BorderPane>
@@ -46,11 +46,10 @@
     </HBox>
     <GridPane>
         <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0"/>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0"/>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0"/>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0"/>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0"/>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0"/>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0"/>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0"/>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0"/>
         </columnConstraints>
         <rowConstraints>
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
@@ -65,17 +64,17 @@
                 <Glyph fontFamily="piratos" text="F"/>
             </graphic>
         </Label>
-        <Label fx:id="garrison" GridPane.columnIndex="2">
+        <!--Label fx:id="garrison" GridPane.columnIndex="2">
             <graphic>
                 <Glyph fontFamily="FontAwesome" icon="users"/>
             </graphic>
-        </Label>
-        <Label fx:id="speed" GridPane.columnIndex="3">
+        </Label-->
+        <Label fx:id="speed" GridPane.columnIndex="2">
             <graphic>
                 <Glyph fontFamily="FontAwesome" icon="flash"/>
             </graphic>
         </Label>
-        <HBox GridPane.columnIndex="4">
+        <HBox GridPane.columnIndex="3">
             <Label text="XP">
                 <HBox.margin>
                     <Insets right="4.0"/>

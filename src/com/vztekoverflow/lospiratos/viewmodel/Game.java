@@ -351,7 +351,7 @@ public class Game {
         plantations.add(new AxialCoordinate(0, 0));
         plantations.add(new AxialCoordinate(0, -6));
         plantations.add(new AxialCoordinate(6, -5));
-        plantations.add(new AxialCoordinate(6, -6));
+        //plantations.add(new AxialCoordinate(6, -6));
 
 
 

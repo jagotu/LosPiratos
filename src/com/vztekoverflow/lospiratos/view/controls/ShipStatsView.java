@@ -26,8 +26,8 @@ public class ShipStatsView extends VBox {
     private Label cannonsCount;
     @FXML
     private Label maxCargo;
-    @FXML
-    private Label garrison;
+    //@FXML
+    //private Label garrison;
     @FXML
     private Label speed;
     @FXML
@@ -64,7 +64,7 @@ public class ShipStatsView extends VBox {
 
         cannonsCount.textProperty().bind(s.cannonsCountProperty().asString());
         maxCargo.textProperty().bind(s.getStorage().capacityMaximumProperty().asString());
-        garrison.textProperty().bind(s.garrisonSizeProperty().asString());
+        //garrison.textProperty().bind(s.garrisonSizeProperty().asString());
         speed.textProperty().bind(s.speedProperty().asString());
         currentHP.valueProperty().bindBidirectional(s.currentHPProperty());
         HPBar.progressProperty().bind(s.currentHPProperty().add(0.0).divide(s.maxHPProperty()));

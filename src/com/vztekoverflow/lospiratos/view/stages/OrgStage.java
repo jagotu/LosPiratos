@@ -32,6 +32,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -196,8 +197,8 @@ public class OrgStage {
     private Stage publicStatStage = null;
 
     private void setCADBackground(VirtualizingHexGridPane hexPane) {
-        //hexPane.setBackgroundGraphic(new ImageView("/cad.png"));
-        hexPane.setBackgroundGraphicOffset(new Point2D(-1000, -1208));
+        hexPane.setBackgroundGraphic(new ImageView("/cad_extended.png"));
+        hexPane.setBackgroundGraphicOffset(new Point2D(-1150, -1000));
     }
 
     private VirtualizingHexGridPane publicHexPane;
@@ -369,7 +370,7 @@ public class OrgStage {
 
     @FXML
     private void togglePrivilegedMode() {
-        ActivatePrivilegedMode.available.set(! ActivatePrivilegedMode.available.get());
+        ActivatePrivilegedMode.available.set(!ActivatePrivilegedMode.available.get());
     }
 
     @FXML

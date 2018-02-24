@@ -8,7 +8,7 @@
 }
 
 .hex-tile.Sea {
-     -fx-fill: rgba(0, 64, 255, 0.4);
+    /*-fx-fill: rgba(0, 64, 255, 0.4);*/
 }
 
 .hex-tile.Shore {
