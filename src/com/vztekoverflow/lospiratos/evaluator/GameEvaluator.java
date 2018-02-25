@@ -68,7 +68,7 @@ class StandardGameEvaluator extends GameEvaluator {
         destroyDamagedShips();
         solveCollisions(0);
         damageCollisionAttendees();
-        return transitions;
+        return mergeTransitions(transitions, transitionsCausedByCollisions);
     }
 
     private void reinitialize() {
@@ -78,6 +78,7 @@ class StandardGameEvaluator extends GameEvaluator {
         attackers = new HashMap<>();
         plunderers = new HashMap<>();
         transitions = new HashMap<>();
+        transitionsCausedByCollisions = new HashMap<>();
     }
 
     /**
@@ -92,6 +93,7 @@ class StandardGameEvaluator extends GameEvaluator {
     private Map<Ship, Set<Ship>> attackers = new HashMap<>();
     private Map<Plunderable, Set<Plunder>> plunderers = new HashMap<>();
     private Map<Ship, List<Transition>> transitions = new HashMap<>();
+    private Map<Ship, List<Transition>> transitionsCausedByCollisions = new HashMap<>();
 
     private OnDamageDoneListener onDamageDoneListener = (Attack sender, Ship target, int damageAmount, DamageSufferedResponse response) -> {
 
@@ -143,10 +145,10 @@ class StandardGameEvaluator extends GameEvaluator {
     }
 
     private void handleTransition(Action a){
+        if(! (a instanceof Maneuver)) return;
         if(a.getRelatedShip() == null){
             Warnings.makeWarning(toString()+".handleTransition()","related ship is null");
         }
-        transitions.putIfAbsent(a.getRelatedShip(), new ArrayList<>());
         Transition t;
         if(a instanceof MoveForward)
             t = new Forward();
@@ -156,8 +158,24 @@ class StandardGameEvaluator extends GameEvaluator {
             t = new Rotate(60);
         else
             return;
-        transitions.get(a.getRelatedShip()).add(t);
+        putTransition(t, a.getRelatedShip());
     }
+    private void putTransition(Transition t, Ship s){
+        transitions.putIfAbsent(s, new ArrayList<>());
+        transitions.get(s).add(t);
+
+    }
+
+    private Map<Ship, List<Transition>> mergeTransitions(Map<Ship, List<Transition>> a, Map<Ship, List<Transition>> b){
+        Map<Ship, List<Transition>> n = new HashMap<>(a);
+        for(Map.Entry<Ship, List<Transition>> e : b.entrySet()){
+            a.putIfAbsent(e.getKey(),new ArrayList<>());
+            for(Transition t : e.getValue()){
+                a.get(e.getKey()).add(t);
+            }
+        }
+        return n;
+    };
 
     private void performPlundering(){
         for(Map.Entry<Plunderable, Set<Plunder>> e : plunderers.entrySet()){
@@ -193,10 +211,11 @@ class StandardGameEvaluator extends GameEvaluator {
     private void destroyShip(Ship s, Iterable<Ship> attackers){
         //dividePlunderedTreasure(s, attackers); //currently not supported by the game rules
         g.createAndAddNewShipwreck(s.getPosition().getCoordinate(), s.getStorage().plus(s.getShipType().getBuyingCost().times(SHIPS_COST_TO_WRECK_COEFF)));
-        transitions.putIfAbsent(s, new ArrayList<>());
-        transitions.get(s).add(new Teleport(s.getCoordinate()));
+        AxialCoordinate shipOldPosition = s.getCoordinate();
         s.destroyShipAndEnhancements();
         g.getLogger().logShipHasDied(s, attackers);
+
+        putTransition(new Teleport(shipOldPosition, (s.getCoordinate())),s);
     }
 
     private void dividePlunderedTreasure(Ship from, Set<Ship> to) {
@@ -237,13 +256,14 @@ class StandardGameEvaluator extends GameEvaluator {
     }
 
     private void rollback(Map<AxialCoordinate, Set<Ship>> originalPositions) {
-        g.getLogger().logMessage("Vyhodnocení kola", "Nepodařilo se vyřešit kolize. Rollback."); //Unable to solve collisions. Rollback.
+        g.getLogger().logMessage("Vyhodnocení kola", "Nepodařilo se vyřešit kolize. Rollback. Nutno vyřešit ručně."); //Unable to solve collisions. Rollback.
         for(Map.Entry<AxialCoordinate, Set<Ship>> e : originalPositions.entrySet()){
             AxialCoordinate c = e.getKey();
             for(Ship s : e.getValue()){
                 s.getPosition().setCoordinate(c);
             }
         }
+        transitionsCausedByCollisions.clear();
     }
 
     private void solveOneCollision(AxialCoordinate collisionPosition, Set<Ship> ships, int iteration) {
@@ -267,14 +287,16 @@ class StandardGameEvaluator extends GameEvaluator {
             if(i <0){
                 Warnings.makeWarning("collision solver",s + " cannot move backwards anymore, but there is still pending collision.");
             }
+            AxialCoordinate oldPosition = s.getCoordinate();
             while(i >= 0){
                 maneuvers.get(i).undo();
                 if(maneuvers.get(i) instanceof MoveForward)
                     break;
                 i--;
             }
+            transitionsCausedByCollisions.putIfAbsent(s, new ArrayList<>());
+            transitionsCausedByCollisions.get(s).add(new Teleport(oldPosition, s.getCoordinate()));
             collisionSolverManeuverIndex.replace(s,i);
-
             collisionAttendees.add(s);
             newPositions.put(s, s.getPosition().getCoordinate());
         }
