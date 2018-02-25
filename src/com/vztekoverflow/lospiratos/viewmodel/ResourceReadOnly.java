@@ -252,22 +252,22 @@ public class ResourceReadOnly {
     public ResourceReadOnly divideComponentWise(ResourceReadOnly rightOperand) {
         int money = 0;
         if (rightOperand.getMoney() != 0)
-            money = (int) ( Math.ceil(this.getMoney() / (float) rightOperand.getMoney()));
+            money = (int) ( Math.ceil((float) this.getMoney() / (float) (rightOperand.getMoney())));
         int cloth = 0;
         if (rightOperand.getCloth() != 0)
-            cloth = (int) (Math.ceil(this.getCloth() / (float) rightOperand.getCloth()));
+            cloth = (int) (Math.ceil((float)this.getCloth() / (float) rightOperand.getCloth()));
         int metal = 0;
         if (rightOperand.getMetal() != 0)
-            metal = (int) (Math.ceil(this.getMetal() / (float) rightOperand.getMetal()));
+            metal = (int) (Math.ceil((float)this.getMetal() / (float) rightOperand.getMetal()));
         int rum = 0;
         if (rightOperand.getRum() != 0)
-            rum = Math.round(this.getRum() / (float) rightOperand.getRum());
+            rum = (int) Math.ceil((float)this.getRum() / (float) rightOperand.getRum());
         int tobco = 0;
         if (rightOperand.getTobacco() != 0)
-            tobco = (int) (Math.ceil(this.getTobacco() / (float) rightOperand.getTobacco()));
+            tobco = (int) (Math.ceil((float)this.getTobacco() / (float) rightOperand.getTobacco()));
         int wood = 0;
         if (rightOperand.getWood() != 0)
-            wood = Math.round(this.getWood() / (float) rightOperand.getWood());
+            wood = (int) Math.ceil((float)this.getWood() / (float) rightOperand.getWood());
         ResourceReadOnly v = new ResourceReadOnly(money, cloth, metal, rum, tobco, wood);
         return v;
     }
