@@ -11,7 +11,7 @@ public class Plantation extends BoardTile implements Plunderable {
         super(location, b);
     }
 
-    protected final Resource resource = new Resource();
+    protected final Resource resource = getInitialState().createMutableCopy();
 
     /**
      * @return final object representing the resource hold by this board. The returned value is always the same.
@@ -22,6 +22,11 @@ public class Plantation extends BoardTile implements Plunderable {
     }
 
     public ResourceReadOnly getCapacity() {
+        return PLANTATION_GENERAL_CAPACITY;
+    }
+
+    protected ResourceReadOnly getInitialState()
+    {
         return PLANTATION_GENERAL_CAPACITY;
     }
 

@@ -54,7 +54,7 @@ public class Board /* I want my Burd */ implements OnNextRoundStartedListener {
                 if (c.getValueAdded() instanceof Plantation) {
                     Plantation p = (Plantation) c.getValueAdded();
                     ResourceM r = new ResourceM();
-                    p.getResource().bindBidirectional(r);
+                    p.getResource().bindBidirectionalFrom(r); //!!!!!
                     modelMap.tilesProperty().add(new MapTile(c.getKey(), BoardTile.getPersistentName(c.getValueAdded().getClass()), r));
                 } else
                     modelMap.tilesProperty().add(new MapTile(c.getKey(), BoardTile.getPersistentName(c.getValueAdded().getClass())));

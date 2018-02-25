@@ -509,7 +509,7 @@ public class Game {
         plantations.add(new AxialCoordinate(0, 6));
         plantations.add(new AxialCoordinate(-5, 4));
         plantations.add(new AxialCoordinate(-5, -1));
-        plantations.add(new AxialCoordinate(0, 0));
+        //plantations.add(new AxialCoordinate(0, 0));
         plantations.add(new AxialCoordinate(0, -6));
         plantations.add(new AxialCoordinate(6, -5));
         //plantations.add(new AxialCoordinate(6, -6));

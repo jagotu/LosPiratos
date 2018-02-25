@@ -23,4 +23,9 @@ public class PlantationExtra extends Plantation {
     public float getQuotient() {
         return PLANTATION_EXTRA_QUOTIENT;
     }
+
+    @Override
+    protected ResourceReadOnly getInitialState() {
+        return PLANTATION_EXTRA_CAPACITY;
+    }
 }
