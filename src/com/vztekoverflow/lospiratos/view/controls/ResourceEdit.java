@@ -1,12 +1,16 @@
 package com.vztekoverflow.lospiratos.view.controls;
 
 import com.vztekoverflow.lospiratos.viewmodel.Resource;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import javafx.util.Duration;
 
 import java.io.IOException;
 
@@ -126,6 +130,8 @@ public class ResourceEdit extends FlowPane {
         clothPane.managedProperty().bind(clothPane.visibleProperty());
         cloth.modeProperty().bind(mode);
         rum.valueProperty().bindBidirectional(r.rumProperty());
+
+
         rumPane.visibleProperty().bind(mode.isNotEqualTo(EditableText.Mode.READONLY).or(r.rumProperty().isNotEqualTo(0)));
         rumPane.managedProperty().bind(rumPane.visibleProperty());
         rum.modeProperty().bind(mode);

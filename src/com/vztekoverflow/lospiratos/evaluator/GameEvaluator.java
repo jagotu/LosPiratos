@@ -14,10 +14,7 @@ import com.vztekoverflow.lospiratos.viewmodel.actions.maneuvers.TurnRight;
 import com.vztekoverflow.lospiratos.viewmodel.actions.transactions.ManeuverTransaction;
 import com.vztekoverflow.lospiratos.viewmodel.actions.transactions.Plunder;
 import com.vztekoverflow.lospiratos.viewmodel.boardTiles.Port;
-import com.vztekoverflow.lospiratos.viewmodel.transitions.Forward;
-import com.vztekoverflow.lospiratos.viewmodel.transitions.Rotate;
-import com.vztekoverflow.lospiratos.viewmodel.transitions.Teleport;
-import com.vztekoverflow.lospiratos.viewmodel.transitions.Transition;
+import com.vztekoverflow.lospiratos.viewmodel.transitions.*;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -216,7 +213,7 @@ class StandardGameEvaluator extends GameEvaluator {
         g.getLogger().logShipHasDied(s, attackers);
 
         int r = s.getPosition().getRotation();
-        putTransition(new Teleport(r,r,shipOldPosition, (s.getCoordinate())),s);
+        putTransition(new Death(r,r,shipOldPosition, (s.getCoordinate())),s);
     }
 
     private void dividePlunderedTreasure(Ship from, Set<Ship> to) {
@@ -296,7 +293,7 @@ class StandardGameEvaluator extends GameEvaluator {
                 i--;
             }
             transitionsCausedByCollisions.putIfAbsent(s, new ArrayList<>());
-            transitionsCausedByCollisions.get(s).add(new Teleport(oldPosition.getRotation(), s.getPosition().getRotation(), oldPosition.getCoordinate(), s.getCoordinate()));
+            transitionsCausedByCollisions.get(s).add(new Bump(oldPosition.getRotation(), s.getPosition().getRotation(), oldPosition.getCoordinate(), s.getCoordinate()));
             collisionSolverManeuverIndex.replace(s,i);
             collisionAttendees.add(s);
             newPositions.put(s, s.getPosition().getCoordinate());

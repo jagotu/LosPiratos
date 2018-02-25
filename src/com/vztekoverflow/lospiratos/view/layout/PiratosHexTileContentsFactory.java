@@ -7,14 +7,9 @@ import com.vztekoverflow.lospiratos.view.controls.figures.ShipFigure;
 import com.vztekoverflow.lospiratos.viewmodel.*;
 import com.vztekoverflow.lospiratos.viewmodel.actions.ActionsCatalog;
 import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.AxialCoordinateActionParameter;
-import com.vztekoverflow.lospiratos.viewmodel.transitions.Forward;
-import com.vztekoverflow.lospiratos.viewmodel.transitions.Rotate;
-import com.vztekoverflow.lospiratos.viewmodel.transitions.Teleport;
+import com.vztekoverflow.lospiratos.viewmodel.transitions.*;
 import com.vztekoverflow.lospiratos.viewmodel.transitions.Transition;
-import javafx.animation.FadeTransition;
-import javafx.animation.RotateTransition;
-import javafx.animation.SequentialTransition;
-import javafx.animation.TranslateTransition;
+import javafx.animation.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
@@ -299,14 +294,43 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
                             trans.getChildren().add(0, rt);
                         } else if (t instanceof Teleport)
                         {
+                            ParallelTransition pt = new ParallelTransition();
                             TranslateTransition tt = new TranslateTransition();
                             Point2D diff = AxialCoordinate.hexToPixel(((Teleport) t).getOriginPositionRelative(), pointy, edgeLength);
                             tt.setByX(diff.getX());
                             tt.setByY(diff.getY());
                             position.setCoordinate(((Teleport) t).getOriginPositionAbsolute());
                             tt.setDuration(Duration.millis(10));
+                            if(t instanceof Bump) {
+                                tt.setDuration(Duration.millis(1000));
+                            }
                             tt.setNode(figureNode);
-                            trans.getChildren().add(0, tt);
+
+                            RotateTransition rt = new RotateTransition();
+                            rt.setByAngle(((Teleport) t).getNewRotationAbsolute() - ((Teleport) t).getOriginalRotationAbsolute());
+                            rt.setDuration(Duration.millis(10));
+                            if(t instanceof Bump) {
+                                rt.setDuration(Duration.millis(1000));
+                            }
+                            rt.setNode(figureNode);
+                            position.setRotation(((Teleport) t).getOriginalRotationAbsolute());
+
+                            pt.getChildren().addAll(tt, rt);
+
+                            if(t instanceof Death)
+                            {
+                                SequentialTransition sqrt = new SequentialTransition();
+                                FadeTransition ft1 = new FadeTransition(Duration.millis(500), figureNode);
+                                ft1.setFromValue(1);
+                                ft1.setToValue(0);
+                                FadeTransition ft2 = new FadeTransition(Duration.millis(500), figureNode);
+                                ft2.setFromValue(0);
+                                ft2.setToValue(1);
+                                sqrt.getChildren().addAll(ft1, pt, ft2);
+                                trans.getChildren().add(0, sqrt);
+                            } else {
+                                trans.getChildren().add(0, pt);
+                            }
                         }
                     }
                     if(figureNode instanceof ShipFigure)
@@ -355,6 +379,11 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
                 l.setFont(bigFont);
                 n = l;
             }
+
+            FadeTransition ft = new FadeTransition(Duration.millis(1000), n);
+            ft.setToValue(1);
+            ft.setFromValue(0);
+            ft.play();
 
             addFigure(f, n);
 
