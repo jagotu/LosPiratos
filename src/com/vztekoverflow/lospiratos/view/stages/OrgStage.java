@@ -198,7 +198,7 @@ public class OrgStage {
 
     private void setCADBackground(VirtualizingHexGridPane hexPane) {
         hexPane.setBackgroundGraphic(new ImageView("/cad_extended.png"));
-        hexPane.setBackgroundGraphicOffset(new Point2D(-1150, -1000));
+        hexPane.setBackgroundGraphicOffset(new Point2D(-1160, -995));
     }
 
     private VirtualizingHexGridPane publicHexPane;
