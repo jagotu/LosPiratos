@@ -46,9 +46,10 @@
     </HBox>
     <GridPane>
         <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="33.3"/>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="33.3"/>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="33.3"/>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25"/>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25"/>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25"/>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25"/>
         </columnConstraints>
         <rowConstraints>
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
@@ -73,7 +74,7 @@
                 <Glyph fontFamily="FontAwesome" icon="flash"/>
             </graphic>
         </Label>
-        <!--HBox GridPane.columnIndex="3">
+        <HBox GridPane.columnIndex="3">
             <Label text="XP">
                 <HBox.margin>
                     <Insets right="4.0"/>
@@ -83,7 +84,7 @@
                 </font>
             </Label>
             <EditableIntegerText fx:id="xp"/>
-        </HBox-->
+        </HBox>
     </GridPane>
 
 
