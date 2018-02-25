@@ -87,8 +87,9 @@ public class Plunder extends Transaction implements ParameterizedAction {
 
     @Override
     public BooleanExpression satisfiedProperty() {
-        return Bindings.createBooleanBinding(() -> true);
-        //this action just does not care how much you want to plunder
+        return Bindings.createBooleanBinding(() -> {
+            return getRelatedShip().getStorage().getCapacityLeft() >= getCommodities().scalarProduct(new ResourceReadOnly(0,1,1,1,1,1));
+        }, getCommodities(), getRelatedShip().getStorage().capacityLeftProperty());
     }
 
     @Override
