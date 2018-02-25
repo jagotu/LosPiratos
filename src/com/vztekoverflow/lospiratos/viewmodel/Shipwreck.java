@@ -23,7 +23,7 @@ public class Shipwreck implements Plunderable, Figure, OnNextRoundStartedListene
     Shipwreck(AxialCoordinate coordinate, Game owner, ShipwreckM model) {
         this.coordinate = coordinate;
         this.owner = owner;
-        owner.addListener(this);
+        owner.addOnNextRoundStartedListener(this);
         this.model = model;
         getResource().bindBidirectional(model.resource);
     }
@@ -44,7 +44,7 @@ public class Shipwreck implements Plunderable, Figure, OnNextRoundStartedListene
     public void onNextRoundStarted(int roundNo) {
         if (getResource().isLesserThanOrEqual(ResourceReadOnly.ZERO)) {
             owner.remove(this);
-            owner.removeListener(this);
+            owner.removeOnNextRoundStartedListener(this);
         }
     }
 

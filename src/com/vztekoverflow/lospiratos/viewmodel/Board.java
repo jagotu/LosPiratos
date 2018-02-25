@@ -22,7 +22,7 @@ public class Board /* I want my Burd */ implements OnNextRoundStartedListener {
         this.game = game;
         this.modelMap = modelMap;
         bindToModel();
-        game.addListener(this);
+        game.addOnNextRoundStartedListener(this);
     }
 
     private void bindToModel() {

@@ -186,7 +186,7 @@ public class Game {
             return;
         }
         allShips.add(ship);
-        addListener(ship);
+        addOnNextRoundStartedListener(ship);
         board.figuresProperty().add(ship);
         //allShips.sort(Comparator.comparing(s -> s.getTeam().getName(), Comparator.naturalOrder()));
     }
@@ -196,7 +196,7 @@ public class Game {
             if (!removedFromBoard) {
                 Warnings.panic(toString() + ".unregisterShip()", "Attempt to remove a ship which is in allShips but not in board.figures: " + s.getName());
             }
-            removeListener(s);
+            removeOnNextRoundStartedListener(s);
             allShips.remove(s);
     }
 
@@ -221,21 +221,21 @@ public class Game {
 
     private Set<OnNextRoundStartedListener> onNextRoundStartedListeners = new HashSet<>();
 
-    public void addListener(OnNextRoundStartedListener listener) {
+    public void addOnNextRoundStartedListener(OnNextRoundStartedListener listener) {
         onNextRoundStartedListeners.add(listener);
     }
 
-    public void removeListener(OnNextRoundStartedListener listener) {
+    public void removeOnNextRoundStartedListener(OnNextRoundStartedListener listener) {
         onNextRoundStartedListeners.remove(listener);
     }
 
     private Set<OnMovementsEvaluatedListener> onMovementsEvaluatedListeners = new HashSet<>();
 
-    public void addListener(OnMovementsEvaluatedListener listener) {
+    public void addOnMovementsEvaluatedListener(OnMovementsEvaluatedListener listener) {
         onMovementsEvaluatedListeners.add(listener);
     }
 
-    public void removeListener(OnMovementsEvaluatedListener listener) {
+    public void removeOnMovementsEvaluatedListener(OnMovementsEvaluatedListener listener) {
         onMovementsEvaluatedListeners.remove(listener);
     }
 

@@ -7,6 +7,13 @@ import com.vztekoverflow.lospiratos.view.controls.figures.ShipFigure;
 import com.vztekoverflow.lospiratos.viewmodel.*;
 import com.vztekoverflow.lospiratos.viewmodel.actions.ActionsCatalog;
 import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.AxialCoordinateActionParameter;
+import com.vztekoverflow.lospiratos.viewmodel.transitions.Forward;
+import com.vztekoverflow.lospiratos.viewmodel.transitions.Rotate;
+import com.vztekoverflow.lospiratos.viewmodel.transitions.Teleport;
+import com.vztekoverflow.lospiratos.viewmodel.transitions.Transition;
+import javafx.animation.RotateTransition;
+import javafx.animation.SequentialTransition;
+import javafx.animation.TranslateTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
@@ -20,10 +27,9 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
+import javafx.util.Duration;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.*;
 
 public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
 
@@ -91,6 +97,14 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
             }
         });
 
+        board.getGame().addOnMovementsEvaluatedListener(transitions -> {
+            for (PiratosHexTileContents tileContents : current.values())
+            {
+                tileContents.animate(transitions);
+            }
+        });
+
+
     }
 
     public PiratosHexTileContentsFactory(Board board, double edgeLength, boolean pointy) {
@@ -99,6 +113,7 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
 
     private boolean pointy;
     private double edgeLength;
+    private HashMap<Figure, ShipFigure> shipFigures = new HashMap<>();
 
 
     private void addFigure(Figure f) {
@@ -251,6 +266,47 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
             return n;
         }
 
+        private void animate(Map<Ship, List<Transition>> transitions)
+        {
+            for(Ship s : transitions.keySet())
+            {
+                if(internalNodes.containsKey(s))
+                {
+                    SequentialTransition trans = new SequentialTransition(internalNodes.get(s));
+                    Position position = s.getPosition().createCopy();
+                    for(int i = transitions.get(s).size()-1; i>=0;i--) {
+                        Transition t = transitions.get(s).get(i);
+                        if (t instanceof Forward) {
+                            TranslateTransition tt = new TranslateTransition();
+                            AxialCoordinate prevPosition = position.getCoordinate().minus(position.getRotationAsDirection());
+                            tt.setByX(AxialCoordinate.hexToPixel(position.getCoordinate(), pointy, edgeLength).getX() - AxialCoordinate.hexToPixel(prevPosition, pointy, edgeLength).getX());
+                            tt.setByY(AxialCoordinate.hexToPixel(position.getCoordinate(), pointy, edgeLength).getY() - AxialCoordinate.hexToPixel(prevPosition, pointy, edgeLength).getY());
+                            position.setCoordinate(prevPosition);
+                            tt.setDuration(Duration.millis(1000));
+                            tt.setNode(internalNodes.get(s));
+                            trans.getChildren().add(0, tt);
+                        } else if (t instanceof Rotate) {
+                            RotateTransition rt = new RotateTransition();
+                            rt.setByAngle(((Rotate) t).getRotation());
+                            rt.setDuration(Duration.millis(1000));
+                            rt.setNode(internalNodes.get(s));
+                            position.setRotation(position.getRotation() - ((Rotate) t).getRotation());
+                            trans.getChildren().add(0, rt);
+                        } else if (t instanceof Teleport)
+                        {
+                            //TODO
+
+                        }
+                    }
+                    internalNodes.get(s).setTranslateX(AxialCoordinate.hexToPixel(position.getCoordinate(), pointy, edgeLength).getX() - AxialCoordinate.hexToPixel(s.getPosition().getCoordinate(), pointy, edgeLength).getX());
+                    internalNodes.get(s).setTranslateY(AxialCoordinate.hexToPixel(position.getCoordinate(), pointy, edgeLength).getY() - AxialCoordinate.hexToPixel(s.getPosition().getCoordinate(), pointy, edgeLength).getY());
+                    internalNodes.get(s).setRotate(position.getRotation() - s.getPosition().getRotation());
+                    trans.play();
+                }
+            }
+
+        }
+
 
         void addFigure(Figure f) {
 
@@ -259,6 +315,7 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
                 ShipFigure s = new ShipFigure((Ship) f, pointy);
                 s.maxWidthProperty().bind(tileWidth);
                 s.maxHeightProperty().bind(tileHeight);
+                shipFigures.put(f, s);
                 n = s;
             } else if (f.getClass().equals(Shipwreck.class)) {
                 StackPane sp = new StackPane();

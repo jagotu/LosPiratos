@@ -131,7 +131,6 @@ public class AxialCoordinate {
         return hexRound(q, r);
     }
 
-    //TODO: Move calculation to a different class after merge
     private static AxialCoordinate hexRound(double x, double z) {
         double y = -x - z;
 

@@ -12,7 +12,7 @@ public abstract class BoardTile implements OnNextRoundStartedListener {
     protected BoardTile(AxialCoordinate location, Board board) {
         this.location = location;
         this.board = board;
-        board.getGame().addListener(this);
+        board.getGame().addOnNextRoundStartedListener(this);
     }
 
     public AxialCoordinate getLocation() {

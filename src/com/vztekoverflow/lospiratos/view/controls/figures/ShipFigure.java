@@ -1,6 +1,13 @@
 package com.vztekoverflow.lospiratos.view.controls.figures;
 
+import com.vztekoverflow.lospiratos.util.AxialCoordinate;
+import com.vztekoverflow.lospiratos.util.AxialCoordinateMutable;
+import com.vztekoverflow.lospiratos.viewmodel.Position;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
+import com.vztekoverflow.lospiratos.viewmodel.transitions.Forward;
+import com.vztekoverflow.lospiratos.viewmodel.transitions.Transition;
+import javafx.animation.SequentialTransition;
+import javafx.animation.TranslateTransition;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
@@ -11,6 +18,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.FillRule;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Font;
+
+import java.util.List;
 
 public class ShipFigure extends Pane {
 
@@ -69,4 +78,5 @@ public class ShipFigure extends Pane {
         layoutInArea(shipType, 0, 0, getWidth(), getHeight(), 0, HPos.CENTER, VPos.CENTER);
         layoutInArea(hpBar, getWidth() * ((1 - widthMultiplier) / 2), getHeight() * 0.25, getWidth() * widthMultiplier, hpBar.prefHeight(-1), 0, HPos.LEFT, VPos.TOP);
     }
+
 }
