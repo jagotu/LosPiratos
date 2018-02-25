@@ -11,7 +11,8 @@ public class Plantation extends BoardTile implements Plunderable {
         super(location, b);
     }
 
-    protected final Resource resource = getInitialState().createMutableCopy();
+    //protected final Resource resource = getInitialState().createMutableCopy();
+    protected final Resource resource = new Resource();
 
     /**
      * @return final object representing the resource hold by this board. The returned value is always the same.
@@ -34,11 +35,19 @@ public class Plantation extends BoardTile implements Plunderable {
         return PLANTATION_GENERAL_QUOTIENT;
     }
 
+    boolean hasAlreadyCalled = false;
     @Override
     public void onNextRoundStarted(int roundNo) {
         super.onNextRoundStarted(roundNo);
+
+        if(hasAlreadyCalled){
+            int a = 0;
+        }
+        hasAlreadyCalled = true;
+
         ResourceReadOnly H = getCapacity().plus(getResource().times(getQuotient())).timesComponentWise(getCapacity());
         ResourceReadOnly L = getCapacity().times(getQuotient()).plus(getResource());
+        ResourceReadOnly debug = H.divideComponentWise(L);
         getResource().setAll(H.divideComponentWise(L));
         //getResource().clamp(ResourceReadOnly.ZERO, getCapacity());
     }
@@ -48,3 +57,14 @@ public class Plantation extends BoardTile implements Plunderable {
         return true;
     }
 }
+
+
+
+
+
+
+
+
+
+
+

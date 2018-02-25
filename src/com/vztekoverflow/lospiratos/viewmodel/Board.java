@@ -70,10 +70,10 @@ public class Board /* I want my Burd */ implements OnNextRoundStartedListener {
     private boolean tryAddingTile(MapTile modelTile) {
         BoardTile t = BoardTile.createInstanceFromPersistentName(modelTile.getContent(), modelTile.getLocation(), this);
         if (t == null) return false;
+        if (tiles.containsKey(t.getLocation())) return false;
         if (t instanceof Plantation) {
             ((Plantation) t).getResource().bindBidirectional(modelTile.plantationsResource);
         }
-        if (tiles.containsKey(t.getLocation())) return false;
         tiles.put(modelTile.getLocation(), t);
         return true;
     }

@@ -47,7 +47,7 @@ public class GameConstants {
     public static final ResourceReadOnly PLANTATION_GENERAL_CAPACITY = new ResourceReadOnly(0, 100, 0, 200, 0, 200);
     public static final int PLANTATION_GENERAL_QUOTIENT = 5;
     public static final ResourceReadOnly PLANTATION_EXTRA_CAPACITY = PLANTATION_GENERAL_CAPACITY.times(2);
-    public static final int PLANTATION_EXTRA_QUOTIENT = 6;
+    public static final int PLANTATION_EXTRA_QUOTIENT = 7;
 
     //endregion
 }
