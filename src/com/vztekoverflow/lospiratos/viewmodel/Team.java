@@ -113,7 +113,13 @@ public class Team implements OnNextRoundStartedListener {
 
 
     private StringProperty name = new SimpleStringProperty("");
-    private ObjectProperty<Color> color = new SimpleObjectProperty<>();
+    private ObjectProperty<Color> color = new SimpleObjectProperty<Color>(){
+        @Override
+        public void set(Color newValue) {
+            super.set(newValue);
+            teamModel.colorProperty().set(FxUtils.toRGBCode(newValue));
+        }
+    };
 
     private final Resource ownedResource = new Resource();
 
@@ -233,11 +239,15 @@ public class Team implements OnNextRoundStartedListener {
             Warnings.makeWarning(toString(), "Invalid color (null or empty).");
             return;
         }
+        Color c = null;
         try {
-            this.color.set(Color.web(color));
+            c = (Color.web(color));
         } catch (IllegalArgumentException | NullPointerException e) {
             Warnings.makeWarning(toString(), "Invalid color: " + color);
         }
+        if(this.color.get() != null && this.color.get().equals(c)) //to prevent cycles in VM<>M binding
+            return;
+        this.color.set(c);
     }
 
 

@@ -19,7 +19,7 @@ public class UpgradeShip extends ModifyShipTransaction {
     public void performOnShipInternal() {
         float HPRatio = getRelatedShip().getCurrentHP() / (float) getRelatedShip().getMaxHP();
         getRelatedShip().setShipType(ShipType.increment(getRelatedShip().getShipType().getClass()));
-        getRelatedShip().setCurrentHP((int) (getRelatedShip().getMaxHP() * HPRatio));
+        getRelatedShip().setCurrentHP(getRelatedShip().getMaxHP());
     }
 
     @Override

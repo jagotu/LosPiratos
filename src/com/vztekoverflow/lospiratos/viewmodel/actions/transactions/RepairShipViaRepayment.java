@@ -23,11 +23,11 @@ public class RepairShipViaRepayment extends RepairShip {
     @Override
     protected void recomputeCost() {
         if(getRelatedShip().isDestroyed()){
-            cost.setAll(getRelatedShip().getShipType().getBasicRepairCost());
+                cost.setAll(getRelatedShip().getShipType().getBasicRepairCost());
             return;
         }
         double coeff = getRelatedShip().getCurrentHP() / (double) getRelatedShip().getMaxHP();
-        ResourceReadOnly c = getRelatedShip().getShipType().getBuyingCost().times(1/50).times(1 + 4 * coeff);
+        ResourceReadOnly c = getRelatedShip().getShipType().getBuyingCost().times(1/50f).times(1 + 4 * coeff);
         cost.setAll(c);
     }
 

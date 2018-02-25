@@ -117,7 +117,6 @@ public class Game {
     private GameEvaluator evaluator = GameEvaluator.createInstance(this);
 
     public void closeRoundAndEvaluate() {
-        GameSerializer.SaveGameToFile(new File(Instant.now().toString().replace(':', '-') + "_round" + roundNo + ".json"), gameModel, false);
         Map<Ship, List<Transition>> transitions = evaluator.evaluateRound(roundNo);
         logger.logRoundHasEnded(roundNo);
         for(OnMovementsEvaluatedListener l : onMovementsEvaluatedListeners){
@@ -132,6 +131,7 @@ public class Game {
         for (OnNextRoundStartedListener l : copy) {
             l.onNextRoundStarted(roundNo);
         }
+        GameSerializer.SaveGameToFile(new File(Instant.now().toString().replace(':', '-') + "_round" + roundNo + ".json"), gameModel, false);
     }
 
 
