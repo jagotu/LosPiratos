@@ -215,7 +215,8 @@ class StandardGameEvaluator extends GameEvaluator {
         s.destroyShipAndEnhancements();
         g.getLogger().logShipHasDied(s, attackers);
 
-        putTransition(new Teleport(shipOldPosition, (s.getCoordinate())),s);
+        int r = s.getPosition().getRotation();
+        putTransition(new Teleport(r,r,shipOldPosition, (s.getCoordinate())),s);
     }
 
     private void dividePlunderedTreasure(Ship from, Set<Ship> to) {
@@ -287,7 +288,7 @@ class StandardGameEvaluator extends GameEvaluator {
             if(i <0){
                 Warnings.makeWarning("collision solver",s + " cannot move backwards anymore, but there is still pending collision.");
             }
-            AxialCoordinate oldPosition = s.getCoordinate();
+            Position oldPosition = s.getPosition().createCopy();
             while(i >= 0){
                 maneuvers.get(i).undo();
                 if(maneuvers.get(i) instanceof MoveForward)
@@ -295,7 +296,7 @@ class StandardGameEvaluator extends GameEvaluator {
                 i--;
             }
             transitionsCausedByCollisions.putIfAbsent(s, new ArrayList<>());
-            transitionsCausedByCollisions.get(s).add(new Teleport(oldPosition, s.getCoordinate()));
+            transitionsCausedByCollisions.get(s).add(new Teleport(oldPosition.getRotation(), s.getPosition().getRotation(), oldPosition.getCoordinate(), s.getCoordinate()));
             collisionSolverManeuverIndex.replace(s,i);
             collisionAttendees.add(s);
             newPositions.put(s, s.getPosition().getCoordinate());
