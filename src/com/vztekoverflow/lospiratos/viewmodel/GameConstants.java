@@ -28,11 +28,11 @@ public class GameConstants {
     /**
      * Purchase cost (in money) is determined as scalar product of purchase commodities and this. Neutral coefficient is 1.
      */
-    public static final ResourceReadOnly PURCHASE_COEFFICIENTS = new ResourceReadOnly(1, 6, 1000, 1000, 1000, 6);
+    public static final ResourceReadOnly PURCHASE_COEFFICIENTS = new ResourceReadOnly(1, 12, 1000, 1000, 1000, 12);
     /**
      * Sell gain (in money) is determined as scalar product of sold commodities and this. Neutral coefficient is 1.
      */
-    public static final ResourceReadOnly SELL_COEFFICIENTS = new ResourceReadOnly(1, 4, 10, 10, 0, 4);
+    public static final ResourceReadOnly SELL_COEFFICIENTS = new ResourceReadOnly(1, 8, 20, 20, 0, 8);
     public static final double REPAIR_ENHANCEMENT_COST_COEFFICIENT = 0.1;
     //endregion transactions
 
