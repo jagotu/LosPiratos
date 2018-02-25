@@ -108,7 +108,7 @@ class StandardGameEvaluator extends GameEvaluator {
         for (Ship s : g.getAllShips()) {
             Position oldPosition = s.getPosition().createCopy();
             for (PerformableAction a : s.getPlannedActions()) {
-                if (a instanceof Maneuver || a instanceof CannonsAbstractVolley || a instanceof FrontalAssault) {
+                if (a instanceof Maneuver || a instanceof CannonsAbstractVolley || a instanceof FrontalAssault || a instanceof Plunder) {
                    try {
                        a.performOnShip();
                    }catch (Exception e){

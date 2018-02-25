@@ -35,14 +35,6 @@ public interface Plunderable {
             getResource().addMoney(-amountGiven);
             p.getRelatedShip().getStorage().addMoney(amountGiven);
         }
-        //cloth:
-        sortedPlunders.sort(Comparator.comparingInt(p -> p.getCommodities().getCloth()));
-        for(Plunder p : sortedPlunders){
-            int amountWanted = p.getCommodities().getCloth();
-            int amountGiven = Math.min(amountWanted, getResource().getCloth());
-            getResource().addCloth(-amountGiven);
-            p.getRelatedShip().getStorage().addCloth(amountGiven);
-        }
         //metal:
         sortedPlunders.sort(Comparator.comparingInt(p -> p.getCommodities().getMetal()));
         for(Plunder p : sortedPlunders){
@@ -50,6 +42,22 @@ public interface Plunderable {
             int amountGiven = Math.min(amountWanted, getResource().getMetal());
             getResource().addMetal(-amountGiven);
             p.getRelatedShip().getStorage().addMetal(amountGiven);
+        }
+        //wood:
+        sortedPlunders.sort(Comparator.comparingInt(p -> p.getCommodities().getWood()));
+        for(Plunder p : sortedPlunders){
+            int amountWanted = p.getCommodities().getWood();
+            int amountGiven = Math.min(amountWanted, getResource().getWood());
+            getResource().addWood(-amountGiven);
+            p.getRelatedShip().getStorage().addWood(amountGiven);
+        }
+        //cloth:
+        sortedPlunders.sort(Comparator.comparingInt(p -> p.getCommodities().getCloth()));
+        for(Plunder p : sortedPlunders){
+            int amountWanted = p.getCommodities().getCloth();
+            int amountGiven = Math.min(amountWanted, getResource().getCloth());
+            getResource().addCloth(-amountGiven);
+            p.getRelatedShip().getStorage().addCloth(amountGiven);
         }
         //rum:
         sortedPlunders.sort(Comparator.comparingInt(p -> p.getCommodities().getRum()));
@@ -67,14 +75,7 @@ public interface Plunderable {
             getResource().addTobacco(-amountGiven);
             p.getRelatedShip().getStorage().addTobacco(amountGiven);
         }
-        //wood:
-        sortedPlunders.sort(Comparator.comparingInt(p -> p.getCommodities().getWood()));
-        for(Plunder p : sortedPlunders){
-            int amountWanted = p.getCommodities().getWood();
-            int amountGiven = Math.min(amountWanted, getResource().getWood());
-            getResource().addWood(-amountGiven);
-            p.getRelatedShip().getStorage().addWood(amountGiven);
-        }
+
 
     }
 }

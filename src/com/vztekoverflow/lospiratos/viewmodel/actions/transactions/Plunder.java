@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Plunder extends ManeuverTransaction implements ParameterizedAction {
+public class Plunder extends Transaction implements ParameterizedAction {
     @Override
     protected Action createCopyAndResetThis() {
         Plunder result = new Plunder();
