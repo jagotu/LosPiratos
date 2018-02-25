@@ -474,5 +474,21 @@ public class OrgStage {
     public void commitTransactions(ActionEvent actionEvent) {
         ActionsCatalog.relatedShip.get().commitModifyingTransactions();
     }
+
+    private double savedX = 0, savedY = 0, savedScale = 0;
+
+    @FXML
+    private void saveView(ActionEvent actionEvent) {
+        savedX = hexPane.getXOffset();
+        savedY = hexPane.getYOffset();
+        savedScale = hexPane.getScale();
+    }
+
+    @FXML
+    private void restoreView(ActionEvent actionEvent) {
+        hexPane.setXOffset(savedX);
+        hexPane.setYOffset(savedY);
+        hexPane.setScale(savedScale);
+    }
 }
 
