@@ -49,7 +49,7 @@ public class Board /* I want my Burd */ implements OnNextRoundStartedListener {
             if (c.wasAdded()) {
                 //if this is circular call:
                 //todo bug, this not only prevents circular calls, but also prevents updating a tiles content
-                if (modelMap.tilesProperty().stream().anyMatch(tile -> tile.getLocation().equals(c.getKey())))
+                ;if (modelMap.tilesProperty().stream().anyMatch(tile -> tile.getLocation().equals(c.getKey())))
                     return;
                 if (c.getValueAdded() instanceof Plantation) {
                     Plantation p = (Plantation) c.getValueAdded();

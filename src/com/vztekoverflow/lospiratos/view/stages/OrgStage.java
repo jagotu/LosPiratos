@@ -33,6 +33,9 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.InputMethodEvent;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -489,6 +492,14 @@ public class OrgStage {
         hexPane.setXOffset(savedX);
         hexPane.setYOffset(savedY);
         hexPane.setScale(savedScale);
+    }
+
+    public void epicEnterPressed(KeyEvent keyEvent) {
+        ((TextField) keyEvent.getSource()).setText("⏎");
+        if(keyEvent.getCode().equals(KeyCode.ENTER))
+        {
+            evaluateRound();
+        }
     }
 }
 

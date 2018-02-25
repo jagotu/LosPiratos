@@ -24,7 +24,7 @@ import java.util.List;
 public class ShipFigure extends Pane {
 
     private SVGPath shipPath;
-    private ProgressBar hpBar;
+    public ProgressBar hpBar;
     private Label shipType;
     private double widthMultiplier = 0.6;
 

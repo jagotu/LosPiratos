@@ -11,6 +11,7 @@ import com.vztekoverflow.lospiratos.viewmodel.transitions.Forward;
 import com.vztekoverflow.lospiratos.viewmodel.transitions.Rotate;
 import com.vztekoverflow.lospiratos.viewmodel.transitions.Teleport;
 import com.vztekoverflow.lospiratos.viewmodel.transitions.Transition;
+import javafx.animation.FadeTransition;
 import javafx.animation.RotateTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
@@ -19,6 +20,7 @@ import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -29,7 +31,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
 
@@ -274,6 +278,7 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
                 {
                     SequentialTransition trans = new SequentialTransition(internalNodes.get(s));
                     Position position = s.getPosition().createCopy();
+                    Node figureNode = internalNodes.get(s);
                     for(int i = transitions.get(s).size()-1; i>=0;i--) {
                         Transition t = transitions.get(s).get(i);
                         if (t instanceof Forward) {
@@ -283,20 +288,37 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
                             tt.setByY(AxialCoordinate.hexToPixel(position.getCoordinate(), pointy, edgeLength).getY() - AxialCoordinate.hexToPixel(prevPosition, pointy, edgeLength).getY());
                             position.setCoordinate(prevPosition);
                             tt.setDuration(Duration.millis(1000));
-                            tt.setNode(internalNodes.get(s));
+                            tt.setNode(figureNode);
                             trans.getChildren().add(0, tt);
                         } else if (t instanceof Rotate) {
                             RotateTransition rt = new RotateTransition();
                             rt.setByAngle(((Rotate) t).getRotation());
                             rt.setDuration(Duration.millis(1000));
-                            rt.setNode(internalNodes.get(s));
+                            rt.setNode(figureNode);
                             position.setRotation(position.getRotation() - ((Rotate) t).getRotation());
                             trans.getChildren().add(0, rt);
                         } else if (t instanceof Teleport)
                         {
-                            //TODO
-
+                            TranslateTransition tt = new TranslateTransition();
+                            Point2D diff = AxialCoordinate.hexToPixel(((Teleport) t).getOriginPositionRelative(), pointy, edgeLength);
+                            tt.setByX(diff.getX());
+                            tt.setByY(diff.getY());
+                            position.setCoordinate(((Teleport) t).getOriginPositionAbsolute());
+                            tt.setDuration(Duration.millis(10));
+                            tt.setNode(figureNode);
+                            trans.getChildren().add(0, tt);
                         }
+                    }
+                    if(figureNode instanceof ShipFigure)
+                    {
+                        FadeTransition ft = new FadeTransition(Duration.millis(200), ((ShipFigure) figureNode).hpBar);
+                        ft.setFromValue(1);
+                        ft.setToValue(0);
+                        trans.getChildren().add(0, ft);
+                        FadeTransition ft2 = new FadeTransition(Duration.millis(200), ((ShipFigure) figureNode).hpBar);
+                        ft2.setFromValue(0);
+                        ft2.setToValue(1);
+                        trans.getChildren().add(ft2);
                     }
                     internalNodes.get(s).setTranslateX(AxialCoordinate.hexToPixel(position.getCoordinate(), pointy, edgeLength).getX() - AxialCoordinate.hexToPixel(s.getPosition().getCoordinate(), pointy, edgeLength).getX());
                     internalNodes.get(s).setTranslateY(AxialCoordinate.hexToPixel(position.getCoordinate(), pointy, edgeLength).getY() - AxialCoordinate.hexToPixel(s.getPosition().getCoordinate(), pointy, edgeLength).getY());

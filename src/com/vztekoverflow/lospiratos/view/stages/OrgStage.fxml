@@ -91,6 +91,7 @@
         </center>
         <bottom>
             <FlowPane alignment="CENTER_RIGHT">
+                <TextField onKeyPressed="#epicEnterPressed" prefHeight="48.0" prefWidth="26.0" text="⏎" />
                 <Button onAction="#saveView" prefHeight="48.0" text="Ulož pohled"
                     textAlignment="CENTER"/>
                 <Button onAction="#restoreView" prefHeight="48.0" text="Načti pohled"
