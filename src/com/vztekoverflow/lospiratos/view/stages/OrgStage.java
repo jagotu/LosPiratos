@@ -475,7 +475,7 @@ public class OrgStage {
         ActionsCatalog.relatedShip.get().commitModifyingTransactions();
     }
 
-    private double savedX = 0, savedY = 0, savedScale = 0;
+    private double savedX = 0, savedY = 0, savedScale = 1;
 
     @FXML
     private void saveView(ActionEvent actionEvent) {

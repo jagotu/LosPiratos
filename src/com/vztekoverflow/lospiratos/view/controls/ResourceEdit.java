@@ -111,23 +111,23 @@ public class ResourceEdit extends FlowPane {
         }
         money.valueProperty().bindBidirectional(r.moneyPropProperty());
         moneyPane.visibleProperty().bind(mode.isNotEqualTo(EditableText.Mode.READONLY).or(r.moneyPropProperty().isNotEqualTo(0)));
-        moneyPane.managedProperty().bind(visibleProperty());
+        moneyPane.managedProperty().bind(moneyPane.visibleProperty());
         money.modeProperty().bind(mode);
         metal.valueProperty().bindBidirectional(r.metalProperty());
         metalPane.visibleProperty().bind(mode.isNotEqualTo(EditableText.Mode.READONLY).or(r.metalProperty().isNotEqualTo(0)));
-        metalPane.managedProperty().bind(visibleProperty());
+        metalPane.managedProperty().bind(metalPane.visibleProperty());
         metal.modeProperty().bind(mode);
         wood.valueProperty().bindBidirectional(r.woodProperty());
         woodPane.visibleProperty().bind(mode.isNotEqualTo(EditableText.Mode.READONLY).or(r.woodProperty().isNotEqualTo(0)));
-        woodPane.managedProperty().bind(visibleProperty());
+        woodPane.managedProperty().bind(woodPane.visibleProperty());
         wood.modeProperty().bind(mode);
         cloth.valueProperty().bindBidirectional(r.clothProperty());
         clothPane.visibleProperty().bind(mode.isNotEqualTo(EditableText.Mode.READONLY).or(r.clothProperty().isNotEqualTo(0)));
-        clothPane.managedProperty().bind(visibleProperty());
+        clothPane.managedProperty().bind(clothPane.visibleProperty());
         cloth.modeProperty().bind(mode);
         rum.valueProperty().bindBidirectional(r.rumProperty());
         rumPane.visibleProperty().bind(mode.isNotEqualTo(EditableText.Mode.READONLY).or(r.rumProperty().isNotEqualTo(0)));
-        rumPane.managedProperty().bind(visibleProperty());
+        rumPane.managedProperty().bind(rumPane.visibleProperty());
         rum.modeProperty().bind(mode);
     }
 
