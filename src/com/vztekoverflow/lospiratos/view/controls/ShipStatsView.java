@@ -42,8 +42,8 @@ public class ShipStatsView extends VBox {
     private Label shipType;
     @FXML
     private HBox shipEnhancements;
-    @FXML
-    private EditableIntegerText xp;
+    //@FXML
+    //private EditableIntegerText xp;
 
     static FXMLLoader fxmlLoader = new FXMLLoader(ShipStatsView.class.getResource(
             "ShipStatsView.fxml"));
@@ -70,7 +70,7 @@ public class ShipStatsView extends VBox {
         HPBar.progressProperty().bind(s.currentHPProperty().add(0.0).divide(s.maxHPProperty()));
         maxHP.textProperty().bind(s.maxHPProperty().asString());
         captain.textProperty().bindBidirectional(s.captainNameProperty());
-        xp.valueProperty().bindBidirectional(s.XPProperty());
+        //xp.valueProperty().bindBidirectional(s.XPProperty());
         s.shipTypeProperty().addListener((observable, oldValue, newValue) ->
                 shipType.setText(newValue.getČeskéJméno()));
         shipType.setText(s.getShipType().getČeskéJméno());
