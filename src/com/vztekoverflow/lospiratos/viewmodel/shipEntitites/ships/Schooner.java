@@ -9,7 +9,7 @@ import static com.vztekoverflow.lospiratos.viewmodel.GameConstants.BASIC_SHIP_WE
 public class Schooner extends ShipType {
     @Override
     public int getBonusMaxHP() {
-        return 60;
+        return 45;
     }
 
     @Override

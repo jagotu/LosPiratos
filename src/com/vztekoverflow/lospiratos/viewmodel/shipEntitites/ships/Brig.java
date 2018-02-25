@@ -9,7 +9,7 @@ public class Brig extends ShipType {
 
     @Override
     public int getBonusMaxHP() {
-        return 90;
+        return 65;
     }
 
     @Override

@@ -9,7 +9,7 @@ public class Galleon extends ShipType {
 
     @Override
     public int getBonusMaxHP() {
-        return 200;
+        return 150;
     }
 
     @Override

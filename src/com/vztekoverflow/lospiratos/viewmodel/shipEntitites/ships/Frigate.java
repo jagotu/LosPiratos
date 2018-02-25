@@ -8,7 +8,7 @@ import static com.vztekoverflow.lospiratos.viewmodel.GameConstants.BASIC_SHIP_WE
 public class Frigate extends ShipType {
     @Override
     public int getBonusMaxHP() {
-        return 140;
+        return 105;
     }
 
     @Override

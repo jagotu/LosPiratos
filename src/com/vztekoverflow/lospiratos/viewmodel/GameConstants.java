@@ -12,7 +12,7 @@ public class GameConstants {
     /**
      * How much of the ships buying cost will be part of shipwreck when the ship dies.
      */
-    public static final float SHIPS_COST_TO_WRECK_COEFF = 0.5f;
+    public static final float SHIPS_COST_TO_WRECK_COEFF = 0.2f;
 
     //region ship attacks:
     public static final double HEAVY_BALL_DAMAGE_COEFFICIENT = 1.5;
