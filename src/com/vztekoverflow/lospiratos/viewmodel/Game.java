@@ -14,6 +14,8 @@ import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Brig;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Frigate;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Galleon;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Schooner;
+import com.vztekoverflow.lospiratos.viewmodel.transitions.OnMovementsEvaluatedListener;
+import com.vztekoverflow.lospiratos.viewmodel.transitions.Transition;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -116,14 +118,22 @@ public class Game {
 
     public void closeRoundAndEvaluate() {
         GameSerializer.SaveGameToFile(new File(Instant.now().toString().replace(':', '-') + "_round" + roundNo + ".json"), gameModel, false);
-        evaluator.evaluateRound(roundNo);
+        Map<Ship, List<Transition>> transitions = evaluator.evaluateRound(roundNo);
         logger.logRoundHasEnded(roundNo);
+        for(OnMovementsEvaluatedListener l : onMovementsEvaluatedListeners){
+            try{
+                l.OnMovementsEvaluated(transitions);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
         ++roundNo;
         List<OnNextRoundStartedListener> copy = new ArrayList<>(onNextRoundStartedListeners);
         for (OnNextRoundStartedListener l : copy) {
             l.onNextRoundStarted(roundNo);
         }
     }
+
 
     //endregion
 
@@ -176,7 +186,7 @@ public class Game {
             return;
         }
         allShips.add(ship);
-        addOnNextRoundStartedListener(ship);
+        addListener(ship);
         board.figuresProperty().add(ship);
         //allShips.sort(Comparator.comparing(s -> s.getTeam().getName(), Comparator.naturalOrder()));
     }
@@ -186,7 +196,7 @@ public class Game {
             if (!removedFromBoard) {
                 Warnings.panic(toString() + ".unregisterShip()", "Attempt to remove a ship which is in allShips but not in board.figures: " + s.getName());
             }
-            removeOnNextRoundStartedListener(s);
+            removeListener(s);
             allShips.remove(s);
     }
 
@@ -211,12 +221,22 @@ public class Game {
 
     private Set<OnNextRoundStartedListener> onNextRoundStartedListeners = new HashSet<>();
 
-    public void addOnNextRoundStartedListener(OnNextRoundStartedListener listener) {
+    public void addListener(OnNextRoundStartedListener listener) {
         onNextRoundStartedListeners.add(listener);
     }
 
-    public void removeOnNextRoundStartedListener(OnNextRoundStartedListener listener) {
+    public void removeListener(OnNextRoundStartedListener listener) {
         onNextRoundStartedListeners.remove(listener);
+    }
+
+    private Set<OnMovementsEvaluatedListener> onMovementsEvaluatedListeners = new HashSet<>();
+
+    public void addListener(OnMovementsEvaluatedListener listener) {
+        onMovementsEvaluatedListeners.add(listener);
+    }
+
+    public void removeListener(OnMovementsEvaluatedListener listener) {
+        onMovementsEvaluatedListeners.remove(listener);
     }
 
     public Shipwreck createAndAddNewDefaultShipwreck() {

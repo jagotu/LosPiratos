@@ -9,9 +9,15 @@ import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.CannonsAbstractVol
 import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.FrontalAssault;
 import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.MortarShot;
 import com.vztekoverflow.lospiratos.viewmodel.actions.maneuvers.MoveForward;
+import com.vztekoverflow.lospiratos.viewmodel.actions.maneuvers.TurnLeft;
+import com.vztekoverflow.lospiratos.viewmodel.actions.maneuvers.TurnRight;
 import com.vztekoverflow.lospiratos.viewmodel.actions.transactions.ManeuverTransaction;
 import com.vztekoverflow.lospiratos.viewmodel.actions.transactions.Plunder;
 import com.vztekoverflow.lospiratos.viewmodel.boardTiles.Port;
+import com.vztekoverflow.lospiratos.viewmodel.transitions.Forward;
+import com.vztekoverflow.lospiratos.viewmodel.transitions.Rotate;
+import com.vztekoverflow.lospiratos.viewmodel.transitions.Teleport;
+import com.vztekoverflow.lospiratos.viewmodel.transitions.Transition;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -22,7 +28,7 @@ import static com.vztekoverflow.lospiratos.viewmodel.GameConstants.SHIPS_COST_TO
 
 abstract public class GameEvaluator {
 
-    abstract public void evaluateRound(int roundNo);
+    abstract public Map<Ship, List<Transition>> evaluateRound(int roundNo);
 
     public static GameEvaluator createInstance(Game g) {
 
@@ -43,7 +49,7 @@ class StandardGameEvaluator extends GameEvaluator {
     }
 
     @Override
-    public void evaluateRound(int roundNo) {
+    public Map<Ship, List<Transition>> evaluateRound(int roundNo) {
 
         reinitialize();
         performOnAllActions(a -> {
@@ -62,6 +68,7 @@ class StandardGameEvaluator extends GameEvaluator {
         destroyDamagedShips();
         solveCollisions(0);
         damageCollisionAttendees();
+        return transitions;
     }
 
     private void reinitialize() {
@@ -70,6 +77,7 @@ class StandardGameEvaluator extends GameEvaluator {
         killedShips = new HashSet<>();
         attackers = new HashMap<>();
         plunderers = new HashMap<>();
+        transitions = new HashMap<>();
     }
 
     /**
@@ -83,6 +91,7 @@ class StandardGameEvaluator extends GameEvaluator {
      */
     private Map<Ship, Set<Ship>> attackers = new HashMap<>();
     private Map<Plunderable, Set<Plunder>> plunderers = new HashMap<>();
+    private Map<Ship, List<Transition>> transitions = new HashMap<>();
 
     private OnDamageDoneListener onDamageDoneListener = (Attack sender, Ship target, int damageAmount, DamageSufferedResponse response) -> {
 
@@ -125,11 +134,29 @@ class StandardGameEvaluator extends GameEvaluator {
             if (action.isAssignableFrom(a.getClass())) {
                 try {
                     a.performOnShip();
+                    handleTransition(a);
                 }catch (Exception e){
                     Warnings.exceptionCaught(toString()+".evaluate(" + action + ")",e);
                 }
             }
         });
+    }
+
+    private void handleTransition(Action a){
+        if(a.getRelatedShip() == null){
+            Warnings.makeWarning(toString()+".handleTransition()","related ship is null");
+        }
+        transitions.putIfAbsent(a.getRelatedShip(), new ArrayList<>());
+        Transition t;
+        if(a instanceof MoveForward)
+            t = new Forward();
+        else if(a instanceof TurnLeft)
+            t = new Rotate(-60);
+        else if(a instanceof TurnRight)
+            t = new Rotate(60);
+        else
+            return;
+        transitions.get(a.getRelatedShip()).add(t);
     }
 
     private void performPlundering(){
@@ -166,6 +193,8 @@ class StandardGameEvaluator extends GameEvaluator {
     private void destroyShip(Ship s, Iterable<Ship> attackers){
         //dividePlunderedTreasure(s, attackers); //currently not supported by the game rules
         g.createAndAddNewShipwreck(s.getPosition().getCoordinate(), s.getStorage().plus(s.getShipType().getBuyingCost().times(SHIPS_COST_TO_WRECK_COEFF)));
+        transitions.putIfAbsent(s, new ArrayList<>());
+        transitions.get(s).add(new Teleport(s.getCoordinate()));
         s.destroyShipAndEnhancements();
         g.getLogger().logShipHasDied(s, attackers);
     }

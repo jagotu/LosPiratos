@@ -36,7 +36,7 @@ public class Team implements OnNextRoundStartedListener {
         this.teamModel = teamModel;
         this.game = owner;
         bindToModel();
-        owner.addOnNextRoundStartedListener(this);
+        owner.addListener(this);
     }
 
     private void bindToModel() {
