@@ -610,7 +610,6 @@ public class Ship implements MovableFigure, DamageableFigure, OnNextRoundStarted
                 e.printStackTrace();
             }
         }
-        plannedActions.clear();
     }
 
     /**

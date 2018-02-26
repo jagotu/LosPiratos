@@ -3,6 +3,7 @@ package com.vztekoverflow.lospiratos.view.controls;
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.view.PopOverSkin;
 import com.vztekoverflow.lospiratos.viewmodel.Game;
+import com.vztekoverflow.lospiratos.viewmodel.Resource;
 import com.vztekoverflow.lospiratos.viewmodel.Team;
 import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.AxialCoordinateActionParameter;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipType;
@@ -140,7 +141,8 @@ public class CreateShipPopOver extends PopOver {
                     if (teamSelect.getValue() == null || shipTypeSelect.getValue() == null || shipName.getText() == null || shipName.getText().isEmpty() || captainName.getText() == null || captainName.getText().isEmpty() || targetPortParameter.get() == null)
                         return true;
                     if (!game.mayCreateShipWithName(shipName.getText())) return true;
-                    if (!cost.resourceProperty().get().isLesserThanOrEqual(teamSelect.getValue().getOwnedResource()))
+                    Resource cost = ShipType.createInstance(shipTypeSelect.getSelectionModel().getSelectedItem()).getBuyingCost().createMutableCopy();
+                    if (!cost.isLesserThanOrEqual(teamSelect.getValue().getOwnedResource()))
                         return true;
                     return false;
                 }, teamSelect.getSelectionModel().selectedItemProperty(),

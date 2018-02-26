@@ -151,6 +151,10 @@ public abstract class Action implements PerformableAction, PlannableAction {
         recomputeCost();
     }
 
+    final protected boolean shipHasPlannedAtLeast(int count, Class<? extends Action> action) {
+        return ! shipHasPlannedLessThan(count, action);
+    }
+
     final protected boolean shipHasPlannedLessThan(int count, Class<? extends Action> action) {
         return getRelatedShip().getPlannedActions().stream().filter(a -> action.isAssignableFrom(a.getClass())).count() < count;
     }

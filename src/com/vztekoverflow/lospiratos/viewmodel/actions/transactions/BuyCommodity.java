@@ -36,6 +36,7 @@ public class BuyCommodity extends CommodityTransaction {
         if (getCommodities() == null) cost.clear();
         else
             cost.setAll(ResourceReadOnly.fromMoney(getCommodities().scalarProduct(PURCHASE_COEFFICIENTS)));
+        int a = 10;
     }
 
     @Override
@@ -43,13 +44,21 @@ public class BuyCommodity extends CommodityTransaction {
         return Bindings.createBooleanBinding(() ->
                 {
                     if (getCommodities() == null) return false;
-                    return !getCommodities().compare(Resource.ZERO).equals(PartialOrdering.Equal)
-                            && getCommodities().getMetal() == 0
-                            && getCommodities().getRum() == 0
-                            && getCommodities().getTobacco() == 0
-                            && getCommodities().getMoney() == 0;
+                    if (getCommodities().compare(Resource.ZERO).equals(PartialOrdering.Equal)) return false;
+                    if (getCommodities().getMetal() != 0
+                            || getCommodities().getRum() != 0
+                            || getCommodities().getTobacco() != 0
+                            || getCommodities().getMoney() != 0) return false;
+                    if(getRelatedShip() == null) return false;
+                    int teamMoney = getRelatedShip().getTeam().getOwnedResource().getMoney();
+                    if (getCost().getMoney() > teamMoney) {
+                        if (shipHasPlannedAtLeast(1, SellCommodity.class) || shipHasPlannedAtLeast(1, UnloadStorage.class))
+                            return true;
+                        else return false;
+                    } else return true;
                 }
-                , getCommodities(), relatedShipProperty());
+                ,
+                getCommodities(), relatedShipProperty());
     }
 
     @Override

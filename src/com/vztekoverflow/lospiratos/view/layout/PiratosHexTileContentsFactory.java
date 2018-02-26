@@ -26,9 +26,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 
-import java.awt.*;
 import java.util.*;
-import java.util.List;
 
 public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
 

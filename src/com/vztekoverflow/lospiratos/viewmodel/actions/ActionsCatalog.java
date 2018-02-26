@@ -58,14 +58,16 @@ public class ActionsCatalog {
 
         Node additionals = new Node(false);
         additionals.icon = ActionIcon.ellipsis;
+        additionals.addChild(new Node(new EmptyAction()));
+        additionals.addChild(new Node(new ActivatePrivilegedMode()));
 
 
         //maneuvers and categories, in the order in which they appear in UI
         root.addChild(new Node(new MoveForward()));
         root.addChild(new Node(new TurnRight()));
         root.addChild(transactions);
-        //root.addChild(additionals);
-        root.addChild(new Node(new ActivatePrivilegedMode()));
+        root.addChild(additionals);
+        //root.addChild(new Node(new ActivatePrivilegedMode()));
         root.addChild(new Node(new Plunder()));
         root.addChild(attacks);
         root.addChild(new Node(new TurnLeft()));

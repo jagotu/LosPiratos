@@ -229,6 +229,12 @@ public class ResourceReadOnly {
         ResourceReadOnly v = new ResourceReadOnly(money, cloth, metal, rum, tobco, wood);
         return v;
     }
+    /**
+     * fluent syntax for creating new ResourceReadOnly form arithmetic expressions
+     */
+    public ResourceReadOnly minus(ResourceReadOnly rightOperand) {
+        return this.plus(rightOperand.times(-1));
+    }
 
     /**
      * fluent syntax for creating new ResourceReadOnly form arithmetic expressions
@@ -286,15 +292,28 @@ public class ResourceReadOnly {
         return result;
     }
 
+    /**
+     *
+     * @return true if any of the resource's component is negative
+     */
+    public boolean anyComponentNegaitve(){
+        return getMoney() < 0 ||
+                getCloth() < 0 ||
+                getMetal() < 0 ||
+                getRum() < 0 ||
+                getTobacco() < 0 ||
+                getWood() < 0 ;
+    }
+
     @Override
     public String toString() {
         char c = ',';
-        return "" + '('
+        return "(Money,Cloth,Metal,Rum,Wood):" + '('
                 + getMoney() + c
                 + getCloth() + c
                 + getMetal() + c
                 + getRum() + c
-                + getWood() + c
+                + getWood()
                 + ')';
     }
 

@@ -29,6 +29,11 @@ public class Plunder extends Transaction implements ParameterizedAction {
     }
 
     @Override
+    public int getManeuverSlotsTaken() {
+        return 1;
+    }
+
+    @Override
     protected boolean recomputePlannable() {
         int shipSpeed = getRelatedShip().getSpeed();
         int maneuversAlreadyPlanned = getRelatedShip().getPlannedActions().stream().mapToInt(Action::getManeuverSlotsTaken).sum();

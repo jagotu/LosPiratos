@@ -25,5 +25,6 @@ public enum ActionIcon {
     repairViaPayment,
     repairEnhnacement,
     upgradeShip,
-    unload
+    unload,
+    empty
 }

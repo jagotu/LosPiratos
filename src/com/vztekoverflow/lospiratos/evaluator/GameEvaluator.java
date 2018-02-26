@@ -49,6 +49,7 @@ class StandardGameEvaluator extends GameEvaluator {
     public Map<Ship, List<Transition>> evaluateRound(int roundNo) {
 
         reinitialize();
+        g.getAllShips().forEach(Ship::commitModifyingTransactions);
         performOnAllActions(a -> {
             if (a instanceof Attack) ((Attack) a).addListener(onDamageDoneListener);
             if (a instanceof Plunder) ((Plunder) a).addListener(onPlunderRequestedListener);
@@ -82,7 +83,7 @@ class StandardGameEvaluator extends GameEvaluator {
      * Ships that were part of a collision and had to be shifted to solve a collision.
      */
     private Set<Ship> collisionAttendees = new HashSet<>();
-    private Map<Ship,Integer> collisionSolverManeuverIndex = new HashMap<>();
+    private Map<Ship, Integer> collisionSolverManeuverIndex = new HashMap<>();
     private Set<Ship> killedShips = new HashSet<>();
     /**
      * Key represents target, Value (List) represents all its attackers from this round
@@ -117,11 +118,11 @@ class StandardGameEvaluator extends GameEvaluator {
             Position oldPosition = s.getPosition().createCopy();
             for (PerformableAction a : s.getPlannedActions()) {
                 if (a instanceof Maneuver || a instanceof CannonsAbstractVolley || a instanceof FrontalAssault || a instanceof Plunder) {
-                   try {
-                       a.performOnShip();
-                   }catch (Exception e){
-                       Warnings.exceptionCaught(toString()+".evaluateVolleys()",e);
-                   }
+                    try {
+                        a.performOnShip();
+                    } catch (Exception e) {
+                        Warnings.exceptionCaught(toString() + ".evaluateVolleys()", e);
+                    }
                 }
             }
             s.getPosition().setFrom(oldPosition);
@@ -134,62 +135,65 @@ class StandardGameEvaluator extends GameEvaluator {
                 try {
                     a.performOnShip();
                     handleTransition(a);
-                }catch (Exception e){
-                    Warnings.exceptionCaught(toString()+".evaluate(" + action + ")",e);
+                } catch (Exception e) {
+                    Warnings.exceptionCaught(toString() + ".evaluate(" + action + ")", e);
                 }
             }
         });
     }
 
-    private void handleTransition(Action a){
-        if(! (a instanceof Maneuver)) return;
-        if(a.getRelatedShip() == null){
-            Warnings.makeWarning(toString()+".handleTransition()","related ship is null");
+    private void handleTransition(Action a) {
+        if (!(a instanceof Maneuver)) return;
+        if (a.getRelatedShip() == null) {
+            Warnings.makeWarning(toString() + ".handleTransition()", "related ship is null");
         }
         Transition t;
-        if(a instanceof MoveForward)
+        if (a instanceof MoveForward)
             t = new Forward();
-        else if(a instanceof TurnLeft)
+        else if (a instanceof TurnLeft)
             t = new Rotate(-60);
-        else if(a instanceof TurnRight)
+        else if (a instanceof TurnRight)
             t = new Rotate(60);
         else
             return;
         putTransition(t, a.getRelatedShip());
     }
-    private void putTransition(Transition t, Ship s){
+
+    private void putTransition(Transition t, Ship s) {
         transitions.putIfAbsent(s, new ArrayList<>());
         transitions.get(s).add(t);
 
     }
 
-    private Map<Ship, List<Transition>> mergeTransitions(Map<Ship, List<Transition>> a, Map<Ship, List<Transition>> b){
+    private Map<Ship, List<Transition>> mergeTransitions(Map<Ship, List<Transition>> a, Map<Ship, List<Transition>> b) {
         Map<Ship, List<Transition>> n = new HashMap<>(a);
-        for(Map.Entry<Ship, List<Transition>> e : b.entrySet()){
-            a.putIfAbsent(e.getKey(),new ArrayList<>());
-            for(Transition t : e.getValue()){
+        for (Map.Entry<Ship, List<Transition>> e : b.entrySet()) {
+            a.putIfAbsent(e.getKey(), new ArrayList<>());
+            for (Transition t : e.getValue()) {
                 a.get(e.getKey()).add(t);
             }
         }
         return n;
-    };
+    }
 
-    private void performPlundering(){
-        for(Map.Entry<Plunderable, Set<Plunder>> e : plunderers.entrySet()){
+    ;
+
+    private void performPlundering() {
+        for (Map.Entry<Plunderable, Set<Plunder>> e : plunderers.entrySet()) {
             try {
                 e.getKey().getPlunderedBy(e.getValue());
-            }catch (Exception ex){
-                Warnings.exceptionCaught(toString()+".performPlundering()",ex);
+            } catch (Exception ex) {
+                Warnings.exceptionCaught(toString() + ".performPlundering()", ex);
             }
 
         }
     }
 
-    private void damageCollisionAttendees(){
-        for(Ship s: collisionAttendees){
+    private void damageCollisionAttendees() {
+        for (Ship s : collisionAttendees) {
             DamageSufferedResponse response = s.takeDamage(COLLISION_DAMAGE);
-            if(response.equals(DamageSufferedResponse.hasJustBeenDestroyed)){
-                destroyShip(s,null);
+            if (response.equals(DamageSufferedResponse.hasJustBeenDestroyed)) {
+                destroyShip(s, null);
             }
         }
     }
@@ -197,7 +201,7 @@ class StandardGameEvaluator extends GameEvaluator {
     private void destroyDamagedShips() {
         for (Ship s : killedShips) {
             destroyShip(s, attackers.get(s));
-            for (Ship a : attackers.get(s)){
+            for (Ship a : attackers.get(s)) {
                 a.incrementXP();
             }
         }
@@ -205,7 +209,7 @@ class StandardGameEvaluator extends GameEvaluator {
         attackers.clear();
     }
 
-    private void destroyShip(Ship s, Iterable<Ship> attackers){
+    private void destroyShip(Ship s, Iterable<Ship> attackers) {
         //dividePlunderedTreasure(s, attackers); //currently not supported by the game rules
         g.createAndAddNewShipwreck(s.getPosition().getCoordinate(), s.getStorage().plus(s.getShipType().getBuyingCost().times(SHIPS_COST_TO_WRECK_COEFF)));
         AxialCoordinate shipOldPosition = s.getCoordinate();
@@ -233,7 +237,7 @@ class StandardGameEvaluator extends GameEvaluator {
         }
         Map<AxialCoordinate, Set<Ship>> collisionTiles = new HashMap<>();
         for (Map.Entry<AxialCoordinate, Set<Ship>> e : nonemptyTiles.entrySet()) {
-            if (e.getValue().size() > 1 && ! (g.getBoard().getTiles().get(e.getKey()) instanceof Port)) {
+            if (e.getValue().size() > 1 && !(g.getBoard().getTiles().get(e.getKey()) instanceof Port)) {
                 collisionTiles.put(e.getKey(), e.getValue());
             }
         }
@@ -246,7 +250,7 @@ class StandardGameEvaluator extends GameEvaluator {
             solveOneCollision(e.getKey(), e.getValue(), iteration);
         }
 
-        boolean success = solveCollisions(iteration+1);
+        boolean success = solveCollisions(iteration + 1);
         if (!success && iteration == 0)
             rollback(collisionTiles);
         return success;
@@ -255,9 +259,9 @@ class StandardGameEvaluator extends GameEvaluator {
 
     private void rollback(Map<AxialCoordinate, Set<Ship>> originalPositions) {
         g.getLogger().logMessage("Vyhodnocení kola", "Nepodařilo se vyřešit kolize. Rollback. Nutno vyřešit ručně."); //Unable to solve collisions. Rollback.
-        for(Map.Entry<AxialCoordinate, Set<Ship>> e : originalPositions.entrySet()){
+        for (Map.Entry<AxialCoordinate, Set<Ship>> e : originalPositions.entrySet()) {
             AxialCoordinate c = e.getKey();
-            for(Ship s : e.getValue()){
+            for (Ship s : e.getValue()) {
                 s.getPosition().setCoordinate(c);
             }
         }
@@ -279,16 +283,16 @@ class StandardGameEvaluator extends GameEvaluator {
             //undo maneuvers from last to first (if possible (i.e. i > 0)):
             List<Maneuver> maneuvers = s.getPlannedActions().stream().filter(a -> a instanceof Maneuver).map(a -> (Maneuver) a).collect(Collectors.toList());
             //1st skip operations that were already undone by previous iterations
-            collisionSolverManeuverIndex.putIfAbsent(s,maneuvers.size()-1);
+            collisionSolverManeuverIndex.putIfAbsent(s, maneuvers.size() - 1);
             int i = collisionSolverManeuverIndex.get(s);
             //2nd, undo one move and all preceding rotations
-            if(i <0){
-                Warnings.makeWarning("collision solver",s + " cannot move backwards anymore, but there is still pending collision.");
+            if (i < 0) {
+                Warnings.makeWarning("collision solver", s + " cannot move backwards anymore, but there is still pending collision.");
             }
             Position oldPosition = s.getPosition().createCopy();
-            while(i >= 0){
+            while (i >= 0) {
                 maneuvers.get(i).undo();
-                if(maneuvers.get(i) instanceof MoveForward)
+                if (maneuvers.get(i) instanceof MoveForward)
                     break;
                 i--;
             }
@@ -302,21 +306,21 @@ class StandardGameEvaluator extends GameEvaluator {
         g.getLogger().logCollisionSolved(collisionPosition, newPositions, iteration);
     }
 
-    private int compareShips(Ship a, Ship b){
+    private int compareShips(Ship a, Ship b) {
         int weight_a = a.getWeight();
         int weight_b = b.getWeight();
 
         //if the figure has stayed od this position in the last round, it should win the contest
-        if(a.getPlannedActions().stream().noneMatch(p-> p instanceof MoveForward))
+        if (a.getPlannedActions().stream().noneMatch(p -> p instanceof MoveForward))
             weight_a = Integer.MAX_VALUE;
-        if(b.getPlannedActions().stream().noneMatch(p-> p instanceof MoveForward))
+        if (b.getPlannedActions().stream().noneMatch(p -> p instanceof MoveForward))
             weight_b = Integer.MAX_VALUE;
 
-        if(weight_a == weight_b){
-            if(weight_a == Integer.MAX_VALUE)
-                Warnings.makeWarning(toString()+".compareShips()","both ships seem to have stayed on the tile "+ a.getCoordinate() +" in the last round");
-            return RandomStatic.instance.nextInt(3) -1; // {-1, 0, 1}
-        }else return weight_a - weight_b;
+        if (weight_a == weight_b) {
+            if (weight_a == Integer.MAX_VALUE)
+                Warnings.makeWarning(toString() + ".compareShips()", "both ships seem to have stayed on the tile " + a.getCoordinate() + " in the last round");
+            return RandomStatic.instance.nextInt(3) - 1; // {-1, 0, 1}
+        } else return weight_a - weight_b;
 
     }
 

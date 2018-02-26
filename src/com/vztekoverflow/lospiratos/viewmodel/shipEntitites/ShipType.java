@@ -47,6 +47,7 @@ public abstract class ShipType extends ShipEntity {
 
 
     public static String getPersistentName(Class<? extends ShipType> shipType) {
+        if(shipType == null) return null;
         if (shipType.equals(Schooner.class)) {
             return persistentNameSchooner;
         }
@@ -72,6 +73,7 @@ public abstract class ShipType extends ShipEntity {
             Warnings.makeWarning("ShipType.createInstanceFromPersistentName()", "Empty or null type name: " + shipTypeName);
             return null;
         }
+        if(shipTypeName.equals("null")) return null;
         if (shipTypeName.equalsIgnoreCase(persistentNameSchooner)) {
             return new Schooner();
         }
