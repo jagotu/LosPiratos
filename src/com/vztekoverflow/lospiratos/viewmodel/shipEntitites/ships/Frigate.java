@@ -42,7 +42,7 @@ public class Frigate extends ShipType {
 
     @Override
     public String getČeskéJméno() {
-        return "Frigata";
+        return "Fregata";
     }
 
     @Override

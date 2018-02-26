@@ -157,3 +157,7 @@
 .action-selector-cost .editable-text .text {
     -fx-font-weight: bold;
 }
+
+.button.highlighted {
+    -fx-background-color: yellow;
+}

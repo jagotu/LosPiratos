@@ -15,15 +15,16 @@ import com.vztekoverflow.lospiratos.viewmodel.actions.ActivatePrivilegedMode;
 import com.vztekoverflow.lospiratos.viewmodel.actions.ParameterizedAction;
 import com.vztekoverflow.lospiratos.viewmodel.actions.PlannableAction;
 import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.AxialCoordinateActionParameter;
+import com.vztekoverflow.lospiratos.viewmodel.actions.transactions.ModifyShipTransaction;
 import com.vztekoverflow.lospiratos.viewmodel.logs.LogFormatter;
 import com.vztekoverflow.lospiratos.viewmodel.logs.LoggedEvent;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.LongBinding;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -44,6 +45,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import javax.naming.Binding;
 import java.io.File;
 
 public class OrgStage {
@@ -108,6 +110,9 @@ public class OrgStage {
         this.game = new SimpleObjectProperty<>(game);
         this.game.addListener(c -> connectToGame());
     }
+
+    private BooleanProperty hasModifyingTransaction = new SimpleBooleanProperty(false);
+    private BooleanBinding hasModifyingTransactionBinding;
 
 
     @FXML
@@ -175,6 +180,33 @@ public class OrgStage {
 
         evaluateRelatedShip.disableProperty().bind(ActionsCatalog.relatedShip.isNull());
         commitTransactions.disableProperty().bind(ActionsCatalog.relatedShip.isNull());
+
+        ActionsCatalog.relatedShip.addListener(i -> {
+            if(ActionsCatalog.relatedShip.get() == null)
+            {
+                hasModifyingTransaction.unbind();
+                hasModifyingTransaction.set(false);
+            } else {
+                hasModifyingTransactionBinding = Bindings.createBooleanBinding(() ->
+                        ActionsCatalog.relatedShip.get().getPlannedActions().stream().anyMatch(x -> x instanceof ModifyShipTransaction),
+                        ActionsCatalog.relatedShip.get().plannedActionsProperty());
+                hasModifyingTransaction.bind(hasModifyingTransactionBinding);
+            }
+
+        });
+
+        hasModifyingTransaction.addListener((observable, oldValue, newValue) -> {
+            if(oldValue)
+            {
+                commitTransactions.getStyleClass().remove("highlighted");
+            }
+            if(newValue)
+            {
+                commitTransactions.getStyleClass().add("highlighted");
+            }
+        });
+
+
 
         connectToGame();
     }
