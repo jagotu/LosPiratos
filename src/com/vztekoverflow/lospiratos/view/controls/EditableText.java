@@ -160,6 +160,7 @@ public abstract class EditableText extends StackPane {
                 save();
             });
             contentEdit.fontProperty().addListener(e -> updateEditWidth(contentEdit.getText()));
+            contentEdit.setMinWidth(40);
             getChildren().add(contentEdit);
         }
 
@@ -209,5 +210,11 @@ public abstract class EditableText extends StackPane {
         EDITOR      //Default to editing
     }
 
-
+    @Override
+    public void requestFocus() {
+        if(contentEdit != null)
+        {
+            contentEdit.requestFocus();
+        }
+    }
 }

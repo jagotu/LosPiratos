@@ -10,6 +10,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ActionsCatalog {
 
@@ -32,45 +33,45 @@ public class ActionsCatalog {
 
 
         //attacks, in the order in which they appear in UI
-        Node attacks = new Node(false);
-        attacks.addChild(new Node(new FrontalAssault()));
-        attacks.addChild(new Node(new CannonsSimpleVolley(false)));
-        attacks.addChild(new Node(new CannonsHeavyBallVolley(false)));
-        attacks.addChild(new Node(new CannonsChainShotVolley(false)));
-        attacks.addChild(new Node(new MortarShot()));
-        attacks.addChild(new Node(new CannonsChainShotVolley(true)));
-        attacks.addChild(new Node(new CannonsHeavyBallVolley(true)));
-        attacks.addChild(new Node(new CannonsSimpleVolley(true)));
+        Node attacks = new Node(false).withShortcut("a");
+        attacks.addChild(new Node(new FrontalAssault()).withShortcut("w"));
+        attacks.addChild(new Node(new CannonsSimpleVolley(false)).withShortcut("e"));
+        attacks.addChild(new Node(new CannonsHeavyBallVolley(false)).withShortcut("d"));
+        attacks.addChild(new Node(new CannonsChainShotVolley(false)).withShortcut("c"));
+        attacks.addChild(new Node(new MortarShot()).withShortcut("x"));
+        attacks.addChild(new Node(new CannonsChainShotVolley(true)).withShortcut("y"));
+        attacks.addChild(new Node(new CannonsHeavyBallVolley(true)).withShortcut("a"));
+        attacks.addChild(new Node(new CannonsSimpleVolley(true)).withShortcut("q"));
         attacks.icon = ActionIcon.attackGenericIcon;
 
 
         //transactions
-        Node transactions = new Node(false);
-        transactions.addChild(new Node(new UnloadStorage()));
-        transactions.addChild(new Node(new BuyCommodity()));
-        transactions.addChild(new Node(new SellCommodity()));
-        transactions.addChild(new Node(new BuyNewEnhancement()));
-        transactions.addChild(new Node(new RepairEnhancement()));
-        transactions.addChild(new Node(new RepairShipViaDowngrade()));
-        transactions.addChild(new Node(new RepairShipViaRepayment()));
-        transactions.addChild(new Node(new UpgradeShip()));
+        Node transactions = new Node(false).withShortcut("d");
+        transactions.addChild(new Node(new UnloadStorage()).withShortcut("w"));
+        transactions.addChild(new Node(new BuyCommodity()).withShortcut("e"));
+        transactions.addChild(new Node(new SellCommodity()).withShortcut("d"));
+        transactions.addChild(new Node(new BuyNewEnhancement()).withShortcut("c"));
+        transactions.addChild(new Node(new RepairEnhancement()).withShortcut("x"));
+        transactions.addChild(new Node(new RepairShipViaDowngrade()).withShortcut("y"));
+        transactions.addChild(new Node(new RepairShipViaRepayment()).withShortcut("a"));
+        transactions.addChild(new Node(new UpgradeShip()).withShortcut("q"));
         transactions.icon = ActionIcon.transactionGenericIcon;
 
-        Node additionals = new Node(false);
+        Node additionals = new Node(false).withShortcut("c");
         additionals.icon = ActionIcon.ellipsis;
-        additionals.addChild(new Node(new EmptyAction()));
-        additionals.addChild(new Node(new ActivatePrivilegedMode()));
+        additionals.addChild(new Node(new EmptyAction()).withShortcut("w"));
+        additionals.addChild(new Node(new ActivatePrivilegedMode()).withShortcut("x"));
 
 
         //maneuvers and categories, in the order in which they appear in UI
-        root.addChild(new Node(new MoveForward()));
-        root.addChild(new Node(new TurnRight()));
+        root.addChild(new Node(new MoveForward()).withShortcut("w"));
+        root.addChild(new Node(new TurnRight()).withShortcut("e"));
         root.addChild(transactions);
         root.addChild(additionals);
         //root.addChild(new Node(new ActivatePrivilegedMode()));
-        root.addChild(new Node(new Plunder()));
+        root.addChild(new Node(new Plunder()).withShortcut("y"));
         root.addChild(attacks);
-        root.addChild(new Node(new TurnLeft()));
+        root.addChild(new Node(new TurnLeft()).withShortcut("q"));
 
         allPossiblePlannableActions = root;
 
@@ -92,13 +93,14 @@ public class ActionsCatalog {
             return leaf;
         }
 
-        public Iterable<Node> getChildren() {
+        public List<Node> getChildren() {
             return children;
         }
 
         public PlannableAction getAction() {
             return action;
         }
+
 
         void addChild(Node n) {
             this.children.add(n);
@@ -123,6 +125,16 @@ public class ActionsCatalog {
         ActionIcon icon = null;
         Node parent = null;
 
+        public String getShortcut() {
+            return shortcut;
+        }
+
+        public void setShortcut(String shortcut) {
+            this.shortcut = shortcut;
+        }
+
+        String shortcut = "ě";
+
         public Node getParent() {
             return parent;
         }
@@ -132,6 +144,12 @@ public class ActionsCatalog {
                 return action.getIcon();
             }
             return icon;
+        }
+
+        public Node withShortcut(String shortcut)
+        {
+            setShortcut(shortcut);
+            return this;
         }
     }
 }

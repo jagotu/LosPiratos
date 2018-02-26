@@ -5,20 +5,25 @@ import com.vztekoverflow.lospiratos.viewmodel.actions.ActionsCatalog;
 import com.vztekoverflow.lospiratos.viewmodel.actions.ParameterizedAction;
 import com.vztekoverflow.lospiratos.viewmodel.actions.PlannableAction;
 import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.event.ActionEvent;
 import javafx.geometry.*;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.Stack;
 import java.util.stream.Collectors;
 
@@ -45,6 +50,21 @@ public class ActionSelector extends Pane {
         getStyleClass().add("action-selector");
         currentNode.addListener(x -> updateActionRoster());
         setPickOnBounds(false);
+        setOnKeyTyped(event -> {
+
+            if(currentNode.get() != null)
+            {
+                if(event.getCharacter().equals("\b") && ActionsCatalog.relatedShip.get() != null && ActionsCatalog.relatedShip.get().getPlannedActions().size() > 0)
+                {
+                    ActionsCatalog.relatedShip.get().unplanActions(ActionsCatalog.relatedShip.get().getPlannedActions().size() - 1);
+                }
+                Optional<ActionsCatalog.Node> node = currentNode.get().getChildren().stream().filter(x -> x.getShortcut().equals(event.getCharacter())).findFirst();
+                if(node.isPresent() && buttonsMap.containsKey(node.get()) && !buttonsMap.get(node.get()).isDisable())
+                {
+                    buttonsMap.get(node.get()).getOnAction().handle(new ActionEvent());
+                }
+            }
+        });
     }
 
     private Button back = null;
@@ -63,6 +83,8 @@ public class ActionSelector extends Pane {
         this.onActionSelectedListener = onActionSelectedListener;
     }
 
+    private HashMap<ActionsCatalog.Node, Button> buttonsMap = new HashMap<>();
+
     private void updateActionRoster() {
         getChildren().clear();
         if (currentNode.get() == null) {
@@ -71,6 +93,7 @@ public class ActionSelector extends Pane {
         if (currentNode.get().isLeaf()) {
             throw new IllegalStateException();
         }
+        buttonsMap.clear();
         for (ActionsCatalog.Node n : currentNode.get().getChildren()) {
             final Button b = new Button();
             StackPane sp = new StackPane();
@@ -105,6 +128,11 @@ public class ActionSelector extends Pane {
                 sp.getChildren().add(ellipsis);
             }
 
+            Label shortcut = new Label(n.getShortcut());
+            shortcut.setFont(new Font(15));
+            StackPane.setAlignment(shortcut, Pos.BOTTOM_LEFT);
+            sp.getChildren().add(shortcut);
+
             if (!n.isLeaf()) {
                 b.setOnAction(e -> {
                     previousCenters.push(center);
@@ -133,6 +161,7 @@ public class ActionSelector extends Pane {
             }
             b.relocate(center.getX(), center.getY());
             getChildren().add(b);
+            buttonsMap.put(n, b);
         }
         back = new Button();
         Glyph backGlyph = new Glyph("FontAwesome", FontAwesome.Glyph.TIMES);
@@ -167,8 +196,16 @@ public class ActionSelector extends Pane {
             }
 
         });
-
         getChildren().add(back);
+        Platform.runLater(() -> back.requestFocus());
+        back.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if(!newValue)
+            {
+                Platform.runLater(() -> back.requestFocus());
+            }
+        });
+
+
 
     }
 

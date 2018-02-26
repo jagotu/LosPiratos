@@ -10,6 +10,7 @@ import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.AxialCoordinateAct
 import com.vztekoverflow.lospiratos.viewmodel.transitions.*;
 import com.vztekoverflow.lospiratos.viewmodel.transitions.Transition;
 import javafx.animation.*;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
@@ -18,15 +19,21 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
 
@@ -95,8 +102,7 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
         });
 
         board.getGame().addOnMovementsEvaluatedListener(transitions -> {
-            for (PiratosHexTileContents tileContents : current.values())
-            {
+            for (PiratosHexTileContents tileContents : current.values()) {
                 tileContents.animate(transitions);
             }
         });
@@ -203,13 +209,37 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
                 re.setResource(((Plunderable) bt).getResource());
                 s.getChildren().add(re);
             }
-            if (onMouseClick != null) {
-                s.setOnMouseClicked(e -> {
+
+            s.setOnMouseClicked(e -> {
+                if (e.isStillSincePress() && e.getButton().equals(MouseButton.SECONDARY))
+                {
+                    Stage st = new Stage();
+                    ScrollPane sp = new ScrollPane();
+                    VBox vb = new VBox();
+                    for(Node n : s.getChildren())
+                    {
+                        VBox vb2 = new VBox();
+                        vb2.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderStroke.DEFAULT_WIDTHS)));
+                        vb2.getChildren().add(new ImageView(n.snapshot(new SnapshotParameters(), null)));
+                        if(n instanceof ShipFigure)
+                        {
+                            vb2.getChildren().add(new Label(((ShipFigure) n).getShip().getName()));
+                        }
+
+                        vb.getChildren().add(vb2);
+
+                    }
+                    sp.setContent(vb);
+                    st.setScene(new Scene(sp, 800, 800));
+                    st.show();
+                }
+                if (onMouseClick != null) {
                     if (e.isStillSincePress() && e.getButton().equals(MouseButton.PRIMARY)) {
                         onMouseClick.OnClick(internalNodes.keySet(), bt.getLocation(), e);
                     }
-                });
-            }
+                }
+            });
+
             availableProperty.addListener(i -> {
                 if (classes.contains("disabled")) {
                     classes.remove("disabled");
@@ -263,16 +293,13 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
             return n;
         }
 
-        private void animate(Map<Ship, List<Transition>> transitions)
-        {
-            for(Ship s : transitions.keySet())
-            {
-                if(internalNodes.containsKey(s))
-                {
+        private void animate(Map<Ship, List<Transition>> transitions) {
+            for (Ship s : transitions.keySet()) {
+                if (internalNodes.containsKey(s)) {
                     SequentialTransition trans = new SequentialTransition(internalNodes.get(s));
                     Position position = s.getPosition().createCopy();
                     Node figureNode = internalNodes.get(s);
-                    for(int i = transitions.get(s).size()-1; i>=0;i--) {
+                    for (int i = transitions.get(s).size() - 1; i >= 0; i--) {
                         Transition t = transitions.get(s).get(i);
                         if (t instanceof Forward) {
                             TranslateTransition tt = new TranslateTransition();
@@ -290,8 +317,7 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
                             rt.setNode(figureNode);
                             position.setRotation(position.getRotation() - ((Rotate) t).getRotation());
                             trans.getChildren().add(0, rt);
-                        } else if (t instanceof Teleport)
-                        {
+                        } else if (t instanceof Teleport) {
                             ParallelTransition pt = new ParallelTransition();
                             TranslateTransition tt = new TranslateTransition();
                             Point2D diff = AxialCoordinate.hexToPixel(((Teleport) t).getOriginPositionRelative(), pointy, edgeLength);
@@ -299,7 +325,7 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
                             tt.setByY(diff.getY());
                             position.setCoordinate(((Teleport) t).getOriginPositionAbsolute());
                             tt.setDuration(Duration.millis(10));
-                            if(t instanceof Bump) {
+                            if (t instanceof Bump) {
                                 tt.setDuration(Duration.millis(1000));
                             }
                             tt.setNode(figureNode);
@@ -307,7 +333,7 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
                             RotateTransition rt = new RotateTransition();
                             rt.setByAngle(((Teleport) t).getNewRotationAbsolute() - ((Teleport) t).getOriginalRotationAbsolute());
                             rt.setDuration(Duration.millis(10));
-                            if(t instanceof Bump) {
+                            if (t instanceof Bump) {
                                 rt.setDuration(Duration.millis(1000));
                             }
                             rt.setNode(figureNode);
@@ -315,8 +341,7 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
 
                             pt.getChildren().addAll(tt, rt);
 
-                            if(t instanceof Death)
-                            {
+                            if (t instanceof Death) {
                                 SequentialTransition sqrt = new SequentialTransition();
                                 FadeTransition ft1 = new FadeTransition(Duration.millis(500), figureNode);
                                 ft1.setFromValue(1);
@@ -331,8 +356,7 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
                             }
                         }
                     }
-                    if(figureNode instanceof ShipFigure)
-                    {
+                    if (figureNode instanceof ShipFigure) {
                         FadeTransition ft = new FadeTransition(Duration.millis(200), ((ShipFigure) figureNode).hpBar);
                         ft.setFromValue(1);
                         ft.setToValue(0);
@@ -382,6 +406,7 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
             ft.setToValue(1);
             ft.setFromValue(0);
             ft.play();
+            ft.setOnFinished(e -> Platform.runLater(() -> n.setOpacity(1)));
 
             addFigure(f, n);
 

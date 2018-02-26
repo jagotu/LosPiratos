@@ -118,6 +118,10 @@ public class ShipView extends StackPane {
             }
         });
 
+        setOnMouseClicked(e -> {
+            info();
+        });
+
 
     }
 

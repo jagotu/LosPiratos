@@ -141,4 +141,9 @@ public class ResourceEdit extends FlowPane {
     protected double computeMaxHeight(double width) {
         return super.computePrefHeight(width);
     }
+
+    @Override
+    public void requestFocus() {
+        money.requestFocus();
+    }
 }

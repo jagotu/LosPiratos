@@ -12,6 +12,7 @@ import com.vztekoverflow.lospiratos.viewmodel.actions.transactions.EnhancementAc
 import com.vztekoverflow.lospiratos.viewmodel.actions.transactions.ResourceActionParameter;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.EnhancementsCatalog;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
@@ -100,7 +101,12 @@ public class ActionParametersPopOver extends PopOver {
             Label l = new Label(a.getČeskéJméno() + ":");
             l.setPadding(new Insets(0, 4, 0, 0));
             gp.add(l, 0, i);
-            gp.add(getNodeFor(a), 1, i);
+            Node pn = getNodeFor(a);
+            gp.add(pn, 1, i);
+            if(i == 0)
+            {
+                Platform.runLater(pn::requestFocus);
+            }
             i++;
         }
 
@@ -123,7 +129,7 @@ public class ActionParametersPopOver extends PopOver {
         setSkin(new PopOverSkin(this));
         ButtonBar buttons = new ButtonBar();
 
-        Button cancelButton = new Button(ButtonType.CANCEL.getText());
+        Button cancelButton = new Button("_Cancel");
         ButtonBar.setButtonData(cancelButton, ButtonBar.ButtonData.CANCEL_CLOSE);
         cancelButton.setOnAction(e -> {
             hide();
@@ -132,7 +138,8 @@ public class ActionParametersPopOver extends PopOver {
 
         buttons.getButtons().add(cancelButton);
 
-        okButton = new Button("Plán!");
+        okButton = new Button("_Plán!");
+        okButton.setMnemonicParsing(true);
         ButtonBar.setButtonData(okButton, ButtonBar.ButtonData.OK_DONE);
         okButton.setOnAction(e -> {
             ActionsCatalog.relatedShip.get().planAction(action);
@@ -177,14 +184,13 @@ public class ActionParametersPopOver extends PopOver {
     private Node getNodeFor(ActionParameter p) {
         if (p instanceof AxialCoordinateActionParameter) {
             AxialCoordinateActionParameter ap = (AxialCoordinateActionParameter) p;
-            HBox h = new HBox();
+
             Label l = new Label();
-            h.setAlignment(Pos.CENTER_LEFT);
+
             l.setPadding(new Insets(0, 4, 0, 0));
             l.textProperty().bind(ap.property().asString());
             Button b = new Button();
             b.setGraphic(new Glyph("FontAwesome", FontAwesome.Glyph.BULLSEYE));
-            h.getChildren().addAll(l, b);
             b.setOnAction(e -> {
                 if (onRequestAxialCoordinateListener != null) {
                     onRequestAxialCoordinateListener.onRequestAxialCoordinate(ap);
@@ -203,9 +209,17 @@ public class ActionParametersPopOver extends PopOver {
             if (ap.property().get() != null) {
                 highlightedTiles.add(ap.get());
             }
+            HBox h = new HBox() {
+                @Override
+                public void requestFocus() {
+                    b.requestFocus();
+                }
+            };
+            h.setAlignment(Pos.CENTER_LEFT);
+            h.getChildren().addAll(l, b);
             return h;
         } else if (p instanceof EnhancementActionParameter) {
-            HBox hb = new HBox();
+
             EnhancementActionParameter eap = (EnhancementActionParameter) p;
             ComboBox<Class<? extends ShipEnhancement>> cb = new ComboBox<Class<? extends ShipEnhancement>>(EnhancementsCatalog.allPossibleEnhancements.stream().filter(eap::isValidValue).collect((Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList))));
 
@@ -238,7 +252,12 @@ public class ActionParametersPopOver extends PopOver {
             cb.visibleProperty().bind(readOnly.not());
             cb.managedProperty().bind(readOnly.not());
 
-
+            HBox hb = new HBox() {
+                @Override
+                public void requestFocus() {
+                    cb.requestFocus();
+                }
+            };
             hb.getChildren().add(cb);
             hb.getChildren().add(l);
             return hb;
