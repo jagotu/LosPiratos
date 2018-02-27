@@ -44,6 +44,10 @@ public class ShipStatsView extends VBox {
     private HBox shipEnhancements;
     @FXML
     private EditableIntegerText xp;
+    @FXML
+    private Label coordinates;
+    @FXML
+    private Label direction;
 
     static FXMLLoader fxmlLoader = new FXMLLoader(ShipStatsView.class.getResource(
             "ShipStatsView.fxml"));
@@ -84,6 +88,9 @@ public class ShipStatsView extends VBox {
             n.getStyleClass().add(s.enhancementStatusProperty(enh).get().toString());
             shipEnhancements.getChildren().add(n);
         }
+
+        coordinates.textProperty().bind(s.getPosition().coordinateProperty().asString());
+        direction.rotateProperty().bind(s.getPosition().rotationProperty().subtract(30));
     }
 
     public static Node getNodeFor(EnhancementIcon enhancementIcon) {

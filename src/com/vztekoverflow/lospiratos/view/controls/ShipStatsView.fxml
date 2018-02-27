@@ -33,17 +33,31 @@
             <HBox fx:id="shipEnhancements"/>
         </right>
     </BorderPane>
-    <HBox>
-        <Label>
-            <graphic>
-                <Glyph fontFamily="FontAwesome" icon="user"/>
-            </graphic>
-            <HBox.margin>
-                <Insets right="2.0"/>
-            </HBox.margin>
-        </Label>
-        <EditableStringText fx:id="captain"/>
-    </HBox>
+    <BorderPane>
+        <center>
+            <HBox>
+                <Label>
+                    <graphic>
+                        <Glyph fontFamily="FontAwesome" icon="user"/>
+                    </graphic>
+                    <HBox.margin>
+                        <Insets right="2.0"/>
+                    </HBox.margin>
+                </Label>
+                <EditableStringText fx:id="captain"/>
+            </HBox>
+        </center>
+        <right>
+            <HBox>
+                <Label BorderPane.alignment="CENTER_RIGHT" fx:id="coordinates"/>
+                <Label fx:id="direction">
+                    <graphic>
+                        <Glyph fontFamily="FontAwesome" icon="arrow_up" />
+                    </graphic>
+                </Label>
+            </HBox>
+        </right>
+    </BorderPane>
     <GridPane>
         <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25"/>
