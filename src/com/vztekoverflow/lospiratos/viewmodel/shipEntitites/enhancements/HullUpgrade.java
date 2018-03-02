@@ -19,13 +19,13 @@ public final class HullUpgrade extends ShipEnhancement {
     public int getBonusMaxHP() {
         if (this.isDestroyed()) return 0;
         if (ship.getShipType() instanceof Schooner) {
-            return 10;
+            return 5;
         } else if (ship.getShipType() instanceof Brig) {
-            return 20;
+            return 10;
         } else if (ship.getShipType() instanceof Frigate) {
-            return 30;
+            return 15;
         } else if (ship.getShipType() instanceof Galleon) {
-            return 40;
+            return 25;
         } else {
             Warnings.makeWarning("CannonUpgrade", " Unknown ship type: " + ship.getShipType());
             return 0;
