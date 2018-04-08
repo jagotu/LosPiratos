@@ -16,7 +16,7 @@ class BoardTest {
         //Game g = Game.CreateNewMockGame();
         //Board b = g.getBoard();
         com.vztekoverflow.lospiratos.model.Map modelMap = new com.vztekoverflow.lospiratos.model.Map();
-        Board b = new Board(null, modelMap);
+        Board b = new Board(new Game(), modelMap);
 
         ReadOnlyMapProperty<AxialCoordinate, BoardTile> tiles = b.tilesProperty();
         ListProperty<MapTile> modelTiles = modelMap.tilesProperty();

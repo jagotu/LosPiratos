@@ -80,7 +80,7 @@ class ShipTest {
         AxialCoordinate pos = new AxialCoordinate(0, 0);
         Ship ship = t.createAndAddNewShip(Schooner.class, "s1", "captain", pos);
 
-        int storageCapacity = 250; //for schooner
+        int storageCapacity = new Schooner().getBonusCargoSpace();
 
         com.vztekoverflow.lospiratos.viewmodel.ResourceStorage storage = ship.getStorage();
         Assertions.assertEquals(storageCapacity, storage.getCapacityMaximum());
@@ -97,7 +97,7 @@ class ShipTest {
 
         //upgrade the ship:
         ship.setShipType(Frigate.class);
-        storageCapacity = 800;
+        storageCapacity = new Frigate().getBonusCargoSpace();
 
         Assertions.assertEquals(storageCapacity, storage.getCapacityMaximum());
 
@@ -116,7 +116,7 @@ class ShipTest {
 
         ship = t.createAndAddNewShip(Schooner.class, "s2", "captain", pos);
         storage = ship.getStorage();
-        storageCapacity = 250;//for schooner
+        storageCapacity = new Schooner().getBonusCargoSpace();
         boolean addedSucesfully = storage.tryAddWood(storageCapacity - 1);
         Assertions.assertTrue(addedSucesfully);
 
@@ -195,7 +195,7 @@ class ShipTest {
         //disable warnings when creating ship wil null owner
         boolean status = Warnings.isEnabled();
         Warnings.setEnabled(false);
-        Ship s = new Ship(null, modelShip);
+        Ship s = new Ship(new Team(new Game(), new com.vztekoverflow.lospiratos.model.Team()), modelShip);
         Warnings.setEnabled(status);
 
         //basic addition:
@@ -235,21 +235,36 @@ class ShipTest {
         Ship weakShip = t.createAndAddNewShip(Schooner.class, "weak ship", "c1", pos);
         Ship strongShip = t.createAndAddNewShip(Schooner.class, "strong ship", "c1", pos);
         strongShip.addNewEnhancement(CannonUpgrade.class);
-        Assertions.assertEquals(8,weakShip.getCannonsCount());
-        Assertions.assertEquals(10,strongShip.getCannonsCount());
+        int weakExpected = new Schooner().getBonusCannonsCount();
+
+        CannonUpgrade cannon = new CannonUpgrade();
+        Ship cannonsShip =  new Ship(new Team(new Game(), new com.vztekoverflow.lospiratos.model.Team()), new com.vztekoverflow.lospiratos.model.Ship());
+        cannonsShip.setShipType(Schooner.class);
+        cannon.onAddedToShip(cannonsShip);
+        int strongExpected = cannon.getBonusCannonsCount() + weakExpected;
+
+        Assertions.assertEquals(weakExpected,weakShip.getCannonsCount());
+        Assertions.assertEquals(strongExpected,strongShip.getCannonsCount());
         weakShip.addNewEnhancement(HullUpgrade.class);
         weakShip.addNewEnhancement(ChainShot.class);
         strongShip.addNewEnhancement(HullUpgrade.class);
         strongShip.addNewEnhancement(ChainShot.class);
+
         //Hull upgrade and chain shot should not change cannon upgrade result:
-        Assertions.assertEquals(8,weakShip.getCannonsCount());
-        Assertions.assertEquals(10,strongShip.getCannonsCount());
+        Assertions.assertEquals(weakExpected,weakShip.getCannonsCount());
+        Assertions.assertEquals(strongExpected,strongShip.getCannonsCount());
 
         // change shipType:
         weakShip.setShipType(Galleon.class);
         strongShip.setShipType(Galleon.class);
-        Assertions.assertEquals(30,weakShip.getCannonsCount());
-        Assertions.assertEquals(37,strongShip.getCannonsCount());
+
+        weakExpected = new Galleon().getBonusCannonsCount();
+        cannonsShip.setShipType(Galleon.class);
+        cannon.onAddedToShip(cannonsShip);
+        strongExpected = cannon.getBonusCannonsCount() + weakExpected;
+
+        Assertions.assertEquals(weakExpected,weakShip.getCannonsCount());
+        Assertions.assertEquals(strongExpected,strongShip.getCannonsCount());
 
     }
 

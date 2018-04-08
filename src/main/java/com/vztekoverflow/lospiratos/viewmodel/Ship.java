@@ -664,7 +664,12 @@ public class Ship implements MovableFigure, DamageableFigure, OnNextRoundStarted
     }
 
     private void translocateToNearestPort() {
-        getPosition().setCoordinate(getTeam().getGame().getBoard().getNearestTile(getCoordinate(), Port.class).getLocation());
+        BoardTile t = getTeam().getGame().getBoard().getNearestTile(getCoordinate(), Port.class);
+        if(t != null){
+            getPosition().setCoordinate(t.getLocation());
+        }else{
+            Warnings.makeWarning(toString()+".translocateToNearestPort()","No port found on the board");
+        }
     }
 
     /**
