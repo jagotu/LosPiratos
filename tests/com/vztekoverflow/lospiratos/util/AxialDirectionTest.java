@@ -19,9 +19,10 @@ class AxialDirectionTest {
         list.add(AxialDirection.PointyUpRight);
         list.add(AxialDirection.PointyLeft);
 
+        int someBignumber = 27;
         for (AxialDirection d : list) {
             AxialDirection n = d;
-            for (int i = 0; i < 27; i++) {
+            for (int i = 0; i < someBignumber; i++) {
                 d = AxialDirection.directionFromDegree_Pointy(d.toDegrees());
                 Assertions.assertEquals(d,n);
             }

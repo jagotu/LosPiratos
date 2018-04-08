@@ -58,9 +58,5 @@ class BoardTest {
         Assertions.assertEquals(b.figuresProperty().size(), g.getAllShips().size());
     }
 
-    @Test
-    void backgroundColorProperty() {
-        //todo
-    }
 
 }
