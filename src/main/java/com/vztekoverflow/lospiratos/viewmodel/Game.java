@@ -132,7 +132,7 @@ public class Game {
         for (OnNextRoundStartedListener l : copy) {
             l.onNextRoundStarted(roundNo);
         }
-        
+
         GameSerializer.SaveGameToFile(new File(Instant.now().toString().replace(':', '-') + "_round" + roundNo + ".json"), gameModel, false);
     }
 

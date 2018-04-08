@@ -231,7 +231,7 @@ public class TeamView extends StackPane {
 
     @FXML
     private void delete() {
-        Alert a = new Alert(Alert.AlertType.CONFIRMATION, "ja se s tim prcat nechci - Anton Teichmann", ButtonType.YES, ButtonType.NO);
+        Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Funkce je nedostupná. Potvrzením 'Ano' rozbijete program. Pro smazání týmu uložte hru, smažte tým ručně v souboru .json a hru opět načtěte. Omlouváme se za nepříjemnosti.", ButtonType.YES, ButtonType.NO);
         a.showAndWait().filter(response -> response == ButtonType.YES).ifPresent(x ->
         {
             if (requestDeleteListener != null) {
