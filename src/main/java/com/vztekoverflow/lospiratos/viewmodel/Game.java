@@ -132,8 +132,8 @@ public class Game {
         for (OnNextRoundStartedListener l : copy) {
             l.onNextRoundStarted(roundNo);
         }
-        //TODO the folder "autosave" should be created if it does not exist
-        GameSerializer.SaveGameToFile(new File("autosave/"+Instant.now().toString().replace(':', '-') + "_round" + roundNo + ".json"), gameModel, false);
+        
+        GameSerializer.SaveGameToFile(new File(Instant.now().toString().replace(':', '-') + "_round" + roundNo + ".json"), gameModel, false);
     }
 
 
