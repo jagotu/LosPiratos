@@ -9,6 +9,9 @@ import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipMechanics;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Generic abstract user action that may apply damage to other board figures.
+ */
 public abstract class Attack extends Action {
 
     //this should still be overridden by concrete classes

@@ -2,6 +2,9 @@ package com.vztekoverflow.lospiratos.viewmodel.actions;
 
 import com.vztekoverflow.lospiratos.viewmodel.Position;
 
+/**
+ * Generic abstract user action that may move the ship it is performed on.
+ */
 public abstract class Maneuver extends Action {
     //this should still be overridden by concrete classes
     @Override

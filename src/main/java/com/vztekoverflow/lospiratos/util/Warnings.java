@@ -2,6 +2,9 @@ package com.vztekoverflow.lospiratos.util;
 
 import java.io.PrintStream;
 
+/**
+ * A class containing set of static functions useful for exception-free debugging.
+ */
 public class Warnings {
 
     private static boolean enabled = true;

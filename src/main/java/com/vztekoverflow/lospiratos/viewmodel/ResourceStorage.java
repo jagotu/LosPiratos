@@ -3,6 +3,9 @@ package com.vztekoverflow.lospiratos.viewmodel;
 import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.IntegerProperty;
 
+/**
+ * As its parent, but with limited capacity. Intended to be used as a resource carrier of a ship.
+ */
 public class ResourceStorage extends Resource {
 
     private static final int clothCargoUsageCoefficient = 1;

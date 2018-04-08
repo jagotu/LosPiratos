@@ -28,6 +28,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Editor of the game content.
+ * This class is no longer maintained and the editor is not usable for current game version.
+ */
 public class Editor extends Application {
 
     public VBox rightPanel;

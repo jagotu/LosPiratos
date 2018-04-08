@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * represents a direction in Axial coordinate system through a unit axial direction.
- * distance between AxialDirection and (0,0) is always 1.
+ * Represents a direction in Axial coordinate system through a unit axial direction.
+ * Distance between AxialDirection and (0,0) is always 1.
  */
 public final class AxialDirection extends AxialCoordinate{
 

@@ -1,5 +1,8 @@
 package com.vztekoverflow.lospiratos.util;
 
+/**
+ * As its parent, and in addition its value may change.
+ */
 public class AxialCoordinateMutable extends AxialCoordinate {
 
     public AxialCoordinateMutable(int q, int r) {

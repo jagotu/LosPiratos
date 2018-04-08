@@ -2,6 +2,9 @@ package com.vztekoverflow.lospiratos.viewmodel;
 
 import com.vztekoverflow.lospiratos.util.PartialOrdering;
 
+/**
+ * Represents a game resource, i.e. vector of money, cloth, metal, rum, toboco, wood.
+ */
 public class ResourceReadOnly {
 
     public static final ResourceReadOnly ZERO = new ResourceReadOnly();
@@ -251,9 +254,10 @@ public class ResourceReadOnly {
     }
 
     /**
+     * Divides values of this by values in rightOperand and returns new values in fluent syntax.
      * Result is rounded up to nearest integer value (ceil)
-     * @param rightOperand
-     * @return
+     * @param rightOperand vector of divisors
+     * @return Vector of divided values, rounded to nearest integer value (ceil)
      */
     public ResourceReadOnly divideComponentWise(ResourceReadOnly rightOperand) {
         int money = 0;

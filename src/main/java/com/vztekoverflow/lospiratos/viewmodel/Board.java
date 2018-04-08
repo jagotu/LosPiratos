@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * The game board (aka map or world) that the game is played on.
+ */
 public class Board /* I want my Burd */ implements OnNextRoundStartedListener {
 
     //initializers:

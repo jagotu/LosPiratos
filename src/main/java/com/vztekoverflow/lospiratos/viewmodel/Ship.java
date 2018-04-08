@@ -23,6 +23,9 @@ import javafx.collections.*;
 import java.util.*;
 
 
+/**
+ * Represents main game figure, Ship, that can sail the ocean (board), carry resources, plan actions (fight) and evolve (upgrade).
+ */
 public class Ship implements MovableFigure, DamageableFigure, OnNextRoundStartedListener {
 
     //region initializers
@@ -384,8 +387,7 @@ public class Ship implements MovableFigure, DamageableFigure, OnNextRoundStarted
     /**
      * The ships takes damage, reducing its HP by {@code value}.
      * If HP goes below 0, the ship will be destroyed.
-     *
-     * @returns value indicating whether the ship has been destroyed.
+     * @return value indicating whether the ship has been destroyed.
      */
     @Override
     public DamageSufferedResponse takeDamage(int value) {

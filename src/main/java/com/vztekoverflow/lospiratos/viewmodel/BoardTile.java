@@ -4,6 +4,9 @@ import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.util.Warnings;
 import com.vztekoverflow.lospiratos.viewmodel.boardTiles.*;
 
+/**
+ * One tile on the board.
+ */
 public abstract class BoardTile implements OnNextRoundStartedListener {
 
     private AxialCoordinate location;

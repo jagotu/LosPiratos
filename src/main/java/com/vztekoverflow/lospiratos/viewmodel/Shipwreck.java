@@ -4,6 +4,9 @@ import com.vztekoverflow.lospiratos.model.ShipwreckM;
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.util.Translatable;
 
+/**
+ * represents a dead ship (wreck) that floats the ocean (game board) and contains resources that may be plundered by players.
+ */
 public class Shipwreck implements Plunderable, Figure, OnNextRoundStartedListener, Translatable {
 
     private final Resource resource = new Resource();

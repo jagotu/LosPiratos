@@ -23,6 +23,9 @@ import java.util.stream.Collectors;
 import static com.vztekoverflow.lospiratos.viewmodel.GameConstants.COLLISION_DAMAGE;
 import static com.vztekoverflow.lospiratos.viewmodel.GameConstants.SHIPS_COST_TO_WRECK_COEFF;
 
+/**
+ * Contains game rules implementation that allows game round evaluation in given order and following the complicated game rules.
+ */
 abstract public class GameEvaluator {
 
     abstract public Map<Ship, List<Transition>> evaluateRound(int roundNo);

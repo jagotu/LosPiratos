@@ -5,6 +5,9 @@ import com.vztekoverflow.lospiratos.viewmodel.BoardTile;
 import com.vztekoverflow.lospiratos.viewmodel.Position;
 import com.vztekoverflow.lospiratos.viewmodel.boardTiles.Port;
 
+/**
+ * Generic abstract user action that corresponds to economical transaction in a port.
+ */
 public abstract class Transaction extends Action {
 
     //this should still be overridden by concrete classes

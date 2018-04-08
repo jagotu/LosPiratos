@@ -6,6 +6,10 @@ import javafx.beans.Observable;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
+/**
+ * As parent, but its values can be modified and observed.
+ * Resource's observable is triggered each time one of its values' observer is triggered.
+ */
 public class Resource extends ResourceReadOnly implements Observable {
     public Resource(int money, int cloth, int metal, int rum, int tobacco, int wood) {
         super();

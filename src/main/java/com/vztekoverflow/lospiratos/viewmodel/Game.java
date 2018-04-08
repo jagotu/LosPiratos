@@ -28,6 +28,9 @@ import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * The main class representing a played game. The root in the backend's game hierarchy.
+ */
 public class Game {
 
     private com.vztekoverflow.lospiratos.model.Game gameModel;

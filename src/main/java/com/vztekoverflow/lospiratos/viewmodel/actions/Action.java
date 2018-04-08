@@ -15,6 +15,9 @@ import javafx.beans.binding.BooleanExpression;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
+/**
+ * Generic abstract class representing an action that may be planned by the user and the performed.
+ */
 public abstract class Action implements PerformableAction, PlannableAction {
 
 
