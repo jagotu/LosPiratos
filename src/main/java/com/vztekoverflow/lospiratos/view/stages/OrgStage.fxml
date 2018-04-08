@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.vztekoverflow.lospiratos.view.controls.ActionSelector?>
+<?import com.vztekoverflow.lospiratos.view.controls.PlannedActionsBar?>
+<?import com.vztekoverflow.lospiratos.view.layout.ShipsBox?>
+<?import com.vztekoverflow.lospiratos.view.layout.TeamsBox?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import org.controlsfx.glyphfont.Glyph?>
+<SplitPane fx:id="root" dividerPositions="0.5" stylesheets="@/common.css" xmlns="http://javafx.com/javafx/8.0.121"
+           xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vztekoverflow.lospiratos.view.stages.OrgStage">
+    <BorderPane>
+        <center>
+            <Pane fx:id="mainPane">
+                <ActionSelector fx:id="actionSelector"/>
+                <Region fx:id="mouseBlocker" visible="false"/>
+                <HBox fx:id="axialSelectorMessage" visible="false">
+                    <Label fx:id="messageLabel" textFill="RED">
+                        <font>
+                            <Font name="System Bold" size="22.0"/>
+                        </font>
+                    </Label>
+                    <Button fx:id="cancelAxialSelection"/>
+                    <padding>
+                        <Insets top="10.0"/>
+                    </padding>
+                </HBox>
+
+            </Pane>
+        </center>
+        <bottom>
+            <PlannedActionsBar fx:id="actionsBar" prefHeight="40.0"/>
+        </bottom>
+    </BorderPane>
+    <BorderPane>
+        <center>
+            <TabPane fx:id="tabPane" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
+                <Tab text="Týmy">
+                    <BorderPane>
+                        <center>
+                            <ScrollPane fitToWidth="true" hbarPolicy="NEVER">
+                                <TeamsBox fx:id="teamsBox"/>
+                            </ScrollPane>
+                        </center>
+                        <bottom>
+                            <Button mnemonicParsing="false" onAction="#addTeam" text="+"
+                                    BorderPane.alignment="BOTTOM_RIGHT"/>
+                        </bottom>
+                    </BorderPane>
+                </Tab>
+                <Tab fx:id="shipsTab" text="Lodě">
+                    <BorderPane>
+                        <center>
+                            <ScrollPane fx:id="shipsScroll" fitToWidth="true" hbarPolicy="NEVER">
+                                <ShipsBox fx:id="shipsBox"/>
+                            </ScrollPane>
+                        </center>
+                        <bottom>
+                            <HBox BorderPane.alignment="BOTTOM_RIGHT">
+                                <Button fx:id="createWreckButton" mnemonicParsing="false" onAction="#createWreck"
+                                        text="+Wreck"/>
+                                <Button fx:id="createShipButton" mnemonicParsing="false" onAction="#createShip"
+                                        text="+Loď"/>
+                            </HBox>
+
+                        </bottom>
+                    </BorderPane>
+                </Tab>
+                <Tab>
+                    <graphic>
+                        <Glyph fontFamily="FontAwesome" icon="save"/>
+                    </graphic>
+                    <VBox>
+                        <Button maxWidth="1.7976931348623157E308" onAction="#load" text="Načíst hru"/>
+                        <Button maxWidth="1.7976931348623157E308" onAction="#save" text="Uložit hru"/>
+                        <Button maxWidth="1.7976931348623157E308" onAction="#loremIpsum"
+                                text="Breakpoint (debug) (pozastaví hru)"/>
+                        <Button maxWidth="1.7976931348623157E308" onAction="#togglePrivilegedMode"
+                                text="Zapnout/vypnout privilegovaného orga"/>
+
+                    </VBox>
+                </Tab>
+                <Tab text="log">
+                    <ListView fx:id="logListView">
+
+                    </ListView>
+                </Tab>
+            </TabPane>
+        </center>
+        <bottom>
+            <FlowPane alignment="CENTER_RIGHT">
+                <TextField onKeyPressed="#epicEnterPressed" prefHeight="48.0" prefWidth="26.0" text="⏎" />
+                <Button onAction="#saveView" prefHeight="48.0" text="Ulož pohled"
+                    textAlignment="CENTER"/>
+                <Button onAction="#restoreView" prefHeight="48.0" text="Načti pohled"
+                        textAlignment="CENTER"/>
+                <Button fx:id="evaluateRelatedShip" onAction="#evaluateShip" prefHeight="48.0" text="Vyhodnotit loď"
+                        textAlignment="CENTER"/>
+                <Button fx:id="commitTransactions" onAction="#commitTransactions" prefHeight="48.0"
+                        text="Potvrdit modifikující transakce"
+                        textAlignment="CENTER"/>
+                <Button fx:id="evaluateRoundButton" onAction="#evaluateRound" prefHeight="48.0" text="Button"
+                        textAlignment="CENTER"/>
+            </FlowPane>
+        </bottom>
+    </BorderPane>
+</SplitPane>
