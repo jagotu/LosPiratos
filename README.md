@@ -16,7 +16,7 @@ The project uses JavaFX which is a standard part of Java 8. Some Ubuntu users ma
 
 The game is meant to be played by 3 - 6 teams of 1 - 6 players, who are all in the same room, watching the main game view on a big screen / projector.
 
-Intended game rules are available at TODO, but only in Czech. Sorry about that. However, you can play around without knowing the exact rules, the UI is pretty expressive.
+Intended game rules are available in the file [pravidla - Los Piratos de la Casa.pdf](pravidla - Los Piratos de la Casa.pdf), but only in Czech. Sorry about that. However, you can play around without knowing the exact rules, the UI is pretty expressive.
 
 ### Localisation
 
@@ -51,4 +51,4 @@ Special thanks to:
 
 ## License
 
-TODO
+See [LICENCE](THIRD-PARTY.txt) and [THIRD-PARTY.txt](THIRD-PARTY.txt) for more details.

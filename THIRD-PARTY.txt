@@ -1,0 +1,10 @@
+
+Lists of 8 third-party dependencies.
+     (Apache 2.0) Gson (com.google.code.gson:gson:2.8.2 - https://github.com/google/gson/gson)
+     (The Apache License, Version 2.0) org.apiguardian:apiguardian-api (org.apiguardian:apiguardian-api:1.0.0 - https://github.com/apiguardian-team/apiguardian)
+     (The 3-Clause BSD License) ControlsFX (org.controlsfx:controlsfx:8.40.14 - http://www.controlsfx.org/)
+     (The MIT License) fx-gson (org.hildan.fxgson:fx-gson:3.1.0 - https://github.com/joffrey-bion/fx-gson)
+     (The Apache Software License, Version 2.0) IntelliJ IDEA Annotations (org.jetbrains:annotations:15.0 - http://www.jetbrains.org)
+     (Eclipse Public License v2.0) org.junit.jupiter:junit-jupiter-api (org.junit.jupiter:junit-jupiter-api:5.1.0 - http://junit.org/junit5/)
+     (Eclipse Public License v2.0) org.junit.platform:junit-platform-commons (org.junit.platform:junit-platform-commons:1.1.0 - http://junit.org/junit5/)
+     (The Apache License, Version 2.0) org.opentest4j:opentest4j (org.opentest4j:opentest4j:1.0.0 - https://github.com/ota4j-team/opentest4j)
