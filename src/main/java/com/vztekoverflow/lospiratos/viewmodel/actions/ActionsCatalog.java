@@ -58,7 +58,7 @@ public class ActionsCatalog {
         transactions.icon = ActionIcon.transactionGenericIcon;
 
         Node additionals = new Node(false).withShortcut("c");
-        additionals.icon = ActionIcon.ellipsis;
+        additionals.icon = ActionIcon.další;
         additionals.addChild(new Node(new EmptyAction()).withShortcut("w"));
         additionals.addChild(new Node(new ActivatePrivilegedMode()).withShortcut("x"));
 

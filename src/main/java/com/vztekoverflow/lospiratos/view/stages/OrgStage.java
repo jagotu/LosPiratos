@@ -15,9 +15,16 @@ import com.vztekoverflow.lospiratos.viewmodel.actions.ActivatePrivilegedMode;
 import com.vztekoverflow.lospiratos.viewmodel.actions.ParameterizedAction;
 import com.vztekoverflow.lospiratos.viewmodel.actions.PlannableAction;
 import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.AxialCoordinateActionParameter;
+import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.CannonsSimpleVolley;
+import com.vztekoverflow.lospiratos.viewmodel.actions.maneuvers.MoveForward;
+import com.vztekoverflow.lospiratos.viewmodel.actions.maneuvers.TurnLeft;
+import com.vztekoverflow.lospiratos.viewmodel.actions.maneuvers.TurnRight;
 import com.vztekoverflow.lospiratos.viewmodel.actions.transactions.ModifyShipTransaction;
+import com.vztekoverflow.lospiratos.viewmodel.actions.transactions.Plunder;
 import com.vztekoverflow.lospiratos.viewmodel.logs.LogFormatter;
 import com.vztekoverflow.lospiratos.viewmodel.logs.LoggedEvent;
+import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Brig;
+import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Schooner;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -45,6 +52,8 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.File;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class OrgStage {
 
@@ -90,6 +99,8 @@ public class OrgStage {
     private Button evaluateRelatedShip;
     @FXML
     private Button commitTransactions;
+    @FXML
+    private Button autopilotButton;
 
 
     private ActionParametersPopOver parametersPopOver = new ActionParametersPopOver();
@@ -101,7 +112,7 @@ public class OrgStage {
 
 
     public OrgStage() {
-        this(Game.CreateNewMockGame());
+        this(Game.CreateNewDODGame());
     }
 
     public OrgStage(Game game) {
@@ -532,5 +543,233 @@ public class OrgStage {
             evaluateRound();
         }
     }
+
+    public void autopilot(ActionEvent actionEvent) {
+        if(timerIsActive){
+            timer.cancel();
+            timerIsActive = false;
+            autopilotButton.setText("DOD autopilot zapnout");
+        }else{
+            timer.scheduleAtFixedRate(task, 0, 5*1000L);
+            timerIsActive = true;
+            autopilotButton.setText("DOD autopilot vypnout");
+        }
+    }
+
+    private boolean timerIsActive = false;
+
+    int autopilotCycleIterations = 0;
+    int autopilotState = 0;
+    private void autopilotNextStep(){
+        Game g = game.get();
+        g.getAllShips().forEach(s -> s.getPlannedActions().clear());
+        try{
+            //blue
+            Ship s1 = g.getTeams().get(0).getShips().values().stream().filter(s -> s.getShipType() instanceof Brig).findFirst().get();
+            if(autopilotState == 4){
+                s1.planAction(new CannonsSimpleVolley(false));
+            }
+            s1.planAction(new MoveForward());
+            s1.planAction(new TurnLeft());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        try{
+            //red
+            Ship s1 = g.getTeams().get(1).getShips().values().stream().filter(s -> s.getShipType() instanceof Brig).findFirst().get();
+            switch (autopilotState) {
+                case 0:
+                    if(autopilotCycleIterations == 0) break;
+                    s1.planAction(new TurnRight());
+                    s1.planAction(new TurnRight());
+                    s1.planAction(new TurnRight());
+                    s1.setCurrentHP(s1.getMaxHP());
+                    break;
+                case 1:
+                    if(autopilotCycleIterations == 0) break;
+                    s1.planAction(new MoveForward());
+                    s1.planAction(new MoveForward());
+                    break;
+                case 2:
+                    if(autopilotCycleIterations == 0) break;
+                    s1.planAction(new TurnRight());
+                    s1.planAction(new TurnRight());
+                    s1.planAction(new TurnRight());
+                    break;
+                case 3:
+                    s1.planAction(new TurnRight());
+                    break;
+                case 4:
+                    s1.planAction(new TurnLeft());
+                    break;
+                case 5:
+                    s1.planAction(new MoveForward());
+                    s1.planAction(new MoveForward());
+                    Plunder p = new Plunder();
+                    p.getCommodities().setRum(50);
+                    p.getCommodities().setMetal(20);
+                    s1.planAction(p);
+                    break;
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        try{
+            //green
+            Ship s1 = g.getTeams().get(2).getShips().values().stream().filter(s -> s.getShipType() instanceof Brig).findFirst().get();
+            switch (autopilotState){
+                case 0:
+                    s1.planAction(new MoveForward());
+                    s1.planAction(new TurnLeft());
+                    break;
+                case 1:
+                    s1.planAction(new MoveForward());
+                    s1.planAction(new MoveForward());
+                    s1.planAction(new TurnLeft());
+                    break;
+                case 2:
+                    s1.planAction(new MoveForward());
+                    s1.planAction(new MoveForward());
+                    s1.planAction(new TurnLeft());
+                    break;
+                case 3:
+                    s1.planAction(new ActivatePrivilegedMode());
+                    s1.planAction(new MoveForward());
+                    s1.planAction(new TurnLeft());
+                    s1.planAction(new MoveForward());
+                    s1.planAction(new MoveForward());
+                    break;
+                case 4:
+                    s1.planAction(new TurnLeft());
+                    s1.planAction(new MoveForward());
+                    break;
+                case 5:
+                    s1.planAction(new MoveForward());
+                    s1.planAction(new TurnLeft());
+                    break;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        try{
+            //red schooner
+            Ship s1 = g.getTeams().get(1).getShips().values().stream().filter(s -> s.getShipType() instanceof Schooner).findFirst().get();
+            switch (autopilotState) {
+                case 2:
+                    s1.planAction(new TurnRight());
+                    s1.planAction(new TurnRight());
+                    break;
+                case 4:
+                    s1.planAction(new TurnLeft());
+                    s1.planAction(new TurnLeft());
+                    break;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        secondAutopilotNextStepLolProtcSiToNezkomplikvoatZejo();
+
+        g.closeRoundAndEvaluate();
+
+        ++autopilotState;
+        if(autopilotState == 6)
+            ++autopilotCycleIterations;
+        autopilotState %= 6;
+
+
+    }
+
+    private int secondAutopilotState = 0;
+    private void secondAutopilotNextStepLolProtcSiToNezkomplikvoatZejo(){
+        Game g = game.get();
+
+        try {
+            // green schooner
+            Ship s = g.getTeams().get(2).getShips().values().stream().filter(sp -> sp.getShipType() instanceof Schooner).findFirst().get();
+            switch (secondAutopilotState) {
+                case 0:
+                    s.planAction(new MoveForward());
+                    s.planAction(new MoveForward());
+                    s.planAction(new MoveForward());
+                    break;
+                case 1:
+                    s.planAction(new TurnRight());
+                    s.planAction(new MoveForward());
+                    s.planAction(new MoveForward());
+                    s.planAction(new TurnLeft());
+                    break;
+                case 2:
+                    s.planAction(new MoveForward());
+                    s.planAction(new MoveForward());
+                    s.planAction(new TurnLeft());
+                    s.planAction(new MoveForward());
+                    break;
+                case 3:
+                    s.planAction(new MoveForward());
+                    s.planAction(new MoveForward());
+                    s.planAction(new MoveForward());
+                    s.planAction(new TurnLeft());
+                    break;
+                case 4:
+                    s.planAction(new MoveForward());
+                    s.planAction(new MoveForward());
+                    s.planAction(new MoveForward());
+                    s.planAction(new TurnLeft());
+
+                    break;
+                case 5:
+                    s.planAction(new MoveForward());
+                    s.planAction(new MoveForward());
+                    s.planAction(new MoveForward());
+                    s.planAction(new TurnLeft());
+                    break;
+                case 6:
+                    s.planAction(new MoveForward());
+                    s.planAction(new MoveForward());
+                    s.planAction(new TurnRight());
+                    s.planAction(new MoveForward());
+                    break;
+                case 7:
+                    s.planAction(new MoveForward());
+                    s.planAction(new MoveForward());
+                    s.planAction(new TurnLeft());
+                    s.planAction(new MoveForward());
+                    break;
+                case 8:
+                    s.planAction(new MoveForward());
+                    s.planAction(new TurnLeft());
+                    s.planAction(new MoveForward());
+                    break;
+                case 9:
+                    s.planAction(new TurnLeft());
+                    s.planAction(new MoveForward());
+                    break;
+                case 10:
+                    break;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        ++secondAutopilotState;
+        secondAutopilotState %= 11;
+    }
+
+    TimerTask task = new TimerTask()
+    {
+        public void run()
+        {
+            Platform.runLater(OrgStage.this::autopilotNextStep);
+        }
+
+    };
+
+    Timer timer = new Timer();
+
 }
 

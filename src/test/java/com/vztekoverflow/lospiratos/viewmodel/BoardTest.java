@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 class BoardTest {
     @Test
     void tilesProperty() {
-        //Game g = Game.CreateNewMockGame();
+        //Game g = Game.CreateNewDODGame();
         //Board b = g.getBoard();
         com.vztekoverflow.lospiratos.model.Map modelMap = new com.vztekoverflow.lospiratos.model.Map();
         Board b = new Board(new Game(), modelMap);
@@ -51,7 +51,7 @@ class BoardTest {
 
     @Test
     void figuresProperty() {
-        Game g = Game.CreateNewMockGame();
+        Game g = Game.CreateNewDODGame();
         Board b = g.getBoard();
         Assertions.assertEquals(b.figuresProperty().size(), g.getAllShips().size());
         g.getTeams().get(0).createAndAddNewShip(Schooner.class, "randomName","randomCaptain", new AxialCoordinate(1,1));

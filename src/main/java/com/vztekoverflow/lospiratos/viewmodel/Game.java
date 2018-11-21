@@ -331,7 +331,7 @@ public class Game {
     };
 
 
-//    public static Game CreateNewMockGame() {
+//    public static Game CreateNewDODGame() {
 //        final int teamCount = 4; //beter do not make bigger than 5
 //        int captainIdx = 0;
 //        Game g = new Game();
@@ -494,8 +494,8 @@ public class Game {
     //endregion
 
 
-    public static Game CreateNewMockGame() {
-        final int teamCount = 4;
+    public static Game CreateNewDODGame() {
+        final int teamCount = 3;
         Game g = new Game();
 
 
@@ -569,36 +569,68 @@ public class Game {
         //ships' positions:
         List<AxialCoordinate> team_blue_shipPositions = new ArrayList<>();
         team_blue_shipPositions.add(new AxialCoordinate(3, -6));
-        team_blue_shipPositions.add(new AxialCoordinate(2, -3));
+        team_blue_shipPositions.add(new AxialCoordinate(0, -1));
 
         List<AxialCoordinate> team_red_shipPositions = new ArrayList<>();
         team_red_shipPositions.add(new AxialCoordinate(-2, -3));
-        team_red_shipPositions.add(new AxialCoordinate(-4, 1));
+        team_red_shipPositions.add(new AxialCoordinate(2, 0));
 
         List<AxialCoordinate> team_green_shipPositions = new ArrayList<>();
         team_green_shipPositions.add(new AxialCoordinate(-3, 5));
-        team_green_shipPositions.add(new AxialCoordinate(-6, 6));
+        team_green_shipPositions.add(new AxialCoordinate(-2, 2));
 
-        List<AxialCoordinate> team_yellow_shipPositions = new ArrayList<>();
-        team_yellow_shipPositions.add(new AxialCoordinate(6, -2));
-        team_yellow_shipPositions.add(new AxialCoordinate(2, 4));
 
         List<List<AxialCoordinate>> teamsShipPositions = new ArrayList<>();
         teamsShipPositions.add(team_blue_shipPositions);
         teamsShipPositions.add(team_red_shipPositions);
         teamsShipPositions.add(team_green_shipPositions);
-        teamsShipPositions.add(team_yellow_shipPositions);
 
         List<Color> teamColors = new ArrayList<>();
         teamColors.add(Color.color(0.4,0.4,1));
         teamColors.add(Color.color(1,0.3,0.3));
         teamColors.add(Color.color(0.3,1,0.3));
-        teamColors.add(Color.color(1,1,0.2));
+
+        List<String> teamNames = new ArrayList<>();
+        teamNames.add("Modrá je dobrá");
+        teamNames.add("Rudí Rváči");
+        teamNames.add("Deadly Green Team");
+
+        List<String> teams1CaptainNames = new ArrayList<>();
+        List<String> teams2CaptainNames = new ArrayList<>();
+        List<String> teams3CaptainNames = new ArrayList<>();
+        teams1CaptainNames.add("Kapitán Amerika");
+        teams1CaptainNames.add("Generál Goci Vnoci");
+        teams2CaptainNames.add("Kapitán Toník");
+        teams2CaptainNames.add("Kapitánka Lůca");
+        teams3CaptainNames.add("Kapitán Honzík");
+        teams3CaptainNames.add("Kapitánka Terezka");
+
+        List<List<String>> teamsShipCaptainNames = new ArrayList<>();
+        teamsShipCaptainNames.add(teams1CaptainNames);
+        teamsShipCaptainNames.add(teams2CaptainNames);
+        teamsShipCaptainNames.add(teams3CaptainNames);
+
+
+        List<String> teams1ShipNames = new ArrayList<>();
+        List<String> teams2ShipNames = new ArrayList<>();
+        List<String> teams3ShipNames = new ArrayList<>();
+        teams1ShipNames.add("Zelený škuner");
+        teams1ShipNames.add("Velká loď");
+        teams2ShipNames.add("Rudý Vrak");
+        teams2ShipNames.add("Červená Perla");
+        teams3ShipNames.add("Nevím něco tam napiš");
+        teams3ShipNames.add("Loď Terezky :)");
+
+        List<List<String>> teamsShipShipNames = new ArrayList<>();
+        teamsShipShipNames.add(teams1ShipNames);
+        teamsShipShipNames.add(teams2ShipNames);
+        teamsShipShipNames.add(teams3ShipNames);
+
 
         //create teams:
         List<Team> teams = new ArrayList<>();
         for (int i = 1; i <= teamCount; i++) {
-            String name = "Tým " + i;
+            String name = teamNames.get(i-1);
             Color c = teamColors.get(i-1);
             Team team = g.createAndAddNewTeam(name, c);
             teams.add(team);
@@ -620,7 +652,7 @@ public class Game {
         String nameBrig = "Tým" + 1 + "_Loď2";
         String captainBrig = "Kapitán2" + "_Tým" + 1;
         Ship brig = teams.get(0).createAndAddNewShip(Brig.class, nameBrig, captainBrig, positionBrig);
-        brig.getPosition().setRotation(300);
+        brig.getPosition().setRotation(240);
 
 
         positionSchooner = teamsShipPositions.get(1).get(0);
@@ -648,18 +680,13 @@ public class Game {
         brig = teams.get(2).createAndAddNewShip(Brig.class, nameBrig, captainBrig, positionBrig);
         brig.getPosition().setRotation(60);
 
-
-        positionSchooner = teamsShipPositions.get(3).get(0);
-        nameSchooner = "Tým" + 4 + "_Loď1";
-        captainSchooner = "Kapitán1" + "_Tým" + 4;
-        schooner = teams.get(3).createAndAddNewShip(Schooner.class, nameSchooner, captainSchooner, positionSchooner);
-        schooner.getPosition().setRotation(300);
-
-        positionBrig = teamsShipPositions.get(3).get(1);
-        nameBrig = "Tým" + 4 + "_Loď2";
-        captainBrig = "Kapitán2" + "_Tým" + 4;
-        brig = teams.get(3).createAndAddNewShip(Brig.class, nameBrig, captainBrig, positionBrig);
-        brig.getPosition().setRotation(300);
+        for (int team = 0; team < teamCount; team++) {
+            for (int ship = 0; ship < 2; ship++) {
+                Ship s = g.getTeams().get(team).getShips().values().stream().collect(Collectors.toList()).get(ship);
+                s.captainNameProperty().set(teamsShipCaptainNames.get(team).get(ship));
+                s.nameProperty().set(teamsShipShipNames.get(team).get(ship));
+            }
+        }
 
         return g;
     }
