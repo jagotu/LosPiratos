@@ -10,7 +10,13 @@ Java 8 is required, both Windows and Linux are supported. To run, use maven:
 ```cd target```
 ```java -jar LosPiratos-2018.1-jar-with-dependencies.jar```
 
-The project uses JavaFX which is a standard part of Java 8. Some Ubuntu users may have Java 8 without JavaFX; to fix, install it with ``sudo apt-get install openjfx``.
+### JavaFX
+
+The project uses JavaFX library.
+
+JavaFX is standard part of Oracle Java 8 and the project can be run seamless on it. For Linux with openjdk 8, it needs to be installed, e.g with ``sudo apt-get install openjfx``. 
+
+After this application was created, JavaFX support has been removed and later Java version don't include the library. For use with Java 11 or later, please follow JavaFX's official guide: https://openjfx.io/openjfx-docs/#introduction.
 
 ## Gameplay
 
