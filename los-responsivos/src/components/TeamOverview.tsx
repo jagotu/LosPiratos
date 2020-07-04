@@ -4,7 +4,7 @@ import ApiService from "../ApiService";
 import Resources from "./Resources";
 import ResourcesModel from "../models/Resources";
 import {CircularProgress, Grid, Typography} from "@material-ui/core";
-import Ship from "./Ship";
+import Ship from "./ships/Ship";
 
 interface TeamOverviewProps {
 

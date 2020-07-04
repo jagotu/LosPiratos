@@ -1,14 +1,15 @@
 import React from "react";
-import ShipModel from "../models/Ship";
+import ShipModel from "../../models/Ship";
 import {Button, Grid, makeStyles} from "@material-ui/core";
-import Resources from "./Resources";
-import ResourcesModel from "./../models/Resources";
-import ShipIcon from "./icons/ShipIcon";
-import translations from "../translations";
-import simpleship from "../assets/simpleship.svg";
+import Resources from "../Resources";
+import ResourcesModel from "../../models/Resources";
+import ShipIcon from "../icons/ShipIcon";
+import translations from "../../translations";
+import simpleship from "../../assets/simpleship.svg";
 import "./Ship.css";
-import Position from "./Position";
+import Position from "../Position";
 import clsx from "clsx";
+import { useHistory } from "react-router-dom";
 
 interface ShipProps {
     data: ShipModel
@@ -30,9 +31,10 @@ const useStyles = makeStyles(() => ({
 const Ship: React.FC<ShipProps> = (props) => {
     const s = props.data;
     const classes = useStyles();
+    const history = useHistory();
 
     const handleClick = (): void => {
-        console.log(`handle ship ${s.id} click`);
+        history.push(`/ship/${s.id}`);
     };
 
     return (
