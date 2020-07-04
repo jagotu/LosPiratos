@@ -1,0 +1,28 @@
+@font-face {
+    font-family: 'IconFontTransaction';
+    src: url(./piratostrans.ttf);
+}
+
+@font-face {
+    font-family: 'IconFont';
+    src: url(./piratos.ttf);
+}
+
+@font-face {
+    font-family: 'IconFontLastminute';
+    src: url(./piratoslastminute.ttf);
+}
+
+.icon {
+    font-family: 'IconFont';
+    font-size: 1.2em;
+}
+
+.icon-lastminute {
+    font-family: 'IconFontLastminute';
+}
+
+.icon-transaction {
+    font-family: 'IconFontTransaction';
+    font-size: 4em;
+}

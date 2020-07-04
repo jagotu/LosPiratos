@@ -1,0 +1,25 @@
+/** The game default rotation direction is 120 deg different than ours */
+
+.deg-120 {
+    transform: rotate(0deg);
+}
+
+.deg-180 {
+    transform: rotate(60deg);
+}
+
+.deg-240 {
+    transform: rotate(120deg);
+}
+
+.deg-300 {
+    transform: rotate(180deg);
+}
+
+.deg-0 {
+    transform: rotate(240deg);
+}
+
+.deg-60 {
+    transform: rotate(300deg);
+}
