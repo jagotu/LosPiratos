@@ -2,7 +2,6 @@ import React from "react";
 import ResourcesModel from "../models/Resources";
 import { Grid } from "@material-ui/core";
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
-import WoodIcon from "./icons/WoodIcon";
 import MetalIcon from "./icons/MetalIcon";
 import ClothIcon from "./icons/ClothIcon";
 import RumIcon from "./icons/RumIcon";

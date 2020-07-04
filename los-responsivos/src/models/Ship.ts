@@ -1,4 +1,4 @@
-import {CustomExtensions} from "./commonModels";
+import {CustomExtensions, Position} from "./commonModels";
 
 export default interface Ship {
     name:                    string;
