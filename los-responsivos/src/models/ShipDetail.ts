@@ -1,7 +1,7 @@
 import Ship from "./Ship";
 
 export default interface ShipDetail extends Ship {
-    availableActions: Map<ShipAction, boolean>;
+    availableActions: Array<ShipAction>;
     plannedActions: Array<ShipAction>;
 }
 

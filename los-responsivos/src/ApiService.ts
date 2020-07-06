@@ -9,11 +9,7 @@ export default class ApiService {
     }
 
     static getShipDetail(id: string): Promise<ShipDetail>{
-        const availableActions = new Map<ShipAction, boolean>([
-            [ShipAction.MoveForward, true],
-            [ShipAction.TurnLeft, true],
-            [ShipAction.TurnRight, false],
-        ])
+        const availableActions = [ShipAction.MoveForward,ShipAction.TurnLeft,ShipAction.TurnRight]
         const plannedActions = [ShipAction.MoveForward,ShipAction.MoveForward,ShipAction.TurnRight]
         const ship: Ship = mockData.teams[0].ships.filter(s => s.id === id)[0] as Ship;
         return new Promise<ShipDetail>((resolve) => resolve({
@@ -21,5 +17,18 @@ export default class ApiService {
             availableActions,
             plannedActions
         }));
+    }
+
+    static removeActions(shipId: string): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            resolve();
+        })
+    }
+
+    static planAction(shipId: string, action: ShipAction): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            console.log("planning ", action, "on ship", shipId);
+            resolve();
+        })
     }
 }

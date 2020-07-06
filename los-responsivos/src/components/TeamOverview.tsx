@@ -5,6 +5,7 @@ import Resources from "./Resources";
 import ResourcesModel from "../models/Resources";
 import {CircularProgress, Grid, Typography} from "@material-ui/core";
 import Ship from "./ships/Ship";
+import { Link } from "react-router-dom";
 
 interface TeamOverviewProps {
 
@@ -33,7 +34,7 @@ const TeamOverview: React.FC<TeamOverviewProps> = (props) => {
                 <Resources resources={ResourcesModel.fromTeam(team)}/>
             </Grid>
             {team.ships.map(ship => (
-                <Grid item>
+                <Grid item key={ship.id}>
                     <Ship key={ship.id} data={ship} />
                 </Grid>
             ))}
