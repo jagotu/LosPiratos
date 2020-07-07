@@ -10,6 +10,7 @@ import {routes} from "../../App";
 import ActionPlanner from "./ActionPlanner";
 import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
 import uid from "../../uid";
+import useError from "../../useError";
 
 interface ShipDetailProps {
     id: string
@@ -29,27 +30,27 @@ const useStyles = makeStyles(() => ({
 type MaybeData = { loaded: true, ship: ShipDetailModel } | { loaded: false, ship: undefined }
 
 const ShipDetail: React.FC<ShipDetailProps> = ({id}) => {
-    const [data, setData] = useState<MaybeData>({loaded: false, ship: undefined});
     const classes = useStyles();
+    const {showDefaultError} = useError();
+
+    const [data, setData] = useState<MaybeData>({loaded: false, ship: undefined});
+    const [dataVersion, setDataVersion] = useState(0);
 
     useEffect(() => {
         ApiService.getShipDetail(id)
-            .then(ship => setData({loaded: true, ship}));
-    }, [id]);
+            .then(ship => setData({loaded: true, ship}))
+            .catch(showDefaultError);
+    }, [id, dataVersion, showDefaultError]);
 
     if (!data.loaded)
-        return <CircularProgress/>;
+        return <div style={{textAlign: "center"}}><CircularProgress/></div>;
     const ship: ShipDetailModel = data.ship;
 
-    const refreshData = () => {
-      // TODO impl, nejak znovu nacist data
-    };
+    const refreshData = () => setDataVersion(oldValue => oldValue+1); // force React to recall the ApiService
     const removeActions = () => {
-        ApiService.removeActions(id)
+        ApiService.deleteActions(id)
             .then(refreshData)
-            .catch(e => {
-               // TODO use notistack
-            });
+            .catch(showDefaultError);
     };
 
     return (
@@ -77,7 +78,7 @@ const ShipDetail: React.FC<ShipDetailProps> = ({id}) => {
             </Grid>
             <Grid item>
                 Plan:
-                <ActionPlanner shipId={id} availableActions={ship.availableActions}/>
+                <ActionPlanner shipId={id} availableActions={ship.availableActions} onActionPlannedOk={refreshData} />
             </Grid>
         </Grid>
 

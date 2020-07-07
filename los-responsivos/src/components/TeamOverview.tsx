@@ -5,7 +5,7 @@ import Resources from "./Resources";
 import ResourcesModel from "../models/Resources";
 import {CircularProgress, Grid, Typography} from "@material-ui/core";
 import Ship from "./ships/Ship";
-import { Link } from "react-router-dom";
+import useError from "../useError";
 
 interface TeamOverviewProps {
 
@@ -15,14 +15,18 @@ type MaybeData = { loaded: true, team: Team } | { loaded: false, team: undefined
 
 const TeamOverview: React.FC<TeamOverviewProps> = (props) => {
     const [data, setData] = useState<MaybeData>({loaded: false, team: undefined});
+    const {showDefaultError} = useError();
 
     useEffect(() => {
-        ApiService.getTeamData()
-            .then(team => setData({loaded: true, team}));
-    }, []);
+        if (!data.loaded) {
+            ApiService.getTeamData()
+                .then(team => setData({loaded: true, team}))
+                .catch(showDefaultError);
+        }
+    }, [data, showDefaultError]);
 
     if (!data.loaded)
-        return <CircularProgress/>;
+        return <div style={{textAlign: "center"}}><CircularProgress/></div>;
     const team: Team = data.team;
 
     return (
@@ -35,7 +39,7 @@ const TeamOverview: React.FC<TeamOverviewProps> = (props) => {
             </Grid>
             {team.ships.map(ship => (
                 <Grid item key={ship.id}>
-                    <Ship key={ship.id} data={ship} />
+                    <Ship key={ship.id} data={ship}/>
                 </Grid>
             ))}
         </Grid>
