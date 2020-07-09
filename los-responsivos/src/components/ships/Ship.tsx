@@ -9,7 +9,8 @@ import simpleship from "../../assets/simpleship.svg";
 import "./Ship.css";
 import Position from "../Position";
 import clsx from "clsx";
-import { useHistory } from "react-router-dom";
+import {useHistory} from "react-router-dom";
+import {routes} from "../../App";
 
 interface ShipProps {
     data: ShipModel
@@ -34,7 +35,7 @@ const Ship: React.FC<ShipProps> = (props) => {
     const history = useHistory();
 
     const handleClick = (): void => {
-        history.push(`/ship/${s.id}`);
+        history.push(`${routes.ship}/${s.id}`);
     };
 
     return (

@@ -11,26 +11,34 @@ export const endpoints = {
 }
 
 export default class ApiService {
-    static getTeamData(): Promise<Team>{
+    static login(username: string, password: string): Promise<string> {
+        console.log("login", username, password)
+
+        return new Promise<string>((resolve, reject) => {
+            resolve("team1")
+        });
+    }
+
+    static getTeamData(): Promise<Team> {
         console.log("service: get team data");
         return new Promise<Team>((resolve) => resolve(mockData.teams[0] as Team))
             .catch(e => {
-                console.error("service error: get team data.",e);
+                console.error("service error: get team data.", e);
                 throw e;
             })
     }
 
-    static getShipDetail(id: string): Promise<ShipDetail>{
+    static getShipDetail(id: string): Promise<ShipDetail> {
         console.log("service: get detail of ship", id);
-        const availableActions = [ShipAction.MoveForward,ShipAction.TurnLeft,ShipAction.TurnRight]
-        const plannedActions = [ShipAction.MoveForward,ShipAction.MoveForward,ShipAction.TurnRight]
+        const availableActions = [ShipAction.MoveForward, ShipAction.TurnLeft, ShipAction.TurnRight]
+        const plannedActions = [ShipAction.MoveForward, ShipAction.MoveForward, ShipAction.TurnRight]
         const ship: Ship = mockData.teams[0].ships.filter(s => s.id === id)[0] as Ship;
         return new Promise<ShipDetail>((resolve) => resolve({
             ...ship,
             availableActions,
             plannedActions
         })).catch(e => {
-            console.error("service error: get ship detail.",e);
+            console.error("service error: get ship detail.", e);
             throw e;
         });
     }
@@ -40,7 +48,7 @@ export default class ApiService {
             console.log("service: deleting all actions on ship", shipId)
             resolve();
         }).catch(e => {
-            console.error("service error: delete actions.",e);
+            console.error("service error: delete actions.", e);
             throw e;
         });
     }
@@ -50,7 +58,7 @@ export default class ApiService {
             console.log("service: planning ", action, "on ship", shipId);
             resolve();
         }).catch(e => {
-            console.error("service error: plan actions.",e);
+            console.error("service error: plan actions.", e);
             throw e;
         });
     }
