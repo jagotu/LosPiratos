@@ -1,8 +1,10 @@
 import React, {useState} from "react";
-import {Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography} from "@material-ui/core";
-import {needsParameters, ShipAction, ShipActionParam} from "../../../models/ShipActions";
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select} from "@material-ui/core";
+import {Enhancement, Enhancements, needsParameters, ShipAction, ShipActionParam} from "../../../models/ShipActions";
 import {isTransaction, Transaction, TransactionsParameters} from "../../../models/Transactions";
 import {actionTranslations} from "./actionDetails";
+import translations from "../../../translations";
+import _ from "lodash";
 
 export type OpenForAction = { open: false, action: undefined } | { open: true, action: ShipAction }
 
@@ -33,12 +35,36 @@ const ActionDetailDialog: React.FC<ActionDetailDialogProps> = ({openForAction, o
     const amountPicker = (
         "Zvolit mnozstvi"
     );
+    const handleEnhancementSelected = (event: any): void => {
+        const enhancement = event.target.value;
+        setActionParam(prev => ({...prev, enhancement}))
+    };
     const enhancementPicker = (
-        "Zvolit rozsireni"
+        <FormControl>
+            <InputLabel id="enhancementPickerInputLabel">Vylepšení</InputLabel>
+            <Select
+                value={actionParam.enhancement ?? "Ram"}
+                labelId="enhancementPickerInputLabel"
+                onChange={handleEnhancementSelected}
+                style={{minWidth: "16ch"}}
+                >
+                {Object.values(Enhancements).map((enh: Enhancement) => (
+                    <MenuItem key={enh} value={enh}>{
+                        // @ts-ignore
+                        translations[enh]}
+                    </MenuItem>
+                ))}
+            </Select>
+        </FormControl>
     );
     const targetPicker = (
         "zvolit cil"
     );
+
+    const handleSubmit = (): void => {
+        onParamSelected(action, actionParam);
+        onClose();
+    };
 
     return (
         <Dialog
@@ -46,17 +72,12 @@ const ActionDetailDialog: React.FC<ActionDetailDialogProps> = ({openForAction, o
             onClose={onClose}
         >
             <DialogTitle>
-                {actionTranslations.get(action)}
+                {_.capitalize(actionTranslations.get(action))}
             </DialogTitle>
             <DialogContent>
-                <Typography>
-                    Zvolte {needsTarget ? "cíl" : null}{needsAmount ? "množství" : null}{needsEnhancement ? "vylepšení" : null}:
-                </Typography>
-                <Box paddingTop={1}>
-                    {needsEnhancement ? enhancementPicker : null}
-                    {needsTarget ? targetPicker : null}
-                    {needsAmount ? amountPicker : null}
-                </Box>
+                {needsEnhancement ? enhancementPicker : null}
+                {needsTarget ? targetPicker : null}
+                {needsAmount ? amountPicker : null}
             </DialogContent>
             <DialogActions>
                 <Button variant="outlined" onClick={onClose}> Zrušit </Button>
@@ -64,7 +85,7 @@ const ActionDetailDialog: React.FC<ActionDetailDialogProps> = ({openForAction, o
                     variant="contained"
                     color="primary"
                     type="submit"
-                    onClick={() => onParamSelected(action, actionParam)}
+                    onClick={handleSubmit}
                 >
                     Naplánovat
                 </Button>
