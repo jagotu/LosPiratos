@@ -1,6 +1,6 @@
 import Ship from "./Ship";
 import mockData from "../losTestos.json";
-import Resources from "./Resources";
+import {ShipAction, ShipActions} from "./ShipActions";
 
 export default interface ShipDetail extends Ship {
     /**
@@ -20,41 +20,10 @@ export default interface ShipDetail extends Ship {
     plannedActions: Array<ShipAction>;
 }
 
-export enum ShipAction {
-    // maneuvers:
-    MoveForward = "MoveForward",
-    TurnLeft = "TurnLeft",
-    TurnRight = "TurnRight",
-    // attacks:
-    LeftCannonsChainShotVolley = "LeftCannonsChainShotVolley",
-    LeftCannonsHeavyBallVolley = "LeftCannonsHeavyBallVolley",
-    LeftCannonsSimpleVolley = "LeftCannonsSimpleVolley",
-    RightCannonsChainShotVolley = "RightCannonsChainShotVolley",
-    RightCannonsHeavyBallVolley = "RightCannonsHeavyBallVolley",
-    RightCannonsSimpleVolley = "RightCannonsSimpleVolley",
-    FrontalAssault = "FrontalAssault",
-    MortarShot = "MortarShot",
-    // transactions:
-    BuyCommodity = "BuyCommodity",
-    BuyNewEnhancement = "BuyNewEnhancement",
-    Plunder = "Plunder",
-    RepairEnhancement = "RepairEnhancement",
-    RepairShipViaDowngrade = "RepairShipViaDowngrade",
-    RepairShipViaRepayment = "RepairShipViaRepayment",
-    SellCommodity = "SellCommodity",
-    UnloadStorage = "UnloadStorage",
-    UpgradeShip = "UpgradeShip"
-}
-
-export interface ShipActionParam {
-    target?: Position;
-    amount?: Resources;
-}
-
 export const getMockShipDetail = (id: string): ShipDetail => {
-    const availableActions = new Set([ShipAction.MoveForward, ShipAction.TurnLeft, ShipAction.TurnRight]);
-    const visibleActions = new Set(Object.keys(ShipAction) as Array<ShipAction>);
-    const plannedActions = [ShipAction.MoveForward, ShipAction.MoveForward, ShipAction.TurnRight];
+    const availableActions = new Set<ShipAction>([ShipActions.MoveForward, ShipActions.TurnLeft, ShipActions.TurnRight]);
+    const visibleActions = new Set<ShipAction>(Object.keys(ShipActions) as Array<ShipAction>);
+    const plannedActions = [ShipActions.MoveForward, ShipActions.MoveForward, ShipActions.TurnRight];
 
     const ship: Ship = mockData.teams[0].ships.filter(s => s.id === id)[0] as Ship;
 

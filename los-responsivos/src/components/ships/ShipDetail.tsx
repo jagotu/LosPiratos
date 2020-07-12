@@ -7,7 +7,7 @@ import Ship from "./Ship";
 import PlannedAction from "./actions/PlannedAction";
 import {Link} from "react-router-dom";
 import {routes} from "../../App";
-import ActionPlanner from "./ActionPlanner";
+import ActionPlanner from "./actions/ActionPlanner";
 import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
 import uid from "../../uid";
 import useError from "../../useError";

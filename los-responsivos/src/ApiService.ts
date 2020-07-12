@@ -1,7 +1,7 @@
 import Team from "./models/Team";
 import mockData from "./losTestos.json";
-import ShipDetail, {getMockShipDetail, ShipAction, ShipActionParam} from "./models/ShipDetail";
-import Ship from "./models/Ship";
+import ShipDetail, {getMockShipDetail} from "./models/ShipDetail";
+import {ShipAction, ShipActionParam} from "./models/ShipActions";
 
 export const endpoints = {
     team: "/team",
