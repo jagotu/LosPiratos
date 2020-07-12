@@ -16,7 +16,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
 /**
- * Generic abstract class representing an action that may be planned by the user and the performed.
+ * Generic abstract class representing an action that may be planned by the user and then performed.
  */
 public abstract class Action implements PerformableAction, PlannableAction {
 

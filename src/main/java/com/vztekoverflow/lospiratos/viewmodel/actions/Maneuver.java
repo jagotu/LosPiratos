@@ -35,6 +35,6 @@ public abstract class Maneuver extends Action {
 
     @Override
     protected void recomputeCost() {
-        //nothing, there this actions costs nothing
+        //do nothing, this actions costs nothing
     }
 }
