@@ -78,7 +78,12 @@ const ShipDetail: React.FC<ShipDetailProps> = ({id}) => {
             </Grid>
             <Grid item>
                 Plan:
-                <ActionPlanner shipId={id} availableActions={ship.availableActions} onActionPlannedOk={refreshData} />
+                <ActionPlanner
+                    shipId={id}
+                    plannableActions={ship.plannableActions}
+                    visibleActions={ship.visibleActions}
+                    onActionPlannedOk={refreshData}
+                />
             </Grid>
         </Grid>
 

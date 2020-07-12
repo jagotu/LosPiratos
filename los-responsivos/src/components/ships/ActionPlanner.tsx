@@ -1,36 +1,35 @@
 import React from "react";
 import {Grid} from "@material-ui/core";
-import {ShipAction} from "../../models/ShipDetail";
+import {ShipAction, ShipActionParam} from "../../models/ShipDetail";
 import PlannableAction from "./actions/PlannableAction";
 import ApiService from "../../ApiService";
 import useError from "../../useError";
 
 interface ActionPlannerProps {
     shipId: string;
-    availableActions: Array<ShipAction>;
+    plannableActions: Set<ShipAction>;
+    visibleActions: Set<ShipAction>;
     /** wil be invoked by the component after the api call to plan the action suceeeded */
     onActionPlannedOk?: () => void;
 }
 
-const allPossibleActions: Array<ShipAction> = Object.keys(ShipAction) as Array<ShipAction>;
-
-const ActionPlanner: React.FC<ActionPlannerProps> = ({shipId, availableActions, ...props}) => {
+const ActionPlanner: React.FC<ActionPlannerProps> = ({shipId, plannableActions, ...props}) => {
     const {showDefaultError} = useError();
 
-    const planMe = (action: ShipAction): void => {
-        ApiService.planAction(shipId, action)
+    const planMe = (action: ShipAction, params?: ShipActionParam): void => {
+        ApiService.planAction(shipId, action, params)
             .then(props.onActionPlannedOk)
             .catch(showDefaultError)
     };
 
     return (
         <Grid container direction="row">
-            {allPossibleActions.map(action => (
+            {Array.from(props.visibleActions.values()).map(action => (
                 <Grid item xs={4} key={action}>
                     <PlannableAction
                         onClick={() => planMe(action)}
                         text={action}
-                        available={availableActions.includes(action)}
+                        available={plannableActions.has(action)}
                         key={action}
                     />
                 </Grid>

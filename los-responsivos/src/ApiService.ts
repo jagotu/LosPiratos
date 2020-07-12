@@ -1,6 +1,6 @@
 import Team from "./models/Team";
 import mockData from "./losTestos.json";
-import ShipDetail, {ShipAction} from "./models/ShipDetail";
+import ShipDetail, {getMockShipDetail, ShipAction, ShipActionParam} from "./models/ShipDetail";
 import Ship from "./models/Ship";
 
 export const endpoints = {
@@ -30,14 +30,10 @@ export default class ApiService {
 
     static getShipDetail(id: string): Promise<ShipDetail> {
         console.log("service: get detail of ship", id);
-        const availableActions = [ShipAction.MoveForward, ShipAction.TurnLeft, ShipAction.TurnRight]
-        const plannedActions = [ShipAction.MoveForward, ShipAction.MoveForward, ShipAction.TurnRight]
-        const ship: Ship = mockData.teams[0].ships.filter(s => s.id === id)[0] as Ship;
-        return new Promise<ShipDetail>((resolve) => resolve({
-            ...ship,
-            availableActions,
-            plannedActions
-        })).catch(e => {
+
+        return new Promise<ShipDetail>
+            ((resolve) => resolve(getMockShipDetail(id))
+        ).catch(e => {
             console.error("service error: get ship detail.", e);
             throw e;
         });
@@ -53,9 +49,9 @@ export default class ApiService {
         });
     }
 
-    static planAction(shipId: string, action: ShipAction): Promise<void> {
+    static planAction(shipId: string, action: ShipAction, actionPayload?: ShipActionParam): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            console.log("service: planning ", action, "on ship", shipId);
+            console.log("service: planning ", action, actionPayload, "on ship", shipId);
             resolve();
         }).catch(e => {
             console.error("service error: plan actions.", e);
