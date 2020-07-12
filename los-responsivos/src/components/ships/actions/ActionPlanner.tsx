@@ -3,10 +3,11 @@ import {Tab, Tabs} from "@material-ui/core";
 import PlannableAction from "./PlannableAction";
 import ApiService from "../../../ApiService";
 import useError from "../../../useError";
-import {makeStyles} from "@material-ui/core/styles";
 import './ActionPlanner.css';
 import actionLayout from "./actionPlannerLayout";
-import {ShipAction, ShipActionKind, ShipActionParam, Transactions} from "../../../models/ShipActions";
+import {needsParameters, ShipAction, ShipActionKind, ShipActionParam} from "../../../models/ShipActions";
+import {isTransaction} from "../../../models/Transactions";
+import ActionDetailDialog, {OpenForAction} from "./ActionDetailDialog";
 
 interface ActionPlannerProps {
     shipId: string;
@@ -16,27 +17,36 @@ interface ActionPlannerProps {
     onActionPlannedOk?: () => void;
 }
 
-const useStyles = (makeStyles(() => {
-
-}));
-
 const ActionPlanner: React.FC<ActionPlannerProps> = ({shipId, plannableActions, visibleActions, ...props}) => {
     const {showDefaultError} = useError();
     const [tab, setTab] = useState<ShipActionKind>("maneuver");
-    const classes = useStyles();
+    const [displayDetailDialog, setDisplayDetailDialog] = useState<OpenForAction>({open: false, action: undefined});
 
-    const planMe = (action: ShipAction, params?: ShipActionParam): void => {
+    const handleActionOnClick = (action: ShipAction): void => {
+        if (needsParameters(action)) {
+            setDisplayDetailDialog({open: true, action});
+        } else {
+            handlePlanParametrizedAction(action,{});
+        }
+    };
+
+    const handlePlanParametrizedAction = (action: ShipAction, params: ShipActionParam) => {
         ApiService.planAction(shipId, action, params)
             .then(props.onActionPlannedOk)
             .catch(showDefaultError)
-    };
+    }
 
     const anyTransactionPlannable = Array.from(plannableActions.values())
-        .filter(a => (Object.values(Transactions) as Array<string>).includes(a))
+        .filter(isTransaction)
         .length > 0;
     const activeLayout: Array<Array<ShipAction | null>> = actionLayout[tab];
     return (
-        <div>
+        <>
+            <ActionDetailDialog
+                openForAction={displayDetailDialog}
+                onClose={() => setDisplayDetailDialog({open: false, action: undefined})}
+                onParamSelected={handlePlanParametrizedAction}
+            />
             <Tabs value={tab} onChange={(e, newTab) => setTab(newTab)}>
                 <Tab label="Manévry" value="maneuver"/>
                 <Tab label="Útoky" value="attack"/>
@@ -51,38 +61,19 @@ const ActionPlanner: React.FC<ActionPlannerProps> = ({shipId, plannableActions, 
                                 {
                                     action && visibleActions.has(action) ?
                                         <PlannableAction
-                                            onClick={() => planMe(action)}
+                                            onClick={() => handleActionOnClick(action)}
                                             action={action}
                                             available={plannableActions.has(action)}
                                         />
                                         : null
                                 }
-
                             </td>
                         ))}
                     </tr>
                 ))}
                 </tbody>
             </table>
-
-
-            {/*<TabContext value={tab}>*/}
-            {/*    <TabPanel value="maneuvers">*/}
-            {/*        <Grid container direction="row">*/}
-            {/*            {Array.from(props.visibleActions.values()).map(action => (*/}
-            {/*                <Grid item xs={4} key={action}>*/}
-            {/*                    <PlannableAction*/}
-            {/*                        onClick={() => planMe(action)}*/}
-            {/*                        text={action}*/}
-            {/*                        available={plannableActions.has(action)}*/}
-            {/*                        key={action}*/}
-            {/*                    />*/}
-            {/*                </Grid>*/}
-            {/*            ))}*/}
-            {/*        </Grid>*/}
-            {/*    </TabPanel>*/}
-            {/*</TabContext>*/}
-        </div>
+        </>
     );
 }
 export default ActionPlanner;

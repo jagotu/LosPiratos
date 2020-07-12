@@ -1,6 +1,7 @@
 import Ship from "./Ship";
 import mockData from "../losTestos.json";
-import {Attacks, Maneuvers, ShipAction, ShipActions, Transactions} from "./ShipActions";
+import {Attacks, Maneuvers, ShipAction, ShipActions} from "./ShipActions";
+import {Transactions} from "./Transactions";
 
 export default interface ShipDetail extends Ship {
     /**
@@ -23,12 +24,13 @@ export default interface ShipDetail extends Ship {
 export const getMockShipDetail = (id: string): ShipDetail => {
     const availableActions = new Set<ShipAction>([
         Maneuvers.MoveForward, Maneuvers.TurnLeft, Maneuvers.TurnRight,
-        Attacks.FrontalAssault, Attacks.LeftCannonsSimpleVolley, Attacks.RightCannonsSimpleVolley,
-        Transactions.UnloadStorage
+        Attacks.FrontalAssault, Attacks.LeftCannonsSimpleVolley, Attacks.RightCannonsSimpleVolley, "MortarShot"
     ]);
+    Object.values(Transactions).forEach(t => availableActions.add(t));
+
     const visibleActions = new Set<ShipAction>(Object.keys(ShipActions) as Array<ShipAction>);
-    visibleActions.delete("MortarShot");
-    const plannedActions = [ShipActions.MoveForward, ShipActions.MoveForward, ShipActions.TurnRight];
+
+    const plannedActions: Array<ShipAction> = ["MoveForward", "MoveForward", "TurnRight", "MortarShot"];
 
     const ship: Ship = mockData.teams[0].ships.filter(s => s.id === id)[0] as Ship;
 

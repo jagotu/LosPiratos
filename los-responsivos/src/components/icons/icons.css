@@ -18,11 +18,15 @@
     font-size: 1.2em;
 }
 
-.icon-lastminute {
+.icon.icon-lastminute {
     font-family: 'IconFontLastminute';
 }
 
-.icon-transaction {
+.icon.icon-transaction {
     font-family: 'IconFontTransaction';
     font-size: 1.2em;
+}
+
+.icon.icon-transaction.larger {
+    font-size: 1.5em;
 }

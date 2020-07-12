@@ -20,7 +20,8 @@ const useStyles = makeStyles(() => ({
     shipButton: {
         paddingTop: 8,
         textTransform: "initial",
-        width: "100%"
+        width: "100%",
+        justifyContent: "left"
     },
     shipView: {
         width: 64,
@@ -40,25 +41,23 @@ const Ship: React.FC<ShipProps> = (props) => {
 
     return (
         <Button className={classes.shipButton} onClick={handleClick} variant="outlined">
-            <Grid container direction="row">
-                <Grid item>
-                    <img src={simpleship} className={clsx(`deg-${s.orientationDeg}`, classes.shipView)}/>
+            <Grid container direction="column">
+                <Grid item style={{display: "inline-flex"}}>
+                    <div style={{float: "left"}}>
+                        <img src={simpleship} className={clsx(`deg-${s.orientationDeg}`, classes.shipView)}/>
+                    </div>
+                    <div>
+                        <Grid container direction="row" spacing={1} style={{alignItems: "center"}}>
+                            <Grid item><ShipIcon/></Grid>
+                            <Grid item>{translations[s.type]}</Grid>
+                            <Grid item>{s.name}</Grid>
+                            <Grid item>{s.captain}</Grid>
+                            <Grid item><Position position={s.position}/></Grid>
+                        </Grid>
+                    </div>
                 </Grid>
                 <Grid item>
-                    <Grid container direction="column">
-                        <Grid item>
-                            <Grid container direction="row" spacing={1}>
-                                <Grid item><ShipIcon/></Grid>
-                                <Grid item>{translations[s.type]}</Grid>
-                                <Grid item>{s.name}</Grid>
-                                <Grid item>{s.captain}</Grid>
-                                <Grid item><Position position={s.position}/></Grid>
-                            </Grid>
-                        </Grid>
-                        <Grid item>
-                            <Resources resources={ResourcesModel.fromShip(s)}/>
-                        </Grid>
-                    </Grid>
+                    <Resources resources={ResourcesModel.fromShip(s)}/>
                 </Grid>
             </Grid>
         </Button>

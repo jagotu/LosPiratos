@@ -1,4 +1,5 @@
 import Resources from "./Resources";
+import {isTransaction, Transaction, Transactions, TransactionsParameters} from "./Transactions";
 
 export const Maneuvers = {
     MoveForward: "MoveForward",
@@ -8,29 +9,16 @@ export const Maneuvers = {
 export type Maneuver = typeof Maneuvers[keyof typeof Maneuvers];
 
 export const Attacks = {
-    LeftCannonsChainShotVolley : "LeftCannonsChainShotVolley",
-    LeftCannonsHeavyBallVolley : "LeftCannonsHeavyBallVolley",
-    LeftCannonsSimpleVolley : "LeftCannonsSimpleVolley",
-    RightCannonsChainShotVolley : "RightCannonsChainShotVolley",
-    RightCannonsHeavyBallVolley : "RightCannonsHeavyBallVolley",
-    RightCannonsSimpleVolley : "RightCannonsSimpleVolley",
-    FrontalAssault : "FrontalAssault",
-    MortarShot : "MortarShot",
+    LeftCannonsChainShotVolley: "LeftCannonsChainShotVolley",
+    LeftCannonsHeavyBallVolley: "LeftCannonsHeavyBallVolley",
+    LeftCannonsSimpleVolley: "LeftCannonsSimpleVolley",
+    RightCannonsChainShotVolley: "RightCannonsChainShotVolley",
+    RightCannonsHeavyBallVolley: "RightCannonsHeavyBallVolley",
+    RightCannonsSimpleVolley: "RightCannonsSimpleVolley",
+    FrontalAssault: "FrontalAssault",
+    MortarShot: "MortarShot",
 } as const;
 export type Attack = typeof Attacks[keyof typeof Attacks];
-
-export const Transactions = {
-    BuyCommodity : "BuyCommodity",
-    BuyNewEnhancement : "BuyNewEnhancement",
-    Plunder : "Plunder",
-    RepairEnhancement : "RepairEnhancement",
-    RepairShipViaDowngrade : "RepairShipViaDowngrade",
-    RepairShipViaRepayment : "RepairShipViaRepayment",
-    SellCommodity : "SellCommodity",
-    UnloadStorage : "UnloadStorage",
-    UpgradeShip : "UpgradeShip"
-} as const;
-export type Transaction = typeof Transactions[keyof typeof Transactions];
 
 export const ShipActions = {
     ...Maneuvers,
@@ -38,10 +26,29 @@ export const ShipActions = {
     ...Transactions,
 }
 export type ShipAction = Attack | Maneuver | Transaction;
-
 export type ShipActionKind = "maneuver" | "attack" | "transaction";
+export const Enhancements = {
+    CannonUpgrade: "CannonUpgrade",
+    ChainShot: "ChainShot",
+    HeavyShot: "HeavyShot",
+    HullUpgrade: "HullUpgrade",
+    Mortar: "Mortar",
+    Ram: "Ram"
+}
+export type Enhancement = typeof Enhancements[keyof typeof Enhancements];
+
+export const needsParameters = (action: ShipAction): boolean => {
+    if (action === "MortarShot")
+        return true;
+    else if (isTransaction(action)) {
+        const transaction = action as Transaction;
+        return TransactionsParameters[transaction].needsAmount ||
+            TransactionsParameters[transaction].needsEnhancement;
+    } else return false;
+}
 
 export interface ShipActionParam {
     target?: Position;
     amount?: Resources;
+    enhancement?: Enhancement;
 }

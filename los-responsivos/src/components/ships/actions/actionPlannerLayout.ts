@@ -1,4 +1,5 @@
-import {Attack, Maneuver, Transaction} from "../../../models/ShipActions";
+import {Attack, Maneuver} from "../../../models/ShipActions";
+import {Transaction} from "../../../models/Transactions";
 
 const actionLayout: {
     maneuver: Array<Array<Maneuver | null>>;
@@ -15,7 +16,7 @@ const actionLayout: {
         ["LeftCannonsHeavyBallVolley", "MortarShot", "RightCannonsHeavyBallVolley"],
     ],
     transaction: [
-        ["UnloadStorage", "Plunder", "BuyCommodity"],
+        ["Plunder", "UnloadStorage", "BuyCommodity"],
         ["UpgradeShip", "BuyNewEnhancement", "SellCommodity"],
         ["RepairShipViaDowngrade", "RepairShipViaRepayment", "RepairEnhancement"],
     ],

@@ -34,7 +34,7 @@ const PlannableAction: React.FC<PlannableActionProps> = ({action, ...props}) => 
     return (
         <div className={classes.root}>
             <Tooltip title={translation ?? ""}>
-                <span>
+                <div> {/* This div is needed for the tooltip, so that underlying element is never disabled */}
                     <Button
                         className={clsx(classes.button, {[classes.buttonWithIcon]: icon !== null})}
                         disabled={!props.available}
@@ -42,8 +42,8 @@ const PlannableAction: React.FC<PlannableActionProps> = ({action, ...props}) => 
                         onClick={props.onClick}
                     >
                         {icon ?? translation ?? _.startCase(action)}
-                </Button>
-                </span>
+                    </Button>
+                </div>
             </Tooltip>
         </div>
     );
