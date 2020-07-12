@@ -1,19 +1,23 @@
-import {ShipActions} from "../../../models/ShipActions";
+import {Attack, Maneuver, Transaction} from "../../../models/ShipActions";
 
-const actionLayout = {
+const actionLayout: {
+    maneuver: Array<Array<Maneuver | null>>;
+    attack: Array<Array<Attack | null>>;
+    transaction: Array<Array<Transaction | null>>;
+} = {
     maneuver: [
-        [null, ShipActions.MoveForward, null],
-        [ShipActions.TurnLeft, null, ShipActions.TurnRight],
+        [null, "MoveForward", null],
+        ["TurnLeft", null, "TurnRight"],
     ],
     attack: [
-        [ShipActions.LeftCannonsSimpleVolley, ShipActions.FrontalAssault, ShipActions.RightCannonsSimpleVolley],
-        [ShipActions.LeftCannonsChainShotVolley, null, ShipActions.RightCannonsChainShotVolley],
-        [ShipActions.LeftCannonsHeavyBallVolley, ShipActions.MortarShot, ShipActions.RightCannonsHeavyBallVolley],
+        ["LeftCannonsSimpleVolley", "FrontalAssault", "RightCannonsSimpleVolley"],
+        ["LeftCannonsChainShotVolley", null, "RightCannonsChainShotVolley"],
+        ["LeftCannonsHeavyBallVolley", "MortarShot", "RightCannonsHeavyBallVolley"],
     ],
     transaction: [
-        [ShipActions.UnloadStorage, ShipActions.Plunder, ShipActions.BuyCommodity],
-        [ShipActions.UpgradeShip, ShipActions.BuyNewEnhancement, ShipActions.SellCommodity],
-        [ShipActions.RepairShipViaDowngrade, ShipActions.RepairShipViaRepayment, ShipActions.RepairEnhancement],
+        ["UnloadStorage", "Plunder", "BuyCommodity"],
+        ["UpgradeShip", "BuyNewEnhancement", "SellCommodity"],
+        ["RepairShipViaDowngrade", "RepairShipViaRepayment", "RepairEnhancement"],
     ],
 };
 
