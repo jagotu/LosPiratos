@@ -6,7 +6,7 @@ import useError from "../../../useError";
 import {makeStyles} from "@material-ui/core/styles";
 import './ActionPlanner.css';
 import actionLayout from "./actionPlannerLayout";
-import {ShipAction, ShipActionKind, ShipActionParam} from "../../../models/ShipActions";
+import {ShipAction, ShipActionKind, ShipActionParam, Transactions} from "../../../models/ShipActions";
 
 interface ActionPlannerProps {
     shipId: string;
@@ -20,7 +20,7 @@ const useStyles = (makeStyles(() => {
 
 }));
 
-const ActionPlanner: React.FC<ActionPlannerProps> = ({shipId, plannableActions, ...props}) => {
+const ActionPlanner: React.FC<ActionPlannerProps> = ({shipId, plannableActions, visibleActions, ...props}) => {
     const {showDefaultError} = useError();
     const [tab, setTab] = useState<ShipActionKind>("maneuver");
     const classes = useStyles();
@@ -31,24 +31,28 @@ const ActionPlanner: React.FC<ActionPlannerProps> = ({shipId, plannableActions, 
             .catch(showDefaultError)
     };
 
+    const anyTransactionPlannable = Array.from(plannableActions.values())
+        .filter(a => (Object.values(Transactions) as Array<string>).includes(a))
+        .length > 0;
     const activeLayout: Array<Array<ShipAction | null>> = actionLayout[tab];
     return (
         <div>
             <Tabs value={tab} onChange={(e, newTab) => setTab(newTab)}>
                 <Tab label="Manévry" value="maneuver"/>
                 <Tab label="Útoky" value="attack"/>
-                <Tab label="Transakce" value="transaction"/>
+                <Tab label="Transakce" value="transaction" disabled={!anyTransactionPlannable}/>
             </ Tabs>
             <table className="actionPlannerTable">
+                <tbody>
                 {activeLayout.map((row: Array<ShipAction | null>, i: number) => (
                     <tr key={i}>
                         {row.map((action: ShipAction | null, j: number) => (
                             <td key={j}>
                                 {
-                                    action ?
+                                    action && visibleActions.has(action) ?
                                         <PlannableAction
                                             onClick={() => planMe(action)}
-                                            text={action}
+                                            action={action}
                                             available={plannableActions.has(action)}
                                         />
                                         : null
@@ -58,6 +62,7 @@ const ActionPlanner: React.FC<ActionPlannerProps> = ({shipId, plannableActions, 
                         ))}
                     </tr>
                 ))}
+                </tbody>
             </table>
 
 

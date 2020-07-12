@@ -1,38 +1,51 @@
 import React from "react";
-import {Button, makeStyles} from "@material-ui/core";
+import {Button, makeStyles, Tooltip} from "@material-ui/core";
 import _ from "lodash";
+import {actionDetails, actionTranslations} from "./actionDetails";
+import {ShipAction} from "../../../models/ShipActions";
 import clsx from "clsx";
-import ApiService from "../../../ApiService";
 
 interface PlannableActionProps {
-    text: string;
+    action: ShipAction;
     available: boolean;
     onClick: () => void;
 }
 
-const size = 8*10;
-const useStyles = makeStyles(() =>({
+const size = 8 * 10;
+const useStyles = makeStyles(() => ({
     button: {
         textTransform: "initial",
-        margin: 8,
-        width: size,
+        width: "100%",
         height: size,
+    },
+    buttonWithIcon: {
+        fontSize: "2.2em"
+    },
+    root: {
+        margin: 8,
     }
 }));
 
-const PlannableAction: React.FC<PlannableActionProps> = (props) => {
+const PlannableAction: React.FC<PlannableActionProps> = ({action, ...props}) => {
     const classes = useStyles();
 
-
+    const icon = actionDetails.get(action)?.icon;
+    const translation = actionTranslations.get(action);
     return (
-        <Button
-            className={classes.button}
-            disabled={!props.available}
-            variant="contained"
-            onClick={props.onClick}
-        >
-            {_.startCase(props.text)}
-        </Button>
+        <div className={classes.root}>
+            <Tooltip title={translation ?? ""}>
+                <span>
+                    <Button
+                        className={clsx(classes.button, {[classes.buttonWithIcon]: icon !== null})}
+                        disabled={!props.available}
+                        variant="contained"
+                        onClick={props.onClick}
+                    >
+                        {icon ?? translation ?? _.startCase(action)}
+                </Button>
+                </span>
+            </Tooltip>
+        </div>
     );
 }
 

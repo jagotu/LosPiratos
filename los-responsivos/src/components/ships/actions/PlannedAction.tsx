@@ -1,9 +1,11 @@
 import React from "react";
 import {makeStyles} from "@material-ui/core";
 import _ from "lodash";
+import {actionTranslations} from "./actionDetails";
+import {ShipAction} from "../../../models/ShipActions";
 
 interface PlannedActionProps {
-    text: string;
+    action: ShipAction;
 }
 
 const useStyles = makeStyles(() => ({
@@ -13,13 +15,15 @@ const useStyles = makeStyles(() => ({
 }));
 
 
-const PlannedAction: React.FC<PlannedActionProps> = (props) => {
+const PlannedAction: React.FC<PlannedActionProps> = ({action, ...props}) => {
     const classes = useStyles();
 
+    const translation = actionTranslations.get(action);
+    const label = translation ?? _.startCase(action);
     return (
         <div className={classes.root}
         >
-            {_.startCase(props.text) + " » "}
+            {label + " » "}
         </div>
     );
 }

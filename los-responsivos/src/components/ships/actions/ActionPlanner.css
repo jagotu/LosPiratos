@@ -1,5 +1,6 @@
 table.actionPlannerTable {
     width: 100%;
+    table-layout: fixed ;
 }
 table.actionPlannerTable td {
     text-align: center;

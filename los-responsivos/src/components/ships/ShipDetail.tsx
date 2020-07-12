@@ -23,7 +23,6 @@ const useStyles = makeStyles(() => ({
         borderWidth: 1,
         borderColor: "#bebebe",
         borderRadius: 4,
-        width: "max-content"
     }
 }));
 
@@ -70,7 +69,7 @@ const ShipDetail: React.FC<ShipDetailProps> = ({id}) => {
                     <Grid container direction="row" className={classes.plannedActionsContainer}>
                         {ship.plannedActions.map(action => (
                             <Grid item key={uid()}>
-                                <PlannedAction text={action}/>
+                                <PlannedAction action={action}/>
                             </Grid>
                         ))}
                     </Grid>

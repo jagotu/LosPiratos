@@ -40,7 +40,7 @@ const AllIcons: React.FC = () => {
             )}
             <div>Trans:</div>
             {alphabet.map(char =>
-                (<div><span className="icon icon-transaction">{char}</span> {char}</div>)
+                (<div><span className="icon icon-transaction" style={{fontSize: "2em"}}>{char}</span> {char}</div>)
             )}
             <div>Lastminute:</div>
             <div><span className="icon icon-lastminute">A</span> A</div>
