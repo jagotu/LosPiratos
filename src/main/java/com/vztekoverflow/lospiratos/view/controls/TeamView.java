@@ -1,9 +1,10 @@
 package com.vztekoverflow.lospiratos.view.controls;
 
-import com.sun.javafx.scene.control.skin.ColorPickerSkin;
+//import com.sun.javafx.scene.control.skin.ColorPickerSkin;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
 import com.vztekoverflow.lospiratos.viewmodel.Team;
 import com.vztekoverflow.lospiratos.viewmodel.actions.ActionsCatalog;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -95,12 +96,11 @@ public class TeamView extends StackPane {
 
         t.colorProperty().addListener(a -> updateColor());
 
-        updateColor();
 
         teamName.textProperty().bindBidirectional(t.nameProperty());
         colorPicker.valueProperty().bindBidirectional(t.colorProperty());
 
-        colorPicker.setSkin(new ColorPickerSkin(colorPicker) {
+        /*colorPicker.setSkin(new ColorPickerSkin(colorPicker) {
             @Override
             public Node getDisplayNode() {
                 Label l = new Label();
@@ -108,7 +108,7 @@ public class TeamView extends StackPane {
                 l.setPadding(new Insets(0));
                 return l;
             }
-        });
+        });*/
 
         ResourceEdit rw = new ResourceEdit();
         rw.setResource(t.getOwnedResource());
@@ -238,5 +238,15 @@ public class TeamView extends StackPane {
                 requestDeleteListener.RequestDelete(t);
             }
         });
+    }
+
+    //Hack to avoid adding css style in the before the children are in a deterministic state
+    private boolean isRendered = false;
+    protected void layoutChildren() {
+        super.layoutChildren();
+        if(!isRendered){
+            updateColor();
+        }
+        isRendered = true;
     }
 }

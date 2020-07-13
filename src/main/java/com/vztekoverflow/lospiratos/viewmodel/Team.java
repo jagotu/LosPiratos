@@ -1,6 +1,5 @@
 package com.vztekoverflow.lospiratos.viewmodel;
 
-import com.sun.javafx.collections.UnmodifiableObservableMap;
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.util.FxUtils;
 import com.vztekoverflow.lospiratos.util.Warnings;
@@ -9,6 +8,7 @@ import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Schooner;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableMap;
 import javafx.scene.paint.Color;
 
 public class Team implements OnNextRoundStartedListener {
@@ -97,10 +97,10 @@ public class Team implements OnNextRoundStartedListener {
     //properties:
 
     private MapProperty<String, Ship> ships = new SimpleMapProperty<String, Ship>(FXCollections.observableHashMap());
-    private UnmodifiableObservableMap<String, Ship> unmodifiableShips = new UnmodifiableObservableMap<>(ships.get());
+    private ObservableMap<String, Ship> unmodifiableShips = FXCollections.unmodifiableObservableMap(ships.get());
     private ReadOnlyMapProperty<String, Ship> unmodifiableShipsProperty = new SimpleMapProperty<>(unmodifiableShips);
 
-    public UnmodifiableObservableMap<String, Ship> getShips() {
+    public ObservableMap<String, Ship> getShips() {
         return unmodifiableShips;
     }
 

@@ -91,7 +91,6 @@ public class ShipView extends StackPane {
 
         s.getTeam().colorProperty().addListener(a -> updateColor());
 
-        updateColor();
 
         shipName.textProperty().bindBidirectional(s.nameProperty());
 
@@ -160,6 +159,16 @@ public class ShipView extends StackPane {
         if (onShipDetailsListener != null) {
             onShipDetailsListener.onShipDetails(s);
         }
+    }
+
+    //Hack to avoid adding css style in the before the children are in a deterministic state
+    private boolean isRendered = false;
+    protected void layoutChildren() {
+        super.layoutChildren();
+        if(!isRendered){
+            updateColor();
+        }
+        isRendered = true;
     }
 
 }

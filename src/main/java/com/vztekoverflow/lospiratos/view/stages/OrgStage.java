@@ -18,6 +18,7 @@ import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.AxialCoordinateAct
 import com.vztekoverflow.lospiratos.viewmodel.actions.transactions.ModifyShipTransaction;
 import com.vztekoverflow.lospiratos.viewmodel.logs.LogFormatter;
 import com.vztekoverflow.lospiratos.viewmodel.logs.LoggedEvent;
+import com.vztekoverflow.lospiratos.webapp.WebAppServer;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -32,19 +33,26 @@ import javafx.geometry.Orientation;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.text.Text;
+import javafx.scene.transform.Scale;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import javafx.embed.swing.SwingFXUtils;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 
 public class OrgStage {
 
@@ -90,6 +98,8 @@ public class OrgStage {
     private Button evaluateRelatedShip;
     @FXML
     private Button commitTransactions;
+
+    private WebAppServer webAppServer;
 
 
     private ActionParametersPopOver parametersPopOver = new ActionParametersPopOver();
@@ -205,8 +215,14 @@ public class OrgStage {
         });
 
 
-
+        try {
+            webAppServer = new WebAppServer();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         connectToGame();
+
+
     }
 
     private ObjectProperty<AxialCoordinateActionParameter> axialCoordinateActionParameterPending = new SimpleObjectProperty<>(null);
@@ -374,6 +390,14 @@ public class OrgStage {
         createWreckPopOver.setGame(game.get());
 
         Platform.runLater(() -> hexPane.centerInParent(new AxialCoordinate(0, 0)));
+
+        if(webAppServer.isRunning())
+        {
+            webAppServer.stop(2);
+        }
+
+        webAppServer.setGame(game.get());
+        webAppServer.start();
     }
 
     private void updateEvaluateButton() {
@@ -398,7 +422,19 @@ public class OrgStage {
 
     @FXML
     private void loremIpsum() {
-        Game g = ActionsCatalog.relatedShip.get().getTeam().getGame();
+        Game g = this.game.get();
+        try {
+            //ShipView s = shipsBox.getShipViewFor(g.getTeams().get(0).getShips().values().stream().findFirst().get());
+            Node s = publicHexPane;
+            SnapshotParameters p = new SnapshotParameters();
+            p.setTransform(new Scale(2, 2));
+            WritableImage i = s.snapshot(p, null);
+            BufferedImage bufferedImage = SwingFXUtils.fromFXImage(i, null);
+            ImageIO.write(bufferedImage, "png", new File("test.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         int a = 0;
     }
 

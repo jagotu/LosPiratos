@@ -4,11 +4,17 @@ import com.vztekoverflow.lospiratos.viewmodel.actions.ActionsCatalog;
 import com.vztekoverflow.lospiratos.viewmodel.actions.ParameterizedAction;
 import com.vztekoverflow.lospiratos.viewmodel.actions.PlannableAction;
 import impl.org.controlsfx.skin.BreadCrumbBarSkin;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Region;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.*;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
 
@@ -55,7 +61,7 @@ public class PlannedActionsBar extends Region {
         }
     };
 
-    private BreadCrumbBarSkin.BreadCrumbButton root = new BreadCrumbBarSkin.BreadCrumbButton("", new Glyph("FontAwesome", FontAwesome.Glyph.TRASH_ALT));
+    private PlannedActionsBar.BreadCrumbButton root = new PlannedActionsBar.BreadCrumbButton("", new Glyph("FontAwesome", FontAwesome.Glyph.TRASH_ALT));
 
     public PlannedActionsBar() {
         root.getStyleClass().add("first");
@@ -94,7 +100,7 @@ public class PlannedActionsBar extends Region {
 
 
             // We have to position the bread crumbs slightly overlapping
-            double ins = n instanceof BreadCrumbBarSkin.BreadCrumbButton ? ((BreadCrumbBarSkin.BreadCrumbButton) n).getArrowWidth() : 0;
+            double ins = n instanceof PlannedActionsBar.BreadCrumbButton ? ((PlannedActionsBar.BreadCrumbButton) n).getArrowWidth() : 0;
             x = snapPosition(x - ins);
 
 
@@ -106,7 +112,7 @@ public class PlannedActionsBar extends Region {
 
 
     private Node getButtonFor(PlannableAction action) {
-        Button b = new BreadCrumbBarSkin.BreadCrumbButton(action.getČeskéJméno());
+        Button b = new PlannedActionsBar.BreadCrumbButton(action.getČeskéJméno());
         b.setOnAction(e -> ActionsCatalog.relatedShip.get().unplanActions(getChildren().indexOf(b) + 1));
         b.setOnMouseClicked(e -> {
             if (onActionDetailsListener != null && e.isStillSincePress() && e.getButton().equals(MouseButton.SECONDARY) && action instanceof ParameterizedAction) {
@@ -114,6 +120,74 @@ public class PlannedActionsBar extends Region {
             }
         });
         return b;
+    }
+
+    public static class BreadCrumbButton extends Button {
+        private final ObjectProperty<Boolean> first;
+        private final double arrowWidth;
+        private final double arrowHeight;
+
+        public BreadCrumbButton(String text) {
+            this(text, (Node)null);
+        }
+
+        public BreadCrumbButton(String text, Node gfx) {
+            super(text, gfx);
+            this.first = new SimpleObjectProperty(this, "first");
+            this.arrowWidth = 5.0D;
+            this.arrowHeight = 20.0D;
+            this.first.set(false);
+            this.getStyleClass().addListener(new InvalidationListener() {
+                public void invalidated(Observable arg0) {
+                    PlannedActionsBar.BreadCrumbButton.this.updateShape();
+                }
+            });
+            this.updateShape();
+        }
+
+        private void updateShape() {
+            this.setShape(this.createButtonShape());
+        }
+
+        public double getArrowWidth() {
+            return 5.0D;
+        }
+
+        private Path createButtonShape() {
+            Path path = new Path();
+            MoveTo e1 = new MoveTo(0.0D, 0.0D);
+            path.getElements().add(e1);
+            HLineTo e2 = new HLineTo();
+            e2.xProperty().bind(this.widthProperty().subtract(5.0D));
+            path.getElements().add(e2);
+            LineTo e3 = new LineTo();
+            e3.xProperty().bind(e2.xProperty().add(5.0D));
+            e3.setY(10.0D);
+            path.getElements().add(e3);
+            LineTo e4 = new LineTo();
+            e4.xProperty().bind(e2.xProperty());
+            e4.setY(20.0D);
+            path.getElements().add(e4);
+            HLineTo e5 = new HLineTo(0.0D);
+            path.getElements().add(e5);
+            if (!this.getStyleClass().contains("first")) {
+                LineTo e6 = new LineTo(5.0D, 10.0D);
+                path.getElements().add(e6);
+            } else {
+                ArcTo arcTo = new ArcTo();
+                arcTo.setSweepFlag(true);
+                arcTo.setX(0.0D);
+                arcTo.setY(0.0D);
+                arcTo.setRadiusX(15.0D);
+                arcTo.setRadiusY(15.0D);
+                path.getElements().add(arcTo);
+            }
+
+            ClosePath e7 = new ClosePath();
+            path.getElements().add(e7);
+            path.setFill(Color.BLACK);
+            return path;
+        }
     }
 }
 
