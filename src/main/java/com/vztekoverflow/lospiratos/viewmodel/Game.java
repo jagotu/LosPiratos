@@ -82,6 +82,8 @@ public class Game {
 
     }
 
+    private static int incrementalTeamCounter = 0;
+
     /**
      * @return null if team with this name (case insensitive) already exists
      */
@@ -97,6 +99,8 @@ public class Game {
         com.vztekoverflow.lospiratos.model.Team teamModel = new com.vztekoverflow.lospiratos.model.Team();
         teamModel.nameProperty().set(teamName);
         teamModel.colorProperty().set(FxUtils.toRGBCode(teamColor));
+        //teamModel.idProperty().set(UUID.randomUUID().toString());
+        teamModel.idProperty().set(String.valueOf(incrementalTeamCounter++));
         gameModel.teamsProperty().add(teamModel);
         //at this place, gameModel.teamsProperty's change calls my observer
         //   which then adds the team to this game's collection (if valid)
