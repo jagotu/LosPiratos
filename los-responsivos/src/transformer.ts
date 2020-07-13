@@ -1,6 +1,6 @@
 import Team from "./models/Team";
 import Ship from "./models/Ship";
-import {Position} from "./models/commonModels";
+import Position from "./models/Position";
 
 export class Transformer {
     static transformTeam(input: any): Team {

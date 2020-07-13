@@ -2,11 +2,11 @@ import React, {useEffect, useState} from "react";
 import useError from "../useError";
 import ApiService from "../ApiService";
 import {Box, Button, CircularProgress, Grid} from "@material-ui/core";
-import TeamOverview from "./TeamOverview";
 import Game from "../models/Game";
 import {useUser} from "../UserContext";
 import {Link} from "react-router-dom";
 import {routes} from "../App";
+import TeamOverview from "./TeamOverview";
 
 type MaybeData = { loaded: true, game: Game } | { loaded: false, game: undefined }
 
@@ -31,7 +31,7 @@ const GameOverview: React.FC = () => {
     const otherTeams = game.teams.filter(t => t.id !== teamId);
 
     const controlPanel = (
-        <Grid container direction="row" spacing={1} >
+        <Grid container direction="row" spacing={1}>
             <Grid item><Button component={Link} to={routes.map} variant="contained">Mapa</Button></Grid>
             <Grid item><Button component={Link} to={routes.combatLog} variant="contained">Combat log</Button></Grid>
             <Grid item><Button component={Link} to={routes.createShip} variant="contained">Nákup lodi</Button></Grid>
@@ -46,8 +46,11 @@ const GameOverview: React.FC = () => {
             {otherTeams.map(t => (
                 <Grid item><TeamOverview team={t}/></Grid>
             ))}
-
         </Grid>
+    // <GameTileProximityView
+    //     center={{Q: 0, R: 0}}
+    //     onTileSelected={console.log}
+    // />
     );
 }
 

@@ -1,5 +1,5 @@
 import React from "react";
-import {Position as PositionModel} from "../models/commonModels";
+import PositionModel from "../models/Position";
 import "./Position.css"
 
 interface PositionProps {

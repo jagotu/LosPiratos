@@ -1,4 +1,4 @@
-import {Position} from "./commonModels";
+import Position from "./Position";
 
 export default interface Ship {
     name: string;
