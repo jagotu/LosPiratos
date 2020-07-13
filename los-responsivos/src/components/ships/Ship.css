@@ -23,3 +23,15 @@
 .deg-60 {
     transform: rotate(300deg);
 }
+
+.shipContainerButtonLike {
+    /* style from material-ui button */
+    border: 1px solid rgba(0, 0, 0, 0.23);
+    padding: 8px 15px 5px ;
+    border-radius: 4px;
+    color: rgba(0, 0, 0, 0.87);
+    font-size: 0.875rem;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    font-weight: 500;
+    /*line-height: 1.75;*/
+}

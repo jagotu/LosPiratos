@@ -14,14 +14,15 @@ const LoginForm: React.FC = () => {
     const [password, setPassword] = useState<string>("");
     const {enqueueSnackbar} = useSnackbar();
     const history = useHistory();
-    const {user, setUser, logout} = useUser();
+    const {user, setUser, setTeamId, logout} = useUser();
 
     const handleFormSubmit = (e: any) => {
         e.preventDefault();
         ApiService.login(username, password)
-            .then((user) => {
-                setUser(username);
-                history.push(routes.team);
+            .then(({teamId}) => {
+                setUser(teamId);
+                setTeamId(teamId);
+                history.push(routes.overview);
             })
             .catch(e => {
                 enqueueSnackbar(

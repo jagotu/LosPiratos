@@ -55,9 +55,9 @@ const ShipDetail: React.FC<ShipDetailProps> = ({id}) => {
     return (
         <Grid container direction="column" spacing={2}>
             <Grid item>
-                <Button component={Link} to={routes.team} color="primary" variant="contained">Zpět</Button>
+                <Button component={Link} to={routes.overview} color="primary" variant="contained">Zpět</Button>
             </Grid>
-            <Grid item><Ship data={ship}/></Grid>
+            <Grid item><Ship data={ship} clickable={false} /></Grid>
             <Grid item>
                 Planned:
                 <div>

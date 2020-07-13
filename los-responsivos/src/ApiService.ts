@@ -1,14 +1,14 @@
-import Team from "./models/Team";
 import ShipDetail, {getMockShipDetail} from "./models/ShipDetail";
 import {Enhancement, Enhancements, ShipAction, ShipActionParam} from "./models/ShipActions";
 import {isModificationTransaction, Transaction} from "./models/Transactions";
 import {teamId} from "./UserContext";
 import axios from "axios";
+import Game from "./models/Game";
 
 const addressPrefix = "http://localhost:8001";
 
 export const endpoints = {
-    game: addressPrefix+"/game", // GET, vraci uplne ta stejna data jako kdyz se dava ulozit hru
+    game: addressPrefix + "/game", // GET, vraci uplne ta stejna data jako kdyz se dava ulozit hru
     shipDetail: (shipId: string) => `/team/${teamId()}/ship/${shipId}`,
     planAction: (shipId: string, action: ShipAction) => `/team/${teamId()}/ship/${shipId}/actions/${action}`, // POST method
     planAndEvaluateModificationTransaction: (shipId: string, action: Transaction) => `/team/${teamId()}/ship/${shipId}/modification-transaction/${action}`, // POST method
@@ -21,19 +21,14 @@ export default class ApiService {
     static login(username: string, password: string): Promise<{ teamId: string }> {
         console.log("login", username, password)
         return new Promise<{ teamId: string }>((resolve, reject) => {
-            resolve({teamId: "team1"})
+            resolve({teamId: "1"})
         });
     }
 
-    static getTeamData(): Promise<Team> {
-        console.log("service: get team data");
-        // return new Promise<Team>((resolve) => resolve(mockData.teams[0] as Team))
-        //     .catch(e => {
-        //         console.error("service error: get team data.", e);
-        //         throw e;
-        //     })
-        return  axios.get(endpoints.game)
-            .then(response => response.data.teams[0] as Team)
+    static getGameData(): Promise<Game> {
+        console.log("service: get game data");
+        return axios.get(endpoints.game)
+            .then(response => response.data);
     }
 
     static getShipDetail(id: string): Promise<ShipDetail> {

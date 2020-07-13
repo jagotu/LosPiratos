@@ -13,7 +13,8 @@ import {useHistory} from "react-router-dom";
 import {routes} from "../../App";
 
 interface ShipProps {
-    data: ShipModel
+    data: ShipModel,
+    clickable: boolean
 }
 
 const useStyles = makeStyles(() => ({
@@ -21,7 +22,8 @@ const useStyles = makeStyles(() => ({
         paddingTop: 8,
         textTransform: "initial",
         width: "100%",
-        justifyContent: "left"
+        justifyContent: "left",
+        lineHeight: 1
     },
     shipView: {
         width: 64,
@@ -39,29 +41,41 @@ const Ship: React.FC<ShipProps> = (props) => {
         history.push(`${routes.ship}/${s.id}`);
     };
 
-    return (
-        <Button className={classes.shipButton} onClick={handleClick} variant="outlined">
-            <Grid container direction="column">
-                <Grid item style={{display: "inline-flex"}}>
-                    <div style={{float: "left"}}>
-                        <img src={simpleship} className={clsx(`deg-${s.orientationDeg}`, classes.shipView)}/>
-                    </div>
-                    <div>
-                        <Grid container direction="row" spacing={1} style={{alignItems: "center"}}>
-                            <Grid item><ShipIcon/></Grid>
-                            <Grid item>{translations[s.type]}</Grid>
-                            <Grid item>{s.name}</Grid>
-                            <Grid item>{s.captain}</Grid>
-                            <Grid item><Position position={s.position}/></Grid>
-                        </Grid>
-                    </div>
-                </Grid>
-                <Grid item>
-                    <Resources resources={ResourcesModel.fromShip(s)}/>
-                </Grid>
+    const content = (
+        <Grid container direction="column">
+            <Grid item style={{display: "inline-flex"}}>
+                <div style={{float: "left"}}>
+                    <img src={simpleship} className={clsx(`deg-${s.orientationDeg}`, classes.shipView)}/>
+                </div>
+                <div>
+                    <Grid container direction="row" spacing={1} style={{alignItems: "center"}}>
+                        <Grid item><ShipIcon/></Grid>
+                        <Grid item>{translations[s.type]}</Grid>
+                        <Grid item>{s.name}</Grid>
+                        <Grid item>{s.captain}</Grid>
+                        <Grid item><Position position={s.position}/></Grid>
+                    </Grid>
+                </div>
             </Grid>
-        </Button>
-    );
+            <Grid item>
+                <Resources resources={ResourcesModel.fromShip(s)}/>
+            </Grid>
+        </Grid>
+    )
+
+    if (props.clickable) {
+        return (
+            <Button className={classes.shipButton} onClick={handleClick} variant="outlined">
+                {content}
+            </Button>
+        );
+    } else {
+        return (
+            <div className="shipContainerButtonLike">
+                {content}
+            </div>
+        );
+    }
 }
 
 export default Ship;
