@@ -1,21 +1,20 @@
 package com.vztekoverflow.lospiratos.webapp;
 
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
-import com.sun.net.httpserver.HttpServer;
-import com.vztekoverflow.lospiratos.model.GameSerializer;
-import com.vztekoverflow.lospiratos.viewmodel.Game;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.Executors;
+
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
+import com.vztekoverflow.lospiratos.model.GameSerializer;
+import com.vztekoverflow.lospiratos.viewmodel.Game;
 
 public class WebAppServer implements HttpHandler {
 
@@ -99,6 +98,7 @@ public class WebAppServer implements HttpHandler {
         }
 
         exchange.getResponseHeaders().add("Content-Type", contentType);
+        exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
         exchange.sendResponseHeaders(200, data.length);
 
         outputStream.write(data);
