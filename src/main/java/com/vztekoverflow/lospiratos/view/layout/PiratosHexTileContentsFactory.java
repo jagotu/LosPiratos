@@ -109,6 +109,8 @@ public class PiratosHexTileContentsFactory implements HexTileContentsFactory {
 
     }
 
+
+
     public PiratosHexTileContentsFactory(Board board, double edgeLength, boolean pointy) {
         this(board, edgeLength, pointy, null, null, null);
     }

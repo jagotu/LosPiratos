@@ -2,6 +2,7 @@ package com.vztekoverflow.lospiratos.view.controls;
 
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
 import com.vztekoverflow.lospiratos.viewmodel.actions.ActionsCatalog;
+import javafx.application.Platform;
 import javafx.beans.binding.BooleanExpression;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -91,6 +92,7 @@ public class ShipView extends StackPane {
 
         s.getTeam().colorProperty().addListener(a -> updateColor());
 
+        Platform.runLater(() -> setStyle("-team-color: rgba(0, 0, 0, 1);"));
 
         shipName.textProperty().bindBidirectional(s.nameProperty());
 

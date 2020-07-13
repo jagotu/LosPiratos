@@ -30,6 +30,10 @@ public class Ship implements MovableFigure, DamageableFigure, OnNextRoundStarted
 
     //region initializers
 
+    public com.vztekoverflow.lospiratos.model.Ship getShipModel() {
+        return shipModel;
+    }
+
     /**
      * Sets properties' values to default.
      * Should be called only after the object has been created.

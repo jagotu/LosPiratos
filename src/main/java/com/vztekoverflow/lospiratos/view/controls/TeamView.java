@@ -96,6 +96,7 @@ public class TeamView extends StackPane {
 
         t.colorProperty().addListener(a -> updateColor());
 
+        Platform.runLater(() -> setStyle("-team-color: rgba(0, 0, 0, 1);"));
 
         teamName.textProperty().bindBidirectional(t.nameProperty());
         colorPicker.valueProperty().bindBidirectional(t.colorProperty());

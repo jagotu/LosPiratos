@@ -27,6 +27,11 @@ public class Team implements OnNextRoundStartedListener {
     }
 
     private com.vztekoverflow.lospiratos.model.Team teamModel;
+
+    public com.vztekoverflow.lospiratos.model.Team getTeamModel() {
+        return teamModel;
+    }
+
     private Game game;
 
     /**

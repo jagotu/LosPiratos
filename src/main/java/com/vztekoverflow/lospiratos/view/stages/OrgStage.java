@@ -35,6 +35,10 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
@@ -42,15 +46,18 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
-import javafx.scene.transform.Scale;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.embed.swing.SwingFXUtils;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
@@ -220,10 +227,41 @@ public class OrgStage {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        connectToGame();
 
+        Platform.runLater(this::connectToGame);
+
+        Thread t = new Thread(() -> {
+            while(true)
+            {
+                Platform.runLater(this::updatePlanSnapshot);
+                if(planImage != null)
+                {
+                    BufferedImage copy = new BufferedImage(2500, 2211, BufferedImage.TYPE_INT_RGB);
+                    Graphics2D g2d = copy.createGraphics();
+                    g2d.drawImage(planImage, 0, -186, null);
+                    g2d.dispose();
+                    try {
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        ImageIO.write(copy, "jpg", baos);
+                        webAppServer.setCurrentMap(baos.toByteArray());
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    break;
+                }
+            }
+        });
+
+        t.start();
 
     }
+
 
     private ObjectProperty<AxialCoordinateActionParameter> axialCoordinateActionParameterPending = new SimpleObjectProperty<>(null);
     private Runnable restoreStateAfterAxialSelection = null;
@@ -251,7 +289,10 @@ public class OrgStage {
         hexPane.setBackgroundGraphicOffset(new Point2D(-1160, -995));
     }
 
+
+
     private VirtualizingHexGridPane publicHexPane;
+    private VirtualizingHexGridPane snapshotHexPane;
 
     private VirtualizingHexGridPane createMainHexPane() {
         VirtualizingHexGridPane hexPane = new VirtualizingHexGridPane(edgeLength, pointy, new PiratosHexTileContentsFactory(game.get().getBoard(), edgeLength, pointy, (figures, ac, e) -> {
@@ -301,6 +342,8 @@ public class OrgStage {
         return hexPane;
     }
 
+    private PiratosHexTileContentsFactory hexTileFactory;
+
     private void updatePublicMapStage() {
         if (publicMapStage == null) {
             publicMapStage = new Stage();
@@ -309,13 +352,29 @@ public class OrgStage {
             publicMapStage.show();
         }
 
-        publicHexPane = new VirtualizingHexGridPane(edgeLength, pointy, new PiratosHexTileContentsFactory(game.get().getBoard(), edgeLength, pointy));
+        hexTileFactory = new PiratosHexTileContentsFactory(game.get().getBoard(), edgeLength, pointy);
+
+        publicHexPane = new VirtualizingHexGridPane(edgeLength, pointy, hexTileFactory);
         publicHexPane.getStylesheets().add("/common.css");
         publicHexPane.setId("public-map");
         publicMapStage.setScene(new Scene(publicHexPane, 800, 600));
         setCADBackground(publicHexPane);
         setHexPanePanAndZoom(publicHexPane, 1.001);
     }
+
+    private Scene snapshotScene;
+
+    private void updateSnapshotMapScene() {
+        snapshotHexPane = new VirtualizingHexGridPane(edgeLength, pointy, hexTileFactory);
+        snapshotHexPane.getStylesheets().add("/common.css");
+        snapshotHexPane.setId("snapshot-map");
+        snapshotScene = new Scene(snapshotHexPane, 2200, 2000);
+        snapshotScene.setFill(Color.rgb(244, 244, 244));
+        setCADBackground(snapshotHexPane);
+
+    }
+
+
 
     private ShipsBox publicShipsBox;
     private TeamsBox publicTeamsBox;
@@ -352,6 +411,7 @@ public class OrgStage {
 
         updatePublicMapStage();
         updatePublicStatStage();
+        updateSnapshotMapScene();
 
         teamsBox.bindToGame(game.get());
         shipsBox.bindToGame(game.get());
@@ -390,6 +450,9 @@ public class OrgStage {
         createWreckPopOver.setGame(game.get());
 
         Platform.runLater(() -> hexPane.centerInParent(new AxialCoordinate(0, 0)));
+        Platform.runLater(() -> {snapshotHexPane.centerInParent(new AxialCoordinate(0, 0));});
+        Platform.runLater(this::updatePlanSnapshot);
+        Platform.runLater(this::updatePlanSnapshot);
 
         if(webAppServer.isRunning())
         {
@@ -419,23 +482,21 @@ public class OrgStage {
         ensureVisible(shipsScroll, sv);
     }
 
+    private BufferedImage planImage;
+
 
     @FXML
     private void loremIpsum() {
         Game g = this.game.get();
         try {
             //ShipView s = shipsBox.getShipViewFor(g.getTeams().get(0).getShips().values().stream().findFirst().get());
-            Node s = publicHexPane;
-            SnapshotParameters p = new SnapshotParameters();
-            p.setTransform(new Scale(2, 2));
-            WritableImage i = s.snapshot(p, null);
-            BufferedImage bufferedImage = SwingFXUtils.fromFXImage(i, null);
-            ImageIO.write(bufferedImage, "png", new File("test.png"));
-        } catch (IOException e) {
+            //Node s = publicHexPane;
+            //SnapshotParameters p = new SnapshotParameters();
+            //p.setTransform(new Scale(2, 2));
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        int a = 0;
     }
 
     @FXML
@@ -567,6 +628,21 @@ public class OrgStage {
         {
             evaluateRound();
         }
+    }
+
+    public void updatePlanSnapshot()
+    {
+        VirtualizingHexGridPane s = snapshotHexPane;
+        SnapshotParameters p = new SnapshotParameters();
+        p.setFill(Color.rgb(244, 244, 244));
+
+        s.snapshot(snapshotResult -> {
+            planImage = SwingFXUtils.fromFXImage(snapshotResult.getImage(), planImage);
+            return null;
+        }, p, null);
+
+
+
     }
 }
 
