@@ -97,7 +97,7 @@ const GameTileProximityView: React.FC<GameTileProximityViewProps> = (props) => {
                     <img
                         onClick={handleImgOnClick}
                         style={imgStyles(hexToPixel(props.center))}
-                        src={process.env.PUBLIC_URL + "/map.jpg"}
+                        src={process.env.REACT_APP_BACKEND_URL + "/map.jpg"}
                         alt="Výřez herní mapy"
                     />
                 </div>

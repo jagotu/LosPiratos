@@ -1,15 +1,15 @@
-import ShipDetail, {getMockShipDetail} from "./models/ShipDetail";
+import ShipDetail from "./models/ShipDetail";
 import {Enhancement, Enhancements, ShipAction, ShipActionParam} from "./models/ShipActions";
 import {isModificationTransaction, Transaction} from "./models/Transactions";
 import {teamId} from "./UserContext";
 import axios from "axios";
 import Game from "./models/Game";
 
-const addressPrefix = "http://localhost:8001";
+const addressPrefix = process.env.REACT_APP_BACKEND_URL;
 
 export const endpoints = {
     game: addressPrefix + "/game", // GET, vraci uplne ta stejna data jako kdyz se dava ulozit hru
-    shipDetail: (shipId: string) => `/team/${teamId()}/ship/${shipId}`,
+    shipDetail: (shipId: string) => addressPrefix + `/shipDetail?ship=${shipId}&team=${teamId()}`,
     planAction: (shipId: string, action: ShipAction) => `/team/${teamId()}/ship/${shipId}/actions/${action}`, // POST method
     planAndEvaluateModificationTransaction: (shipId: string, action: Transaction) => `/team/${teamId()}/ship/${shipId}/modification-transaction/${action}`, // POST method
     deleteAllActions: (shipId: string) => `/team/${teamId()}/ship/${shipId}/actions`, // DELETE method
@@ -33,13 +33,16 @@ export default class ApiService {
 
     static getShipDetail(id: string): Promise<ShipDetail> {
         console.log("service: get detail of ship", id);
-
-        return new Promise<ShipDetail>
-        ((resolve) => resolve(getMockShipDetail(id))
-        ).catch(e => {
-            console.error("service error: get ship detail.", e);
-            throw e;
-        });
+        return axios.get(endpoints.shipDetail(id))
+            .then(response => ({
+                ...response.data,
+                plannableActions: new Set(response.data.plannableActions),
+                visibleActions: new Set(response.data.visibleActions),
+            }))
+            .catch(e => {
+                console.error("service error: get ship detail.", e);
+                throw e;
+            });
     }
 
     static deleteActions(shipId: string): Promise<void> {

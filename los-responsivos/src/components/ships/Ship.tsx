@@ -33,7 +33,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 const Ship: React.FC<ShipProps> = (props) => {
-    const s = props.data;
+    const s: ShipModel = props.data;
     const classes = useStyles();
     const history = useHistory();
 

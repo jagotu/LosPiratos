@@ -43,9 +43,9 @@ const ShipDetail: React.FC<ShipDetailProps> = ({id}) => {
 
     if (!data.loaded)
         return <div style={{textAlign: "center"}}><CircularProgress/></div>;
-    const ship: ShipDetailModel = data.ship;
+    const shipDetail: ShipDetailModel = data.ship;
 
-    const refreshData = () => setDataVersion(oldValue => oldValue+1); // force React to recall the ApiService
+    const refreshData = () => setDataVersion(oldValue => oldValue + 1); // force React to recall the ApiService
     const removeActions = () => {
         ApiService.deleteActions(id)
             .then(refreshData)
@@ -57,7 +57,7 @@ const ShipDetail: React.FC<ShipDetailProps> = ({id}) => {
             <Grid item>
                 <Button component={Link} to={routes.overview} color="primary" variant="contained">Zpět</Button>
             </Grid>
-            <Grid item><Ship data={ship} clickable={false} /></Grid>
+            <Grid item><Ship data={shipDetail.ship} clickable={false}/></Grid>
             <Grid item>
                 Planned:
                 <div>
@@ -67,7 +67,7 @@ const ShipDetail: React.FC<ShipDetailProps> = ({id}) => {
                         </Button>
                     </div>
                     <Grid container direction="row" className={classes.plannedActionsContainer}>
-                        {ship.plannedActions.map(action => (
+                        {shipDetail.plannedActions.map(action => (
                             <Grid item key={uid()}>
                                 <PlannedAction action={action}/>
                             </Grid>
@@ -78,9 +78,9 @@ const ShipDetail: React.FC<ShipDetailProps> = ({id}) => {
             <Grid item>
                 Plan:
                 <ActionPlanner
-                    ship={ship}
-                    plannableActions={ship.plannableActions}
-                    visibleActions={ship.visibleActions}
+                    ship={shipDetail.ship}
+                    plannableActions={shipDetail.plannableActions}
+                    visibleActions={shipDetail.visibleActions}
                     onActionPlannedOk={refreshData}
                 />
             </Grid>

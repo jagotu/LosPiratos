@@ -1,19 +1,18 @@
 package com.vztekoverflow.lospiratos.webapp;
 
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.hildan.fxgson.FxGson;
+
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.vztekoverflow.lospiratos.viewmodel.Game;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
 import com.vztekoverflow.lospiratos.viewmodel.Team;
 import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
-
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.net.MalformedURLException;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class ShipDetail {
     public com.vztekoverflow.lospiratos.model.Ship ship;
@@ -33,8 +32,7 @@ public class ShipDetail {
 
     }
 
-    public static byte[] getJson(HttpExchange exchange, Game g)
-    {
+    public static byte[] getJson(HttpExchange exchange, Game g) throws InstantiationException {
 
         //Todo security
 
@@ -48,7 +46,7 @@ public class ShipDetail {
 
         ShipDetail shipDetail = new ShipDetail(s);
 
-        Gson gson = new Gson();
+        Gson gson = FxGson.create();
         String jsonString = gson.toJson(shipDetail);
 
 
