@@ -9,16 +9,17 @@ import {needsParameters, ShipAction, ShipActionKind, ShipActionParam} from "../.
 import {isModificationTransaction, isTransaction} from "../../../models/Transactions";
 import ActionDetailDialog, {OpenForAction} from "./ActionDetailDialog";
 import TransactionModificationConfirmDialog from "./TransactionModificationConfirmDialog";
+import Ship from "../../../models/Ship";
 
 interface ActionPlannerProps {
-    shipId: string;
+    ship: Ship;
     plannableActions: Set<ShipAction>;
     visibleActions: Set<ShipAction>;
     /** wil be invoked by the component after the api call to plan the action suceeeded */
     onActionPlannedOk?: () => void;
 }
 
-const ActionPlanner: React.FC<ActionPlannerProps> = ({shipId, plannableActions, visibleActions, ...props}) => {
+const ActionPlanner: React.FC<ActionPlannerProps> = ({ship, plannableActions, visibleActions, ...props}) => {
     const {showDefaultError} = useError();
     const [tab, setTab] = useState<ShipActionKind>("maneuver");
     const [displayDetailDialog, setDisplayDetailDialog] = useState<OpenForAction>({open: false, action: undefined});
@@ -42,7 +43,7 @@ const ActionPlanner: React.FC<ActionPlannerProps> = ({shipId, plannableActions, 
     };
     const planAction = (action: ShipAction, params: ShipActionParam) => {
         const serviceCall = isModificationTransaction(action) ? ApiService.planAndPerformModificationTransaction : ApiService.planAction;
-        serviceCall(shipId, action, params)
+        serviceCall(ship.id, action, params)
             .then(props.onActionPlannedOk)
             .catch(showDefaultError)
     };
@@ -55,7 +56,8 @@ const ActionPlanner: React.FC<ActionPlannerProps> = ({shipId, plannableActions, 
         <>
             <ActionDetailDialog
                 openForAction={displayDetailDialog}
-                shipId={shipId}
+                shipId={ship.id}
+                sourceLocation={ship.position}
                 onClose={() => setDisplayDetailDialog({open: false, action: undefined})}
                 onParamSelected={planAction}
             />

@@ -1,5 +1,6 @@
 import Resources from "./Resources";
 import {isTransaction, Transaction, Transactions, transactionsParameters} from "./Transactions";
+import HexPosition from "./HexPosition";
 
 export const Maneuvers = {
     MoveForward: "MoveForward",
@@ -48,7 +49,7 @@ export const needsParameters = (action: ShipAction): boolean => {
 }
 
 export interface ShipActionParam {
-    target?: Position;
+    target?: HexPosition;
     amount?: Resources;
     enhancement?: Enhancement;
 }

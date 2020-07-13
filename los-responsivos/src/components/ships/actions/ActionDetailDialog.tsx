@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select} from "@material-ui/core";
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, Typography} from "@material-ui/core";
 import {Enhancement, needsParameters, ShipAction, ShipActionParam} from "../../../models/ShipActions";
 import {isTransaction, Transaction, transactionsParameters} from "../../../models/Transactions";
 import {actionTranslations} from "./actionDetails";
@@ -7,17 +7,25 @@ import translations from "../../../translations";
 import _ from "lodash";
 import ApiService from "../../../ApiService";
 import useError from "../../../useError";
+import GameTileProximityView from "../../GameTileProximityView";
+import HexPosition from "../../../models/HexPosition";
+import Position from "../../Position";
+
 
 export type OpenForAction = { open: false, action: undefined } | { open: true, action: ShipAction }
 
 interface ActionDetailDialogProps {
     openForAction: OpenForAction;
     shipId: string;
+    /**
+     * Position of the ship that is planning this action. Used by for target selection.
+     */
+    sourceLocation: HexPosition;
     onClose: () => void;
     onParamSelected: (action: ShipAction, param: ShipActionParam) => void;
 }
 
-const ActionDetailDialog: React.FC<ActionDetailDialogProps> = ({openForAction, onClose, onParamSelected, shipId}) => {
+const ActionDetailDialog: React.FC<ActionDetailDialogProps> = ({openForAction, onClose, onParamSelected, shipId,sourceLocation}) => {
     const [actionParam, setActionParam] = useState<ShipActionParam>({});
     const [availableEnhancements, setAvailableEnhancements] = useState<Array<Enhancement> | null>(null);
     const {showDefaultError} = useError();
@@ -25,7 +33,7 @@ const ActionDetailDialog: React.FC<ActionDetailDialogProps> = ({openForAction, o
     useEffect(() => {
         if (availableEnhancements === null
             && openForAction.open
-            && transactionsParameters[openForAction.action as Transaction].needsEnhancement
+            && transactionsParameters[openForAction.action as Transaction]?.needsEnhancement
         ) {
             ApiService.getPossibleEnhancements(shipId, openForAction.action)
                 .then(setAvailableEnhancements)
@@ -51,6 +59,7 @@ const ActionDetailDialog: React.FC<ActionDetailDialogProps> = ({openForAction, o
     const amountPicker = (
         "Zvolit mnozstvi"
     );
+
     const handleEnhancementSelected = (event: any): void => {
         const enhancement = event.target.value;
         setActionParam(prev => ({...prev, enhancement}))
@@ -73,8 +82,21 @@ const ActionDetailDialog: React.FC<ActionDetailDialogProps> = ({openForAction, o
             </Select>
         </FormControl>
     );
+
+    const handleTargetSelected = (target: HexPosition) => {
+        setActionParam(prev => ({...prev, target}))
+    };
     const targetPicker = (
-        "zvolit cil"
+        <>
+            <Typography component="span">Vyber cíl:</Typography>
+            <GameTileProximityView
+                center={sourceLocation}
+                style={{marginLeft: -16}}
+                onTileSelected={handleTargetSelected}
+            />
+            <Typography component="span">Střed: <Position position={sourceLocation} /></Typography>
+            <Typography style={{float: "right"}} component="span">Vybráno: <Position position={actionParam.target} /></Typography>
+        </>
     );
 
     const handleSubmit = (): void => {

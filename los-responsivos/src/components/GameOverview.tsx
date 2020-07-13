@@ -47,10 +47,6 @@ const GameOverview: React.FC = () => {
                 <Grid item><TeamOverview team={t}/></Grid>
             ))}
         </Grid>
-    // <GameTileProximityView
-    //     center={{Q: 0, R: 0}}
-    //     onTileSelected={console.log}
-    // />
     );
 }
 

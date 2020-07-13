@@ -1,11 +1,17 @@
 import React from "react";
-import Position from "../models/Position";
+import HexPosition from "../models/HexPosition";
 
 interface GameTileProximityViewProps {
-    center: Position,
-    // in material-ui units, i.e. 1 - 8
+    center: HexPosition,
+    /**
+     * In material-ui units, i.e. 1 - 8
+     */
     padding?: number
-    onTileSelected?: (tile: Position) => void;
+    onTileSelected?: (tile: HexPosition) => void;
+    /**
+     * Styles applied to the underlying element.
+     */
+    style?: any
 }
 
 type Coordinate2D = { x: number, y: number }
@@ -20,19 +26,19 @@ const tileHeight = edgeLength * 2;
 const viewportWidth = tileWidth * 2;
 const viewportHeight = tileHeight * 2;
 
-const hexToPixel = ({Q, R}: Position): Coordinate2D => {
+const hexToPixel = ({Q, R}: HexPosition): Coordinate2D => {
     return {
         x: edgeLength * SQRT_3 * (Q + R / 2.0),
         y: edgeLength * 3.0 / 2 * R
     };
 }
-const pixelToHex = function (x: number, y: number): Position {
+const pixelToHex = function (x: number, y: number): HexPosition {
     const Q = (x * SQRT_3 / 3 - y / 3) / edgeLength;
     const R = y * 2 / 3 / edgeLength;
 
     return hexRound(Q, R);
 }
-const hexRound = function (x: number, z: number): Position {
+const hexRound = function (x: number, z: number): HexPosition {
     const y = -x - z;
 
     let rx = Math.round(x);
@@ -76,7 +82,7 @@ const GameTileProximityView: React.FC<GameTileProximityViewProps> = (props) => {
     }
 
     return (
-        <div style={{padding: paddingCoeff * 8}}>
+        <div style={{padding: paddingCoeff * 8, ...props?.style}}>
             <div style={{
                 transform: "scale(0.3)",
                 transformOrigin: "0 0",
@@ -85,9 +91,13 @@ const GameTileProximityView: React.FC<GameTileProximityViewProps> = (props) => {
             }}>
                 <div style={containerStyles}>
                     <img
+                        style={{position: "absolute", left: 365, top: 423}}
+                        src={process.env.PUBLIC_URL + "/hexGridBorder.png"}
+                        />
+                    <img
                         onClick={handleImgOnClick}
                         style={imgStyles(hexToPixel(props.center))}
-                        src={process.env.PUBLIC_URL + "map.jpg"}
+                        src={process.env.PUBLIC_URL + "/map.jpg"}
                         alt="Výřez herní mapy"
                     />
                 </div>

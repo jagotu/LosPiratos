@@ -1,4 +1,4 @@
-import Position from "./Position";
+import HexPosition from "./HexPosition";
 
 export default interface Ship {
     name: string;
@@ -10,7 +10,7 @@ export default interface Ship {
     XP: number;
     HP: number;
     orientationDeg: number;
-    position: Position;
+    position: HexPosition;
     customAdditionalHPmax: number;
     customAdditionalCannons: number;
     customAdditionalSpeed: number;

@@ -32,7 +32,7 @@ export const getMockShipDetail = (id: string): ShipDetail => {
 
     const plannedActions: Array<ShipAction> = ["MoveForward", "MoveForward", "TurnRight", "MortarShot"];
 
-    const ship: Ship = mockData.teams[0].ships.filter(s => s.id === id)[0] as Ship;
+    const ship: Ship = mockData.teams[0].ships.filter(s => s.id === "1.1")[0] as Ship;
 
     return {
         ...ship,

@@ -78,7 +78,7 @@ const ShipDetail: React.FC<ShipDetailProps> = ({id}) => {
             <Grid item>
                 Plan:
                 <ActionPlanner
-                    shipId={id}
+                    ship={ship}
                     plannableActions={ship.plannableActions}
                     visibleActions={ship.visibleActions}
                     onActionPlannedOk={refreshData}

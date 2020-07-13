@@ -1,6 +1,6 @@
 import Team from "./models/Team";
 import Ship from "./models/Ship";
-import Position from "./models/Position";
+import HexPosition from "./models/HexPosition";
 
 export class Transformer {
     static transformTeam(input: any): Team {
@@ -17,7 +17,7 @@ export class Transformer {
         }
     }
 
-    static transformPosition(input: any): Position {
+    static transformPosition(input: any): HexPosition {
         return {
             ...input
         }
