@@ -3,24 +3,23 @@ import mockData from "./losTestos.json";
 import ShipDetail, {getMockShipDetail} from "./models/ShipDetail";
 import {Enhancement, Enhancements, ShipAction, ShipActionParam} from "./models/ShipActions";
 import {isModificationTransaction, Transaction} from "./models/Transactions";
+import {teamId} from "./UserContext";
 
 export const endpoints = {
     game: "/game", // GET, vraci uplne ta stejna data jako kdyz se dava ulozit hru
-    shipDetail: (shipId: string, teamId: string) => `/team/${teamId}/ship/${shipId}`,
-    planAction: (shipId: string, teamId: string, action: ShipAction) => `/team/${teamId}/ship/${shipId}/actions/${action}`, // POST method
-    planAndEvaluateModificationTransaction: (shipId: string, teamId: string, action: Transaction) => `/team/${teamId}/ship/${shipId}/modification-transaction/${action}`, // POST method
-    deleteAllActions: (shipId: string, teamId: string) => `/team/${teamId}/ship/${shipId}/actions`, // DELETE method
-    deleteSomeActions: (shipId: string, teamId: string, howMany: number) => `/team/${teamId}/ship/${shipId}/actions/${howMany}`, // DELETE method
-    possibleEnhancements: (shipId: string, teamId: string, action: ShipAction) => `/team/${teamId}/ship/${shipId}/actions/${action}/plannable-enhancements`, // GET method
-    boardTile: (coord: string) => `/board/tile/${coord}` // GET method, coord in format (x,y)
+    shipDetail: (shipId: string) => `/team/${teamId()}/ship/${shipId}`,
+    planAction: (shipId: string, action: ShipAction) => `/team/${teamId()}/ship/${shipId}/actions/${action}`, // POST method
+    planAndEvaluateModificationTransaction: (shipId: string, action: Transaction) => `/team/${teamId()}/ship/${shipId}/modification-transaction/${action}`, // POST method
+    deleteAllActions: (shipId: string) => `/team/${teamId()}/ship/${shipId}/actions`, // DELETE method
+    deleteSomeActions: (shipId: string, howMany: number) => `/team/${teamId()}/ship/${shipId}/actions/${howMany}`, // DELETE method
+    possibleEnhancements: (shipId: string, action: ShipAction) => `/team/${teamId()}/ship/${shipId}/actions/${action}/plannable-enhancements`, // GET method
 }
 
 export default class ApiService {
-    static login(username: string, password: string): Promise<string> {
+    static login(username: string, password: string): Promise<{ teamId: string }> {
         console.log("login", username, password)
-
-        return new Promise<string>((resolve, reject) => {
-            resolve("team1")
+        return new Promise<{ teamId: string }>((resolve, reject) => {
+            resolve({teamId: "team1"})
         });
     }
 

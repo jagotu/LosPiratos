@@ -20,7 +20,7 @@ const LoginForm: React.FC = () => {
         e.preventDefault();
         ApiService.login(username, password)
             .then((user) => {
-                setUser(user);
+                setUser(username);
                 history.push(routes.team);
             })
             .catch(e => {
