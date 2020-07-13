@@ -1,7 +1,7 @@
 import Team from "./models/Team";
 import mockData from "./losTestos.json";
 import ShipDetail, {getMockShipDetail} from "./models/ShipDetail";
-import {ShipAction, ShipActionParam} from "./models/ShipActions";
+import {Enhancement, Enhancements, ShipAction, ShipActionParam} from "./models/ShipActions";
 import {isModificationTransaction, Transaction} from "./models/Transactions";
 
 export const endpoints = {
@@ -11,6 +11,7 @@ export const endpoints = {
     planAndEvaluateModificationTransaction: (shipId: string, teamId: string, action: Transaction) => `/team/${teamId}/ship/${shipId}/modification-transaction/${action}`, // POST method
     deleteAllActions: (shipId: string, teamId: string) => `/team/${teamId}/ship/${shipId}/actions`, // DELETE method
     deleteSomeActions: (shipId: string, teamId: string, howMany: number) => `/team/${teamId}/ship/${shipId}/actions/${howMany}`, // DELETE method
+    possibleEnhancements: (shipId: string, teamId: string, action: ShipAction) => `/team/${teamId}/ship/${shipId}/actions/${action}/plannable-enhancements`, // GET method
     boardTile: (coord: string) => `/board/tile/${coord}` // GET method, coord in format (x,y)
 }
 
@@ -75,5 +76,16 @@ export default class ApiService {
             console.error("service error: plan actions.", e);
             throw e;
         });
+    }
+
+
+    static getPossibleEnhancements(shipId: string, action: ShipAction): Promise<Array<Enhancement>> {
+        console.log("service: get possible enhancements of ship", shipId, "action", action);
+        const result = Object.keys(Enhancements) as Array<Enhancement>;
+        return new Promise<Array<Enhancement>>((resolve) => resolve(result))
+            .catch(e => {
+                console.error("service error: get possible enhancements.", e);
+                throw e;
+            });
     }
 }

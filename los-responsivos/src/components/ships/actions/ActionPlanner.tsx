@@ -55,6 +55,7 @@ const ActionPlanner: React.FC<ActionPlannerProps> = ({shipId, plannableActions, 
         <>
             <ActionDetailDialog
                 openForAction={displayDetailDialog}
+                shipId={shipId}
                 onClose={() => setDisplayDetailDialog({open: false, action: undefined})}
                 onParamSelected={planAction}
             />

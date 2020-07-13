@@ -1,5 +1,5 @@
-import { useSnackbar } from 'notistack';
-import React, {useCallback} from "react";
+import {useSnackbar} from 'notistack';
+import React, {useCallback, useMemo} from "react";
 
 interface useErrorResult {
     showDefaultError: () => void;
@@ -8,12 +8,12 @@ interface useErrorResult {
 export default function useError(): useErrorResult {
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
-    const defaultMessage = (
+    const defaultMessage = useMemo( () => (
         <div>
             Něco se nepovedlo. Zkuste znovu načíst stránku.<br />
             Pokud to nepomůže, kontaktujte Gociho, případně Toníka.
         </div>
-    );
+    ),[]);
 
     const showDefaultError = useCallback(() => {
         enqueueSnackbar(
@@ -26,7 +26,7 @@ export default function useError(): useErrorResult {
                 }
             }
         )
-    },[enqueueSnackbar]);
+    },[enqueueSnackbar, defaultMessage]);
 
     return { showDefaultError };
 }

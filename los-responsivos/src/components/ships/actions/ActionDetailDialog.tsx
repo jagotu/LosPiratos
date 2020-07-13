@@ -1,26 +1,42 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select} from "@material-ui/core";
-import {Enhancement, Enhancements, needsParameters, ShipAction, ShipActionParam} from "../../../models/ShipActions";
+import {Enhancement, needsParameters, ShipAction, ShipActionParam} from "../../../models/ShipActions";
 import {isTransaction, Transaction, transactionsParameters} from "../../../models/Transactions";
 import {actionTranslations} from "./actionDetails";
 import translations from "../../../translations";
 import _ from "lodash";
+import ApiService from "../../../ApiService";
+import useError from "../../../useError";
 
 export type OpenForAction = { open: false, action: undefined } | { open: true, action: ShipAction }
 
 interface ActionDetailDialogProps {
-    openForAction: OpenForAction
+    openForAction: OpenForAction;
+    shipId: string;
     onClose: () => void;
     onParamSelected: (action: ShipAction, param: ShipActionParam) => void;
 }
 
-const ActionDetailDialog: React.FC<ActionDetailDialogProps> = ({openForAction, onClose, onParamSelected}) => {
+const ActionDetailDialog: React.FC<ActionDetailDialogProps> = ({openForAction, onClose, onParamSelected, shipId}) => {
     const [actionParam, setActionParam] = useState<ShipActionParam>({});
+    const [availableEnhancements, setAvailableEnhancements] = useState<Array<Enhancement> | null>(null);
+    const {showDefaultError} = useError();
+
+    useEffect(() => {
+        if (availableEnhancements === null
+            && openForAction.open
+            && transactionsParameters[openForAction.action as Transaction].needsEnhancement
+        ) {
+            ApiService.getPossibleEnhancements(shipId, openForAction.action)
+                .then(setAvailableEnhancements)
+                .catch(showDefaultError);
+        }
+    }, [availableEnhancements, openForAction, showDefaultError, shipId]);
 
     if (!openForAction.open) return null;
     const action = openForAction.action;
 
-    if (needsParameters(action)) {
+    if (!needsParameters(action)) {
         console.warn("ActionDetailDialog opened for action that does not need parameters.", action);
     }
 
@@ -43,12 +59,12 @@ const ActionDetailDialog: React.FC<ActionDetailDialogProps> = ({openForAction, o
         <FormControl>
             <InputLabel id="enhancementPickerInputLabel">Vylepšení</InputLabel>
             <Select
-                value={actionParam.enhancement ?? "Ram"}
+                value={actionParam.enhancement ?? ""}
                 labelId="enhancementPickerInputLabel"
                 onChange={handleEnhancementSelected}
                 style={{minWidth: "16ch"}}
-                >
-                {Object.values(Enhancements).map((enh: Enhancement) => (
+            >
+                {availableEnhancements?.map((enh: Enhancement) => (
                     <MenuItem key={enh} value={enh}>{
                         // @ts-ignore
                         translations[enh]}
