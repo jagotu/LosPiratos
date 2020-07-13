@@ -6,8 +6,9 @@ import useError from "../../../useError";
 import './ActionPlanner.css';
 import actionLayout from "./actionPlannerLayout";
 import {needsParameters, ShipAction, ShipActionKind, ShipActionParam} from "../../../models/ShipActions";
-import {isTransaction} from "../../../models/Transactions";
+import {isModificationTransaction, isTransaction} from "../../../models/Transactions";
 import ActionDetailDialog, {OpenForAction} from "./ActionDetailDialog";
+import TransactionModificationConfirmDialog from "./TransactionModificationConfirmDialog";
 
 interface ActionPlannerProps {
     shipId: string;
@@ -21,20 +22,30 @@ const ActionPlanner: React.FC<ActionPlannerProps> = ({shipId, plannableActions, 
     const {showDefaultError} = useError();
     const [tab, setTab] = useState<ShipActionKind>("maneuver");
     const [displayDetailDialog, setDisplayDetailDialog] = useState<OpenForAction>({open: false, action: undefined});
+    const [displayConfirmModificationDialog, setDisplayConfirmModificationDialog] = useState<OpenForAction>({open: false, action: undefined});
 
     const handleActionOnClick = (action: ShipAction): void => {
+        if (isModificationTransaction(action)) {
+            setDisplayConfirmModificationDialog({open: true, action})
+        } else if (needsParameters(action)) {
+            setDisplayDetailDialog({open: true, action});
+        } else {
+            planAction(action, {});
+        }
+    };
+    const handlePlanModificationTransaction = (action: ShipAction) => {
         if (needsParameters(action)) {
             setDisplayDetailDialog({open: true, action});
         } else {
-            handlePlanParametrizedAction(action,{});
+            planAction(action, {})
         }
     };
-
-    const handlePlanParametrizedAction = (action: ShipAction, params: ShipActionParam) => {
-        ApiService.planAction(shipId, action, params)
+    const planAction = (action: ShipAction, params: ShipActionParam) => {
+        const serviceCall = isModificationTransaction(action) ? ApiService.planAndPerformModificationTransaction : ApiService.planAction;
+        serviceCall(shipId, action, params)
             .then(props.onActionPlannedOk)
             .catch(showDefaultError)
-    }
+    };
 
     const anyTransactionPlannable = Array.from(plannableActions.values())
         .filter(isTransaction)
@@ -45,7 +56,12 @@ const ActionPlanner: React.FC<ActionPlannerProps> = ({shipId, plannableActions, 
             <ActionDetailDialog
                 openForAction={displayDetailDialog}
                 onClose={() => setDisplayDetailDialog({open: false, action: undefined})}
-                onParamSelected={handlePlanParametrizedAction}
+                onParamSelected={planAction}
+            />
+            <TransactionModificationConfirmDialog
+                openForAction={displayConfirmModificationDialog}
+                onClose={() => setDisplayConfirmModificationDialog({open: false, action: undefined})}
+                onConfirmed={handlePlanModificationTransaction}
             />
             <Tabs value={tab} onChange={(e, newTab) => setTab(newTab)}>
                 <Tab label="Manévry" value="maneuver"/>

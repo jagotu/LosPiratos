@@ -2,12 +2,16 @@ import Team from "./models/Team";
 import mockData from "./losTestos.json";
 import ShipDetail, {getMockShipDetail} from "./models/ShipDetail";
 import {ShipAction, ShipActionParam} from "./models/ShipActions";
+import {isModificationTransaction, Transaction} from "./models/Transactions";
 
 export const endpoints = {
-    team: "/team",
-    shipDetail: (id: string) => `/ship/${id}`,
-    planAction: (shipId: string, action: ShipAction) => `/ship/${shipId}/actions/${action}`, // POST method
-    deleteActions: (shipId: string) => `/ship/${shipId}/actions`, // DELETE method
+    game: "/game", // GET, vraci uplne ta stejna data jako kdyz se dava ulozit hru
+    shipDetail: (shipId: string, teamId: string) => `/team/${teamId}/ship/${shipId}`,
+    planAction: (shipId: string, teamId: string, action: ShipAction) => `/team/${teamId}/ship/${shipId}/actions/${action}`, // POST method
+    planAndEvaluateModificationTransaction: (shipId: string, teamId: string, action: Transaction) => `/team/${teamId}/ship/${shipId}/modification-transaction/${action}`, // POST method
+    deleteAllActions: (shipId: string, teamId: string) => `/team/${teamId}/ship/${shipId}/actions`, // DELETE method
+    deleteSomeActions: (shipId: string, teamId: string, howMany: number) => `/team/${teamId}/ship/${shipId}/actions/${howMany}`, // DELETE method
+    boardTile: (coord: string) => `/board/tile/${coord}` // GET method, coord in format (x,y)
 }
 
 export default class ApiService {
@@ -32,7 +36,7 @@ export default class ApiService {
         console.log("service: get detail of ship", id);
 
         return new Promise<ShipDetail>
-            ((resolve) => resolve(getMockShipDetail(id))
+        ((resolve) => resolve(getMockShipDetail(id))
         ).catch(e => {
             console.error("service error: get ship detail.", e);
             throw e;
@@ -49,7 +53,21 @@ export default class ApiService {
         });
     }
 
+    static planAndPerformModificationTransaction
+    (shipId: string, action: ShipAction, actionPayload?: ShipActionParam): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            console.log("service: planning and performing ", action, actionPayload, "on ship", shipId);
+            resolve();
+        }).catch(e => {
+            console.error("service error: plan actions.", e);
+            throw e;
+        });
+    }
+
     static planAction(shipId: string, action: ShipAction, actionPayload?: ShipActionParam): Promise<void> {
+        if (isModificationTransaction(action)) {
+            console.warn("ApiService, planning modification transaction. Did you mean to pland and perform it instead?", action);
+        }
         return new Promise<void>((resolve, reject) => {
             console.log("service: planning ", action, actionPayload, "on ship", shipId);
             resolve();

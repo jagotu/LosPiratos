@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select} from "@material-ui/core";
 import {Enhancement, Enhancements, needsParameters, ShipAction, ShipActionParam} from "../../../models/ShipActions";
-import {isTransaction, Transaction, TransactionsParameters} from "../../../models/Transactions";
+import {isTransaction, Transaction, transactionsParameters} from "../../../models/Transactions";
 import {actionTranslations} from "./actionDetails";
 import translations from "../../../translations";
 import _ from "lodash";
@@ -28,8 +28,8 @@ const ActionDetailDialog: React.FC<ActionDetailDialogProps> = ({openForAction, o
     let needsEnhancement = false;
     let needsTarget = action === "MortarShot";
     if (isTransaction(action)) {
-        needsAmount = TransactionsParameters[action as Transaction].needsAmount;
-        needsEnhancement = TransactionsParameters[action as Transaction].needsEnhancement;
+        needsAmount = transactionsParameters[action as Transaction].needsAmount;
+        needsEnhancement = transactionsParameters[action as Transaction].needsEnhancement;
     }
 
     const amountPicker = (

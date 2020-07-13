@@ -1,3 +1,5 @@
+import {ShipAction} from "./ShipActions";
+
 export const Transactions = {
     BuyCommodity: "BuyCommodity",
     BuyNewEnhancement: "BuyNewEnhancement",
@@ -15,9 +17,9 @@ export const isTransaction = (a: string): boolean => (Object.values(Transactions
 
 export interface TransactionParameter {
     needsAmount: boolean,
-    needsEnhancement: boolean
+    needsEnhancement: boolean,
 }
-export const TransactionsParameters = {
+export const transactionsParameters = {
     BuyCommodity: {needsAmount: true, needsEnhancement: false},
     SellCommodity: {needsAmount: true, needsEnhancement: false},
     Plunder: {needsAmount: true, needsEnhancement: false},
@@ -28,4 +30,15 @@ export const TransactionsParameters = {
     RepairShipViaRepayment: {needsAmount: false, needsEnhancement: false},
     UnloadStorage: {needsAmount: true, needsEnhancement: false},
     UpgradeShip: {needsAmount: false, needsEnhancement: false},
+}
+
+export const modificationTransactions: Array<Transaction> = [
+    Transactions.RepairShipViaDowngrade,
+    Transactions.RepairShipViaRepayment,
+    Transactions.UpgradeShip,
+    Transactions.BuyNewEnhancement,
+    Transactions.RepairEnhancement
+]
+export const isModificationTransaction = (t: ShipAction) => {
+    return modificationTransactions.includes(t as Transaction);
 }

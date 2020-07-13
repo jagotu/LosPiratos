@@ -1,5 +1,5 @@
 import Resources from "./Resources";
-import {isTransaction, Transaction, Transactions, TransactionsParameters} from "./Transactions";
+import {isTransaction, Transaction, Transactions, transactionsParameters} from "./Transactions";
 
 export const Maneuvers = {
     MoveForward: "MoveForward",
@@ -42,8 +42,8 @@ export const needsParameters = (action: ShipAction): boolean => {
         return true;
     else if (isTransaction(action)) {
         const transaction = action as Transaction;
-        return TransactionsParameters[transaction].needsAmount ||
-            TransactionsParameters[transaction].needsEnhancement;
+        return transactionsParameters[transaction].needsAmount ||
+            transactionsParameters[transaction].needsEnhancement;
     } else return false;
 }
 
