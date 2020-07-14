@@ -7,10 +7,13 @@ import ShipDetail from "./components/ships/ShipDetail";
 import LoginForm from "./components/LoginForm";
 import {useUser} from "./UserContext";
 import GameOverview from "./components/GameOverview";
+import TileDetail from "./components/TileDetail";
+import MapView from "./components/MapView";
 
 export const routes = {
     overview: "/overview",
-    ship: "/ship",
+    shipDetail: "/ship",
+    tileDetail: "/tile",
     icons: "/icons",
     login: "/login",
     map: "/map",
@@ -29,7 +32,13 @@ function App() {
                         {user === null ? <Redirect from="/" to={routes.login}/> : null}
                         <Redirect exact from="/" to={routes.overview}/>
                         <Route path={routes.overview} component={GameOverview}/>
-                        <Route path={routes.ship + "/:id"} render={({match}) => <ShipDetail id={match.params.id}/>}/>
+                        <Route path={routes.map} component={MapView}/>
+                        <Route path={routes.shipDetail + "/:id"}
+                               render={({match}) => <ShipDetail id={match.params.id}/>}
+                        />
+                        <Route path={routes.tileDetail + "/:position"}
+                               render={({match}) => <TileDetail position={match.params.position}/>}
+                        />
                         <Route path={routes.icons} component={AllIcons}/>
                         {/*default: */}
                         <Route render={() => <h1>404: stránka nenalezena</h1>}/>

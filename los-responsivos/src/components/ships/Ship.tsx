@@ -38,7 +38,7 @@ const Ship: React.FC<ShipProps> = (props) => {
     const history = useHistory();
 
     const handleClick = (): void => {
-        history.push(`${routes.ship}/${s.id}`);
+        history.push(`${routes.shipDetail}/${s.id}`);
     };
 
     const content = (
