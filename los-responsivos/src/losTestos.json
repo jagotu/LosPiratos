@@ -1,0 +1,1336 @@
+{
+  "teams": [
+    {
+      "name": "Tým 1",
+      "id": "1",
+      "color": "#6666FF",
+      "money": 516,
+      "ownedMetal": 0,
+      "ownedWood": 128,
+      "ownedCloth": 70,
+      "ownedRum": 5,
+      "ownedTobacco": 0,
+      "ships": [
+        {
+          "name": "Tým1_Loď1",
+          "id": "1.1",
+          "teamId": "",
+          "captain": "Kapitán1_Tým1",
+          "type": "Schooner",
+          "destroyed": false,
+          "XP": 0,
+          "HP": 45,
+          "orientationDeg": 60,
+          "position": {
+            "Q": 3,
+            "R": -6
+          },
+          "customAdditionalHPmax": 0,
+          "customAdditionalCannons": 0,
+          "customAdditionalSpeed": 0,
+          "carriesMetalUnits": 0,
+          "carriesWoodUnits": 20,
+          "carriesClothUnits": 80,
+          "carriesRumUnits": 14,
+          "carriesTobaccoUnits": 0,
+          "carriesMoney": 0,
+          "enhancements": {},
+          "customExtensions": {},
+          "activeMechanics": []
+        },
+        {
+          "name": "Tým1_Loď2",
+          "id": "1.2",
+          "teamId": "",
+          "captain": "Kapitán2_Tým1",
+          "type": "Brig",
+          "destroyed": false,
+          "XP": 0,
+          "HP": 65,
+          "orientationDeg": 300,
+          "position": {
+            "Q": 0,
+            "R": -6
+          },
+          "customAdditionalHPmax": 0,
+          "customAdditionalCannons": 0,
+          "customAdditionalSpeed": 0,
+          "carriesMetalUnits": 0,
+          "carriesWoodUnits": 55,
+          "carriesClothUnits": 41,
+          "carriesRumUnits": 18,
+          "carriesTobaccoUnits": 0,
+          "carriesMoney": 0,
+          "enhancements": {},
+          "customExtensions": {},
+          "activeMechanics": []
+        }
+      ]
+    },
+    {
+      "name": "Tým 2",
+      "id": "",
+      "color": "#FF4C4C",
+      "money": 500,
+      "ownedMetal": 0,
+      "ownedWood": 50,
+      "ownedCloth": 50,
+      "ownedRum": 0,
+      "ownedTobacco": 0,
+      "ships": [
+        {
+          "name": "Tým2_Loď1",
+          "id": "206dd497-bb97-4943-ab98-d27b2ac1284d",
+          "teamId": "",
+          "captain": "Kapitán1_Tým2",
+          "type": "Schooner",
+          "destroyed": false,
+          "XP": 0,
+          "HP": 45,
+          "orientationDeg": 120,
+          "position": {
+            "Q": -2,
+            "R": -3
+          },
+          "customAdditionalHPmax": 0,
+          "customAdditionalCannons": 0,
+          "customAdditionalSpeed": 0,
+          "carriesMetalUnits": 0,
+          "carriesWoodUnits": 0,
+          "carriesClothUnits": 0,
+          "carriesRumUnits": 0,
+          "carriesTobaccoUnits": 0,
+          "carriesMoney": 0,
+          "enhancements": {},
+          "customExtensions": {},
+          "activeMechanics": []
+        },
+        {
+          "name": "Tým2_Loď2",
+          "id": "",
+          "teamId": "",
+          "captain": "Kapitán2_Tým2",
+          "type": "Brig",
+          "destroyed": false,
+          "XP": 0,
+          "HP": 65,
+          "orientationDeg": 300,
+          "position": {
+            "Q": -4,
+            "R": 1
+          },
+          "customAdditionalHPmax": 0,
+          "customAdditionalCannons": 0,
+          "customAdditionalSpeed": 0,
+          "carriesMetalUnits": 0,
+          "carriesWoodUnits": 0,
+          "carriesClothUnits": 0,
+          "carriesRumUnits": 0,
+          "carriesTobaccoUnits": 0,
+          "carriesMoney": 0,
+          "enhancements": {},
+          "customExtensions": {},
+          "activeMechanics": []
+        }
+      ]
+    },
+    {
+      "name": "Tým 3",
+      "id": "",
+      "color": "#4CFF4C",
+      "money": 500,
+      "ownedMetal": 0,
+      "ownedWood": 50,
+      "ownedCloth": 50,
+      "ownedRum": 0,
+      "ownedTobacco": 0,
+      "ships": [
+        {
+          "name": "Tým3_Loď1",
+          "id": "",
+          "teamId": "",
+          "captain": "Kapitán1_Tým3",
+          "type": "Schooner",
+          "destroyed": false,
+          "XP": 0,
+          "HP": 45,
+          "orientationDeg": 60,
+          "position": {
+            "Q": -3,
+            "R": 5
+          },
+          "customAdditionalHPmax": 0,
+          "customAdditionalCannons": 0,
+          "customAdditionalSpeed": 0,
+          "carriesMetalUnits": 0,
+          "carriesWoodUnits": 0,
+          "carriesClothUnits": 0,
+          "carriesRumUnits": 0,
+          "carriesTobaccoUnits": 0,
+          "carriesMoney": 0,
+          "enhancements": {},
+          "customExtensions": {},
+          "activeMechanics": []
+        },
+        {
+          "name": "Tým3_Loď2",
+          "id": "",
+          "teamId": "",
+          "captain": "Kapitán2_Tým3",
+          "type": "Brig",
+          "destroyed": false,
+          "XP": 0,
+          "HP": 65,
+          "orientationDeg": 60,
+          "position": {
+            "Q": -6,
+            "R": 6
+          },
+          "customAdditionalHPmax": 0,
+          "customAdditionalCannons": 0,
+          "customAdditionalSpeed": 0,
+          "carriesMetalUnits": 0,
+          "carriesWoodUnits": 0,
+          "carriesClothUnits": 0,
+          "carriesRumUnits": 0,
+          "carriesTobaccoUnits": 0,
+          "carriesMoney": 0,
+          "enhancements": {},
+          "customExtensions": {},
+          "activeMechanics": []
+        }
+      ]
+    },
+    {
+      "name": "Tým 4",
+      "id": "",
+      "color": "#FFFF33",
+      "money": 500,
+      "ownedMetal": 0,
+      "ownedWood": 50,
+      "ownedCloth": 50,
+      "ownedRum": 0,
+      "ownedTobacco": 0,
+      "ships": [
+        {
+          "name": "Tým4_Loď1",
+          "id": "",
+          "teamId": "",
+          "captain": "Kapitán1_Tým4",
+          "type": "Schooner",
+          "destroyed": false,
+          "XP": 0,
+          "HP": 45,
+          "orientationDeg": 300,
+          "position": {
+            "Q": 6,
+            "R": -2
+          },
+          "customAdditionalHPmax": 0,
+          "customAdditionalCannons": 0,
+          "customAdditionalSpeed": 0,
+          "carriesMetalUnits": 0,
+          "carriesWoodUnits": 0,
+          "carriesClothUnits": 0,
+          "carriesRumUnits": 0,
+          "carriesTobaccoUnits": 0,
+          "carriesMoney": 0,
+          "enhancements": {},
+          "customExtensions": {},
+          "activeMechanics": []
+        },
+        {
+          "name": "Tým4_Loď2",
+          "id": "",
+          "teamId": "",
+          "captain": "Kapitán2_Tým4",
+          "type": "Brig",
+          "destroyed": false,
+          "XP": 0,
+          "HP": 65,
+          "orientationDeg": 300,
+          "position": {
+            "Q": 2,
+            "R": 4
+          },
+          "customAdditionalHPmax": 0,
+          "customAdditionalCannons": 0,
+          "customAdditionalSpeed": 0,
+          "carriesMetalUnits": 0,
+          "carriesWoodUnits": 0,
+          "carriesClothUnits": 0,
+          "carriesRumUnits": 0,
+          "carriesTobaccoUnits": 0,
+          "carriesMoney": 0,
+          "enhancements": {},
+          "customExtensions": {},
+          "activeMechanics": []
+        }
+      ]
+    }
+  ],
+  "shipwrecks": [],
+  "map": {
+    "tiles": [
+      {
+        "location": {
+          "Q": -6,
+          "R": 0
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -6,
+          "R": 1
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -6,
+          "R": 2
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -6,
+          "R": 3
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -6,
+          "R": 4
+        },
+        "plantationsResource": null,
+        "content": "Shore"
+      },
+      {
+        "location": {
+          "Q": -6,
+          "R": 5
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -6,
+          "R": 6
+        },
+        "plantationsResource": null,
+        "content": "Port"
+      },
+      {
+        "location": {
+          "Q": -5,
+          "R": -1
+        },
+        "plantationsResource": {
+          "money": 0,
+          "cloth": 100,
+          "metal": 0,
+          "rum": 200,
+          "wood": 200
+        },
+        "content": "Plantation"
+      },
+      {
+        "location": {
+          "Q": -5,
+          "R": 0
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -5,
+          "R": 1
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -5,
+          "R": 2
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -5,
+          "R": 3
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -5,
+          "R": 4
+        },
+        "plantationsResource": {
+          "money": 0,
+          "cloth": 100,
+          "metal": 0,
+          "rum": 200,
+          "wood": 200
+        },
+        "content": "Plantation"
+      },
+      {
+        "location": {
+          "Q": -5,
+          "R": 5
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -5,
+          "R": 6
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -4,
+          "R": -2
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -4,
+          "R": -1
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -4,
+          "R": 0
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -4,
+          "R": 1
+        },
+        "plantationsResource": null,
+        "content": "Port"
+      },
+      {
+        "location": {
+          "Q": -4,
+          "R": 2
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -4,
+          "R": 3
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -4,
+          "R": 4
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -4,
+          "R": 5
+        },
+        "plantationsResource": null,
+        "content": "Shore"
+      },
+      {
+        "location": {
+          "Q": -4,
+          "R": 6
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -3,
+          "R": -3
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -3,
+          "R": -2
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -3,
+          "R": -1
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -3,
+          "R": 0
+        },
+        "plantationsResource": null,
+        "content": "Shore"
+      },
+      {
+        "location": {
+          "Q": -3,
+          "R": 1
+        },
+        "plantationsResource": null,
+        "content": "Shore"
+      },
+      {
+        "location": {
+          "Q": -3,
+          "R": 2
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -3,
+          "R": 3
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -3,
+          "R": 4
+        },
+        "plantationsResource": null,
+        "content": "Shore"
+      },
+      {
+        "location": {
+          "Q": -3,
+          "R": 5
+        },
+        "plantationsResource": null,
+        "content": "Port"
+      },
+      {
+        "location": {
+          "Q": -3,
+          "R": 6
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -2,
+          "R": -4
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -2,
+          "R": -3
+        },
+        "plantationsResource": null,
+        "content": "Port"
+      },
+      {
+        "location": {
+          "Q": -2,
+          "R": -2
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -2,
+          "R": -1
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -2,
+          "R": 0
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -2,
+          "R": 1
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -2,
+          "R": 2
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -2,
+          "R": 3
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -2,
+          "R": 4
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -2,
+          "R": 5
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -2,
+          "R": 6
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -1,
+          "R": -5
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -1,
+          "R": -4
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -1,
+          "R": -3
+        },
+        "plantationsResource": null,
+        "content": "Shore"
+      },
+      {
+        "location": {
+          "Q": -1,
+          "R": -2
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -1,
+          "R": -1
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -1,
+          "R": 0
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -1,
+          "R": 1
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -1,
+          "R": 2
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -1,
+          "R": 3
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -1,
+          "R": 4
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -1,
+          "R": 5
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": -1,
+          "R": 6
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 0,
+          "R": -6
+        },
+        "plantationsResource": {
+          "money": 0,
+          "cloth": 71,
+          "metal": 0,
+          "rum": 188,
+          "wood": 162
+        },
+        "content": "Plantation"
+      },
+      {
+        "location": {
+          "Q": 0,
+          "R": -5
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 0,
+          "R": -4
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 0,
+          "R": -3
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 0,
+          "R": -2
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 0,
+          "R": -1
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 0,
+          "R": 0
+        },
+        "plantationsResource": {
+          "money": 0,
+          "cloth": 200,
+          "metal": 0,
+          "rum": 400,
+          "wood": 400
+        },
+        "content": "PlantationExtra"
+      },
+      {
+        "location": {
+          "Q": 0,
+          "R": 1
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 0,
+          "R": 2
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 0,
+          "R": 3
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 0,
+          "R": 4
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 0,
+          "R": 5
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 0,
+          "R": 6
+        },
+        "plantationsResource": {
+          "money": 0,
+          "cloth": 100,
+          "metal": 0,
+          "rum": 200,
+          "wood": 200
+        },
+        "content": "Plantation"
+      },
+      {
+        "location": {
+          "Q": 1,
+          "R": -6
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 1,
+          "R": -5
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 1,
+          "R": -4
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 1,
+          "R": -3
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 1,
+          "R": -2
+        },
+        "plantationsResource": null,
+        "content": "Shore"
+      },
+      {
+        "location": {
+          "Q": 1,
+          "R": -1
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 1,
+          "R": 0
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 1,
+          "R": 1
+        },
+        "plantationsResource": null,
+        "content": "Shore"
+      },
+      {
+        "location": {
+          "Q": 1,
+          "R": 2
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 1,
+          "R": 3
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 1,
+          "R": 4
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 1,
+          "R": 5
+        },
+        "plantationsResource": null,
+        "content": "Shore"
+      },
+      {
+        "location": {
+          "Q": 2,
+          "R": -6
+        },
+        "plantationsResource": null,
+        "content": "Shore"
+      },
+      {
+        "location": {
+          "Q": 2,
+          "R": -5
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 2,
+          "R": -4
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 2,
+          "R": -3
+        },
+        "plantationsResource": null,
+        "content": "Port"
+      },
+      {
+        "location": {
+          "Q": 2,
+          "R": -2
+        },
+        "plantationsResource": null,
+        "content": "Shore"
+      },
+      {
+        "location": {
+          "Q": 2,
+          "R": -1
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 2,
+          "R": 0
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 2,
+          "R": 1
+        },
+        "plantationsResource": null,
+        "content": "Shore"
+      },
+      {
+        "location": {
+          "Q": 2,
+          "R": 2
+        },
+        "plantationsResource": {
+          "money": 0,
+          "cloth": 100,
+          "metal": 0,
+          "rum": 200,
+          "wood": 200
+        },
+        "content": "Plantation"
+      },
+      {
+        "location": {
+          "Q": 2,
+          "R": 3
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 2,
+          "R": 4
+        },
+        "plantationsResource": null,
+        "content": "Port"
+      },
+      {
+        "location": {
+          "Q": 3,
+          "R": -6
+        },
+        "plantationsResource": null,
+        "content": "Port"
+      },
+      {
+        "location": {
+          "Q": 3,
+          "R": -5
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 3,
+          "R": -4
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 3,
+          "R": -3
+        },
+        "plantationsResource": null,
+        "content": "Shore"
+      },
+      {
+        "location": {
+          "Q": 3,
+          "R": -2
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 3,
+          "R": -1
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 3,
+          "R": 0
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 3,
+          "R": 1
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 3,
+          "R": 2
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 3,
+          "R": 3
+        },
+        "plantationsResource": null,
+        "content": "Shore"
+      },
+      {
+        "location": {
+          "Q": 4,
+          "R": -6
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 4,
+          "R": -5
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 4,
+          "R": -4
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 4,
+          "R": -3
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 4,
+          "R": -2
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 4,
+          "R": -1
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 4,
+          "R": 0
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 4,
+          "R": 1
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 4,
+          "R": 2
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 5,
+          "R": -6
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 5,
+          "R": -5
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 5,
+          "R": -4
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 5,
+          "R": -3
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 5,
+          "R": -2
+        },
+        "plantationsResource": null,
+        "content": "Shore"
+      },
+      {
+        "location": {
+          "Q": 5,
+          "R": -1
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 5,
+          "R": 0
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 5,
+          "R": 1
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 6,
+          "R": -6
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 6,
+          "R": -5
+        },
+        "plantationsResource": {
+          "money": 0,
+          "cloth": 38,
+          "metal": 0,
+          "rum": 191,
+          "wood": 182
+        },
+        "content": "Plantation"
+      },
+      {
+        "location": {
+          "Q": 6,
+          "R": -4
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 6,
+          "R": -3
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 6,
+          "R": -2
+        },
+        "plantationsResource": null,
+        "content": "Port"
+      },
+      {
+        "location": {
+          "Q": 6,
+          "R": -1
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      },
+      {
+        "location": {
+          "Q": 6,
+          "R": 0
+        },
+        "plantationsResource": null,
+        "content": "Sea"
+      }
+    ],
+    "backgroundColor": ""
+  }
+}

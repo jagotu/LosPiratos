@@ -49,6 +49,3 @@ fabric.properties
 
 # Generated jar files
 LosPiratos.jar
-
-# Saved games
-*.json
