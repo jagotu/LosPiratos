@@ -1,6 +1,10 @@
 package com.vztekoverflow.lospiratos.webapp;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -98,6 +102,11 @@ public class WebAppServer implements HttpHandler {
                 p = Paths.get("webapp", "index.html");
                 data = Files.readAllBytes(p);
                 contentType = Files.probeContentType(p);
+            }
+
+            if(contentType == null)
+            {
+                contentType = "text/plain";
             }
 
             if (contentType.equals("text/html") || contentType.equals("application/json")) {

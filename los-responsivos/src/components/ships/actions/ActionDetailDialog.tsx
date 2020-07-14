@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, Typography} from "@material-ui/core";
 import {Enhancement, needsParameters, ShipAction, ShipActionParam} from "../../../models/ShipActions";
 import {isTransaction, Transaction, transactionsParameters} from "../../../models/Transactions";
@@ -7,9 +7,10 @@ import translations from "../../../translations";
 import _ from "lodash";
 import ApiService from "../../../ApiService";
 import useError from "../../../useError";
-import GameTileProximityView from "../../GameTileProximityView";
+import TileProximityView from "../../TileProximityView";
 import HexPosition from "../../../models/HexPosition";
 import Position from "../../Position";
+import uid from "../../../uid";
 
 
 export type OpenForAction = { open: false, action: undefined } | { open: true, action: ShipAction }
@@ -29,6 +30,7 @@ const ActionDetailDialog: React.FC<ActionDetailDialogProps> = ({openForAction, o
     const [actionParam, setActionParam] = useState<ShipActionParam>({});
     const [availableEnhancements, setAvailableEnhancements] = useState<Array<Enhancement> | null>(null);
     const {showDefaultError} = useError();
+    const imgKey = useMemo(uid,[openForAction]); // change every time the dialog opens / closes
 
     useEffect(() => {
         if (availableEnhancements === null
@@ -89,13 +91,16 @@ const ActionDetailDialog: React.FC<ActionDetailDialogProps> = ({openForAction, o
     const targetPicker = (
         <>
             <Typography component="span">Vyber cíl:</Typography>
-            <GameTileProximityView
+            <TileProximityView
                 center={sourceLocation}
-                style={{marginLeft: -16}}
+                style={{padding: 0}}
                 onTileSelected={handleTargetSelected}
+                imgKey={imgKey}
             />
             <Typography component="span">Střed: <Position position={sourceLocation} /></Typography>
-            <Typography style={{float: "right"}} component="span">Vybráno: <Position position={actionParam.target} /></Typography>
+            <Typography style={{float: "right"}} component="span">
+                Vybráno: <Position position={actionParam.target} />
+            </Typography>
         </>
     );
 

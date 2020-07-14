@@ -1,32 +1,47 @@
 package com.vztekoverflow.lospiratos.viewmodel;
 
+import java.io.File;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import com.vztekoverflow.lospiratos.evaluator.GameEvaluator;
 import com.vztekoverflow.lospiratos.model.GameSerializer;
 import com.vztekoverflow.lospiratos.model.ShipwreckM;
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.util.FxUtils;
 import com.vztekoverflow.lospiratos.util.Warnings;
-import com.vztekoverflow.lospiratos.viewmodel.boardTiles.*;
+import com.vztekoverflow.lospiratos.viewmodel.boardTiles.Plantation;
+import com.vztekoverflow.lospiratos.viewmodel.boardTiles.PlantationExtra;
+import com.vztekoverflow.lospiratos.viewmodel.boardTiles.Port;
+import com.vztekoverflow.lospiratos.viewmodel.boardTiles.Sea;
+import com.vztekoverflow.lospiratos.viewmodel.boardTiles.Shore;
 import com.vztekoverflow.lospiratos.viewmodel.logs.EventLogger;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipType;
-import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.*;
+import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.CannonUpgrade;
+import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.ChainShot;
+import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.HeavyShot;
+import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.HullUpgrade;
+import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.Mortar;
+import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.Ram;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Brig;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Frigate;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Galleon;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ships.Schooner;
 import com.vztekoverflow.lospiratos.viewmodel.transitions.OnMovementsEvaluatedListener;
 import com.vztekoverflow.lospiratos.viewmodel.transitions.Transition;
-import javafx.beans.property.*;
+
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.ReadOnlyListProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.paint.Color;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.time.Instant;
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * The main class representing a played game. The root in the backend's game hierarchy.
@@ -637,6 +652,7 @@ public class Game {
         nameBrig = "Tým" + 2 + "_Loď2";
         captainBrig = "Kapitán2" + "_Tým" + 2;
         brig = teams.get(1).createAndAddNewShip(Brig.class, nameBrig, captainBrig, positionBrig);
+        brig.addNewEnhancement(Mortar.class);
         brig.getPosition().setRotation(0);
 
 

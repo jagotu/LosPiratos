@@ -12,6 +12,10 @@ interface GameTileProximityViewProps {
      * Styles applied to the underlying element.
      */
     style?: any
+    /**
+     * Pass to force the inserted image to re-download every time the imgKey changes.
+     */
+    imgKey?: string
 }
 
 type Coordinate2D = { x: number, y: number }
@@ -69,7 +73,7 @@ const containerStyles = {
     borderRadius: 16
 }
 
-const GameTileProximityView: React.FC<GameTileProximityViewProps> = (props) => {
+const TileProximityView: React.FC<GameTileProximityViewProps> = (props) => {
     const paddingCoeff = props.padding ?? 1;
 
     const handleImgOnClick = function (e: any): void {
@@ -91,13 +95,17 @@ const GameTileProximityView: React.FC<GameTileProximityViewProps> = (props) => {
             }}>
                 <div style={containerStyles}>
                     <img
-                        style={{position: "absolute", left: 365, top: 423}}
+                        style={{position: "absolute", left: 365, top: 423, pointerEvents: "none"}}
                         src={process.env.PUBLIC_URL + "/hexGridBorder.png"}
                         />
                     <img
+                        style={{position: "absolute", pointerEvents: "none"}}
+                        src={process.env.PUBLIC_URL + "/mortar_scope.png"}
+                    />
+                    <img
                         onClick={handleImgOnClick}
                         style={imgStyles(hexToPixel(props.center))}
-                        src={process.env.REACT_APP_BACKEND_URL + "/map.jpg"}
+                        src={process.env.REACT_APP_BACKEND_URL + `/map.jpg?${props.imgKey}`} // Append uid to prevent browser from caching
                         alt="Výřez herní mapy"
                     />
                 </div>
@@ -107,4 +115,4 @@ const GameTileProximityView: React.FC<GameTileProximityViewProps> = (props) => {
 }
 
 
-export default GameTileProximityView;
+export default TileProximityView;
