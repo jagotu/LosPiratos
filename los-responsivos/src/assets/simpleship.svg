@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+        xmlns:dc="http://purl.org/dc/elements/1.1/"
+        xmlns:cc="http://creativecommons.org/ns#"
+        xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+        xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+        width="77.619926mm"
+        height="23.792625mm"
+        viewBox="0 0 275.03124 84.304578"
+        id="svg2"
+        version="1.1"
+        inkscape:version="0.92.1 r15371"
+        sodipodi:docname="simpleship2.svg"
+        inkscape:export-filename="C:\Users\Tonda\Documents\LosPiratos\graphics\ships\sources\brig.png"
+        inkscape:export-xdpi="90"
+        inkscape:export-ydpi="90">
+  <defs
+     id="defs4">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 526.18107 : 1"
+       inkscape:vp_y="0 : 999.99995 : 0"
+       inkscape:vp_z="744.09446 : 526.18107 : 1"
+       inkscape:persp3d-origin="372.04722 : 350.78739 : 1"
+       id="perspective4169" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="4"
+     inkscape:cx="93.393255"
+     inkscape:cy="20.757966"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:snap-grids="true"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Vrstva 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="fill:#ffff00;stroke:#ff0000;stroke-width:10;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 101.94141,0.00390625 C 82.955825,-0.02820042 73.403144,0.7164629 49.623047,3.1367188 30.561075,5.0767827 14.48945,7.1375116 13.910156,7.7167969 10.538929,20.679655 4.8289227,33.272392 2.4863281,44.966797 c 2.6343629,13.183182 7.6802159,26.144542 11.4238279,37.25 0.579294,0.579285 16.650919,2.641967 35.712891,4.582031 23.780097,2.420256 33.332778,3.162966 52.318363,3.13086 6.32853,-0.01071 13.70494,-0.106388 23.00586,-0.25586 66.80141,-1.073546 79.56858,-4.433913 120.22851,-31.634766 6.35872,-4.253877 15.05742,-8.779351 19.33203,-10.058593 10.00296,-0.961568 16.62468,-2.312776 30.96094,-3.013672 C 281.13249,44.265901 274.51077,42.916646 264.50781,41.955078 260.2332,40.675836 251.5345,36.148408 245.17578,31.894531 204.51585,4.6936788 191.74868,1.3352653 124.94727,0.26171875 115.64635,0.11224676 108.26994,0.01461558 101.94141,0.00390625 Z"
+       transform="scale(0.93750004)"
+       id="path41168"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cscccscsscccssc" />
+  </g>
+</svg>
