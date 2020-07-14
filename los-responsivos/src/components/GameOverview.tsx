@@ -1,27 +1,15 @@
-import React, {useEffect, useState} from "react";
-import useError from "../useError";
-import ApiService from "../ApiService";
+import React from "react";
 import {Box, Button, CircularProgress, Grid} from "@material-ui/core";
 import Game from "../models/Game";
-import {useUser} from "../UserContext";
+import {useUser} from "../userContext";
 import {Link} from "react-router-dom";
 import {routes} from "../App";
 import TeamOverview from "./TeamOverview";
-
-type MaybeData = { loaded: true, game: Game } | { loaded: false, game: undefined }
+import {useGameData} from "../gameDataContext";
 
 const GameOverview: React.FC = () => {
-    const [data, setData] = useState<MaybeData>({loaded: false, game: undefined});
-    const {showDefaultError} = useError();
     const {teamId} = useUser();
-
-    useEffect(() => {
-        if (!data.loaded) {
-            ApiService.getGameData()
-                .then(game => setData({loaded: true, game}))
-                .catch(showDefaultError);
-        }
-    }, [data, showDefaultError]);
+    const {data} = useGameData();
 
     if (!data.loaded)
         return <div style={{textAlign: "center"}}><CircularProgress/></div>;

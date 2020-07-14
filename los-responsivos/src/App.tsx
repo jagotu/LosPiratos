@@ -5,10 +5,11 @@ import {BrowserRouter, Redirect, Route, Switch} from "react-router-dom";
 import AllIcons from "./components/icons/AllIcons";
 import ShipDetail from "./components/ships/ShipDetail";
 import LoginForm from "./components/LoginForm";
-import {useUser} from "./UserContext";
+import {useUser} from "./userContext";
 import GameOverview from "./components/GameOverview";
 import TileDetail from "./components/TileDetail";
 import MapView from "./components/MapView";
+import HexPosition from "./models/HexPosition";
 
 export const routes = {
     overview: "/overview",
@@ -19,6 +20,9 @@ export const routes = {
     map: "/map",
     combatLog: "/combatLog",
     createShip: "/createShip",
+    factory: {
+        tileDetail: (position: HexPosition) => `${routes.tileDetail}/${position.Q},${position.R}`
+    }
 }
 
 function App() {

@@ -3,14 +3,17 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import {UserProvider} from "./UserContext";
+import {UserProvider} from "./userContext";
 import {SnackbarProvider} from "notistack";
+import {GameContextProvider} from "./gameDataContext";
 
 ReactDOM.render(
     <React.StrictMode>
         <SnackbarProvider>
             <UserProvider>
-                <App/>
+                <GameContextProvider>
+                    <App/>
+                </GameContextProvider>
             </UserProvider>
         </SnackbarProvider>
     </React.StrictMode>,

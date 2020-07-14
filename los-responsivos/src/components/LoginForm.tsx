@@ -6,7 +6,7 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import {useHistory} from "react-router-dom";
 import {routes} from "../App";
-import {useUser} from "../UserContext";
+import {useUser} from "../userContext";
 import {Typography} from "@material-ui/core";
 
 const LoginForm: React.FC = () => {

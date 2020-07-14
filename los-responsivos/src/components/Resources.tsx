@@ -1,6 +1,6 @@
 import React from "react";
 import ResourcesModel from "../models/Resources";
-import { Grid } from "@material-ui/core";
+import {Grid} from "@material-ui/core";
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import MetalIcon from "./icons/MetalIcon";
 import ClothIcon from "./icons/ClothIcon";
@@ -13,6 +13,7 @@ interface ResourcesProps {
 
 const Resources: React.FC<ResourcesProps> = (props) => {
     const r = props.resources;
+    console.log(props);
     return (
         <Grid container spacing={1} direction="row">
             <Grid item>

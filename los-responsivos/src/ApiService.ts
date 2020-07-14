@@ -1,7 +1,7 @@
 import ShipDetail from "./models/ShipDetail";
 import {Enhancement, Enhancements, ShipAction, ShipActionParam} from "./models/ShipActions";
 import {isModificationTransaction, Transaction} from "./models/Transactions";
-import {teamId} from "./UserContext";
+import {teamId} from "./userContext";
 import axios from "axios";
 import Game from "./models/Game";
 

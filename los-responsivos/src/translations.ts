@@ -9,4 +9,9 @@ export default {
     HullUpgrade: "Vyztužení trupu",
     Mortar: "Houfnice",
     Ram: "Kloun",
+    Sea: "Moře",
+    Plantation: "Plantáž",
+    PlantationExtra: "Super plantáž",
+    Shore: "Pevnina",
+    Port: "Přístav"
 }
