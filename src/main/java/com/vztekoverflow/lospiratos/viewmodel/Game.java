@@ -577,7 +577,7 @@ public class Game {
 
         List<AxialCoordinate> team_red_shipPositions = new ArrayList<>();
         team_red_shipPositions.add(new AxialCoordinate(-2, -3));
-        team_red_shipPositions.add(new AxialCoordinate(-4, 1));
+        team_red_shipPositions.add(new AxialCoordinate(-5, -1));
 
         List<AxialCoordinate> team_green_shipPositions = new ArrayList<>();
         team_green_shipPositions.add(new AxialCoordinate(-3, 5));
@@ -637,7 +637,7 @@ public class Game {
         nameBrig = "Tým" + 2 + "_Loď2";
         captainBrig = "Kapitán2" + "_Tým" + 2;
         brig = teams.get(1).createAndAddNewShip(Brig.class, nameBrig, captainBrig, positionBrig);
-        brig.getPosition().setRotation(300);
+        brig.getPosition().setRotation(0);
 
 
         positionSchooner = teamsShipPositions.get(2).get(0);

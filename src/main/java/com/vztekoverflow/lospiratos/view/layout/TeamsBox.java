@@ -44,14 +44,14 @@ public class TeamsBox extends FlowPane {
         teamViews.clear();
 
         for (final Team t : game.getTeams()) {
-            Main.viewCreator.submit(() -> addTeamView(t));
+            addTeamView(t);
         }
 
         game.getTeams().addListener((ListChangeListener.Change<? extends Team> c) -> {
             while (c.next()) {
                 if (!(c.wasPermutated() || c.wasUpdated())) {
                     for (Team t : c.getAddedSubList()) {
-                        Main.viewCreator.submit(() -> addTeamView(t));
+                        addTeamView(t);
                     }
                     for (Team t : c.getRemoved()) {
                         removeTeamView(t);

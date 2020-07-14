@@ -31,6 +31,7 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.geometry.Orientation;
 import javafx.geometry.Point2D;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
@@ -236,9 +237,9 @@ public class OrgStage {
                 Platform.runLater(this::updatePlanSnapshot);
                 if(planImage != null)
                 {
-                    BufferedImage copy = new BufferedImage(2500, 2211, BufferedImage.TYPE_INT_RGB);
+                    BufferedImage copy = new BufferedImage(planImage.getWidth(), planImage.getHeight(), BufferedImage.TYPE_INT_RGB);
                     Graphics2D g2d = copy.createGraphics();
-                    g2d.drawImage(planImage, 0, -186, null);
+                    g2d.drawImage(planImage, 0, 0, null);
                     g2d.dispose();
                     try {
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -365,10 +366,10 @@ public class OrgStage {
     private Scene snapshotScene;
 
     private void updateSnapshotMapScene() {
-        snapshotHexPane = new VirtualizingHexGridPane(edgeLength, pointy, hexTileFactory);
+        snapshotHexPane = new VirtualizingHexGridPane(edgeLength, pointy, new PiratosHexTileContentsFactory(game.get().getBoard(), edgeLength, pointy));
         snapshotHexPane.getStylesheets().add("/common.css");
         snapshotHexPane.setId("snapshot-map");
-        snapshotScene = new Scene(snapshotHexPane, 2200, 2000);
+        snapshotScene = new Scene(snapshotHexPane, 2600, 2300);
         snapshotScene.setFill(Color.rgb(244, 244, 244));
         setCADBackground(snapshotHexPane);
 
@@ -450,7 +451,7 @@ public class OrgStage {
         createWreckPopOver.setGame(game.get());
 
         Platform.runLater(() -> hexPane.centerInParent(new AxialCoordinate(0, 0)));
-        Platform.runLater(() -> {snapshotHexPane.centerInParent(new AxialCoordinate(0, 0));});
+        Platform.runLater(() -> {snapshotHexPane.setXOffset(-1161);snapshotHexPane.setYOffset(-994);});
         Platform.runLater(this::updatePlanSnapshot);
         Platform.runLater(this::updatePlanSnapshot);
 
@@ -635,6 +636,7 @@ public class OrgStage {
         VirtualizingHexGridPane s = snapshotHexPane;
         SnapshotParameters p = new SnapshotParameters();
         p.setFill(Color.rgb(244, 244, 244));
+        p.setViewport(new Rectangle2D(0,0, 2500, 2211));
 
         s.snapshot(snapshotResult -> {
             planImage = SwingFXUtils.fromFXImage(snapshotResult.getImage(), planImage);

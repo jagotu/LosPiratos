@@ -17,12 +17,12 @@ import java.util.concurrent.Executors;
 
 public class Main extends Application {
 
-    public static final ExecutorService viewCreator = Executors.newSingleThreadExecutor(r -> {
+    /*public static final ExecutorService viewCreator = Executors.newSingleThreadExecutor(r -> {
         Thread thread = Executors.defaultThreadFactory().newThread(r);
         thread.setDaemon(true);
         thread.setUncaughtExceptionHandler((t, e) -> e.printStackTrace());
         return thread;
-    });
+    });*/
 
     @Override
     public void start(Stage primaryStage) throws Exception{

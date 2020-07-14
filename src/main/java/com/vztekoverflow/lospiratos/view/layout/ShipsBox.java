@@ -43,15 +43,13 @@ public class ShipsBox extends FlowPane {
         shipViews.clear();
 
         for (final Ship s : game.getAllShips()) {
-            Main.viewCreator.submit(() -> addShipView(s));
+            addShipView(s);
         }
 
         game.getAllShips().addListener((ListChangeListener<? super Ship>) c -> {
             while (c.next()) {
                 c.getRemoved().forEach(this::removeShipView);
-                c.getAddedSubList().forEach(s ->
-                        Main.viewCreator.submit(() -> addShipView(s)
-                        ));
+                c.getAddedSubList().forEach(this::addShipView);
             }
         });
     }
