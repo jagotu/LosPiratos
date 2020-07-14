@@ -1,7 +1,8 @@
 import React from "react";
 import HexPosition from "../models/HexPosition";
-import {useHistory} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import {routes} from "../App";
+import {Button} from "@material-ui/core";
 
 interface MapViewProps {
 }
@@ -59,11 +60,12 @@ const MapView: React.FC<MapViewProps> = (props) => {
 
         // console.log(x - imageWidth / 2, y - imageHeight / 2);
         const position = pixelToHex(x - imageWidth / 2, y - imageHeight / 2);
-        history.push(`${routes.tileDetail}/${position.Q},${position.R}`)
+        history.push(`${routes.tileDetail}/${position.Q},${position.R}`);
     }
 
     return (
         <div>
+            <Button component={Link} to={routes.overview} color="primary" variant="contained">Zpět</Button>
             <div style={{
                 transform: "scale(0.3)",
                 transformOrigin: "0 0",

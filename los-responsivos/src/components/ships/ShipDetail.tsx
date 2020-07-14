@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, CircularProgress, Grid, makeStyles} from "@material-ui/core";
+import {Button, CircularProgress, Grid, makeStyles, Typography} from "@material-ui/core";
 import "./Ship.css";
 import ApiService from "../../ApiService";
 import ShipDetailModel from "../../models/ShipDetail";
@@ -11,6 +11,7 @@ import ActionPlanner from "./actions/ActionPlanner";
 import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
 import uid from "../../uid";
 import useError from "../../useError";
+import TileProximityView from "../TileProximityView";
 
 interface ShipDetailProps {
     id: string
@@ -59,7 +60,7 @@ const ShipDetail: React.FC<ShipDetailProps> = ({id}) => {
             </Grid>
             <Grid item><Ship data={shipDetail.ship} clickable={false}/></Grid>
             <Grid item>
-                Planned:
+                <Typography variant="h6">Naplánované akce</Typography>
                 <div>
                     <div style={{float: "left", marginRight: 16}}>
                         <Button variant="contained" onClick={removeActions}>
@@ -76,13 +77,17 @@ const ShipDetail: React.FC<ShipDetailProps> = ({id}) => {
                 </div>
             </Grid>
             <Grid item>
-                Plan:
+                <Typography variant="h6">Naplánovat akce</Typography>
                 <ActionPlanner
                     ship={shipDetail.ship}
                     plannableActions={shipDetail.plannableActions}
                     visibleActions={shipDetail.visibleActions}
                     onActionPlannedOk={refreshData}
                 />
+            </Grid>
+            <Grid item>
+                <Typography variant="h6">Okolí lodi</Typography>
+                <TileProximityView center={shipDetail.ship.position} />
             </Grid>
         </Grid>
 

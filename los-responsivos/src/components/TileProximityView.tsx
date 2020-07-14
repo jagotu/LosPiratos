@@ -2,20 +2,24 @@ import React from "react";
 import HexPosition from "../models/HexPosition";
 
 interface GameTileProximityViewProps {
-    center: HexPosition,
+    center: HexPosition;
     /**
      * In material-ui units, i.e. 1 - 8
      */
-    padding?: number
+    padding?: number;
     onTileSelected?: (tile: HexPosition) => void;
     /**
      * Styles applied to the underlying element.
      */
-    style?: any
+    style?: any;
     /**
      * Pass to force the inserted image to re-download every time the imgKey changes.
      */
-    imgKey?: string
+    imgKey?: string;
+    /**
+     * whether to display fog on tiles that are farther than 2 from center
+     */
+    mortar?: boolean;
 }
 
 type Coordinate2D = { x: number, y: number }
@@ -64,7 +68,11 @@ const hexRound = function (x: number, z: number): HexPosition {
 
 const imgStyles = (cropCenter: Coordinate2D) => ({
     marginLeft: -(imageWidth / 2 + cropCenter.x - tileWidth / 2.0) + viewportWidth,
-    marginTop: -(imageHeight / 2 + cropCenter.y - tileHeight / 2.0) + viewportHeight
+    marginTop: -(imageHeight / 2 + cropCenter.y - tileHeight / 2.0) + viewportHeight,
+    transitionProperty: "margin",
+    transitionDuration: "1s",
+    transitionTimingFunction: "ease"
+
 })
 const containerStyles = {
     width: tileWidth + 2 * viewportWidth,
@@ -98,10 +106,12 @@ const TileProximityView: React.FC<GameTileProximityViewProps> = (props) => {
                         style={{position: "absolute", left: 365, top: 423, pointerEvents: "none"}}
                         src={process.env.PUBLIC_URL + "/hexGridBorder.png"}
                         />
-                    <img
-                        style={{position: "absolute", pointerEvents: "none"}}
-                        src={process.env.PUBLIC_URL + "/mortar_scope.png"}
-                    />
+                    {props.mortar ?
+                        <img
+                            style={{position: "absolute", pointerEvents: "none"}}
+                            src={process.env.PUBLIC_URL + "/mortar_scope.png"}
+                        /> : null
+                    }
                     <img
                         onClick={handleImgOnClick}
                         style={imgStyles(hexToPixel(props.center))}
@@ -112,6 +122,10 @@ const TileProximityView: React.FC<GameTileProximityViewProps> = (props) => {
             </div>
         </div>
     );
+}
+
+TileProximityView.defaultProps = {
+    mortar: false
 }
 
 

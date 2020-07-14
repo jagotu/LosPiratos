@@ -36,8 +36,8 @@ function App() {
                         <Route path={routes.shipDetail + "/:id"}
                                render={({match}) => <ShipDetail id={match.params.id}/>}
                         />
-                        <Route path={routes.tileDetail + "/:position"}
-                               render={({match}) => <TileDetail position={match.params.position}/>}
+                        <Route path={routes.tileDetail + "/:coordinates"}
+                               render={({match}) => <TileDetail coordinates={match.params.coordinates}/>}
                         />
                         <Route path={routes.icons} component={AllIcons}/>
                         {/*default: */}
