@@ -9,7 +9,6 @@ export default class Resources {
         readonly wood: number,
         readonly cloth: number,
         readonly rum: number,
-        readonly tobacco: number,
     ) {
     }
 
@@ -20,7 +19,6 @@ export default class Resources {
             team.ownedWood,
             team.ownedCloth,
             team.ownedRum,
-            team.ownedTobacco
         );
     }
 
@@ -31,7 +29,10 @@ export default class Resources {
             ship.carriesWoodUnits,
             ship.carriesClothUnits,
             ship.carriesRumUnits,
-            ship.carriesTobaccoUnits
         );
+    }
+
+    static zero(): Resources {
+        return new Resources(0, 0, 0, 0, 0);
     }
 }

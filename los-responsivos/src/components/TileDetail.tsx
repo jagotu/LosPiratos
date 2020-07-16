@@ -33,8 +33,6 @@ const cropToRange = (location: HexPosition): HexPosition => {
     };
 }
 
-
-
 const TileDetail: React.FC<TileDetailProps> = ({coordinates}) => {
     const location: HexPosition = useMemo(() => ({
         Q: parseInt(coordinates.split(",")[0]),

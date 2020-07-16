@@ -11,6 +11,8 @@ import TileProximityView from "../../TileProximityView";
 import HexPosition from "../../../models/HexPosition";
 import Position from "../../Position";
 import uid from "../../../uid";
+import ResourceEdit from "../../ResourceEdit";
+import Resources from "../../../models/Resources";
 
 
 export type OpenForAction = { open: false, action: undefined } | { open: true, action: ShipAction }
@@ -26,11 +28,11 @@ interface ActionDetailDialogProps {
     onParamSelected: (action: ShipAction, param: ShipActionParam) => void;
 }
 
-const ActionDetailDialog: React.FC<ActionDetailDialogProps> = ({openForAction, onClose, onParamSelected, shipId,sourceLocation}) => {
+const ActionDetailDialog: React.FC<ActionDetailDialogProps> = ({openForAction, onClose, onParamSelected, shipId, sourceLocation}) => {
     const [actionParam, setActionParam] = useState<ShipActionParam>({});
     const [availableEnhancements, setAvailableEnhancements] = useState<Array<Enhancement> | null>(null);
     const {showDefaultError} = useError();
-    const imgKey = useMemo(uid,[openForAction]); // change every time the dialog opens / closes
+    const imgKey = useMemo(uid, [openForAction]); // change every time the dialog opens / closes
 
     useEffect(() => {
         if (availableEnhancements === null
@@ -59,7 +61,10 @@ const ActionDetailDialog: React.FC<ActionDetailDialogProps> = ({openForAction, o
     }
 
     const amountPicker = (
-        "Zvolit mnozstvi"
+        <ResourceEdit
+            value={actionParam.amount ?? Resources.zero()}
+            onValueChange={amount => setActionParam(prev => ({...prev, amount}))}
+        />
     );
 
     const handleEnhancementSelected = (event: any): void => {
@@ -98,18 +103,20 @@ const ActionDetailDialog: React.FC<ActionDetailDialogProps> = ({openForAction, o
                 onTileSelected={handleTargetSelected}
                 imgKey={imgKey}
             />
-            <Typography component="span">Střed: <Position position={sourceLocation} /></Typography>
+            <Typography component="span">Střed: <Position position={sourceLocation}/></Typography>
             <Typography style={{float: "right"}} component="span">
-                Vybráno: <Position position={actionParam.target} />
+                Vybráno: <Position position={actionParam.target}/>
             </Typography>
         </>
     );
 
     const handleSubmit = (): void => {
         onParamSelected(action, actionParam);
+        setActionParam({}) // reset values
         onClose();
     };
 
+    const formId = "actionDetailDialog-" + action;
     return (
         <Dialog
             open={openForAction.open}
@@ -119,13 +126,16 @@ const ActionDetailDialog: React.FC<ActionDetailDialogProps> = ({openForAction, o
                 {_.capitalize(actionTranslations.get(action))}
             </DialogTitle>
             <DialogContent>
-                {needsEnhancement ? enhancementPicker : null}
-                {needsTarget ? targetPicker : null}
-                {needsAmount ? amountPicker : null}
+                <form id={formId}>
+                    {needsEnhancement ? enhancementPicker : null}
+                    {needsTarget ? targetPicker : null}
+                    {needsAmount ? amountPicker : null}
+                </form>
             </DialogContent>
             <DialogActions>
                 <Button variant="outlined" onClick={onClose}> Zrušit </Button>
                 <Button
+                    form={formId}
                     variant="contained"
                     color="primary"
                     type="submit"

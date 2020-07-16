@@ -13,7 +13,6 @@ interface ResourcesProps {
 
 const Resources: React.FC<ResourcesProps> = (props) => {
     const r = props.resources;
-    console.log(props);
     return (
         <Grid container spacing={1} direction="row">
             <Grid item>
