@@ -21,9 +21,11 @@ interface TileDetailProps {
 
 const outOfRange = (location: HexPosition): boolean =>
     Math.abs(location.Q) > 6 || Math.abs(location.R) > 6 || Math.abs(location.Q + location.R) > 6;
+
 const cropToRange = (location: HexPosition): HexPosition => {
     const z = location.Q + location.R;
     if (Math.abs(z) > 6) {
+        // There is probably also some mathematically elegant solution to this, using the cubic (x,y,z) system.
         const Q = Math.sign(z) * Math.min(6, Math.abs(location.Q));
         const R = Math.sign(z) * 6 - Q;
         return {Q,R};
@@ -34,7 +36,7 @@ const cropToRange = (location: HexPosition): HexPosition => {
 }
 
 const TileDetail: React.FC<TileDetailProps> = ({coordinates}) => {
-    const location: HexPosition = useMemo(() => ({
+    let location: HexPosition = useMemo(() => ({
         Q: parseInt(coordinates.split(",")[0]),
         R: parseInt(coordinates.split(",")[1]),
     }), [coordinates]);
@@ -46,10 +48,11 @@ const TileDetail: React.FC<TileDetailProps> = ({coordinates}) => {
 
     useEffect(() => {
         if (outOfRange(location)) {
-            history.replace(routes.factory.tileDetail(cropToRange(location)));
+            history.push(routes.factory.tileDetail(cropToRange(location)));
         }
     }, [location, history]);
-    if (outOfRange(location)) return null;
+    if (outOfRange(location))
+        location = cropToRange(location);
 
     if (!data.loaded)
         return <div style={{textAlign: "center"}}><CircularProgress/></div>;

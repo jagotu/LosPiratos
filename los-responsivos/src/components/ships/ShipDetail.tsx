@@ -9,7 +9,7 @@ import {Link} from "react-router-dom";
 import {routes} from "../../App";
 import ActionPlanner from "./actions/ActionPlanner";
 import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
-import uid from "../../uid";
+import uid from "../../util/uid";
 import useError from "../../useError";
 import TileProximityView from "../TileProximityView";
 
@@ -56,7 +56,7 @@ const ShipDetail: React.FC<ShipDetailProps> = ({id}) => {
     return (
         <Grid container direction="column" spacing={2}>
             <Grid item>
-                <Button component={Link} to={routes.overview} color="primary" variant="contained">Zpět</Button>
+                <Button component={Link} to={routes.overview} color="primary" variant="contained">Zpět na přehled</Button>
             </Grid>
             <Grid item><Ship data={shipDetail.ship} clickable={false}/></Grid>
             <Grid item>
@@ -87,7 +87,9 @@ const ShipDetail: React.FC<ShipDetailProps> = ({id}) => {
             </Grid>
             <Grid item>
                 <Typography variant="h6">Okolí lodi</Typography>
-                <TileProximityView center={shipDetail.ship.position} />
+                <Link to={routes.factory.tileDetail(shipDetail.ship.position)}>
+                    <TileProximityView center={shipDetail.ship.position}/>
+                </Link>
             </Grid>
         </Grid>
 

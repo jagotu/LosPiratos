@@ -1,5 +1,6 @@
 import React from "react";
 import HexPosition from "../models/HexPosition";
+import {Coordinate2D, edgeLength, hexToPixel, mapImageHeight, mapImageWidth, pixelToHex, SQRT_3} from "../util/hexGridMapMath";
 
 interface GameTileProximityViewProps {
     center: HexPosition;
@@ -22,53 +23,15 @@ interface GameTileProximityViewProps {
     mortar?: boolean;
 }
 
-type Coordinate2D = { x: number, y: number }
-
-const imageWidth = 2500; // hardcoded value, width of the image from the backend
-const imageHeight = 2211; // hardcoded value, height of the image from the backend
-
-const SQRT_3 = Math.sqrt(3);
-const edgeLength = 107.312;
 const tileWidth = SQRT_3 * edgeLength;
 const tileHeight = edgeLength * 2;
 const viewportWidth = tileWidth * 2;
 const viewportHeight = tileHeight * 2;
 
-const hexToPixel = ({Q, R}: HexPosition): Coordinate2D => {
-    return {
-        x: edgeLength * SQRT_3 * (Q + R / 2.0),
-        y: edgeLength * 3.0 / 2 * R
-    };
-}
-const pixelToHex = function (x: number, y: number): HexPosition {
-    const Q = (x * SQRT_3 / 3 - y / 3) / edgeLength;
-    const R = y * 2 / 3 / edgeLength;
-
-    return hexRound(Q, R);
-}
-const hexRound = function (x: number, z: number): HexPosition {
-    const y = -x - z;
-
-    let rx = Math.round(x);
-    let rz = Math.round(z);
-    let ry = Math.round(y);
-
-    const x_diff = Math.abs(rx - x);
-    const y_diff = Math.abs(ry - y);
-    const z_diff = Math.abs(rz - z);
-
-    if (x_diff > y_diff && x_diff > z_diff) {
-        rx = -ry - rz;
-    } else if (y_diff <= z_diff) {
-        rz = -rx - ry;
-    }
-
-    return {Q: rx, R: rz};
-}
 
 const imgStyles = (cropCenter: Coordinate2D) => ({
-    marginLeft: -(imageWidth / 2 + cropCenter.x - tileWidth / 2.0) + viewportWidth,
-    marginTop: -(imageHeight / 2 + cropCenter.y - tileHeight / 2.0) + viewportHeight,
+    marginLeft: -(mapImageWidth / 2 + cropCenter.x - tileWidth / 2.0) + viewportWidth,
+    marginTop: -(mapImageHeight / 2 + cropCenter.y - tileHeight / 2.0) + viewportHeight,
     transitionProperty: "margin",
     transitionDuration: "1s",
     transitionTimingFunction: "ease"
@@ -89,8 +52,8 @@ const TileProximityView: React.FC<GameTileProximityViewProps> = (props) => {
         const y = e.nativeEvent.offsetY;  //y position within the element.
 
         // console.log(x - imageWidth / 2, y - imageHeight / 2);
-        const result = pixelToHex(x - imageWidth / 2, y - imageHeight / 2);
-        props.onTileSelected?.(result);
+        const position = pixelToHex(x - mapImageWidth / 2, y - mapImageHeight / 2);
+        props.onTileSelected?.(position);
     }
 
     return (
@@ -105,7 +68,7 @@ const TileProximityView: React.FC<GameTileProximityViewProps> = (props) => {
                     <img
                         style={{position: "absolute", left: 365, top: 423, pointerEvents: "none"}}
                         src={process.env.PUBLIC_URL + "/hexGridBorder.png"}
-                        />
+                    />
                     {props.mortar ?
                         <img
                             style={{position: "absolute", pointerEvents: "none"}}

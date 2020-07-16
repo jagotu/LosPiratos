@@ -10,7 +10,7 @@ import useError from "../../../useError";
 import TileProximityView from "../../TileProximityView";
 import HexPosition from "../../../models/HexPosition";
 import Position from "../../Position";
-import uid from "../../../uid";
+import uid from "../../../util/uid";
 import ResourceEdit from "../../ResourceEdit";
 import Resources from "../../../models/Resources";
 
