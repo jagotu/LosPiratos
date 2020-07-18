@@ -2,7 +2,11 @@ package com.vztekoverflow.lospiratos.viewmodel;
 
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.util.Warnings;
-import com.vztekoverflow.lospiratos.viewmodel.boardTiles.*;
+import com.vztekoverflow.lospiratos.viewmodel.boardTiles.Plantation;
+import com.vztekoverflow.lospiratos.viewmodel.boardTiles.PlantationExtra;
+import com.vztekoverflow.lospiratos.viewmodel.boardTiles.Port;
+import com.vztekoverflow.lospiratos.viewmodel.boardTiles.Sea;
+import com.vztekoverflow.lospiratos.viewmodel.boardTiles.Shore;
 
 /**
  * One tile on the board.
@@ -82,7 +86,7 @@ public abstract class BoardTile implements OnNextRoundStartedListener {
             return new PlantationExtra(location, owner);
         }
         if (tileName.equalsIgnoreCase(persistentNamePort)) {
-            return new Port(location, owner);
+            return new Port(location, owner, "undefinedPortName");
         }
         if (tileName.equalsIgnoreCase(persistentNameSea)) {
             return new Sea(location, owner);

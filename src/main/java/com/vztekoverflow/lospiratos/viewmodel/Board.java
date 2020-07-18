@@ -1,18 +1,29 @@
 package com.vztekoverflow.lospiratos.viewmodel;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import com.vztekoverflow.lospiratos.model.Map;
 import com.vztekoverflow.lospiratos.model.MapTile;
 import com.vztekoverflow.lospiratos.model.ResourceM;
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.util.Warnings;
 import com.vztekoverflow.lospiratos.viewmodel.boardTiles.Plantation;
-import javafx.beans.property.*;
-import javafx.collections.*;
+import com.vztekoverflow.lospiratos.viewmodel.boardTiles.Port;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.MapProperty;
+import javafx.beans.property.ReadOnlyListProperty;
+import javafx.beans.property.ReadOnlyMapProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleMapProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 
 /**
  * The game board (aka map or world) that the game is played on.
@@ -59,6 +70,10 @@ public class Board /* I want my Burd */ implements OnNextRoundStartedListener {
                     ResourceM r = new ResourceM();
                     p.getResource().bindBidirectionalFrom(r); //!!!!!
                     modelMap.tilesProperty().add(new MapTile(c.getKey(), BoardTile.getPersistentName(c.getValueAdded().getClass()), r));
+                }
+                if (c.getValueAdded() instanceof Port) {
+                    String portName = ((Port) c.getValueAdded()).getPortName();
+                    modelMap.tilesProperty().add(new MapTile(c.getKey(), BoardTile.getPersistentName(c.getValueAdded().getClass()),portName));
                 } else
                     modelMap.tilesProperty().add(new MapTile(c.getKey(), BoardTile.getPersistentName(c.getValueAdded().getClass())));
             } else if (c.wasRemoved()) {
@@ -72,10 +87,15 @@ public class Board /* I want my Burd */ implements OnNextRoundStartedListener {
 
     private boolean tryAddingTile(MapTile modelTile) {
         BoardTile t = BoardTile.createInstanceFromPersistentName(modelTile.getContent(), modelTile.getLocation(), this);
-        if (t == null) return false;
-        if (tiles.containsKey(t.getLocation())) return false;
+        if (t == null)
+            return false;
+        if (tiles.containsKey(t.getLocation()))
+            return false;
         if (t instanceof Plantation) {
             ((Plantation) t).getResource().bindBidirectional(modelTile.plantationsResource);
+        }
+        if (t instanceof Port) {
+            ((Port) t).setPortName(modelTile.getPortName());
         }
         tiles.put(modelTile.getLocation(), t);
         return true;
@@ -155,7 +175,8 @@ public class Board /* I want my Burd */ implements OnNextRoundStartedListener {
             if (!tiles.get(f.getCoordinate()).allowsFighting())
                 return null;
             return (DamageableFigure) f;
-        } else return null;
+        } else
+            return null;
     }
 
     /**
@@ -168,12 +189,14 @@ public class Board /* I want my Burd */ implements OnNextRoundStartedListener {
         if (tiles.get(position) instanceof Plunderable)
             return (Plunderable) tiles.get(position);
 
-        List<Plunderable> plunderables = findFigures(position).stream().filter(f -> f instanceof Plunderable).map(f -> (Plunderable) f).collect(Collectors.toList());
+        List<Plunderable> plunderables = findFigures(position).stream().filter(f -> f instanceof Plunderable).map(f -> (Plunderable) f)
+                .collect(Collectors.toList());
         if (plunderables.size() >= 1) {
             if (plunderables.size() > 1)
                 Warnings.makeWarning(toString() + ".getPlunderable()", "more (" + plunderables.size() + ") are at the same position: " + position + ")");
             return plunderables.get(0);
-        } else return null;
+        } else
+            return null;
     }
 
     /**
@@ -185,7 +208,8 @@ public class Board /* I want my Burd */ implements OnNextRoundStartedListener {
         Figure f = findFigure(position);
         if (f instanceof Ship)
             return (Ship) f;
-        else return null;
+        else
+            return null;
     }
 
     /**

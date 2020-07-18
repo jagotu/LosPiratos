@@ -530,6 +530,19 @@ public class Game {
         ports.add(new AxialCoordinate(2, 4));
         ports.add(new AxialCoordinate(3, -6));
 
+        List<String> portNames = new ArrayList<>();
+        portNames.add("Port Royal");
+        portNames.add("Port-au-Prince");
+        portNames.add("Tortuga");
+        portNames.add("Havana");
+        portNames.add("Santo Dominigo");
+        portNames.add("Caracas");
+        portNames.add("Nassau");
+        portNames.add("Sand Pedro");
+        int portNamesIndex = 0;
+
+        assert portNames.size() == ports.size();
+
         List<AxialCoordinate> shores = new ArrayList<>();
         shores.add(new AxialCoordinate(2, -6));
         shores.add(new AxialCoordinate(1, -2));
@@ -571,7 +584,7 @@ public class Game {
                 if (shores.contains(c)) {
                     tile = new Shore(c, b);
                 } else if (ports.contains(c)) {
-                    tile = new Port(c, b);
+                    tile = new Port(c, b, portNames.get(portNamesIndex++));
                 } else if (plantations.contains(c)) {
                     tile = new Plantation(c, b);
                 } else if (c.equals(AxialCoordinate.ZERO)) {

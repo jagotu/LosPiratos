@@ -5,8 +5,19 @@ import com.vztekoverflow.lospiratos.viewmodel.Board;
 import com.vztekoverflow.lospiratos.viewmodel.BoardTile;
 
 public class Port extends BoardTile {
-    public Port(AxialCoordinate location, Board b) {
-        super(location, b);
+    public Port(AxialCoordinate location, Board board, String portName) {
+        super(location, board);
+        this.portName = portName;
+    }
+
+    private String portName;
+
+    public String getPortName() {
+        return portName;
+    }
+
+    public void setPortName(String portName) {
+        this.portName = portName;
     }
 
     @Override

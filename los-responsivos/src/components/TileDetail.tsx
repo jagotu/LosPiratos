@@ -83,7 +83,7 @@ const TileDetail: React.FC<TileDetailProps> = ({coordinates}) => {
                 onTileSelected={(newPosition) => history.push(routes.factory.tileDetail(newPosition))}
                 center={location}
             />
-            <Typography>Políčko <Position position={location}/>, {translations[tile.content]}</Typography>
+            <Typography>Políčko <Position position={location}/>, {translations[tile.content]} {tile.portName}</Typography>
             {
                 tile.plantationsResource !== null ?
                     <Resources resources={tile.plantationsResource}/> : null
