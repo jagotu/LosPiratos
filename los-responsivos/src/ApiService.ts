@@ -85,15 +85,17 @@ export default class ApiService {
 
     static planAction(shipId: string, action: ShipAction, actionPayload?: ShipActionParam): Promise<void> {
         if (isModificationTransaction(action)) {
-            console.warn("ApiService, planning modification transaction. Did you mean to pland and perform it instead?", action);
+            console.warn("ApiService, planning modification transaction. Did you mean to plan and perform it instead?", action);
         }
+        console.log("service: planning ", action, actionPayload, "on ship", shipId);
 
-        return axios.post(endpoints.planAction(shipId), {
-                "action": action,
-                "actionPayload" : actionPayload
-            }
-        , {withCredentials: true})
-            .then(() => {})
+        return axios.post(
+            endpoints.planAction(shipId),
+            {action, actionPayload},
+            {withCredentials: true}
+        )
+            .then(() => {
+            })
             .catch(e => {
                 console.error("service error: plan action", e);
                 throw e;
