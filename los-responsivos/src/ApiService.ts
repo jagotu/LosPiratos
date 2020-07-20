@@ -12,12 +12,13 @@ export const endpoints = {
     game: addressPrefix + "/game", // GET, vraci uplne ta stejna data jako kdyz se dava ulozit hru
     shipDetail: (shipId: string) => addressPrefix + `/shipDetail?ship=${shipId}&team=${teamId()}`,
     planAction: (shipId: string) => addressPrefix + `/planAction?ship=${shipId}&team=${teamId()}`, // POST method
-    planAndEvaluateModificationTransaction: (shipId: string, action: Transaction) => `/team/${teamId()}/ship/${shipId}/modification-transaction/${action}`, // POST method
-    deleteAllActions: (shipId: string) => `/team/${teamId()}/ship/${shipId}/actions`, // DELETE method
-    deleteSomeActions: (shipId: string, howMany: number) => `/team/${teamId()}/ship/${shipId}/actions/${howMany}`, // DELETE method
-    possibleEnhancements: (shipId: string, action: ShipAction) => `/team/${teamId()}/ship/${shipId}/actions/${action}/plannable-enhancements`, // GET method
+    deleteActions: (shipId: string) => addressPrefix + `/deleteActions?ship=${shipId}&team=${teamId()}`, // POST method, screw REST
     login: addressPrefix + "/login",
-    combatLog: addressPrefix + "/log"
+    combatLog: addressPrefix + "/log",
+
+    planAndEvaluateModificationTransaction: (shipId: string, action: Transaction) => `/team/${teamId()}/ship/${shipId}/modification-transaction/${action}`, // POST method
+    possibleEnhancements: (shipId: string, action: ShipAction) => `/team/${teamId()}/ship/${shipId}/actions/${action}/plannable-enhancements`, // GET method
+
 }
 
 export default class ApiService {
@@ -60,14 +61,15 @@ export default class ApiService {
             });
     }
 
-    static deleteActions(shipId: string): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            console.log("service: deleting all actions on ship", shipId)
-            resolve();
-        }).catch(e => {
-            console.error("service error: delete actions.", e);
-            throw e;
-        });
+    static deleteActions(shipId: string, howManyToKeep: number): Promise<void> {
+
+        return axios.post(endpoints.deleteActions(shipId), howManyToKeep
+            , {withCredentials: true})
+            .then(() => {})
+            .catch(e => {
+                console.error("service error: delete actions", e);
+                throw e;
+            });
     }
 
     static planAndPerformModificationTransaction
@@ -96,14 +98,6 @@ export default class ApiService {
                 console.error("service error: plan action", e);
                 throw e;
             });
-
-        return new Promise<void>((resolve, reject) => {
-            console.log("service: planning ", action, actionPayload, "on ship", shipId);
-            resolve();
-        }).catch(e => {
-            console.error("service error: plan actions.", e);
-            throw e;
-        });
     }
 
 

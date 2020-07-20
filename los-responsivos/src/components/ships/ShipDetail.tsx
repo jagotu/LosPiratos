@@ -48,7 +48,7 @@ const ShipDetail: React.FC<ShipDetailProps> = ({id}) => {
 
     const refreshData = () => setDataVersion(oldValue => oldValue + 1); // force React to recall the ApiService
     const removeActions = () => {
-        ApiService.deleteActions(id)
+        ApiService.deleteActions(id, 0)
             .then(refreshData)
             .catch(showDefaultError);
     };
