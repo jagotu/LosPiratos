@@ -130,6 +130,9 @@ public class OrgStage {
     private BooleanProperty hasModifyingTransaction = new SimpleBooleanProperty(false);
     private BooleanBinding hasModifyingTransactionBinding;
 
+    public WebAppServer getWebAppServer() {
+        return webAppServer;
+    }
 
     @FXML
     private void initialize() {
@@ -258,6 +261,7 @@ public class OrgStage {
                 }
             }
         });
+        t.setDaemon(true);
 
         t.start();
 
@@ -364,6 +368,7 @@ public class OrgStage {
     }
 
     private Scene snapshotScene;
+
 
     private void updateSnapshotMapScene() {
         snapshotHexPane = new VirtualizingHexGridPane(edgeLength, pointy, new PiratosHexTileContentsFactory(game.get().getBoard(), edgeLength, pointy));

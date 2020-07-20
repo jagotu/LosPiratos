@@ -42,10 +42,23 @@ public class Main extends Application {
         GlyphFont piratoslastminuteFont = new GlyphFont("piratoslastminute", 16, inputStream);
         GlyphFontRegistry.register(piratoslastminuteFont);
 
-        Parent root = FXMLLoader.load(OrgStage.class.getResource("/com/vztekoverflow/lospiratos/view/stages/OrgStage.fxml"));
+        FXMLLoader loader = new FXMLLoader(OrgStage.class.getResource("/com/vztekoverflow/lospiratos/view/stages/OrgStage.fxml"));
+        Parent root = loader.load();
+
+        OrgStage sg = (OrgStage)loader.getController();
+
         primaryStage.setTitle("OrgStage");
         primaryStage.setScene(new Scene(root, 1024, 600));
-        primaryStage.setOnCloseRequest(e -> Platform.exit());
+        primaryStage.setOnCloseRequest(e -> {
+            Platform.exit();
+            if(sg.getWebAppServer() != null)
+            {
+                sg.getWebAppServer().stop(0);
+            }
+        });
+
+
+
         primaryStage.show();
 
 
