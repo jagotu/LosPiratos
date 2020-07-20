@@ -68,7 +68,7 @@ public abstract class LogFormatter {
 
             @Override
             String const_AttackCauses() {
-                return "způsobuje";
+                return "způsobuje ";
             }
 
             @Override
