@@ -45,7 +45,7 @@ const Ship: React.FC<ShipProps> = (props) => {
         <Grid container direction="column">
             <Grid item style={{display: "inline-flex"}}>
                 <div style={{float: "left"}}>
-                    <img src={simpleship} className={clsx(`deg-${s.orientationDeg}`, classes.shipView)}/>
+                    <img alt="loď" src={simpleship} className={clsx(`deg-${s.orientationDeg}`, classes.shipView)}/>
                 </div>
                 <div>
                     <Grid container direction="row" spacing={1} style={{alignItems: "center"}}>

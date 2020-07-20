@@ -2,45 +2,42 @@ import {useSnackbar} from 'notistack';
 import React, {useCallback, useMemo} from "react";
 
 interface useErrorResult {
-    showDefaultError: (e : any) => void;
+    showDefaultError: () => void;
+    showError: (message: string) => void;
+    showErrorFromEvent: (event: any) => void;
 }
 
 export default function useError(): useErrorResult {
-    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+    const {enqueueSnackbar} = useSnackbar();
 
-    const defaultMessage = useMemo( () => (
+    const defaultMessage = useMemo(() => (
         <div>
-            Ay! Něco se nepovedlo. Zkuste znovu načíst stránku.<br />
+            Ay! Něco se nepovedlo. Zkuste znovu načíst stránku.<br/>
             Pokud to nepomůže, kontaktujte Gociho, případně Toníka.
         </div>
-    ),[]);
+    ), []);
 
-    const showDefaultError = useCallback(e => {
-        if(e.response && e.response.status == 400)
-        {
-            enqueueSnackbar(
-                e.response.data,
-                {
-                    variant: "error",
-                    anchorOrigin: {
-                        vertical: 'top',
-                        horizontal: 'center',
-                    }
-                }
-            )
-        } else {
+    const showError = useCallback((message: string) => {
         enqueueSnackbar(
-                defaultMessage,
-                {
-                    variant: "error",
-                    anchorOrigin: {
-                        vertical: 'top',
-                        horizontal: 'center',
-                    }
-                }
-            )
-        }
-    },[enqueueSnackbar, defaultMessage]);
+            message,
+            {variant: "error"}
+        )
+    }, [enqueueSnackbar]);
 
-    return { showDefaultError };
+    const showErrorFromEvent = useCallback((event: any) => {
+        const message = event.response?.status === 400 ? event.response.data : defaultMessage;
+        enqueueSnackbar(
+            message,
+            {variant: "error"}
+        )
+    }, [enqueueSnackbar, defaultMessage]);
+
+    const showDefaultError = useCallback(() => {
+        enqueueSnackbar(
+            defaultMessage,
+            {variant: "error"}
+        )
+    }, [enqueueSnackbar, defaultMessage]);
+
+    return {showDefaultError, showError, showErrorFromEvent};
 }

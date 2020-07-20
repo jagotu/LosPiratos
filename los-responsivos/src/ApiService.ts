@@ -22,16 +22,11 @@ export const endpoints = {
 
 export default class ApiService {
     static login(username: string, password: string): Promise<{ teamId: string }> {
-        console.log("login", username, password)
-
-
-
-        return axios.post(endpoints.login, querystring.stringify(
-            {
-                username: username,
-                password: password
-            }
-        ), {withCredentials: true})
+        return axios.post(
+            endpoints.login,
+            querystring.stringify({username, password}),
+            {withCredentials: true}
+        )
             .then(response => response.data)
             .catch(e => {
                 console.error("service error: login", e);

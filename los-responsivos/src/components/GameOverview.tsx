@@ -32,7 +32,7 @@ const GameOverview: React.FC = () => {
             <Grid item>{controlPanel}</Grid>
             <Box pb={2}/> {/* visual separator */}
             {otherTeams.map(t => (
-                <Grid item><TeamOverview team={t}/></Grid>
+                <Grid item key={t.id}><TeamOverview team={t}/></Grid>
             ))}
         </Grid>
     );
