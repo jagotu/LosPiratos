@@ -4,11 +4,10 @@ import Button from "@material-ui/core/Button";
 import ApiService from "../ApiService";
 import {routes} from "../App";
 import {useSnackbar} from "notistack";
-import useError from "../useError";
 import TextField from "@material-ui/core/TextField";
 import PortSelect from "./PortSelect";
 import {Typography} from "@material-ui/core";
-import {Link} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 
 interface BuyNewShipProps {
 }
@@ -18,20 +17,17 @@ const BuyNewShip: React.FC<BuyNewShipProps> = (props) => {
     const [port, setPort] = useState("Port Royal");
     const [shipName, setShipName] = useState("");
     const [captainName, setCaptainName] = useState("");
-    const {showDefaultError} = useError();
+    const history = useHistory();
 
     const handleFormSubmit = (e: any) => {
         e.preventDefault();
         ApiService.buyNewShip(shipName, captainName, port)
             .then(() => {
+                enqueueSnackbar(`Loď ${shipName} byla zakoupena`,{variant: "success"});
+                history.push(routes.overview);
             })
             .catch(e =>  {
-                enqueueSnackbar(
-                    "Něco není správně, loď nebyla vytvořena.",
-                    {
-                        variant: "error"
-                    }
-                )
+                enqueueSnackbar("Ay! Něco není správně, loď nebyla vytvořena.",{variant: "error"});
             });
     };
 

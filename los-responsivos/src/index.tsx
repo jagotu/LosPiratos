@@ -9,7 +9,12 @@ import {GameContextProvider} from "./gameDataContext";
 
 ReactDOM.render(
     <React.StrictMode>
-        <SnackbarProvider>
+        <SnackbarProvider
+            anchorOrigin={{
+                horizontal: "left",
+                vertical: "top"
+            }}
+        >
             <UserProvider>
                 <GameContextProvider>
                     <App/>

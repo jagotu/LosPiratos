@@ -10,7 +10,7 @@ export default function useError(): useErrorResult {
 
     const defaultMessage = useMemo( () => (
         <div>
-            Něco se nepovedlo. Zkuste znovu načíst stránku.<br />
+            Ay! Něco se nepovedlo. Zkuste znovu načíst stránku.<br />
             Pokud to nepomůže, kontaktujte Gociho, případně Toníka.
         </div>
     ),[]);

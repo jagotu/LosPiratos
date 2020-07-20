@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from "react";
+import React, {useEffect, useMemo} from "react";
 import {Link, useHistory} from "react-router-dom";
 import {routes} from "../App";
 import {Button, CircularProgress, Grid, Typography} from "@material-ui/core";
@@ -18,7 +18,8 @@ interface TileDetailProps {
     /**
      * String as matched in the URL, i.e. in format "Q.R"
      */
-    coordinates: string
+    coordinates: string;
+    fullMap?: boolean;
 }
 
 const outOfRange = (location: HexPosition): boolean =>
@@ -46,13 +47,13 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-const TileDetail: React.FC<TileDetailProps> = ({coordinates}) => {
+const TileDetail: React.FC<TileDetailProps> = ({coordinates, fullMap}) => {
     let location: HexPosition = useMemo(() => ({
         Q: parseInt(coordinates.split(",")[0]),
         R: parseInt(coordinates.split(",")[1]),
     }), [coordinates]);
     const classes = useStyles();
-    const [fullMap, setFullMap] = useState(false);
+    // const [fullMap, setFullMap] = useState(false);
     const history = useHistory();
     const {data} = useGameData();
     const allShips = useMemo(() =>
@@ -104,7 +105,6 @@ const TileDetail: React.FC<TileDetailProps> = ({coordinates}) => {
 
     const handleTileSelected = (newPosition: HexPosition) => {
         history.push(routes.factory.tileDetail(newPosition));
-        setFullMap(false);
     }
 
     return (
@@ -115,11 +115,12 @@ const TileDetail: React.FC<TileDetailProps> = ({coordinates}) => {
                 </Grid>
                 {fullMap ? null :
                     <Grid item>
-                        <Button onClick={e => setFullMap(!fullMap)} color="primary" variant="contained">Velká mapa</Button>
+                        <Button component={Link} to={routes.map} color="primary" variant="contained">Velká mapa</Button>
                     </Grid>
                 }
             </Grid>
             <TileProximityView
+                style={{paddingLeft: 0}}
                 onTileSelected={handleTileSelected}
                 center={location}
                 fullMap={fullMap}
@@ -127,6 +128,10 @@ const TileDetail: React.FC<TileDetailProps> = ({coordinates}) => {
             {detailsOfItemsOnTile}
         </>
     );
+}
+
+TileDetail.defaultProps = {
+    fullMap: false
 }
 
 export default TileDetail;
