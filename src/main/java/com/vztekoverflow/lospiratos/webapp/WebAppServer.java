@@ -124,6 +124,7 @@ public class WebAppServer implements HttpHandler {
 
             exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "http://localhost:3000");
             exchange.getResponseHeaders().add("Access-Control-Allow-Credentials", "true"); //only debug!!!
+            exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
             if(exchange.getRequestHeaders().containsKey("Access-Control-Request-Headers"))
             {
                 exchange.getResponseHeaders().add("Access-Control-Allow-Headers", exchange.getRequestHeaders().get("Access-Control-Request-Headers").get(0));
@@ -131,7 +132,7 @@ public class WebAppServer implements HttpHandler {
 
             if(exchange.getRequestMethod().equals("OPTIONS"))
             {
-                exchange.sendResponseHeaders(200, 0);
+                exchange.sendResponseHeaders(204, -1);
             }
 
 
