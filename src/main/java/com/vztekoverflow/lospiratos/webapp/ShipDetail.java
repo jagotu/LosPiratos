@@ -38,7 +38,7 @@ public class ShipDetail {
 
     private static String getActionName(Action a) {
         if (a instanceof CannonsAbstractVolley) {
-            return ((CannonsAbstractVolley) a).isUseLeftCannons() ? "Left" : "Right" + a.getClass().getSimpleName();
+            return (((CannonsAbstractVolley) a).isUseLeftCannons() ? "Left" : "Right") + a.getClass().getSimpleName();
         }
         return a.getClass().getSimpleName();
     }
