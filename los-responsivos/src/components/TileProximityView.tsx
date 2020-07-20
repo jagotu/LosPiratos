@@ -45,6 +45,7 @@ const useStyles = makeStyles(() => ({
         overflow: "hidden",
         borderRadius: 16,
         transition: "width 1s ease, height 1s ease",
+        backgroundColor: "#f4f4f4" // same background color as the image has
     },
     mapContainerOriginalSize: {
         width: mapImageWidth + 56,

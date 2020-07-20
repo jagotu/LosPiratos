@@ -89,4 +89,14 @@ export default class ApiService {
                 throw e;
             });
     }
+
+
+    static buyNewShip(shipName: string, captainName: string, port: string): Promise<void> {
+        console.log(`service: buy new ship. name: ${shipName}, captain: ${captainName}, port: ${port} `);
+        return new Promise<void>((resolve) => resolve())
+            .catch(e => {
+                console.error("service error: buy new ship.", e);
+                throw e;
+            });
+    }
 }

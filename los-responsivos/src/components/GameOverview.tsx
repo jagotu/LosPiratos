@@ -22,7 +22,7 @@ const GameOverview: React.FC = () => {
         <Grid container direction="row" spacing={1}>
             <Grid item><Button component={Link} to={routes.map} variant="contained">Mapa</Button></Grid>
             <Grid item><Button component={Link} to={routes.combatLog} variant="contained">Combat log</Button></Grid>
-            <Grid item><Button component={Link} to={routes.createShip} variant="contained">Nákup lodi</Button></Grid>
+            <Grid item><Button component={Link} to={routes.buyShip} variant="contained">Nákup lodi</Button></Grid>
         </Grid>
     )
 

@@ -10,6 +10,7 @@ import GameOverview from "./components/GameOverview";
 import TileDetail from "./components/TileDetail";
 import MapView from "./components/MapView";
 import HexPosition from "./models/HexPosition";
+import BuyNewShip from "./components/BuyNewShip";
 
 export const routes = {
     overview: "/overview",
@@ -19,7 +20,7 @@ export const routes = {
     login: "/login",
     map: "/map",
     combatLog: "/combatLog",
-    createShip: "/createShip",
+    buyShip: "/buyShip",
     factory: {
         tileDetail: (position: HexPosition) => `${routes.tileDetail}/${position.Q},${position.R}`
     }
@@ -43,6 +44,7 @@ function App() {
                         <Route path={routes.tileDetail + "/:coordinates"}
                                render={({match}) => <TileDetail coordinates={match.params.coordinates}/>}
                         />
+                        <Route path={routes.buyShip} component={BuyNewShip}/>
                         <Route path={routes.icons} component={AllIcons}/>
                         {/*default: */}
                         <Route render={() => <h1>404: stránka nenalezena</h1>}/>

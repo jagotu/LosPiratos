@@ -538,7 +538,7 @@ public class Game {
         portNames.add("Santo Dominigo");
         portNames.add("Caracas");
         portNames.add("Nassau");
-        portNames.add("Sand Pedro");
+        portNames.add("San Pedro");
         int portNamesIndex = 0;
 
         assert portNames.size() == ports.size();
