@@ -45,6 +45,12 @@ export default class ApiService {
             .then(response => response.data);
     }
 
+    static getCombatLog(): Promise<string[]> {
+        console.log("service: get combat log");
+        return axios.get(endpoints.combatLog)
+            .then(response => response.data);
+    }
+
     static getShipDetail(id: string): Promise<ShipDetail> {
         console.log("service: get detail of ship", id);
         return axios.get(endpoints.shipDetail(id), {withCredentials: true})

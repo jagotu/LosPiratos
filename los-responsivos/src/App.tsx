@@ -10,6 +10,7 @@ import GameOverview from "./components/GameOverview";
 import TileDetail from "./components/TileDetail";
 import HexPosition from "./models/HexPosition";
 import BuyNewShip from "./components/BuyNewShip";
+import CombatLog from "./components/CombatLog";
 
 export const routes = {
     overview: "/overview",
@@ -49,6 +50,7 @@ function App() {
                         <Route path={routes.tileDetail + "/:coordinates"} render={renderTileDetail}/>
                         <Route path={routes.buyShip} component={BuyNewShip}/>
                         <Route path={routes.icons} component={AllIcons}/>
+                        <Route path={routes.combatLog} component={CombatLog}/>
                         {/*default: */}
                         <Route render={() => <h1>404: stránka nenalezena</h1>}/>
                     </Switch>
