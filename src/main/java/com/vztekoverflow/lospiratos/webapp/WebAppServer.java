@@ -29,13 +29,8 @@ public class WebAppServer implements HttpHandler {
 
     private boolean running = false;
 
-    public WebAppServer() throws IOException {
-        server = HttpServer.create(new InetSocketAddress("localhost", 8001), 0);
-        server.createContext("/", this);
-        server.setExecutor(Executors.newFixedThreadPool(10));
-    }
 
-    public void start() {
+    public void start() throws IOException {
 
         if (game == null) {
             throw new IllegalStateException("No game.");
@@ -43,6 +38,10 @@ public class WebAppServer implements HttpHandler {
         if (running) {
             throw new IllegalStateException("Server already running.");
         }
+
+        server = HttpServer.create(new InetSocketAddress("localhost", 8001), 0);
+        server.createContext("/", this);
+        server.setExecutor(Executors.newFixedThreadPool(10));
 
         server.start();
         running = true;
@@ -56,7 +55,7 @@ public class WebAppServer implements HttpHandler {
         synchronized (jpglock) {
             currentjpg = map;
         }
-    }
+}
 
     public void setGame(Game g) {
         this.game = g;
@@ -68,6 +67,7 @@ public class WebAppServer implements HttpHandler {
         }
 
         server.stop(delay);
+        running = false;
     }
 
 

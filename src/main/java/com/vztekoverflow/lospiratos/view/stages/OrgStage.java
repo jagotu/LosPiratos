@@ -226,11 +226,8 @@ public class OrgStage {
         });
 
 
-        try {
-            webAppServer = new WebAppServer();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        webAppServer = new WebAppServer();
 
         Platform.runLater(this::connectToGame);
 
@@ -466,7 +463,11 @@ public class OrgStage {
         }
 
         webAppServer.setGame(game.get());
-        webAppServer.start();
+        try {
+            webAppServer.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void updateEvaluateButton() {
