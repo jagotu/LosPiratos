@@ -29,19 +29,14 @@ public class ShipDetail {
 
 
         List<Action> relatedActions = Helpers.allActionsRelatedToShip(s);
-        plannableActions = relatedActions.stream().filter(Action::getPlannable).map(ShipDetail::getActionName).collect(Collectors.toList());
-        visibleActions = relatedActions.stream().filter(Action::getVisible).map(ShipDetail::getActionName).collect(Collectors.toList());
+        plannableActions = relatedActions.stream().filter(Action::getPlannable).map(Helpers::getActionName).collect(Collectors.toList());
+        visibleActions = relatedActions.stream().filter(Action::getVisible).map(Helpers::getActionName).collect(Collectors.toList());
 
-        plannedActions = s.getPlannedActions().stream().map(ShipDetail::getActionName).collect(Collectors.toList());
+        plannedActions = s.getPlannedActions().stream().map(Helpers::getActionName).collect(Collectors.toList());
 
     }
 
-    private static String getActionName(Action a) {
-        if (a instanceof CannonsAbstractVolley) {
-            return (((CannonsAbstractVolley) a).isUseLeftCannons() ? "Left" : "Right") + a.getClass().getSimpleName();
-        }
-        return a.getClass().getSimpleName();
-    }
+
 
     public static byte[] getJson(HttpExchange exchange, Game g, String teamToken) throws NoSuchAlgorithmException, InvalidKeyException, IOException {
         Map<String, List<String>> params = Helpers.splitQuery(exchange.getRequestURI());

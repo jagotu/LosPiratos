@@ -8,6 +8,7 @@ import com.vztekoverflow.lospiratos.viewmodel.actions.maneuvers.TurnLeft;
 import com.vztekoverflow.lospiratos.viewmodel.actions.maneuvers.TurnRight;
 import com.vztekoverflow.lospiratos.viewmodel.actions.transactions.*;
 
+import javax.json.JsonObject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -103,6 +104,24 @@ public class Helpers {
         }
     }
 
+    public static void assertHasAll(JsonObject json, String... values)
+    {
+        for(String value : values)
+        {
+            if(!json.containsKey(value))
+                throw new WebAppServer.FriendlyException("Required parameter missing: " + value);
+        }
+    }
+
+    public static void assertHasAll(JsonObject json, List<String> values)
+    {
+        for(String value : values)
+        {
+            if(!json.containsKey(value))
+                throw new WebAppServer.FriendlyException("Required parameter missing: " + value);
+        }
+    }
+
     public static byte[] readAllBytes(InputStream is) throws IOException {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
@@ -114,6 +133,13 @@ public class Helpers {
         }
 
         return buffer.toByteArray();
+    }
+
+    public static String getActionName(Action a) {
+        if (a instanceof CannonsAbstractVolley) {
+            return (((CannonsAbstractVolley) a).isUseLeftCannons() ? "Left" : "Right") + a.getClass().getSimpleName();
+        }
+        return a.getClass().getSimpleName();
     }
 
 }

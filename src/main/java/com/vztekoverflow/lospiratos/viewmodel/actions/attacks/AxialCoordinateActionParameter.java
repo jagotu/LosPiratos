@@ -23,4 +23,6 @@ public abstract class AxialCoordinateActionParameter implements ValidableActionP
 
     private ObjectProperty<AxialCoordinate> coordinate = new SimpleObjectProperty<>();
 
+
+
 }

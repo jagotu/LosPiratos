@@ -124,6 +124,16 @@ public class WebAppServer implements HttpHandler {
 
             exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "http://localhost:3000");
             exchange.getResponseHeaders().add("Access-Control-Allow-Credentials", "true"); //only debug!!!
+            if(exchange.getRequestHeaders().containsKey("Access-Control-Request-Headers"))
+            {
+                exchange.getResponseHeaders().add("Access-Control-Allow-Headers", exchange.getRequestHeaders().get("Access-Control-Request-Headers").get(0));
+            }
+
+            if(exchange.getRequestMethod().equals("OPTIONS"))
+            {
+                exchange.sendResponseHeaders(200, 0);
+            }
+
 
 
             Path p = Paths.get("webapp", exchange.getRequestURI().getPath());
@@ -160,7 +170,11 @@ public class WebAppServer implements HttpHandler {
                 contentType = "image/jpeg";
             } else if (loweredpath.startsWith("/shipdetail")) {
                 data = ShipDetail.getJson(exchange, game, teamToken);
-            } else if (loweredpath.equals("/login") && exchange.getRequestMethod().equals("POST")) {
+            } else if (loweredpath.startsWith("/planaction")) {
+                data = PlanAction.doit(exchange, game, teamToken, postData);
+            }
+
+            else if (loweredpath.equals("/login") && exchange.getRequestMethod().equals("POST")) {
 
                 String teamId = Auth.getLogin(postData);
 

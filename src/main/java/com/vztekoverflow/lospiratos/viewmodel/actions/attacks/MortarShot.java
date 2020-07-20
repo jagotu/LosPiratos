@@ -75,6 +75,11 @@ public class MortarShot extends Attack implements ParameterizedAction {
         public String getČeskéJméno() {
             return "Cíl";
         }
+
+        @Override
+        public String getJsonMapping() {
+            return "target";
+        }
     };
 
     @Override

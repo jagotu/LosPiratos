@@ -10,6 +10,11 @@ public interface ActionParameter<T> extends Translatable {
 
     ObjectProperty<T> property();
 
+    default String getJsonMapping()
+    {
+        return "todo";
+    }
+
 }
 
 

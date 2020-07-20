@@ -11,7 +11,7 @@ const addressPrefix = process.env.REACT_APP_BACKEND_URL;
 export const endpoints = {
     game: addressPrefix + "/game", // GET, vraci uplne ta stejna data jako kdyz se dava ulozit hru
     shipDetail: (shipId: string) => addressPrefix + `/shipDetail?ship=${shipId}&team=${teamId()}`,
-    planAction: (shipId: string, action: ShipAction) => `/team/${teamId()}/ship/${shipId}/actions/${action}`, // POST method
+    planAction: (shipId: string) => addressPrefix + `/planAction?ship=${shipId}&team=${teamId()}`, // POST method
     planAndEvaluateModificationTransaction: (shipId: string, action: Transaction) => `/team/${teamId()}/ship/${shipId}/modification-transaction/${action}`, // POST method
     deleteAllActions: (shipId: string) => `/team/${teamId()}/ship/${shipId}/actions`, // DELETE method
     deleteSomeActions: (shipId: string, howMany: number) => `/team/${teamId()}/ship/${shipId}/actions/${howMany}`, // DELETE method
@@ -90,6 +90,18 @@ export default class ApiService {
         if (isModificationTransaction(action)) {
             console.warn("ApiService, planning modification transaction. Did you mean to pland and perform it instead?", action);
         }
+
+        return axios.post(endpoints.planAction(shipId), {
+                "action": action,
+                "actionPayload" : actionPayload
+            }
+        , {withCredentials: true})
+            .then(() => {})
+            .catch(e => {
+                console.error("service error: plan action", e);
+                throw e;
+            });
+
         return new Promise<void>((resolve, reject) => {
             console.log("service: planning ", action, actionPayload, "on ship", shipId);
             resolve();
