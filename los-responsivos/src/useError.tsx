@@ -2,7 +2,7 @@ import {useSnackbar} from 'notistack';
 import React, {useCallback, useMemo} from "react";
 
 interface useErrorResult {
-    showDefaultError: () => void;
+    showDefaultError: (e : any) => void;
 }
 
 export default function useError(): useErrorResult {
@@ -15,17 +15,31 @@ export default function useError(): useErrorResult {
         </div>
     ),[]);
 
-    const showDefaultError = useCallback(() => {
-        enqueueSnackbar(
-            defaultMessage,
-            {
-                variant: "error",
-                anchorOrigin: {
-                    vertical: 'top',
-                    horizontal: 'center',
+    const showDefaultError = useCallback(e => {
+        if(e.response && e.response.status == 400)
+        {
+            enqueueSnackbar(
+                e.response.data,
+                {
+                    variant: "error",
+                    anchorOrigin: {
+                        vertical: 'top',
+                        horizontal: 'center',
+                    }
                 }
-            }
-        )
+            )
+        } else {
+        enqueueSnackbar(
+                defaultMessage,
+                {
+                    variant: "error",
+                    anchorOrigin: {
+                        vertical: 'top',
+                        horizontal: 'center',
+                    }
+                }
+            )
+        }
     },[enqueueSnackbar, defaultMessage]);
 
     return { showDefaultError };

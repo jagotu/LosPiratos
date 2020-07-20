@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class CannonsAbstractVolley extends Attack {
+    public boolean isUseLeftCannons() {
+        return useLeftCannons;
+    }
+
     final protected boolean useLeftCannons; //false ~ right, true ~ left
 
     protected CannonsAbstractVolley(boolean useLeftCannons) {

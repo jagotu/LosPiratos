@@ -8,13 +8,15 @@ import {useHistory} from "react-router-dom";
 import {routes} from "../App";
 import {useUser} from "../userContext";
 import {Typography} from "@material-ui/core";
+import useError from "../useError";
 
 const LoginForm: React.FC = () => {
-    const [username, setUsername] = useState<string>("");
-    const [password, setPassword] = useState<string>("");
+    const [username, setUsername] = useState<string>("1");
+    const [password, setPassword] = useState<string>("a");
     const {enqueueSnackbar} = useSnackbar();
     const history = useHistory();
     const {user, setUser, setTeamId, logout} = useUser();
+    const {showDefaultError} = useError();
 
     const handleFormSubmit = (e: any) => {
         e.preventDefault();
@@ -25,13 +27,19 @@ const LoginForm: React.FC = () => {
                 history.push(routes.overview);
             })
             .catch(e => {
-                enqueueSnackbar(
-                    "Nesprávné údaje",
-                    {
-                        variant: "error"
-                    }
-                )
-            });
+                if(e.response && e.response.status === 401)
+                {
+                    enqueueSnackbar(
+                        e.response.data,
+                        {
+                            variant: "error"
+                        }
+                    )
+                } else {
+                    throw e;
+                }
+
+            }).catch(showDefaultError);
     };
 
     const userElement = (

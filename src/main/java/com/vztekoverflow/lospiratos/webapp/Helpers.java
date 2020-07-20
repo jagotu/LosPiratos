@@ -8,9 +8,11 @@ import com.vztekoverflow.lospiratos.viewmodel.actions.maneuvers.TurnLeft;
 import com.vztekoverflow.lospiratos.viewmodel.actions.maneuvers.TurnRight;
 import com.vztekoverflow.lospiratos.viewmodel.actions.transactions.*;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
-import java.net.URL;
 import java.net.URLDecoder;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -56,10 +58,17 @@ public class Helpers {
 
     public static Map<String, List<String>> splitQuery(URI uri) {
 
-        if (uri.getQuery() == null || uri.getQuery().isEmpty()) {
+        return splitUrlEncodedParams(uri.getQuery());
+
+    }
+
+    public static Map<String, List<String>> splitUrlEncodedParams(String urlEncodedParams)
+    {
+        if (urlEncodedParams == null || urlEncodedParams.isEmpty()) {
             return Collections.emptyMap();
         }
-        return Arrays.stream(uri.getQuery().split("&"))
+
+        return Arrays.stream(urlEncodedParams.split("&"))
                 .map(Helpers::splitQueryParameter)
                 .collect(Collectors.groupingBy(AbstractMap.SimpleImmutableEntry::getKey, LinkedHashMap::new, Collectors.mapping(Map.Entry::getValue, Collectors.toList())));
     }
@@ -78,6 +87,33 @@ public class Helpers {
                     key, value
             );
         }
+    }
+
+    public static boolean isPresentOnce(Map<String, List<String>> params, String value)
+    {
+        return params.containsKey(value) && params.get(value).size() == 1;
+    }
+
+    public static void assertPresentOnce(Map<String, List<String>> params, String... values)
+    {
+        for(String value : values)
+        {
+            if(!isPresentOnce(params, value))
+                throw new WebAppServer.FriendlyException("Required parameter missing or has multiple values: " + value);
+        }
+    }
+
+    public static byte[] readAllBytes(InputStream is) throws IOException {
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+
+        int nRead;
+        byte[] data = new byte[16384];
+
+        while ((nRead = is.read(data, 0, data.length)) != -1) {
+            buffer.write(data, 0, nRead);
+        }
+
+        return buffer.toByteArray();
     }
 
 }

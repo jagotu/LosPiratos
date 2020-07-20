@@ -4,6 +4,7 @@ import {isModificationTransaction, Transaction} from "./models/Transactions";
 import {teamId} from "./userContext";
 import axios from "axios";
 import Game from "./models/Game";
+import querystring from "querystring";
 
 const addressPrefix = process.env.REACT_APP_BACKEND_URL;
 
@@ -15,14 +16,26 @@ export const endpoints = {
     deleteAllActions: (shipId: string) => `/team/${teamId()}/ship/${shipId}/actions`, // DELETE method
     deleteSomeActions: (shipId: string, howMany: number) => `/team/${teamId()}/ship/${shipId}/actions/${howMany}`, // DELETE method
     possibleEnhancements: (shipId: string, action: ShipAction) => `/team/${teamId()}/ship/${shipId}/actions/${action}/plannable-enhancements`, // GET method
+    login: addressPrefix + "/login",
 }
 
 export default class ApiService {
     static login(username: string, password: string): Promise<{ teamId: string }> {
         console.log("login", username, password)
-        return new Promise<{ teamId: string }>((resolve, reject) => {
-            resolve({teamId: "1"})
-        });
+
+
+
+        return axios.post(endpoints.login, querystring.stringify(
+            {
+                username: username,
+                password: password
+            }
+        ), {withCredentials: true})
+            .then(response => response.data)
+            .catch(e => {
+                console.error("service error: login", e);
+                throw e;
+            });
     }
 
     static getGameData(): Promise<Game> {
@@ -33,7 +46,7 @@ export default class ApiService {
 
     static getShipDetail(id: string): Promise<ShipDetail> {
         console.log("service: get detail of ship", id);
-        return axios.get(endpoints.shipDetail(id))
+        return axios.get(endpoints.shipDetail(id), {withCredentials: true})
             .then(response => ({
                 ...response.data,
                 plannableActions: new Set(response.data.plannableActions),

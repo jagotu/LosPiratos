@@ -49,3 +49,6 @@ fabric.properties
 
 # Generated jar files
 LosPiratos.jar
+
+# secret key
+secret.key

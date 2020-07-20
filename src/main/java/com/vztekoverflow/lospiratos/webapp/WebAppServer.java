@@ -10,6 +10,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executors;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -17,6 +19,8 @@ import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import com.vztekoverflow.lospiratos.model.GameSerializer;
 import com.vztekoverflow.lospiratos.viewmodel.Game;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class WebAppServer implements HttpHandler {
 
@@ -70,11 +74,56 @@ public class WebAppServer implements HttpHandler {
         running = false;
     }
 
+    private String getTeamTokenValue(HttpExchange exchange)
+    {
+        String token = null;
+
+        if(exchange.getRequestHeaders().containsKey("Cookie"))
+        {
+            for(String cookies : exchange.getRequestHeaders().get("Cookie"))
+            {
+                for(String cookie : cookies.split(";"))
+                {
+                    if(cookie.startsWith("teamToken="))
+                    {
+                        token = cookie.replace("teamToken=", "");
+                    }
+                }
+            }
+        }
+
+        /*if(exchange.getRequestBody() != null)
+        {
+            try {
+                String postData = new String(Helpers.readAllBytes(exchange.getRequestBody()), UTF_8);
+                Map<String, List<String>> postParams = Helpers.splitUrlEncodedParams(postData);
+                if(Helpers.isPresentOnce(postParams, "teamToken"))
+                {
+                    token = postParams.get("teamToken").get(0);
+                }
+            } catch (IOException ignored) {
+
+            }
+        }
+
+        Map<String, List<String>> urlParams = Helpers.splitQuery(exchange.getRequestURI());
+
+        if(Helpers.isPresentOnce(urlParams, "teamToken"))
+        {
+            token = urlParams.get("teamToken").get(0);
+        }*/
+
+        return token;
+    }
+
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         OutputStream outputStream = exchange.getResponseBody();
         try {
+
+            exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "http://localhost:3000");
+            exchange.getResponseHeaders().add("Access-Control-Allow-Credentials", "true"); //only debug!!!
 
 
             Path p = Paths.get("webapp", exchange.getRequestURI().getPath());
@@ -85,19 +134,41 @@ public class WebAppServer implements HttpHandler {
 
             byte[] data = {};
             String contentType = "application/json";
+            String postData = "";
+
+            if(exchange.getRequestBody() != null)
+            {
+                try {
+                    postData = new String(Helpers.readAllBytes(exchange.getRequestBody()), UTF_8);
+                } catch (IOException ignored) {
+
+                }
+            }
+
+            String teamToken = getTeamTokenValue(exchange);
+
 
             if (f.isFile() && f.canRead()) {
                 data = Files.readAllBytes(p);
                 contentType = Files.probeContentType(p);
             } else if (loweredpath.equals("/game")) {
-                data = GameSerializer.JsonFromGame(game.getGameModel()).getBytes(StandardCharsets.UTF_8);
+                data = GameSerializer.JsonFromGame(game.getGameModel()).getBytes(UTF_8);
             } else if (loweredpath.equals("/map.jpg")) {
                 synchronized (jpglock) {
                     data = currentjpg;
                 }
                 contentType = "image/jpeg";
             } else if (loweredpath.startsWith("/shipdetail")) {
-                data = ShipDetail.getJson(exchange, game);
+                data = ShipDetail.getJson(exchange, game, teamToken);
+            } else if (loweredpath.equals("/login") && exchange.getRequestMethod().equals("POST")) {
+
+                String teamId = Auth.getLogin(postData);
+
+                String token = Auth.getSecretForTeam(teamId);
+
+                data = String.format("{\"teamId\":\"%s\"}", teamId).getBytes(UTF_8);
+                exchange.getResponseHeaders().add("Set-Cookie", "teamToken=" + token);
+
             } else {
                 p = Paths.get("webapp", "index.html");
                 data = Files.readAllBytes(p);
@@ -114,15 +185,25 @@ public class WebAppServer implements HttpHandler {
             }
 
             exchange.getResponseHeaders().add("Content-Type", contentType);
-            exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
             exchange.sendResponseHeaders(200, data.length);
 
             outputStream.write(data);
+        } catch (FriendlyException e)
+        {
+            byte[] err = e.getMessage().getBytes(UTF_8);
+            exchange.sendResponseHeaders(400, err.length);
+            outputStream.write(err);
+
+        } catch (UnauthorizedException e)
+        {
+            byte[] err = e.getMessage().getBytes(UTF_8);
+            exchange.sendResponseHeaders(401, err.length);
+            outputStream.write(err);
         } catch (Exception e) {
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
             e.printStackTrace(pw);
-            byte[] err = sw.toString().getBytes(StandardCharsets.UTF_8);
+            byte[] err = sw.toString().getBytes(UTF_8);
 
             exchange.sendResponseHeaders(500, err.length);
             outputStream.write(err);
@@ -131,7 +212,32 @@ public class WebAppServer implements HttpHandler {
         outputStream.close();
     }
 
-    public class FriendlyException extends Exception {
 
+    /**
+     * Exception that results in a 400 response with a friendly error message
+     */
+    public static class FriendlyException extends RuntimeException {
+
+        public FriendlyException() {
+        }
+
+        public FriendlyException(String message) {
+            super(message);
+        }
+    }
+
+
+    /**
+     * Exception that results in a 401 response with a friendly error message
+     */
+    public static class UnauthorizedException extends RuntimeException
+    {
+
+        public UnauthorizedException() {
+        }
+
+        public UnauthorizedException(String message) {
+            super(message);
+        }
     }
 }
