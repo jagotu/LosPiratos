@@ -169,7 +169,11 @@ public class WebAppServer implements HttpHandler {
                 data = String.format("{\"teamId\":\"%s\"}", teamId).getBytes(UTF_8);
                 exchange.getResponseHeaders().add("Set-Cookie", "teamToken=" + token);
 
-            } else {
+            } else if (loweredpath.equals("/log"))
+            {
+                data = CombatLog.getJson(exchange, game);
+            }
+            else {
                 p = Paths.get("webapp", "index.html");
                 data = Files.readAllBytes(p);
                 contentType = Files.probeContentType(p);

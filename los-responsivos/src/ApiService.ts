@@ -17,6 +17,7 @@ export const endpoints = {
     deleteSomeActions: (shipId: string, howMany: number) => `/team/${teamId()}/ship/${shipId}/actions/${howMany}`, // DELETE method
     possibleEnhancements: (shipId: string, action: ShipAction) => `/team/${teamId()}/ship/${shipId}/actions/${action}/plannable-enhancements`, // GET method
     login: addressPrefix + "/login",
+    combatLog: addressPrefix + "/log"
 }
 
 export default class ApiService {
