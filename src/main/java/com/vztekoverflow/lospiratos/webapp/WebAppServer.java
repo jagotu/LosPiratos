@@ -170,8 +170,10 @@ public class WebAppServer implements HttpHandler {
                 contentType = "image/jpeg";
             } else if (loweredpath.startsWith("/shipdetail")) {
                 data = ShipDetail.getJson(exchange, game, teamToken);
+            } else if (loweredpath.startsWith("/planactionandcommit") && exchange.getRequestMethod().equals("POST")) {
+                data = PlanAction.doit(exchange, game, teamToken, postData, true);
             } else if (loweredpath.startsWith("/planaction") && exchange.getRequestMethod().equals("POST")) {
-                data = PlanAction.doit(exchange, game, teamToken, postData);
+                data = PlanAction.doit(exchange, game, teamToken, postData, false);
             } else if (loweredpath.startsWith("/deleteactions") && exchange.getRequestMethod().equals("POST")) {
                 data = DeleteActions.doit(exchange, game, teamToken, postData);
             }

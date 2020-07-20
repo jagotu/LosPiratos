@@ -5,13 +5,19 @@ import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.viewmodel.Game;
+import com.vztekoverflow.lospiratos.viewmodel.Resource;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
 import com.vztekoverflow.lospiratos.viewmodel.Team;
 import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
 import com.vztekoverflow.lospiratos.viewmodel.actions.ActionParameter;
 import com.vztekoverflow.lospiratos.viewmodel.actions.ParameterizedAction;
 import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.AxialCoordinateActionParameter;
+import com.vztekoverflow.lospiratos.viewmodel.actions.transactions.EnhancementActionParameter;
+import com.vztekoverflow.lospiratos.viewmodel.actions.transactions.Plunder;
+import com.vztekoverflow.lospiratos.viewmodel.actions.transactions.ResourceActionParameter;
 import com.vztekoverflow.lospiratos.viewmodel.logs.LogFormatter;
+import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
+import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.EnhancementsCatalog;
 import javafx.application.Platform;
 import org.hildan.fxgson.FxGson;
 
@@ -30,7 +36,7 @@ import java.util.stream.StreamSupport;
 
 public class PlanAction {
 
-    public static byte[] doit(HttpExchange exchange, Game g, String teamToken, String postData) throws NoSuchAlgorithmException, InvalidKeyException, IOException, InterruptedException {
+    public static byte[] doit(HttpExchange exchange, Game g, String teamToken, String postData, boolean commit) throws NoSuchAlgorithmException, InvalidKeyException, IOException, InterruptedException {
 
         Map<String, List<String>> params = Helpers.splitQuery(exchange.getRequestURI());
         Helpers.assertPresentOnce(params, "ship", "team");
@@ -80,11 +86,38 @@ public class PlanAction {
                             paramValue.getInt("R")
                     ));
 
-                } //TODO others
+                } else if (ap instanceof ResourceActionParameter) {
+                    Resource r = ((ResourceActionParameter) ap).get();
+                    if (paramValue.containsKey("money")) {
+                        r.setMoney(paramValue.getInt("money"));
+                    }
+                    if (paramValue.containsKey("metal")) {
+                        r.setMetal(paramValue.getInt("metal"));
+                    }
+                    if (paramValue.containsKey("wood")) {
+                        r.setWood(paramValue.getInt("wood"));
+                    }
+                    if (paramValue.containsKey("cloth")) {
+                        r.setCloth(paramValue.getInt("cloth"));
+                    }
+                    if (paramValue.containsKey("rum")) {
+                        r.setRum(paramValue.getInt("rum"));
+                    }
+
+                } else if (ap instanceof EnhancementActionParameter) {
+                    Helpers.assertHasAll(paramValue, "enhancement");
+                    String enhancement = paramValue.getString("enhancement");
+                    Class<? extends ShipEnhancement> enhancementClass = EnhancementsCatalog.allPossibleEnhancements.stream()
+                            .filter(x -> EnhancementsCatalog.getPersistentName(x).equals(enhancement))
+                            .findFirst().orElseThrow(() -> new WebAppServer.FriendlyException("No such enhancement: " + enhancement));
+
+                    ap.set(enhancementClass);
+                }
+
+                //TODO others
             }
 
-            if(!pa.isSatisfied())
-            {
+            if (!pa.isSatisfied()) {
                 throw new WebAppServer.FriendlyException("Action is not satisfied - provided parameters are invalid.");
             }
         }
@@ -94,13 +127,14 @@ public class PlanAction {
         Platform.runLater(() ->
         {
             s.planAction(a);
+            if (commit) {
+                s.commitModifyingTransactions();
+            }
             wr.setResult("");
         });
 
-        while(!wr.isDone())
-        {
-            synchronized (wr.getNotifier())
-            {
+        while (!wr.isDone()) {
+            synchronized (wr.getNotifier()) {
                 wr.getNotifier().wait();
             }
 

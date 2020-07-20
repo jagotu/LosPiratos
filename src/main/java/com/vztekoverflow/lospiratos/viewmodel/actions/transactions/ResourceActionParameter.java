@@ -34,4 +34,8 @@ public class ResourceActionParameter implements ActionParameter<Resource> {
 
     final ObjectProperty<Resource> r = new ReadOnlyObjectWrapper<>(new Resource());
 
+    @Override
+    public String getJsonMapping() {
+        return "amount";
+    }
 }

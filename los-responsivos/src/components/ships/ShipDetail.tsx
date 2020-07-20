@@ -31,7 +31,7 @@ type MaybeData = { loaded: true, ship: ShipDetailModel } | { loaded: false, ship
 
 const ShipDetail: React.FC<ShipDetailProps> = ({id}) => {
     const classes = useStyles();
-    const {showDefaultError} = useError();
+    const {showErrorFromEvent} = useError();
 
     const [data, setData] = useState<MaybeData>({loaded: false, ship: undefined});
     const [dataVersion, setDataVersion] = useState(0);
@@ -39,8 +39,8 @@ const ShipDetail: React.FC<ShipDetailProps> = ({id}) => {
     useEffect(() => {
         ApiService.getShipDetail(id)
             .then(ship => setData({loaded: true, ship}))
-            .catch(showDefaultError);
-    }, [id, dataVersion, showDefaultError]);
+            .catch(showErrorFromEvent);
+    }, [id, dataVersion, showErrorFromEvent]);
 
     if (!data.loaded)
         return <div style={{textAlign: "center"}}><CircularProgress/></div>;
@@ -50,7 +50,7 @@ const ShipDetail: React.FC<ShipDetailProps> = ({id}) => {
     const removeActions = () => {
         ApiService.deleteActions(id, 0)
             .then(refreshData)
-            .catch(showDefaultError);
+            .catch(showErrorFromEvent);
     };
 
     return (

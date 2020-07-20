@@ -20,7 +20,7 @@ interface ActionPlannerProps {
 }
 
 const ActionPlanner: React.FC<ActionPlannerProps> = ({ship, plannableActions, visibleActions, ...props}) => {
-    const {showDefaultError} = useError();
+    const {showErrorFromEvent} = useError();
     const [tab, setTab] = useState<ShipActionKind>("maneuver");
     const [displayDetailDialog, setDisplayDetailDialog] = useState<OpenForAction>({open: false, action: undefined});
     const [displayConfirmModificationDialog, setDisplayConfirmModificationDialog] = useState<OpenForAction>({open: false, action: undefined});
@@ -42,10 +42,9 @@ const ActionPlanner: React.FC<ActionPlannerProps> = ({ship, plannableActions, vi
         }
     };
     const planAction = (action: ShipAction, params: ShipActionParam) => {
-        const serviceCall = isModificationTransaction(action) ? ApiService.planAndPerformModificationTransaction : ApiService.planAction;
-        serviceCall(ship.id, action, params)
+        ApiService.planAction(ship.id, action, params, isModificationTransaction(action))
             .then(props.onActionPlannedOk)
-            .catch(showDefaultError)
+            .catch(showErrorFromEvent)
     };
 
     const anyTransactionPlannable = Array.from(plannableActions.values())

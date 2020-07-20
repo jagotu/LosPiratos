@@ -60,6 +60,11 @@ const ActionDetailDialog: React.FC<ActionDetailDialogProps> = ({openForAction, o
         needsEnhancement = transactionsParameters[action as Transaction].needsEnhancement;
     }
 
+    if(needsAmount && !actionParam.amount)
+    {
+        actionParam.amount = Resources.zero()
+    }
+
     const amountPicker = (
         <ResourceEdit
             value={actionParam.amount ?? Resources.zero()}
@@ -68,14 +73,14 @@ const ActionDetailDialog: React.FC<ActionDetailDialogProps> = ({openForAction, o
     );
 
     const handleEnhancementSelected = (event: any): void => {
-        const enhancement = event.target.value;
+        const enhancement = {"enhancement": event.target.value};
         setActionParam(prev => ({...prev, enhancement}))
     };
     const enhancementPicker = (
         <FormControl>
             <InputLabel id="enhancementPickerInputLabel">Vylepšení</InputLabel>
             <Select
-                value={actionParam.enhancement ?? ""}
+                value={actionParam.enhancement?.enhancement ?? ""}
                 labelId="enhancementPickerInputLabel"
                 onChange={handleEnhancementSelected}
                 style={{minWidth: "16ch"}}

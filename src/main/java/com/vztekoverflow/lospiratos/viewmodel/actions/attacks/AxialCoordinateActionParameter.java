@@ -23,6 +23,8 @@ public abstract class AxialCoordinateActionParameter implements ValidableActionP
 
     private ObjectProperty<AxialCoordinate> coordinate = new SimpleObjectProperty<>();
 
-
-
+    @Override
+    public String getJsonMapping() {
+        return "target";
+    }
 }

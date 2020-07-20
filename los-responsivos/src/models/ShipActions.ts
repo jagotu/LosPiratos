@@ -51,5 +51,5 @@ export const needsParameters = (action: ShipAction): boolean => {
 export interface ShipActionParam {
     target?: HexPosition;
     amount?: Resources;
-    enhancement?: Enhancement;
+    enhancement?: {"enhancement" : Enhancement};
 }

@@ -12,11 +12,11 @@ export const endpoints = {
     game: addressPrefix + "/game", // GET, vraci uplne ta stejna data jako kdyz se dava ulozit hru
     shipDetail: (shipId: string) => addressPrefix + `/shipDetail?ship=${shipId}&team=${teamId()}`,
     planAction: (shipId: string) => addressPrefix + `/planAction?ship=${shipId}&team=${teamId()}`, // POST method
+    planAndEvaluateModificationTransaction: (shipId: string) => addressPrefix + `/planActionAndCommit?ship=${shipId}&team=${teamId()}`, // POST method
     deleteActions: (shipId: string) => addressPrefix + `/deleteActions?ship=${shipId}&team=${teamId()}`, // POST method, screw REST
     login: addressPrefix + "/login",
     combatLog: addressPrefix + "/log",
 
-    planAndEvaluateModificationTransaction: (shipId: string, action: Transaction) => `/team/${teamId()}/ship/${shipId}/modification-transaction/${action}`, // POST method
     possibleEnhancements: (shipId: string, action: ShipAction) => `/team/${teamId()}/ship/${shipId}/actions/${action}/plannable-enhancements`, // GET method
 
 }
@@ -65,29 +65,20 @@ export default class ApiService {
 
         return axios.post(endpoints.deleteActions(shipId), howManyToKeep
             , {withCredentials: true})
-            .then(() => {})
+            .then(() => {
+            })
             .catch(e => {
                 console.error("service error: delete actions", e);
                 throw e;
             });
     }
 
-    static planAndPerformModificationTransaction
-    (shipId: string, action: ShipAction, actionPayload?: ShipActionParam): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            console.log("service: planning and performing ", action, actionPayload, "on ship", shipId);
-            resolve();
-        }).catch(e => {
-            console.error("service error: plan actions.", e);
-            throw e;
-        });
-    }
-
-    static planAction(shipId: string, action: ShipAction, actionPayload?: ShipActionParam): Promise<void> {
-        if (isModificationTransaction(action)) {
+    static planAction(shipId: string, action: ShipAction, actionPayload?: ShipActionParam, performModificationTransaction: boolean = false): Promise<void> {
+        if (isModificationTransaction(action) && !performModificationTransaction) {
             console.warn("ApiService, planning modification transaction. Did you mean to plan and perform it instead?", action);
         }
-        console.log("service: planning ", action, actionPayload, "on ship", shipId);
+
+        const endpoint = performModificationTransaction ? endpoints.planAndEvaluateModificationTransaction(shipId) : endpoints.planAction(shipId)
 
         return axios.post(
             endpoints.planAction(shipId),

@@ -27,6 +27,11 @@ public abstract class EnhancementActionParameter implements ValidableActionParam
         return enh;
     }
 
+    @Override
+    public String getJsonMapping() {
+        return "enhancement";
+    }
+
     private ObjectProperty<Class<? extends ShipEnhancement>> enh = new SimpleObjectProperty<>();
 
 }

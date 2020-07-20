@@ -28,7 +28,7 @@ export const transactionsParameters = {
     // no params:
     RepairShipViaDowngrade: {needsAmount: false, needsEnhancement: false},
     RepairShipViaRepayment: {needsAmount: false, needsEnhancement: false},
-    UnloadStorage: {needsAmount: true, needsEnhancement: false},
+    UnloadStorage: {needsAmount: false, needsEnhancement: false},
     UpgradeShip: {needsAmount: false, needsEnhancement: false},
 }
 
