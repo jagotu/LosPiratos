@@ -11,6 +11,7 @@ import TileDetail from "./components/TileDetail";
 import HexPosition from "./models/HexPosition";
 import BuyNewShip from "./components/BuyNewShip";
 import CombatLog from "./components/CombatLog";
+import Pexeso from "./components/edgeOfBreakfast/Pexeso";
 
 export const routes = {
     overview: "/overview",
@@ -33,9 +34,16 @@ const renderTileDetail: RouteProps["render"] = ({location, match}) => (
     />
 );
 
+const EdgeOfBreakfast = false;
+
 function App() {
     const {user} = useUser();
-    return (
+    if(EdgeOfBreakfast){
+        return (
+            <Pexeso />
+        )
+    }
+    else return (
         <Box paddingTop={3} paddingBottom={3}>
             <Container maxWidth={"sm"}>
                 <BrowserRouter>
