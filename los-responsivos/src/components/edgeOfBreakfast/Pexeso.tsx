@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from "react";
-import {Box, Button, Container} from "@material-ui/core";
+import {Box, Button, Container, Typography} from "@material-ui/core";
 import {useSnackbar} from "notistack";
 import {makeStyles} from "@material-ui/core/styles";
 import clsx from "clsx";
@@ -12,9 +12,9 @@ type PexesoTile = {
     imgSrc: string;
 };
 
-const tile = (index: number): PexesoTile => ({
+const createTile = (index: number): PexesoTile => ({
     tupleId: "" + Math.round(index / 2),
-    imgSrc: process.env.PUBLIC_URL + "pexeso_" + index + ".png",
+    imgSrc: process.env.PUBLIC_URL + "pexeso/" + Math.round(index / 2) + ".png",
 });
 
 
@@ -23,7 +23,7 @@ const data: Array<Array<PexesoTile>> = [
     [5, 6, 7, 8],
     [9, 10, 11, 12],
     [13, 14, 15, 16],
-].map(row => row.map(tile));
+].map(row => row.map(createTile));
 
 interface TileProps {
     cell: PexesoTile;
@@ -32,28 +32,45 @@ interface TileProps {
 }
 
 const tileHeight = 200;
-const doNothing = () =>{};
-
-const Tile: React.FC<TileProps> = ({cell, imageVisible, onClick}) => {
-    return (
-        <Button
-            style={{height: tileHeight}}
-            fullWidth
-            variant="contained"
-            color={imageVisible ? "primary" : "secondary"}
-            onClick={imageVisible ? doNothing : () => onClick(cell)}
-        >
-            {imageVisible ? "Obrázek " + cell.tupleId : "?"}
-        </Button>
-    )
-}
+const doNothing = () => {
+};
 
 const useStyles = makeStyles(() => ({
     transparent: {
         opacity: 0,
         transition: "opacity .5s linear 1s",
     },
+    imageTransparent: {
+        opacity: 0,
+    },
+    image: {
+        transition: "opacity .5s linear",
+    }
 }));
+
+const Tile: React.FC<TileProps> = ({cell, imageVisible, onClick}) => {
+    const classes = useStyles();
+
+    return (
+        <Box p={1}>
+            <Button
+                style={{height: tileHeight}}
+                fullWidth
+                variant="contained"
+                onClick={imageVisible ? doNothing : () => onClick(cell)}
+            >
+                <img
+                    alt={cell.tupleId}
+                    src={cell.imgSrc}
+                    className={clsx({[classes.image]: imageVisible}, {[classes.imageTransparent]: !imageVisible})}
+                />
+                <div style={{position: "absolute", top: "50%", left: "50%"}}>
+                    {imageVisible ? null : "?"}
+                </div>
+            </Button>
+        </Box>
+    )
+}
 
 const Pexeso: React.FC<PexesoProps> = (props) => {
     const [tilesOpened, setTilesOpened] = useState<Array<PexesoTile>>([]);
@@ -86,18 +103,21 @@ const Pexeso: React.FC<PexesoProps> = (props) => {
         if (tilesOpened.length === 2) {
             if (tilesOpened[0].tupleId === tilesOpened[1].tupleId) {
                 markCompleted(tilesOpened[0].tupleId);
+                setTilesOpened([]);
             } else {
-                resetGame();
+                setTimeout(() => {
+                    resetGame();
+                    setTilesOpened([]);
+                }, 1000);
             }
-            setTilesOpened([]);
         }
     }, [tilesOpened, resetGame, markCompleted]);
 
-    const gameWon = <h1 style={{color: "green"}}>Vyhráli jste!</h1>;
+    const gameWon = <Typography variant="h1" component="span" style={{color: "green"}}>Vyhráli jste!</Typography>;
 
     if (tilesCompleted.length === 8) {
         return (
-            <Box padding={3}>
+            <Box padding={8}>
                 <Container>
                     {gameWon}
                 </Container>

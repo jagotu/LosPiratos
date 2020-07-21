@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import { Grid, Button, Typography } from "@material-ui/core";
+import React, {useState} from "react";
+import {Button, Grid, Typography} from "@material-ui/core";
 
 // @ts-ignore
 const Moznost = ({children, onClick}) => {
