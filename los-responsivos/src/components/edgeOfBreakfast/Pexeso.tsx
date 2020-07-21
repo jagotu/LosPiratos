@@ -19,10 +19,17 @@ const createTile = (index: number): PexesoTile => ({
 
 
 const data: Array<Array<PexesoTile>> = [
-    [1, 2, 3, 4],
-    [5, 6, 7, 8],
-    [9, 10, 11, 12],
-    [13, 14, 15, 16],
+    // test:
+    // [1, 2, 3, 4],
+    // [5, 6, 7, 8],
+    // [9, 10, 11, 12],
+    // [13, 14, 15, 16],
+
+    // production:
+    [1, 16, 10, 7],
+    [13, 4, 5, 12],
+    [15, 6, 2, 8],
+    [3, 11, 14, 9],
 ].map(row => row.map(createTile));
 
 interface TileProps {
@@ -86,7 +93,7 @@ const Pexeso: React.FC<PexesoProps> = (props) => {
 
     const resetGame = useCallback(() => {
         setTilesCompleted([]);
-        enqueueSnackbar("Chyba! Hra se restartovala.", {
+        enqueueSnackbar("Špatně! Začni znovu.", {
             variant: "info",
             anchorOrigin: {
                 vertical: "top",
@@ -126,22 +133,21 @@ const Pexeso: React.FC<PexesoProps> = (props) => {
     } else return (
         <Box padding={3}>
             <Container>
-                <table style={{width: "100%", tableLayout: "fixed"}}>
+                <table style={{width: "100%"}}>
                     <tbody>
-                    {data.map(row => (
-                        <tr>
-                            {row.map(cell => (
+                    {data.map((row, i) => (
+                        <tr key={i}>
+                            {row.map((cell, j) => (
                                 <td
+                                    key={j}
                                     className={clsx({[classes.transparent]: tilesCompleted.includes(cell.tupleId)})}
                                     style={{height: tileHeight}}
                                 >
                                     <Tile
-                                        // disabled={tilesCompleted.includes(cell.tupleId)}
                                         cell={cell}
                                         imageVisible={tilesOpened.includes(cell) || tilesCompleted.includes(cell.tupleId)}
                                         onClick={handleClick}
                                     />
-
                                 </td>
                             ))}
                         </tr>
