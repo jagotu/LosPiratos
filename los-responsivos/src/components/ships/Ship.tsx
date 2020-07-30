@@ -116,9 +116,9 @@ const Ship: React.FC<ShipProps> = (props) => {
 
     if (props.clickable) {
         return (
-            <a className={classes.shipButton} onClick={handleClick}>
+            <div className={classes.shipButton} onClick={handleClick}>
                 {content}
-            </a>
+            </div>
         );
     } else {
         return (

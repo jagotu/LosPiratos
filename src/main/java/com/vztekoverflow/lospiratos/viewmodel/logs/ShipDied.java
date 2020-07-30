@@ -17,7 +17,7 @@ public class ShipDied extends LoggedEvent {
         }
 
         return f.format(deadShip) + s + f.const_Dies() + s
-                + f.const_ThanksTo() + s + "{" + attackers.toString() + "}";
+                + f.const_DueTo() + s + "{" + attackers.toString() + "}";
     }
 
     private Ship deadShip;

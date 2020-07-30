@@ -13,6 +13,7 @@ import Ship from "./ships/Ship";
 import {teamId} from "../userContext";
 import {makeStyles} from "@material-ui/core/styles";
 import clsx from "clsx";
+import uid from "../util/uid";
 
 interface TileDetailProps {
     /**
@@ -82,6 +83,7 @@ const TileDetail: React.FC<TileDetailProps> = ({coordinates, fullMap}) => {
         return <>Políčko {coordinates} nenalezeno</>;
     }
     const shipsOnThisTile = allShips.filter(s => positionsEqual(location, s.position));
+    const wrecksOnThisTile = data.enrichedGame.game.shipwrecks.filter(w => positionsEqual(location, w.position));
 
     const detailsOfItemsOnTile = (
         <Grid container direction="column" spacing={1} className={clsx(
@@ -96,8 +98,12 @@ const TileDetail: React.FC<TileDetailProps> = ({coordinates, fullMap}) => {
                 : null
             }
             {shipsOnThisTile.map(ship => (
-                // TODO klikani na lode bude fungovat, kdyz @jangocnik doda do ship teamId, #44
                 <Grid item key={ship.id}><Ship data={ship} clickable={ship.teamId === teamId()}/></Grid>
+            ))}
+            {wrecksOnThisTile.map(wreck => (
+                <Grid item key={uid()}>
+                    Vrak: <Resources resources={wreck.resource} />
+                </Grid>
             ))}
         </Grid>
     );

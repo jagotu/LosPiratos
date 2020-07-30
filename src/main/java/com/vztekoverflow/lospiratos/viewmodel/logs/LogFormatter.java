@@ -86,6 +86,11 @@ public abstract class LogFormatter {
             }
 
             @Override
+            String const_DueTo() {
+                return "kvůli";
+            }
+
+            @Override
             String const_Dies() {
                 return "umírá";
             }
@@ -178,6 +183,11 @@ public abstract class LogFormatter {
             }
 
             @Override
+            String const_DueTo() {
+                return ":";
+            }
+
+            @Override
             String const_Dies() {
                 return "†";
             }
@@ -218,6 +228,8 @@ public abstract class LogFormatter {
     abstract String const_Dies();
 
     abstract String const_CollisionOn();
+
+    abstract String const_DueTo();
 
     String space() {
         return " ";
