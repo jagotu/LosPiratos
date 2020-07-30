@@ -1,0 +1,10 @@
+import React from "react";
+import './icons.css';
+
+const !!!Icon: React.FC = () => {
+    return (
+        <span className="icon">E</span>
+    );
+}
+
+export default !!!Icon;

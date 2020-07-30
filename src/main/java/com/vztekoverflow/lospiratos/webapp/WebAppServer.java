@@ -19,6 +19,7 @@ import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import com.vztekoverflow.lospiratos.model.GameSerializer;
 import com.vztekoverflow.lospiratos.viewmodel.Game;
+import org.hildan.fxgson.FxGson;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -163,7 +164,7 @@ public class WebAppServer implements HttpHandler {
                 data = Files.readAllBytes(p);
                 contentType = Files.probeContentType(p);
             } else if (loweredpath.equals("/game")) {
-                data = GameSerializer.JsonFromGame(game.getGameModel()).getBytes(UTF_8);
+                data = FxGson.create().toJson(new EnrichedGame(game)).getBytes(UTF_8);
             } else if (loweredpath.equals("/map.jpg")) {
                 synchronized (jpglock) {
                     data = currentjpg;

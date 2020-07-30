@@ -57,7 +57,7 @@ const TileDetail: React.FC<TileDetailProps> = ({coordinates, fullMap}) => {
     const history = useHistory();
     const {data} = useGameData();
     const allShips = useMemo(() =>
-            data.loaded ? data.game.teams.flatMap(t => t.ships) : []
+            data.loaded ? data.enrichedGame.game.teams.flatMap(t => t.ships) : []
         , [data]);
 
     useEffect(() => {
@@ -76,9 +76,9 @@ const TileDetail: React.FC<TileDetailProps> = ({coordinates, fullMap}) => {
         return null;
     }
 
-    const tile: Tile | undefined = data.game.map.tiles.find(t => positionsEqual(t.location, location));
+    const tile: Tile | undefined = data.enrichedGame.game.map.tiles.find(t => positionsEqual(t.location, location));
     if (tile === undefined) {
-        console.error("Tile not found in game data.", location, data.game.map);
+        console.error("Tile not found in game data.", location, data.enrichedGame.game.map);
         return <>Políčko {coordinates} nenalezeno</>;
     }
     const shipsOnThisTile = allShips.filter(s => positionsEqual(location, s.position));

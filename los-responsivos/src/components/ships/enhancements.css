@@ -1,0 +1,7 @@
+.enhancement.destroyed {
+    color: red;
+}
+
+.enhancement.empty {
+    color: lightgray;
+}

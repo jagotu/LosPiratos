@@ -12,7 +12,7 @@ interface PortSelectProps {
 const PortSelect: React.FC<PortSelectProps> = ({port, onPortSelected}) => {
     const {data} = useGameData();
 
-    const allPorts: Array<Tile> = data.game?.map.tiles.filter(t => t.content === "Port") ?? [];
+    const allPorts: Array<Tile> = data.enrichedGame?.game.map.tiles.filter(t => t.content === "Port") ?? [];
     return (
         <FormControl
             variant="outlined"

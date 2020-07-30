@@ -6,17 +6,21 @@ import {Link} from "react-router-dom";
 import {routes} from "../App";
 import TeamOverview from "./TeamOverview";
 import {useGameData} from "../gameDataContext";
+import Team from "../models/Team";
 
 const GameOverview: React.FC = () => {
     const {teamId} = useUser();
     const {data} = useGameData();
 
+    const [teamEnlarged, setTeamEnlarged] = React.useState<string>("")
+
     if (!data.loaded)
         return <div style={{textAlign: "center"}}><CircularProgress/></div>;
 
-    const game: Game = data.game;
+    const game: Game = data.enrichedGame.game;
     const myTeam = game.teams.filter(t => t.id === teamId)[0];
     const otherTeams = game.teams.filter(t => t.id !== teamId);
+
 
     const controlPanel = (
         <Grid container direction="row" spacing={1}>
@@ -26,13 +30,23 @@ const GameOverview: React.FC = () => {
         </Grid>
     )
 
+    const clickHandler = function (t: Team): void {
+        if(teamEnlarged === t.id)
+        {
+            setTeamEnlarged("");
+        } else {
+            setTeamEnlarged(t.id);
+        }
+    }
+
+
     return (
         <Grid container spacing={3} direction="column">
-            <Grid item><TeamOverview team={myTeam} isCurrentTeam/></Grid>
+            <Grid item><TeamOverview team={myTeam} isCurrentTeam areShipsVisible={true}/></Grid>
             <Grid item>{controlPanel}</Grid>
             <Box pb={2}/> {/* visual separator */}
             {otherTeams.map(t => (
-                <Grid item key={t.id}><TeamOverview team={t}/></Grid>
+                <Grid item key={t.id}><TeamOverview team={t} areShipsVisible={teamEnlarged === t.id} onClick={() => clickHandler(t)}/></Grid>
             ))}
         </Grid>
     );

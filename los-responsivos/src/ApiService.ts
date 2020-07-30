@@ -1,10 +1,10 @@
 import ShipDetail from "./models/ShipDetail";
 import {Enhancement, Enhancements, ShipAction, ShipActionParam} from "./models/ShipActions";
-import {isModificationTransaction, Transaction} from "./models/Transactions";
+import {isModificationTransaction} from "./models/Transactions";
 import {teamId} from "./userContext";
 import axios from "axios";
-import Game from "./models/Game";
 import querystring from "querystring";
+import EnrichedGame from "./models/EnrichedGame";
 
 const addressPrefix = process.env.REACT_APP_BACKEND_URL;
 
@@ -35,7 +35,7 @@ export default class ApiService {
             });
     }
 
-    static getGameData(): Promise<Game> {
+    static getGameData(): Promise<EnrichedGame> {
         console.log("service: get game data");
         return axios.get(endpoints.game)
             .then(response => response.data);
@@ -81,7 +81,7 @@ export default class ApiService {
         const endpoint = performModificationTransaction ? endpoints.planAndEvaluateModificationTransaction(shipId) : endpoints.planAction(shipId)
 
         return axios.post(
-            endpoints.planAction(shipId),
+            endpoint,
             {action, actionPayload},
             {withCredentials: true}
         )

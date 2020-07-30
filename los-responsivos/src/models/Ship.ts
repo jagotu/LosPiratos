@@ -1,4 +1,5 @@
 import HexPosition from "./HexPosition";
+import Enhancements from "./Enhancements";
 
 export default interface Ship {
     name: string;
@@ -20,7 +21,7 @@ export default interface Ship {
     carriesRumUnits: number;
     carriesTobaccoUnits: number;
     carriesMoney: number;
-    enhancements: any;
+    enhancements: Enhancements;
     customExtensions: any;
     activeMechanics: any[];
 }

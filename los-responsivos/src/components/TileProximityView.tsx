@@ -1,4 +1,4 @@
-import React from "react";
+ import React from "react";
 import HexPosition from "../models/HexPosition";
 import {Coordinate2D, edgeLength, hexToPixel, mapImageHeight, mapImageWidth, pixelToHex, SQRT_3} from "../util/hexGridMapMath";
 import {makeStyles} from "@material-ui/core/styles";

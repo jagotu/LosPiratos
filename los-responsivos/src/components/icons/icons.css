@@ -16,6 +16,8 @@
 .icon {
     font-family: 'IconFont';
     font-size: 1.2em;
+    vertical-align: bottom;
+    line-height: 17px;
 }
 
 .icon.icon-lastminute {
