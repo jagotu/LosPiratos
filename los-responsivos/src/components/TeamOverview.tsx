@@ -12,6 +12,7 @@ interface TeamOverviewProps {
     isCurrentTeam?: boolean;
     areShipsVisible?: boolean;
     onClick?: () => void;
+    createShips?: boolean;
 }
 
 const useStyles = makeStyles(() => ({
@@ -37,6 +38,7 @@ const TeamOverview: React.FC<TeamOverviewProps> = (props) => {
     const team = props.team;
     const isCurrentTeam = props.isCurrentTeam;
     const areShipsVisible = props.areShipsVisible ?? false;
+    const createShips = props.createShips ?? true;
 
 
     return (
@@ -54,19 +56,23 @@ const TeamOverview: React.FC<TeamOverviewProps> = (props) => {
                         </Grid>
                     </Box>
                 </Grid>
-                <Grid item>
-                    <AnimateHeight
-                        duration={500}
-                        height={areShipsVisible ? "auto" : "0"}>
-                        <Grid container direction={"column"} spacing={1}>
-                            {team.ships.map(ship => (
-                                <Grid item key={ship.id}>
-                                    <Ship key={ship.id} data={ship} clickable={isCurrentTeam ?? false}/>
-                                </Grid>
-                            ))}
-                        </Grid>
-                    </AnimateHeight>
-                </Grid>
+
+                {createShips ?
+                    (
+                    <Grid item>
+                        <AnimateHeight
+                            duration={500}
+                            height={areShipsVisible ? "auto" : "0"}>
+                            <Grid container direction={"column"} spacing={1}>
+                                {team.ships.map(ship => (
+                                    <Grid item key={ship.id}>
+                                        <Ship key={ship.id} data={ship} clickable={isCurrentTeam ?? false}/>
+                                    </Grid>
+                                ))}
+                            </Grid>
+                        </AnimateHeight>
+                    </Grid>
+                    ) : null}
             </Grid>
         </div>
     );

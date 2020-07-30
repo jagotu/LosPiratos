@@ -13,6 +13,8 @@ import uid from "../../util/uid";
 import useError from "../../useError";
 import TileProximityView from "../TileProximityView";
 import Resources from "../Resources";
+import TeamOverview from "../TeamOverview";
+import {useGameData} from "../../gameDataContext";
 
 interface ShipDetailProps {
     id: string
@@ -33,6 +35,7 @@ type MaybeData = { loaded: true, ship: ShipDetailModel } | { loaded: false, ship
 const ShipDetail: React.FC<ShipDetailProps> = ({id}) => {
     const classes = useStyles();
     const {showErrorFromEvent} = useError();
+    const game = useGameData().data.enrichedGame;
 
     const [data, setData] = useState<MaybeData>({loaded: false, ship: undefined});
     const [dataVersion, setDataVersion] = useState(0);
@@ -54,11 +57,14 @@ const ShipDetail: React.FC<ShipDetailProps> = ({id}) => {
             .catch(showErrorFromEvent);
     };
 
+    const shipTeam = game?.game.teams.filter(x => x.id === shipDetail.ship.teamId)[0];
+
     return (
         <Grid container direction="column" spacing={2}>
             <Grid item>
                 <Button component={Link} to={routes.overview} color="primary" variant="contained">Zpět na přehled</Button>
             </Grid>
+            {shipTeam ? <Grid item><TeamOverview team={shipTeam} createShips={false}/></Grid> : null}
             <Grid item><Ship data={shipDetail.ship} clickable={false}/></Grid>
             <Grid item>
                 <Typography variant="h6">Naplánované akce</Typography>
