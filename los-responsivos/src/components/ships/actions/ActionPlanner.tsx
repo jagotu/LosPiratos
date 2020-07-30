@@ -10,6 +10,7 @@ import {isModificationTransaction, isTransaction} from "../../../models/Transact
 import ActionDetailDialog, {OpenForAction} from "./ActionDetailDialog";
 import TransactionModificationConfirmDialog from "./TransactionModificationConfirmDialog";
 import Ship from "../../../models/Ship";
+import uid from "../../../util/uid";
 
 interface ActionPlannerProps {
     ship: Ship;
@@ -26,7 +27,7 @@ const ActionPlanner: React.FC<ActionPlannerProps> = ({ship, plannableActions, vi
     const [displayConfirmModificationDialog, setDisplayConfirmModificationDialog] = useState<OpenForAction>({open: false, action: undefined});
 
     const handleActionOnClick = (action: ShipAction): void => {
-        if (isModificationTransaction(action)) {
+        if (isModificationTransaction(action) && ! needsParameters(action)) {
             setDisplayConfirmModificationDialog({open: true, action})
         } else if (needsParameters(action)) {
             setDisplayDetailDialog({open: true, action});
@@ -47,6 +48,7 @@ const ActionPlanner: React.FC<ActionPlannerProps> = ({ship, plannableActions, vi
             .catch(showErrorFromEvent)
     };
 
+
     const anyTransactionPlannable = Array.from(plannableActions.values())
         .filter(isTransaction)
         .length > 0;
@@ -55,10 +57,11 @@ const ActionPlanner: React.FC<ActionPlannerProps> = ({ship, plannableActions, vi
         <>
             <ActionDetailDialog
                 openForAction={displayDetailDialog}
-                shipId={ship.id}
+                ship={ship}
                 sourceLocation={ship.position}
                 onClose={() => setDisplayDetailDialog({open: false, action: undefined})}
                 onParamSelected={planAction}
+                key={uid()}
             />
             <TransactionModificationConfirmDialog
                 openForAction={displayConfirmModificationDialog}

@@ -37,7 +37,8 @@ public class BuyNewEnhancement extends EnhancementAbstractTransaction {
                 public BooleanExpression validValueProperty(ObservableValue<Class<? extends ShipEnhancement>> value) {
                     return Bindings.createBooleanBinding(() -> {
                                 if (getRelatedShip() == null || value.getValue() == null) return false;
-                                return EnhancementsCatalog.isAcquirableBy(value.getValue(), getRelatedShip().getShipType());
+                                return EnhancementsCatalog.isAcquirableBy(value.getValue(), getRelatedShip().getShipType()) &&
+                                        getRelatedShip().getTeam().getOwnedResource().isGreaterThanOrEqual(getCost());
                             }, relatedShipProperty(), value
                     );
                 }

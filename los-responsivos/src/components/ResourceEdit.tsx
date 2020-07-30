@@ -1,6 +1,6 @@
 import React from "react";
 import Resources from "../models/Resources";
-import {Grid} from "@material-ui/core";
+import {Grid, Icon} from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import MetalIcon from "./icons/MetalIcon";
 import ClothIcon from "./icons/ClothIcon";
@@ -14,9 +14,11 @@ interface ResourceEditProps {
 }
 
 const resourceIcons = {
-    money: <>$ </>,
+    money:  <Icon className="fa fa-money"
+                  style={{fontSize: "18px", lineHeight: "17px", verticalAlign: "bottom"}}/>,
     metal: <MetalIcon/>,
-    wood: <>W </>,
+    wood: <Icon className="fa fa-tree"
+                style={{fontSize: "17px", lineHeight: "17px", verticalAlign: "bottom"}}/>,
     cloth: <ClothIcon/>,
     rum: <RumIcon/>,
 }

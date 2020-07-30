@@ -39,7 +39,8 @@ public class RepairEnhancement extends EnhancementAbstractTransaction {
                 public BooleanExpression validValueProperty(ObservableValue<Class<? extends ShipEnhancement>> value) {
                     return Bindings.createBooleanBinding(() -> {
                                 if (getRelatedShip() == null) return false;
-                                return getRelatedShip().getEnhancementStatus(value.getValue()).equals(ShipEnhancementStatus.destroyed);
+                                return getRelatedShip().getEnhancementStatus(value.getValue()).equals(ShipEnhancementStatus.destroyed)
+                                && getRelatedShip().getTeam().getOwnedResource().isGreaterThanOrEqual(getCost());
                             }, relatedShipProperty(), value
                     );
                 }

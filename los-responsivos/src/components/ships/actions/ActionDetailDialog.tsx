@@ -1,7 +1,12 @@
 import React, {useEffect, useMemo, useState} from "react";
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, Typography} from "@material-ui/core";
 import {Enhancement, needsParameters, ShipAction, ShipActionParam} from "../../../models/ShipActions";
-import {isTransaction, Transaction, transactionsParameters} from "../../../models/Transactions";
+import {
+    isModificationTransaction,
+    isTransaction,
+    Transaction,
+    transactionsParameters
+} from "../../../models/Transactions";
 import {actionTranslations} from "./actionDetails";
 import translations from "../../../translations";
 import _ from "lodash";
@@ -12,14 +17,17 @@ import HexPosition from "../../../models/HexPosition";
 import Position from "../../Position";
 import uid from "../../../util/uid";
 import ResourceEdit from "../../ResourceEdit";
-import Resources from "../../../models/Resources";
+import ResourcesModel from "../../../models/Resources";
+import Resources from "../../Resources";
+import Ship from "../../../models/Ship";
+import CostResponse from "../../../models/CostResponse";
 
 
 export type OpenForAction = { open: false, action: undefined } | { open: true, action: ShipAction }
 
 interface ActionDetailDialogProps {
     openForAction: OpenForAction;
-    shipId: string;
+    ship: Ship
     /**
      * Position of the ship that is planning this action. Used by for target selection.
      */
@@ -28,22 +36,60 @@ interface ActionDetailDialogProps {
     onParamSelected: (action: ShipAction, param: ShipActionParam) => void;
 }
 
-const ActionDetailDialog: React.FC<ActionDetailDialogProps> = ({openForAction, onClose, onParamSelected, shipId, sourceLocation}) => {
+type MaybeCost = { loaded: "true", cost: CostResponse } | { loaded: "loading", cost: undefined } | {loaded: "error", cost: undefined}
+
+const ActionDetailDialog: React.FC<ActionDetailDialogProps> = ({openForAction, onClose, onParamSelected, ship, sourceLocation}) => {
     const [actionParam, setActionParam] = useState<ShipActionParam>({});
     const [availableEnhancements, setAvailableEnhancements] = useState<Array<Enhancement> | null>(null);
+
+    const [maybeCost, setMaybeCost] = useState<MaybeCost>({loaded: "loading", cost: undefined});
+
     const {showDefaultError} = useError();
     const imgKey = useMemo(uid, [openForAction]); // change every time the dialog opens / closes
+    const shipId = ship.id;
 
     useEffect(() => {
         if (availableEnhancements === null
             && openForAction.open
             && transactionsParameters[openForAction.action as Transaction]?.needsEnhancement
         ) {
-            ApiService.getPossibleEnhancements(shipId, openForAction.action)
-                .then(setAvailableEnhancements)
-                .catch(showDefaultError);
+            if(openForAction.action === "RepairEnhancement")
+            {
+                let enhancements = [];
+                for(let enh of Object.keys(ship.enhancements))
+                {
+                    // @ts-ignore
+                    if(ship.enhancements[enh] === "destroyed")
+                    {
+                        enhancements.push(enh);
+                    }
+                }
+                setAvailableEnhancements(enhancements);
+
+            } else {
+                ApiService.getPossibleEnhancementsForPurchase(shipId)
+                    .then(setAvailableEnhancements)
+                    .catch(showDefaultError);
+            }
+
         }
-    }, [availableEnhancements, openForAction, showDefaultError, shipId]);
+    }, [availableEnhancements, openForAction, showDefaultError, shipId, ship.enhancements]);
+
+    useEffect(() => {
+        if (openForAction.open)
+        {
+            ApiService.getActionCost(shipId, openForAction.action, actionParam)
+                .then(cost => setMaybeCost({loaded: "true", cost}))
+                .catch(e => {
+                    if(e.response?.status === 400)
+                    {
+                        setMaybeCost({loaded: "error", cost: undefined})
+                    } else {
+                      throw e
+                    }})
+                .catch(showDefaultError)
+        }
+    }, [shipId, openForAction, actionParam, showDefaultError ]);
 
     if (!openForAction.open) return null;
     const action = openForAction.action;
@@ -55,19 +101,21 @@ const ActionDetailDialog: React.FC<ActionDetailDialogProps> = ({openForAction, o
     let needsAmount = false;
     let needsEnhancement = false;
     let needsTarget = action === "MortarShot";
+    let hasCost = false;
     if (isTransaction(action)) {
         needsAmount = transactionsParameters[action as Transaction].needsAmount;
         needsEnhancement = transactionsParameters[action as Transaction].needsEnhancement;
+        hasCost = transactionsParameters[action as Transaction].hasCost;
     }
 
     if(needsAmount && !actionParam.amount)
     {
-        actionParam.amount = Resources.zero()
+        actionParam.amount = ResourcesModel.zero()
     }
 
     const amountPicker = (
         <ResourceEdit
-            value={actionParam.amount ?? Resources.zero()}
+            value={actionParam.amount ?? ResourcesModel.zero()}
             onValueChange={amount => setActionParam(prev => ({...prev, amount}))}
         />
     );
@@ -121,6 +169,25 @@ const ActionDetailDialog: React.FC<ActionDetailDialogProps> = ({openForAction, o
         onClose();
     };
 
+    let costStatus = (<>Neplatné parametry</>);
+
+    if(maybeCost.loaded === "true")
+    {
+        costStatus = (<Resources resources={maybeCost.cost.cost} hideZero={true} />);
+    } else if (maybeCost.loaded === "loading")
+    {
+        costStatus = (<>Načítání...</>);
+    }
+
+    const costDisplay = (
+        <Typography>cena: {costStatus}</Typography>
+    )
+
+    const immediateWarning = isModificationTransaction(action) ? (
+        <>
+        Tato transakce bude ihned provedena. Už ji nepůjde vzít zpět a ostatní týmy budou moci vidět její výsledek.
+    </>) : null;
+
     const formId = "actionDetailDialog-" + action;
     return (
         <Dialog
@@ -131,10 +198,12 @@ const ActionDetailDialog: React.FC<ActionDetailDialogProps> = ({openForAction, o
                 {_.capitalize(actionTranslations.get(action))}
             </DialogTitle>
             <DialogContent>
+                {immediateWarning}
                 <form id={formId}>
                     {needsEnhancement ? enhancementPicker : null}
                     {needsTarget ? targetPicker : null}
                     {needsAmount ? amountPicker : null}
+                    {hasCost ? costDisplay : null}
                 </form>
             </DialogContent>
             <DialogActions>
@@ -145,8 +214,9 @@ const ActionDetailDialog: React.FC<ActionDetailDialogProps> = ({openForAction, o
                     color="primary"
                     type="submit"
                     onClick={handleSubmit}
+                    disabled={!maybeCost?.cost?.isSatisfied ?? false}
                 >
-                    Naplánovat
+                    {isModificationTransaction(action) ? "Provést ihned" : "Naplánovat"}
                 </Button>
             </DialogActions>
         </Dialog>

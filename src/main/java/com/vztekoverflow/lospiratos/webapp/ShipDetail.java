@@ -8,7 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.vztekoverflow.lospiratos.model.ResourceM;
 import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.CannonsAbstractVolley;
+import com.vztekoverflow.lospiratos.viewmodel.actions.transactions.RepairShip;
+import com.vztekoverflow.lospiratos.viewmodel.actions.transactions.RepairShipViaRepayment;
+import com.vztekoverflow.lospiratos.viewmodel.actions.transactions.UpgradeShip;
 import org.hildan.fxgson.FxGson;
 
 import com.google.gson.Gson;
@@ -23,6 +27,8 @@ public class ShipDetail {
     public List<String> plannableActions;
     public List<String> visibleActions;
     public List<String> plannedActions;
+    public ResourceM upgradeCost;
+    public ResourceM repairCost;
 
     public ShipDetail(Ship s) {
         ship = s.getShipModel();
@@ -33,6 +39,12 @@ public class ShipDetail {
         visibleActions = relatedActions.stream().filter(Action::getVisible).map(Helpers::getActionName).collect(Collectors.toList());
 
         plannedActions = s.getPlannedActions().stream().map(Helpers::getActionName).collect(Collectors.toList());
+
+        upgradeCost = new ResourceM(s.getShipType().getUpgradeCost());
+
+        RepairShip rs = new RepairShipViaRepayment();
+        rs.setRelatedShip(s);
+        repairCost = new ResourceM(rs.getCost());
 
     }
 

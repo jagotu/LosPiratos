@@ -7,28 +7,43 @@ import RumIcon from "./icons/RumIcon";
 import "font-awesome/css/font-awesome.css";
 
 interface ResourcesProps {
-    resources: ResourcesModel
+    resources: ResourcesModel,
+    hideZero?: boolean
 }
 
 const Resources: React.FC<ResourcesProps> = (props) => {
     const r = props.resources;
+    const hideZero = props.hideZero ?? false;
+
     return (
         <Grid container spacing={1} direction="row">
-            <Grid item>
-                <Icon className="fa fa-money" style={{fontSize: "18px", lineHeight: "17px", verticalAlign: "bottom"}} /> {r.money}
-            </Grid>
-            <Grid item>
-                <MetalIcon /> {r.metal}
-            </Grid>
-            <Grid item>
-                <Icon className="fa fa-tree" style={{fontSize: "17px", lineHeight: "17px", verticalAlign: "bottom"}} /> {r.wood}
-            </Grid>
-            <Grid item>
-                <ClothIcon /> {r.cloth}
-            </Grid>
-            <Grid item>
-                <RumIcon /> {r.rum}
-            </Grid>
+            {hideZero && r.money === 0 ? null : (
+                <Grid item>
+                    <Icon className="fa fa-money"
+                          style={{fontSize: "18px", lineHeight: "17px", verticalAlign: "bottom"}}/> {r.money}
+                </Grid>
+            )}
+            {hideZero && r.metal === 0 ? null : (
+                <Grid item>
+                    <MetalIcon/> {r.metal}
+                </Grid>
+            )}
+            {hideZero && r.wood === 0 ? null : (
+                <Grid item>
+                    <Icon className="fa fa-tree"
+                          style={{fontSize: "17px", lineHeight: "17px", verticalAlign: "bottom"}}/> {r.wood}
+                </Grid>
+            )}
+            {hideZero && r.cloth === 0 ? null : (
+                <Grid item>
+                    <ClothIcon/> {r.cloth}
+                </Grid>
+            )}
+            {hideZero && r.rum === 0 ? null : (
+                <Grid item>
+                    <RumIcon/> {r.rum}
+                </Grid>
+            )}
         </Grid>
     );
 }

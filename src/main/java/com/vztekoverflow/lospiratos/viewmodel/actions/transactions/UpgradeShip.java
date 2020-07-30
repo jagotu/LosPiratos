@@ -12,7 +12,8 @@ public class UpgradeShip extends ModifyShipTransaction {
 
     @Override
     protected boolean recomputePlannable() {
-        return super.recomputePlannable() && ShipType.increment(getRelatedShip().getShipType().getClass()) != null;
+        return super.recomputePlannable() && ShipType.increment(getRelatedShip().getShipType().getClass()) != null
+                && getRelatedShip().getTeam().getOwnedResource().isGreaterThanOrEqual(getCost());
     }
 
     @Override

@@ -12,6 +12,7 @@ import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined'
 import uid from "../../util/uid";
 import useError from "../../useError";
 import TileProximityView from "../TileProximityView";
+import Resources from "../Resources";
 
 interface ShipDetailProps {
     id: string
@@ -85,6 +86,8 @@ const ShipDetail: React.FC<ShipDetailProps> = ({id}) => {
                     onActionPlannedOk={refreshData}
                 />
             </Grid>
+            <Grid item>Aktuální cena vylepšení: <Resources resources={shipDetail.upgradeCost} hideZero={true}/></Grid>
+            <Grid item>Aktuální cena opravy: <Resources resources={shipDetail.repairCost} hideZero={true}/></Grid>
             <Grid item>
                 <Typography variant="h6">Okolí lodi</Typography>
                 <Link to={routes.factory.tileDetail(shipDetail.ship.position)}>

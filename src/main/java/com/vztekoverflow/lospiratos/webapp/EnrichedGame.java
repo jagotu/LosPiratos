@@ -1,6 +1,7 @@
 package com.vztekoverflow.lospiratos.webapp;
 
 import com.vztekoverflow.lospiratos.model.Game;
+import com.vztekoverflow.lospiratos.model.ResourceM;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
 import com.vztekoverflow.lospiratos.viewmodel.Team;
 

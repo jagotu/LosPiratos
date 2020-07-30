@@ -1,5 +1,6 @@
 import Ship from "./Ship";
 import {ShipAction} from "./ShipActions";
+import Resources from "./Resources";
 
 export default interface ShipDetail {
     /**
@@ -17,5 +18,7 @@ export default interface ShipDetail {
      * Actions that have already been planned by the user.
      */
     plannedActions: Array<ShipAction>;
+    upgradeCost: Resources;
+    repairCost: Resources;
     ship: Ship;
 }

@@ -44,7 +44,7 @@ public class WebAppServer implements HttpHandler {
             throw new IllegalStateException("Server already running.");
         }
 
-        server = HttpServer.create(new InetSocketAddress("localhost", 8001), 0);
+        server = HttpServer.create(new InetSocketAddress(8001), 0);
         server.createContext("/", this);
         server.setExecutor(Executors.newFixedThreadPool(10));
 
@@ -172,10 +172,14 @@ public class WebAppServer implements HttpHandler {
                 contentType = "image/jpeg";
             } else if (loweredpath.startsWith("/shipdetail")) {
                 data = ShipDetail.getJson(exchange, game, teamToken);
+            } else if (loweredpath.startsWith("/getavailableenhancements")) {
+                data = AvailableEnhancements.getJson(exchange, game, teamToken);
             } else if (loweredpath.startsWith("/planactionandcommit") && exchange.getRequestMethod().equals("POST")) {
                 data = PlanAction.doit(exchange, game, teamToken, postData, true);
             } else if (loweredpath.startsWith("/planaction") && exchange.getRequestMethod().equals("POST")) {
                 data = PlanAction.doit(exchange, game, teamToken, postData, false);
+            } else if (loweredpath.startsWith("/getactioncost") && exchange.getRequestMethod().equals("POST")) {
+                data = GetActionCost.doit(exchange, game, teamToken, postData, false);
             } else if (loweredpath.startsWith("/deleteactions") && exchange.getRequestMethod().equals("POST")) {
                 data = DeleteActions.doit(exchange, game, teamToken, postData);
             } else if (loweredpath.startsWith("/createship") && exchange.getRequestMethod().equals("POST") )

@@ -1,11 +1,12 @@
 import ShipDetail from "./models/ShipDetail";
-import {Enhancement, Enhancements, ShipAction, ShipActionParam} from "./models/ShipActions";
+import {Enhancement, ShipAction, ShipActionParam} from "./models/ShipActions";
 import {isModificationTransaction} from "./models/Transactions";
 import {teamId} from "./userContext";
 import axios from "axios";
 import querystring from "querystring";
 import EnrichedGame from "./models/EnrichedGame";
 import {ShipType} from "./models/Ship";
+import CostResponse from "./models/CostResponse";
 
 const addressPrefix = process.env.REACT_APP_BACKEND_URL;
 
@@ -13,9 +14,11 @@ export const endpoints = {
     game:addressPrefix + "/game", // GET, vraci uplne ta stejna data jako kdyz se dava ulozit hru
     shipDetail: (shipId: string) => addressPrefix + `/shipDetail?ship=${shipId}&team=${teamId()}`,
     planAction: (shipId: string) => addressPrefix + `/planAction?ship=${shipId}&team=${teamId()}`, // POST method
+    getActionCost: (shipId: string) => addressPrefix + `/getActionCost?ship=${shipId}&team=${teamId()}`, // POST method
     planAndEvaluateModificationTransaction: (shipId: string) => addressPrefix + `/planActionAndCommit?ship=${shipId}&team=${teamId()}`, // POST method
     deleteActions: (shipId: string) => addressPrefix + `/deleteActions?ship=${shipId}&team=${teamId()}`, // POST method, screw REST
     createShip: () => addressPrefix + `/createShip?team=${teamId()}`, // POST method
+    getAvailableEnhancements: (shipId : string) => addressPrefix + `/getAvailableEnhancements?ship=${shipId}&team=${teamId()}`,
     login: addressPrefix + "/login",
     combatLog: addressPrefix + "/log",
 
@@ -95,15 +98,29 @@ export default class ApiService {
             });
     }
 
-
-    static getPossibleEnhancements(shipId: string, action: ShipAction): Promise<Array<Enhancement>> {
-        console.log("service: get possible enhancements of ship", shipId, "action", action);
-        const result = Object.keys(Enhancements) as Array<Enhancement>;
-        return new Promise<Array<Enhancement>>((resolve) => resolve(result))
+    static getActionCost(shipId: string, action: ShipAction, actionPayload?: ShipActionParam): Promise<CostResponse> {
+        return axios.post(
+            endpoints.getActionCost(shipId),
+            {action, actionPayload},
+            {withCredentials: true}
+        )
+            .then(response => response.data)
             .catch(e => {
-                console.error("service error: get possible enhancements.", e);
+                console.error("service error: get action cost", e);
                 throw e;
             });
+    }
+
+
+    static getPossibleEnhancementsForPurchase(shipId: string): Promise<Array<Enhancement>> {
+        console.log("service: get possible enhancements of ship", shipId);
+        return axios.get(endpoints.getAvailableEnhancements(shipId), {withCredentials: true})
+            .then(response => response.data)
+            .catch(e => {
+                console.error("service error: get ship detail.", e);
+                throw e;
+            });
+
     }
 
 

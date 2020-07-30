@@ -9,7 +9,6 @@ import PortSelect from "./PortSelect";
 import {FormControl, InputLabel, MenuItem, Select, Typography} from "@material-ui/core";
 import {Link, useHistory} from "react-router-dom";
 import {ShipType} from "../models/Ship";
-import {Enhancement} from "../models/ShipActions";
 import translations from "../translations";
 import useError from "../useError";
 

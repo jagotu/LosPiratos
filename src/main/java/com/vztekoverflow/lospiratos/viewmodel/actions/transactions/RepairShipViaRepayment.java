@@ -26,9 +26,14 @@ public class RepairShipViaRepayment extends RepairShip {
                 cost.setAll(getRelatedShip().getShipType().getBasicRepairCost());
             return;
         }
-        double coeff = getRelatedShip().getCurrentHP() / (double) getRelatedShip().getMaxHP();
+        double coeff = 1f-(getRelatedShip().getCurrentHP() / (double) getRelatedShip().getMaxHP());
         ResourceReadOnly c = getRelatedShip().getShipType().getBuyingCost().times(1/50f).times(1 + 4 * coeff);
         cost.setAll(c);
+    }
+
+    @Override
+    protected boolean recomputePlannable() {
+        return super.recomputePlannable() && getRelatedShip().getTeam().getOwnedResource().isGreaterThanOrEqual(getCost());
     }
 
     @Override
