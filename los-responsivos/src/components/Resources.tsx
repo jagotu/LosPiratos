@@ -15,8 +15,10 @@ const Resources: React.FC<ResourcesProps> = (props) => {
     const r = props.resources;
     const hideZero = props.hideZero ?? false;
 
+    console.log(r);
     return (
         <Grid container spacing={1} direction="row">
+
             {hideZero && r.money === 0 ? null : (
                 <Grid item>
                     <Icon className="fa fa-money"

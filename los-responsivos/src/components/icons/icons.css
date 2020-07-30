@@ -32,3 +32,26 @@
 .icon.icon-transaction.larger {
     font-size: 1.5em;
 }
+
+.icon.smaller {
+    font-size: 1em;
+}
+
+.flip-X {
+    transform: scaleX(-1);
+}
+
+.icon.miniLeft {
+    font-size: .45em;
+    position: absolute;
+    left: 8px;
+    top: 8px;
+    transform: scaleX(-1);
+}
+
+.icon.miniRight {
+    font-size: .45em;
+    position: absolute;
+    right: 8px;
+    top: 8px;
+}

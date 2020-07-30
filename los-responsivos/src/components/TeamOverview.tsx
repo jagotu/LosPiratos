@@ -62,7 +62,7 @@ const TeamOverview: React.FC<TeamOverviewProps> = (props) => {
                     <Grid item>
                         <AnimateHeight
                             duration={500}
-                            height={areShipsVisible ? "auto" : "0"}>
+                            height={areShipsVisible ? "auto" : 0}>
                             <Grid container direction={"column"} spacing={1}>
                                 {team.ships.map(ship => (
                                     <Grid item key={ship.id}>
