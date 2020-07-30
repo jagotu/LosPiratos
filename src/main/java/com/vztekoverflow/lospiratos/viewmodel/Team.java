@@ -184,6 +184,11 @@ public class Team implements OnNextRoundStartedListener {
      */
     public <T extends ShipType> Ship buyNewShip(Class<T> shipType, String shipName, String captainName, AxialCoordinate position) {
 
+        if(!ownedResource.isGreaterThanOrEqual(ShipType.createInstance(shipType).getBuyingCost()))
+        {
+            return null;
+        }
+
         Ship s = createAndAddNewShip(shipType, shipName, captainName, position);
         if (s != null) {
             ownedResource.subtract(ShipType.createInstance(shipType).getBuyingCost());

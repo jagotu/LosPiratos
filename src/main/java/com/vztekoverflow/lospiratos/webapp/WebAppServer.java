@@ -178,6 +178,9 @@ public class WebAppServer implements HttpHandler {
                 data = PlanAction.doit(exchange, game, teamToken, postData, false);
             } else if (loweredpath.startsWith("/deleteactions") && exchange.getRequestMethod().equals("POST")) {
                 data = DeleteActions.doit(exchange, game, teamToken, postData);
+            } else if (loweredpath.startsWith("/createship") && exchange.getRequestMethod().equals("POST") )
+            {
+                data = CreateShip.doit(exchange, game, teamToken, postData);
             }
 
             else if (loweredpath.equals("/login") && exchange.getRequestMethod().equals("POST")) {

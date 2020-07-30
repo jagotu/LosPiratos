@@ -5,15 +5,17 @@ import {teamId} from "./userContext";
 import axios from "axios";
 import querystring from "querystring";
 import EnrichedGame from "./models/EnrichedGame";
+import {ShipType} from "./models/Ship";
 
 const addressPrefix = process.env.REACT_APP_BACKEND_URL;
 
 export const endpoints = {
-    game: addressPrefix + "/game", // GET, vraci uplne ta stejna data jako kdyz se dava ulozit hru
+    game:addressPrefix + "/game", // GET, vraci uplne ta stejna data jako kdyz se dava ulozit hru
     shipDetail: (shipId: string) => addressPrefix + `/shipDetail?ship=${shipId}&team=${teamId()}`,
     planAction: (shipId: string) => addressPrefix + `/planAction?ship=${shipId}&team=${teamId()}`, // POST method
     planAndEvaluateModificationTransaction: (shipId: string) => addressPrefix + `/planActionAndCommit?ship=${shipId}&team=${teamId()}`, // POST method
     deleteActions: (shipId: string) => addressPrefix + `/deleteActions?ship=${shipId}&team=${teamId()}`, // POST method, screw REST
+    createShip: () => addressPrefix + `/createShip?team=${teamId()}`, // POST method
     login: addressPrefix + "/login",
     combatLog: addressPrefix + "/log",
 
@@ -105,11 +107,15 @@ export default class ApiService {
     }
 
 
-    static buyNewShip(shipName: string, captainName: string, port: string): Promise<void> {
-        console.log(`service: buy new ship. name: ${shipName}, captain: ${captainName}, port: ${port} `);
-        return new Promise<void>((resolve) => resolve())
+    static buyNewShip(shipName: string, port: string, type: ShipType): Promise<void> {
+
+        return axios.post(endpoints.createShip(), {
+            shipName,port,type}
+            , {withCredentials: true})
+            .then(() => {
+            })
             .catch(e => {
-                console.error("service error: buy new ship.", e);
+                console.error("service error: buy ship", e);
                 throw e;
             });
     }

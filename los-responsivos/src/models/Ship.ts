@@ -1,12 +1,14 @@
 import HexPosition from "./HexPosition";
 import Enhancements from "./Enhancements";
 
+export type ShipType = "Schooner" | "Brig" | "Frigate" | "Galleon";
+
 export default interface Ship {
     name: string;
     id: string;
     teamId: string;
     captain: string;
-    type: "Schooner" | "Brig" | "Frigate" | "Galleon";
+    type: ShipType;
     destroyed: boolean;
     XP: number;
     HP: number;
