@@ -205,6 +205,7 @@ public class Team implements OnNextRoundStartedListener {
         modelShip.captainProperty().set(captainName);
         modelShip.setPosition(position);
         modelShip.idProperty().set(UUID.randomUUID().toString());
+        modelShip.teamIdProperty().setValue(teamModel.getId());
         teamModel.shipsProperty().add(modelShip);
         //at this place, teamModel.shipsProperty's change calls my observer
         //   which then adds the ship to this team's collection (if valid)
