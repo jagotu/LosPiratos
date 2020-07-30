@@ -1,21 +1,30 @@
 package com.vztekoverflow.lospiratos.viewmodel.logs;
 
+import java.util.Map;
+
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
 import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
 import com.vztekoverflow.lospiratos.viewmodel.actions.Attack;
+
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ReadOnlyListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.util.Map;
-
 public class EventLogger {
     public void logAttack(Ship sender, Attack cause, Ship target, int damageCaused) {
         events.add(new DamageDone(sender, cause, target, damageCaused));
+    }
+
+    public void logAttackingEmptyTile(Ship sender, Attack cause, AxialCoordinate targetPosition) {
+        events.add(new MessageLoggedEvent(null, LogFormatter.hezkyČesky().format(sender) + "naprázdno útočí akcí " + cause.getČeskéJméno() + " na prázdné políčko " + targetPosition));
+    }
+
+    public void logFrontalAssaultOnTargetFacingMe(Ship sender, Ship target){
+        events.add(new MessageLoggedEvent(LogFormatter.hezkyČesky().format(sender), " útouk klounem proti soupeři natočenému přídí nezpůsobil žádnou škodu. Nepřítel: " + LogFormatter.hezkyČesky().format(target)));
     }
 
     public void logResourceGain(Ship subject, ResourceReadOnly amount, Action cause) {

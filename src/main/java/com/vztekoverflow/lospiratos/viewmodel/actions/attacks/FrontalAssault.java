@@ -28,15 +28,19 @@ public class FrontalAssault extends Attack {
     public void performOnShipInternal() {
         int damage = FRONTAL_ASSAULT_BASIC_DAMAGE;
         int selfDamage = FRONTAL_ASSAULT_BASIC_SELF_DAMAGE;
-        Position p = getRelatedShip().getPosition().createCopy();
-        p.moveForward();
+        Position targetPosition = getRelatedShip().getPosition().createCopy();
+        targetPosition.moveForward();
 
-        Ship target = getRelatedShip().getTeam().getGame().getBoard().getShip(p.getCoordinate());
-        if (target == null) return;
+        Ship target = getRelatedShip().getTeam().getGame().getBoard().getShip(targetPosition.getCoordinate());
+        if (target == null){
+            getEventLogger().logAttackingEmptyTile(getRelatedShip(), this, targetPosition.getCoordinate());
+            return;
+        }
         //if target is facing me:
         if (target.getPosition().getRotation() == (getRelatedShip().getPosition().getRotation() + 180) % 360) {
-            return; //the rules state that if target is facing me, nothing happens
-            //todo maybe log this event?
+            //the rules state that if target is facing me, nothing happens
+            getEventLogger().logFrontalAssaultOnTargetFacingMe(getRelatedShip(), target);
+            return;
         }
 
         //if action played just before was move forward, add dmg:

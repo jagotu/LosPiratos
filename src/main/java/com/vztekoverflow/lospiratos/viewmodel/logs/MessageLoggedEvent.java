@@ -3,7 +3,7 @@ package com.vztekoverflow.lospiratos.viewmodel.logs;
 public class MessageLoggedEvent extends LoggedEvent {
     @Override
     public String getTextualDescription(LogFormatter f) {
-        return sender + ": " + message;
+        return (sender != null ? sender + ": " : "" ) + message;
     }
 
     private String sender;

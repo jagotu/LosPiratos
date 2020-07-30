@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from "react";
+import React, {ReactElement, useEffect, useState} from "react";
 import useError from "../useError";
 import ApiService from "../ApiService";
-import {Button, CircularProgress, Grid, Table, TableBody, TableCell, TableRow, Typography} from "@material-ui/core";
+import {Accordion, AccordionDetails, AccordionSummary, Button, CircularProgress, Grid, Table, TableBody, TableCell, TableRow} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {Link} from "react-router-dom";
 import {routes} from "../App";
@@ -10,13 +10,32 @@ type MaybeData = { loaded: true, log: string[] } | { loaded: false, log: undefin
 
 const useStyles = makeStyles({
     row: {
-        "&:nth-of-type(even)" : {
+        "&:nth-of-type(odd)": {
             background: "WhiteSmoke"
         }
     }
-
 });
 
+interface Round {
+    number: number;
+    logs: Array<string>
+}
+
+const parseCombatLog = (combatLog: Array<string>): Array<Round> => {
+    const result: Array<Round> = [{number: 0, logs: []}];
+    let roundIdx = 0;
+    for (let i = 0; i < combatLog.length; i++) {
+        const item = combatLog[i];
+        if (item.startsWith("konec")) {
+            const roundNo = Number.parseInt(item.split(" ")[1]);
+            roundIdx++
+            result[roundIdx] = {number: roundNo, logs: []};
+        } else {
+            result[roundIdx].logs.push(item);
+        }
+    }
+    return result.filter(round => round.logs.length > 0);
+}
 
 const CombatLog: React.FC = () => {
     const classes = useStyles();
@@ -34,21 +53,17 @@ const CombatLog: React.FC = () => {
     if (!data.loaded)
         return <div style={{textAlign: "center"}}><CircularProgress/></div>;
 
-    const log : string[] = data.log;
+    const rounds: Array<Round> = parseCombatLog(data.log);
 
-
-    return (
-        <Grid container direction="column" spacing={2}>
-            <Grid item>
-                <Button component={Link} to={routes.overview} color="primary" variant="contained">Zpět na přehled</Button>
-            </Grid>
-            <Grid item>
-                <Typography variant="caption">(Nejnovější nahoře)</Typography>
-            </Grid>
-            <Grid item>
-                <Table size="small">
+    const renderRound = (round: Round): ReactElement => (
+        <Accordion>
+            <AccordionSummary>
+                {round.number}. kolo
+            </AccordionSummary>
+            <AccordionDetails>
+                <Table size="small" style={{padding: 24}}>
                     <TableBody>
-                        {log.map((logitem,i) => (
+                        {round.logs.map((logitem, i) => (
                             <TableRow key={i} className={classes.row}>
                                 <TableCell>
                                     {logitem}
@@ -57,6 +72,17 @@ const CombatLog: React.FC = () => {
                         ))}
                     </TableBody>
                 </Table>
+            </AccordionDetails>
+        </Accordion>
+    )
+
+    return (
+        <Grid container direction="column" spacing={2}>
+            <Grid item>
+                <Button component={Link} to={routes.overview} color="primary" variant="contained">Zpět na přehled</Button>
+            </Grid>
+            <Grid item>
+                {rounds.map(renderRound)}
             </Grid>
         </Grid>
     )

@@ -2,7 +2,7 @@ import React from "react";
 import Team from "../models/Team";
 import Resources from "./Resources";
 import ResourcesModel from "../models/Resources";
-import {Grid, makeStyles, Typography} from "@material-ui/core";
+import {Box, Grid, makeStyles, Typography} from "@material-ui/core";
 import Ship from "./ships/Ship";
 import getContrastColor from "../util/contrast";
 import AnimateHeight from 'react-animate-height';
@@ -47,15 +47,17 @@ const TeamOverview: React.FC<TeamOverviewProps> = (props) => {
             </div>
             <Grid container direction={"column"} spacing={1} className={classes.content}>
                 <Grid item>
-                    <Grid container direction="row" spacing={1}>
-                        <Grid item><Resources resources={ResourcesModel.fromTeam(team)}/></Grid>
-                        <Grid item><span className="icon">D</span> {team.ships.length}</Grid>
-                    </Grid>
+                    <Box paddingLeft={1}>
+                        <Grid container direction="row" spacing={1}>
+                            <Grid item><Resources resources={ResourcesModel.fromTeam(team)}/></Grid>
+                            <Grid item><span className="icon">D</span> {team.ships.length}</Grid>
+                        </Grid>
+                    </Box>
                 </Grid>
                 <Grid item>
                     <AnimateHeight
-                    duration={500}
-                    height={areShipsVisible ? "auto" : "0"}>
+                        duration={500}
+                        height={areShipsVisible ? "auto" : "0"}>
                         <Grid container direction={"column"} spacing={1}>
                             {team.ships.map(ship => (
                                 <Grid item key={ship.id}>

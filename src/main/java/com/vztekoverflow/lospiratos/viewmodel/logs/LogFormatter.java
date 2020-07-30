@@ -17,10 +17,9 @@ public abstract class LogFormatter {
 
             @Override
             String format(Ship s) {
-                if (s == null) return "loď null";
-                return s.getShipType().getČeskéJméno() + s + quotesL + s.getName() + quotesR
-                        + space() + braceL + "pod vedením " + quotesL + s.getCaptainName() + quotesR + braceR
-                        ;
+                if (s == null)
+                    return "loď null";
+                return s.getShipType().getČeskéJméno() + " " + quotesL + s.getName() + quotesR + space();
             }
 
             @Override
@@ -76,7 +75,6 @@ public abstract class LogFormatter {
                 return " a ";
             }
 
-
             @Override
             String const_Gains() {
                 return "získává";
@@ -104,33 +102,38 @@ public abstract class LogFormatter {
         return new LogFormatter() {
             @Override
             String format(Ship s) {
-                if (s == null || s.getName() == null) return "null";
+                if (s == null || s.getName() == null)
+                    return "null";
                 int length = Math.min(10, s.getName().length());
                 return s.getName().substring(0, length);
             }
 
             @Override
             String format(AxialCoordinate c) {
-                if (c == null) return "null";
+                if (c == null)
+                    return "null";
                 return c.toString();
             }
 
             @Override
             String format(Action a) {
-                if (a == null) return "null";
+                if (a == null)
+                    return "null";
                 return a.getČeskéJméno();
             }
 
             @Override
             String format(Team t) {
-                if (t == null || t.getName() == null) return "null";
+                if (t == null || t.getName() == null)
+                    return "null";
                 int length = Math.min(10, t.getName().length());
                 return t.getName().substring(0, length);
             }
 
             @Override
             String format(ResourceReadOnly r) {
-                if (r == null) return "null";
+                if (r == null)
+                    return "null";
                 return r.toString();
             }
 

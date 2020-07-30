@@ -1,7 +1,19 @@
 package com.vztekoverflow.lospiratos.webapp;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import java.io.IOException;
+import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
+
 import com.sun.net.httpserver.HttpExchange;
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.viewmodel.Game;
@@ -13,26 +25,11 @@ import com.vztekoverflow.lospiratos.viewmodel.actions.ActionParameter;
 import com.vztekoverflow.lospiratos.viewmodel.actions.ParameterizedAction;
 import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.AxialCoordinateActionParameter;
 import com.vztekoverflow.lospiratos.viewmodel.actions.transactions.EnhancementActionParameter;
-import com.vztekoverflow.lospiratos.viewmodel.actions.transactions.Plunder;
 import com.vztekoverflow.lospiratos.viewmodel.actions.transactions.ResourceActionParameter;
-import com.vztekoverflow.lospiratos.viewmodel.logs.LogFormatter;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipEnhancement;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.enhancements.EnhancementsCatalog;
-import javafx.application.Platform;
-import org.hildan.fxgson.FxGson;
 
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
-import java.io.IOException;
-import java.io.StringReader;
-import java.nio.charset.StandardCharsets;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+import javafx.application.Platform;
 
 public class PlanAction {
 
@@ -118,7 +115,7 @@ public class PlanAction {
             }
 
             if (!pa.isSatisfied()) {
-                throw new WebAppServer.FriendlyException("Action is not satisfied - provided parameters are invalid.");
+                throw new WebAppServer.FriendlyException("S těmito parametry nejde akce naplánovat. Ověřte cenu / kapacitu nákladového prostoru.");
             }
         }
 
