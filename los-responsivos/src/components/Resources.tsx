@@ -1,10 +1,12 @@
 import React from "react";
 import ResourcesModel from "../models/Resources";
-import {Grid, Icon} from "@material-ui/core";
+import {Grid} from "@material-ui/core";
 import MetalIcon from "./icons/MetalIcon";
 import ClothIcon from "./icons/ClothIcon";
 import RumIcon from "./icons/RumIcon";
 import "font-awesome/css/font-awesome.css";
+import MoneyIcon from "./icons/MoneyIcon";
+import WoodIcon from "./icons/WoodIcon";
 
 interface ResourcesProps {
     resources: ResourcesModel,
@@ -21,29 +23,32 @@ const Resources: React.FC<ResourcesProps> = (props) => {
 
             {hideZero && r.money === 0 ? null : (
                 <Grid item>
-                    <Icon className="fa fa-money"
-                          style={{fontSize: "18px", lineHeight: "17px", verticalAlign: "bottom"}}/> {r.money}
+                    <MoneyIcon />
+                    {r.money}
                 </Grid>
             )}
             {hideZero && r.metal === 0 ? null : (
                 <Grid item>
-                    <MetalIcon/> {r.metal}
+                    <MetalIcon/>
+                    {r.metal}
                 </Grid>
             )}
             {hideZero && r.wood === 0 ? null : (
                 <Grid item>
-                    <Icon className="fa fa-tree"
-                          style={{fontSize: "17px", lineHeight: "17px", verticalAlign: "bottom"}}/> {r.wood}
+                    <WoodIcon />
+                    {r.wood}
                 </Grid>
             )}
             {hideZero && r.cloth === 0 ? null : (
                 <Grid item>
-                    <ClothIcon/> {r.cloth}
+                    <ClothIcon/>
+                    {r.cloth}
                 </Grid>
             )}
             {hideZero && r.rum === 0 ? null : (
                 <Grid item>
-                    <RumIcon/> {r.rum}
+                    <RumIcon/>
+                    {r.rum}
                 </Grid>
             )}
         </Grid>

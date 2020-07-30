@@ -6,6 +6,8 @@ interface HPIndicatorProps {
     maxHP: number
 }
 
+const maxIngameHPEver = 175;
+
 const HPBar = withStyles((theme) => ({
     root: {
         height: 15,
@@ -36,8 +38,14 @@ const HPIndicator: React.FC<HPIndicatorProps> = (props) => {
 
     return (
         <Grid container direction="row">
-            <Box flexGrow={1}><HPBar variant="determinate" value={100*props.HP/props.maxHP} /></Box>
-            <Box><div className={classes.hpText}>{props.HP}/{props.maxHP}</div></Box>
+            <Box flexGrow={1} style={{position: "relative"}}>
+                <div style={{width: `${props.maxHP / maxIngameHPEver * 100}%`}}>
+                    <HPBar variant="determinate" value={100*props.HP/props.maxHP} />
+                </div>
+            </Box>
+            <Box>
+                <div className={classes.hpText}>{props.HP}/{props.maxHP}</div>
+            </Box>
         </Grid>
     );
 }

@@ -16,7 +16,7 @@
 .icon {
     font-family: 'IconFont';
     font-size: 1.2em;
-    vertical-align: bottom;
+    vertical-align: sub;
     line-height: 17px;
 }
 

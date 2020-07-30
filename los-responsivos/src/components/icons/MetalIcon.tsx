@@ -3,7 +3,7 @@ import './icons.css';
 
 const MetalIcon: React.FC = () => {
     return (
-        <span className="icon">A</span>
+        <span className="icon" style={{paddingRight: 5}}>A</span>
     );
 }
 

@@ -21,31 +21,21 @@ interface ShipProps {
 }
 
 const useStyles = makeStyles(() => ({
-    shipButton: {
-        textTransform: "initial",
-        width: "100%",
-        justifyContent: "left",
-        lineHeight: 1,
-        padding: 0
-    },
-    shipView: {
-        width: 64,
-        height: 64,
-        padding: 8
+    clickable: {
+        cursor: "pointer"
     },
     border: {
         borderStyle: "solid",
-        borderRadius: 12,
-        borderWidth: 4
+        borderRadius: 8,
+        borderWidth: 1,
+        overflow: "hidden"
     },
     header: {
-        fontWeight: "bold",
-        lineHeight: "30px",
-        paddingLeft: 8,
-        paddingRight: 0
+        padding: 8,
+        paddingLeft: 16
     },
     content: {
-        padding: "8px 8px"
+        padding: 16
     },
     fixIconAlign: {
         lineHeight: "17px",
@@ -60,7 +50,6 @@ const Ship: React.FC<ShipProps> = (props) => {
     const {data} = useGameData();
 
 
-
     if (!data.loaded)
         return <div style={{textAlign: "center"}}><CircularProgress/></div>;
 
@@ -68,65 +57,60 @@ const Ship: React.FC<ShipProps> = (props) => {
     const shipExtendedDetails = data.enrichedGame.extendedShipDetails.filter(t => t.shipId === s.id)[0];
 
 
-
     const handleClick = (): void => {
         history.push(`${routes.shipDetail}/${s.id}`);
     };
 
     const content = (
-            <div className={classes.border} style={{borderColor: shipTeam.color}}>
-                <div className={classes.header}
-                     style={{backgroundColor: shipTeam.color, color: getContrastColor(shipTeam.color)}}>
-                    {s.name}
-                </div>
-                <Grid container direction="column" className={classes.content} spacing={1}>
-                    <Grid item>
-                        <HPIndicator HP={s.HP} maxHP={shipExtendedDetails.maxHP} />
-                    </Grid>
+        <div className={classes.border} style={{borderColor: shipTeam.color}}>
+            <div className={classes.header}
+                 style={{backgroundColor: shipTeam.color, color: getContrastColor(shipTeam.color)}}>
+                {s.name}
+            </div>
+            <Grid container direction="column" className={classes.content} spacing={1}>
+                <Grid item>
+                    <HPIndicator HP={s.HP} maxHP={shipExtendedDetails.maxHP}/>
+                </Grid>
 
-                    <Grid item>
-                        <Grid container direction="row">
-                            <Box flexGrow={1}>{translations[s.type]}</Box>
-                            <Box>
-                                <ShipEnhancementsIndicator ship={s} />
-                            </Box>
-                        </Grid>
+                <Grid item>
+                    <Grid container direction="row">
+                        <Box flexGrow={1}>{translations[s.type]}</Box>
+                        <Box>
+                            <ShipEnhancementsIndicator ship={s}/>
+                        </Box>
                     </Grid>
+                </Grid>
 
-                    <Grid item>
-                        <Grid container direction="row" spacing={2}>
-                            <Grid item><span className="icon">E</span> {shipExtendedDetails.cannonsCount}</Grid>
-                            <Grid item><span className="icon">F</span> {shipExtendedDetails.cargoCapacity}</Grid>
-                            <Grid item><Icon className="fa fa-flash" style={{fontSize: "18px", lineHeight: "17px", verticalAlign: "bottom"}} />{shipExtendedDetails.speed}</Grid>
-                            <Box flexGrow={1}/>
-                            <Grid item>
+                <Grid item>
+                    <Grid container direction="row" spacing={2}>
+                        <Grid item><span className="icon">E</span> {shipExtendedDetails.cannonsCount}</Grid>
+                        <Grid item><span className="icon">F</span> {shipExtendedDetails.cargoCapacity}</Grid>
+                        <Grid item><Icon className="fa fa-flash"
+                                         style={{fontSize: "18px", lineHeight: "17px", verticalAlign: "bottom"}}/>{shipExtendedDetails.speed}</Grid>
+                        <Box flexGrow={1}/>
+                        <Grid item>
                                 <span className={classes.fixIconAlign} style={{marginRight: 2}}>
                                     <Position position={s.position}/>
                                 </span>
-                                <Icon className={clsx("fa", "fa-arrow-right", `deg-${s.orientationDeg}`)} style={{fontSize: "18px"}} />
-                            </Grid>
+                            <Icon className={clsx("fa", "fa-arrow-right", `deg-${s.orientationDeg}`)} style={{fontSize: "18px"}}/>
                         </Grid>
                     </Grid>
-                    <Grid item>
-                        <Resources resources={ResourcesModel.fromShip(s)}/>
-                    </Grid>
                 </Grid>
-            </div>
+                <Grid item>
+                    <Resources resources={ResourcesModel.fromShip(s)}/>
+                </Grid>
+            </Grid>
+        </div>
     )
 
-    if (props.clickable) {
-        return (
-            <div className={classes.shipButton} onClick={handleClick}>
-                {content}
-            </div>
-        );
-    } else {
-        return (
-            <div>
-                {content}
-            </div>
-        );
-    }
+    return (
+        <div
+            className={clsx({[classes.clickable]: props.clickable})}
+            onClick={props.clickable ? handleClick : () => ({})}>
+            {content}
+        </div>
+    );
+
 }
 
 export default Ship;
