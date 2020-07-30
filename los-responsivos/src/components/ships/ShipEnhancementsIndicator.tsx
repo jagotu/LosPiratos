@@ -20,7 +20,6 @@ const ShipEnhancementsIndicator: React.FC<ShipEnhancementsIndicatorProps> = (pro
             <Grid item><span className={"icon enhancement " + (s.enhancements.HullUpgrade ?? "empty")}>J</span></Grid>
             <Grid item><span className={"icon enhancement " + (s.enhancements.Mortar ?? "empty")}>K</span></Grid>
             <Grid item><span className={"icon icon-lastminute enhancement " + (s.enhancements.Ram ?? "empty")} style={{fontWeight: "bold"}}>A</span></Grid>
-
         </Grid>
     );
 }

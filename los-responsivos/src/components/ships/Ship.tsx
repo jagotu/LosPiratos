@@ -1,6 +1,6 @@
 import React from "react";
 import ShipModel from "../../models/Ship";
-import {Box, CircularProgress, Grid, Icon, makeStyles} from "@material-ui/core";
+import {Box, CircularProgress, Grid, makeStyles} from "@material-ui/core";
 import Resources from "../Resources";
 import ResourcesModel from "../../models/Resources";
 import translations from "../../translations";
@@ -83,16 +83,28 @@ const Ship: React.FC<ShipProps> = (props) => {
 
                 <Grid item>
                     <Grid container direction="row" spacing={2}>
-                        <Grid item><span className="icon">E</span> {shipExtendedDetails.cannonsCount}</Grid>
-                        <Grid item><span className="icon">F</span> {shipExtendedDetails.cargoCapacity}</Grid>
-                        <Grid item><Icon className="fa fa-flash"
-                                         style={{fontSize: "18px", lineHeight: "17px", verticalAlign: "bottom"}}/>{shipExtendedDetails.speed}</Grid>
+                        <Grid item>
+                            <span className="icon">E</span> {shipExtendedDetails.cannonsCount}
+                        </Grid>
+                        <Grid item>
+                            <span className="icon">F</span> {shipExtendedDetails.cargoCapacity}
+                        </Grid>
+                        <Grid item>
+                            <span
+                                className="fa fa-flash"
+                                style={{fontSize: "18px", lineHeight: "17px", verticalAlign: "bottom"}}
+                            />
+                            {shipExtendedDetails.speed}
+                        </Grid>
                         <Box flexGrow={1}/>
                         <Grid item>
-                                <span className={classes.fixIconAlign} style={{marginRight: 2}}>
-                                    <Position position={s.position}/>
-                                </span>
-                            <Icon className={clsx("fa", "fa-arrow-right", `deg-${s.orientationDeg}`)} style={{fontSize: "18px"}}/>
+                            <span className={classes.fixIconAlign} style={{marginRight: 2}}>
+                                <Position position={s.position}/>
+                            </span>
+                            <span
+                                className={clsx("fa", "fa-arrow-right", `deg-${s.orientationDeg}`)}
+                                style={{fontSize: "18px"}}
+                            />
                         </Grid>
                     </Grid>
                 </Grid>
