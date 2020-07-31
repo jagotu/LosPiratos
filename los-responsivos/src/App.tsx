@@ -15,6 +15,7 @@ import Pexeso from "./components/edgeOfBreakfast/Pexeso";
 // @ts-ignore
 import Websocket from 'react-websocket';
 import {useGameData} from "./gameDataContext";
+import GameRules from "./components/GameRules";
 
 export const routes = {
     overview: "/overview",
@@ -24,6 +25,7 @@ export const routes = {
     login: "/login",
     map: "/tile/0,0?fullMap",
     combatLog: "/combatLog",
+    gameRules: "/gameRules",
     buyShip: "/buyShip",
     factory: {
         tileDetail: (position: HexPosition) => `${routes.tileDetail}/${position.Q},${position.R}`
@@ -70,6 +72,7 @@ function App() {
                         <Route path={routes.buyShip} component={BuyNewShip}/>
                         <Route path={routes.icons} component={AllIcons}/>
                         <Route path={routes.combatLog} component={CombatLog}/>
+                        <Route path={routes.gameRules} component={GameRules}/>
                         {/*default: */}
                         <Route render={() => <h1>404: stránka nenalezena</h1>}/>
                     </Switch>
