@@ -33,6 +33,7 @@ public class WebAppServer implements HttpHandler {
     }
 
     private boolean running = false;
+    PiratosWebSocket piratosocket = null;
 
 
     public void start() throws IOException {
@@ -49,7 +50,17 @@ public class WebAppServer implements HttpHandler {
         server.setExecutor(Executors.newFixedThreadPool(10));
 
         server.start();
+
+        piratosocket = new PiratosWebSocket(4242);
+        piratosocket.start();
+
+        game.addOnNextRoundStartedListener(roundNo -> {
+            forceClientsRefresh();
+        });
+
         running = true;
+
+
 
     }
 
@@ -60,7 +71,12 @@ public class WebAppServer implements HttpHandler {
         synchronized (jpglock) {
             currentjpg = map;
         }
-}
+    }
+
+    public void forceClientsRefresh()
+    {
+        piratosocket.broadcast("refresh");
+    }
 
     public void setGame(Game g) {
         this.game = g;
@@ -72,6 +88,11 @@ public class WebAppServer implements HttpHandler {
         }
 
         server.stop(delay);
+        try {
+            piratosocket.stop(delay);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         running = false;
     }
 
