@@ -41,7 +41,7 @@ const TransactionModificationConfirmDialog: React.FC<TransactionModificationConf
                     type="submit"
                     onClick={handleSubmit}
                 >
-                    Ihned provést
+                    Provést ihned
                 </Button>
             </DialogActions>
         </Dialog>

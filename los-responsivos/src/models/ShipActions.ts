@@ -43,7 +43,8 @@ export const needsParameters = (action: ShipAction): boolean => {
         return true;
     else if (isTransaction(action)) {
         const transaction = action as Transaction;
-        return transactionsParameters[transaction].needsAmount ||
+        return transactionsParameters[transaction].needsMoney ||
+            transactionsParameters[transaction].needsCommodity ||
             transactionsParameters[transaction].needsEnhancement;
     } else return false;
 }

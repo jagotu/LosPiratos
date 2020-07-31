@@ -88,7 +88,7 @@ const ShipDetail: React.FC<ShipDetailProps> = ({id}) => {
             <Grid item>
                 <Typography variant="h6">Okolí lodi</Typography>
                 <Link to={routes.factory.tileDetail(shipDetail.ship.position)}>
-                    <TileProximityView center={shipDetail.ship.position}/>
+                    <TileProximityView center={shipDetail.ship.position} imgKey={String(gameDataVersion)} />
                 </Link>
             </Grid>
         </Grid>

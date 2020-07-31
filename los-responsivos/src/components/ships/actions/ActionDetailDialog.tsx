@@ -1,12 +1,7 @@
 import React, {useEffect, useMemo, useState} from "react";
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, Typography} from "@material-ui/core";
 import {Enhancement, needsParameters, ShipAction, ShipActionParam} from "../../../models/ShipActions";
-import {
-    isModificationTransaction,
-    isTransaction,
-    Transaction,
-    transactionsParameters
-} from "../../../models/Transactions";
+import {isModificationTransaction, isTransaction, Transaction, transactionsParameters} from "../../../models/Transactions";
 import {actionTranslations} from "./actionDetails";
 import translations from "../../../translations";
 import _ from "lodash";
@@ -36,7 +31,7 @@ interface ActionDetailDialogProps {
     onParamSelected: (action: ShipAction, param: ShipActionParam) => void;
 }
 
-type MaybeCost = { loaded: "true", cost: CostResponse } | { loaded: "loading", cost: undefined } | {loaded: "error", cost: undefined}
+type MaybeCost = { loaded: "true", cost: CostResponse } | { loaded: "loading", cost: undefined } | { loaded: "error", cost: undefined }
 
 const ActionDetailDialog: React.FC<ActionDetailDialogProps> = ({openForAction, onClose, onParamSelected, ship, sourceLocation}) => {
     const [actionParam, setActionParam] = useState<ShipActionParam>({});
@@ -53,43 +48,37 @@ const ActionDetailDialog: React.FC<ActionDetailDialogProps> = ({openForAction, o
             && openForAction.open
             && transactionsParameters[openForAction.action as Transaction]?.needsEnhancement
         ) {
-            if(openForAction.action === "RepairEnhancement")
-            {
+            if (openForAction.action === "RepairEnhancement") {
                 let enhancements = [];
-                for(let enh of Object.keys(ship.enhancements))
-                {
+                for (let enh of Object.keys(ship.enhancements)) {
                     // @ts-ignore
-                    if(ship.enhancements[enh] === "destroyed")
-                    {
+                    if (ship.enhancements[enh] === "destroyed") {
                         enhancements.push(enh);
                     }
                 }
                 setAvailableEnhancements(enhancements);
-
             } else {
                 ApiService.getPossibleEnhancementsForPurchase(shipId)
                     .then(setAvailableEnhancements)
                     .catch(showDefaultError);
             }
-
         }
     }, [availableEnhancements, openForAction, showDefaultError, shipId, ship.enhancements]);
 
     useEffect(() => {
-        if (openForAction.open)
-        {
+        if (openForAction.open) {
             ApiService.getActionCost(shipId, openForAction.action, actionParam)
                 .then(cost => setMaybeCost({loaded: "true", cost}))
                 .catch(e => {
-                    if(e.response?.status === 400)
-                    {
+                    if (e.response?.status === 400) {
                         setMaybeCost({loaded: "error", cost: undefined})
                     } else {
-                      throw e
-                    }})
+                        throw e
+                    }
+                })
                 .catch(showDefaultError)
         }
-    }, [shipId, openForAction, actionParam, showDefaultError ]);
+    }, [shipId, openForAction, actionParam, showDefaultError]);
 
     if (!openForAction.open) return null;
     const action = openForAction.action;
@@ -98,23 +87,26 @@ const ActionDetailDialog: React.FC<ActionDetailDialogProps> = ({openForAction, o
         console.warn("ActionDetailDialog opened for action that does not need parameters.", action);
     }
 
-    let needsAmount = false;
+    let needsMoney = false;
+    let needsCommodity = false;
     let needsEnhancement = false;
     let needsTarget = action === "MortarShot";
     let hasCost = false;
     if (isTransaction(action)) {
-        needsAmount = transactionsParameters[action as Transaction].needsAmount;
+        needsMoney = transactionsParameters[action as Transaction].needsMoney;
+        needsCommodity = transactionsParameters[action as Transaction].needsCommodity;
         needsEnhancement = transactionsParameters[action as Transaction].needsEnhancement;
         hasCost = transactionsParameters[action as Transaction].hasCost;
     }
 
-    if(needsAmount && !actionParam.amount)
-    {
+    if ((needsMoney || needsCommodity) && !actionParam.amount) {
         actionParam.amount = ResourcesModel.zero()
     }
 
     const amountPicker = (
         <ResourceEdit
+            moneyOnly={!needsCommodity}
+            noMoney={!needsMoney}
             value={actionParam.amount ?? ResourcesModel.zero()}
             onValueChange={amount => setActionParam(prev => ({...prev, amount}))}
         />
@@ -171,22 +163,20 @@ const ActionDetailDialog: React.FC<ActionDetailDialogProps> = ({openForAction, o
 
     let costStatus = (<>Neplatné parametry</>);
 
-    if(maybeCost.loaded === "true")
-    {
-        costStatus = (<Resources resources={maybeCost.cost.cost} hideZero={true} />);
-    } else if (maybeCost.loaded === "loading")
-    {
+    if (maybeCost.loaded === "true") {
+        costStatus = (<Resources resources={maybeCost.cost.cost} hideZero={true}/>);
+    } else if (maybeCost.loaded === "loading") {
         costStatus = (<>Načítání...</>);
     }
 
     const costDisplay = (
-        <Typography>cena: {costStatus}</Typography>
+        <Typography style={{paddingTop: 8}}>cena: {costStatus}</Typography>
     )
 
     const immediateWarning = isModificationTransaction(action) ? (
         <>
-        Tato transakce bude ihned provedena. Už ji nepůjde vzít zpět a ostatní týmy budou moci vidět její výsledek.
-    </>) : null;
+            Tato transakce bude ihned provedena. Už ji nepůjde vzít zpět a ostatní týmy budou moci vidět její výsledek.
+        </>) : null;
 
     const formId = "actionDetailDialog-" + action;
     return (
@@ -202,7 +192,7 @@ const ActionDetailDialog: React.FC<ActionDetailDialogProps> = ({openForAction, o
                 <form id={formId}>
                     {needsEnhancement ? enhancementPicker : null}
                     {needsTarget ? targetPicker : null}
-                    {needsAmount ? amountPicker : null}
+                    {(needsCommodity || needsMoney) ? amountPicker : null}
                     {hasCost ? costDisplay : null}
                 </form>
             </DialogContent>
