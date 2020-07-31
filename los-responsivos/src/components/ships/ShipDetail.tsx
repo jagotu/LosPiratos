@@ -1,15 +1,14 @@
 import React, {useEffect, useState} from "react";
-import {Button, CircularProgress, Grid, makeStyles, Typography} from "@material-ui/core";
+import {Button, CircularProgress, Grid, IconButton, makeStyles, Tooltip, Typography} from "@material-ui/core";
 import "./Ship.css";
 import ApiService from "../../ApiService";
 import ShipDetailModel from "../../models/ShipDetail";
 import Ship from "./Ship";
-import PlannedAction from "./actions/PlannedAction";
+import PlannedActions from "./actions/PlannedActions";
 import {Link} from "react-router-dom";
 import {routes} from "../../App";
 import ActionPlanner from "./actions/ActionPlanner";
 import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
-import uid from "../../util/uid";
 import useError from "../../useError";
 import TileProximityView from "../TileProximityView";
 import Resources from "../Resources";
@@ -50,14 +49,11 @@ const ShipDetail: React.FC<ShipDetailProps> = ({id}) => {
         return <div style={{textAlign: "center"}}><CircularProgress/></div>;
     const shipDetail: ShipDetailModel = data.ship;
 
-    const refreshData = () => {
-        invalidateData();
-    }
-    const removeActions = () => {
-        ApiService.deleteActions(id, 0)
-            .then(refreshData)
+    const handlePlannedActionClick = (index: number) => {
+        ApiService.deleteActions(id, index + 1)
+            .then(invalidateData)
             .catch(showErrorFromEvent);
-    };
+    }
 
     const shipTeam = game?.game.teams.filter(x => x.id === shipDetail.ship.teamId)[0];
 
@@ -69,21 +65,14 @@ const ShipDetail: React.FC<ShipDetailProps> = ({id}) => {
             {shipTeam ? <Grid item><TeamOverview team={shipTeam} createShips={false}/></Grid> : null}
             <Grid item><Ship data={shipDetail.ship} clickable={false}/></Grid>
             <Grid item>
-                <Typography variant="h6">Naplánované akce</Typography>
-                <div>
-                    <div style={{float: "left", marginRight: 16}}>
-                        <Button variant="contained" onClick={removeActions}>
+                <Typography variant="h6">Naplánované akce
+                    <Tooltip title="Zrušit všechny plánované akce">
+                        <IconButton onClick={() => handlePlannedActionClick(-1)} style={{float: "right"}}>
                             <DeleteForeverOutlinedIcon/>
-                        </Button>
-                    </div>
-                    <Grid container direction="row" className={classes.plannedActionsContainer}>
-                        {shipDetail.plannedActions.map(action => (
-                            <Grid item key={uid()}>
-                                <PlannedAction action={action}/>
-                            </Grid>
-                        ))}
-                    </Grid>
-                </div>
+                        </IconButton>
+                    </Tooltip>
+                </Typography>
+                <PlannedActions actions={shipDetail.plannedActions} onActionClick={handlePlannedActionClick}/>
             </Grid>
             <Grid item>
                 <Typography variant="h6">Naplánovat akce</Typography>
@@ -91,7 +80,7 @@ const ShipDetail: React.FC<ShipDetailProps> = ({id}) => {
                     ship={shipDetail.ship}
                     plannableActions={shipDetail.plannableActions}
                     visibleActions={shipDetail.visibleActions}
-                    onActionPlannedOk={refreshData}
+                    onActionPlannedOk={invalidateData}
                 />
             </Grid>
             <Grid item>Aktuální cena vylepšení: <Resources resources={shipDetail.upgradeCost} hideZero={true}/></Grid>
