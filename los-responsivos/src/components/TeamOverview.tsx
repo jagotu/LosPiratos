@@ -59,11 +59,11 @@ const TeamOverview: React.FC<TeamOverviewProps> = (props) => {
                 <Typography variant={"h5"}>{team.name}</Typography>
             </div>
             <Grid container direction={"column"} spacing={2} className={classes.content}>
-                <Grid item >
-                        <Grid container direction="row" spacing={1} >
-                            <Grid item><Resources resources={ResourcesModel.fromTeam(team)}/></Grid>
-                            <Grid item><span className="icon">D</span> {team.ships.length}</Grid>
-                        </Grid>
+                <Grid item>
+                    <Grid container direction="row" spacing={1} style={{paddingLeft: 8}}>
+                        <Grid item><Resources resources={ResourcesModel.fromTeam(team)}/></Grid>
+                        <Grid item><span className="icon">D</span> {team.ships.length}</Grid>
+                    </Grid>
                 </Grid>
                 <Grid item>
                     {createShips ? ships : null}

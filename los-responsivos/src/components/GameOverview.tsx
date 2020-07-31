@@ -1,5 +1,5 @@
 import React from "react";
-import {Box, Button, CircularProgress, Grid} from "@material-ui/core";
+import {Button, CircularProgress, Divider, Grid} from "@material-ui/core";
 import Game from "../models/Game";
 import {useUser} from "../userContext";
 import {Link} from "react-router-dom";
@@ -7,6 +7,7 @@ import {routes} from "../App";
 import TeamOverview from "./TeamOverview";
 import {useGameData} from "../gameDataContext";
 import Team from "../models/Team";
+import ReadyCheck from "./ReadyCheck";
 
 const GameOverview: React.FC = () => {
     const {teamId} = useUser();
@@ -24,9 +25,9 @@ const GameOverview: React.FC = () => {
 
     const controlPanel = (
         <Grid container direction="row" spacing={1}>
+            <Grid item><Button component={Link} to={routes.buyShip} variant="contained">Nákup lodi</Button></Grid>
             <Grid item><Button component={Link} to={routes.map} variant="contained">Mapa</Button></Grid>
             <Grid item><Button component={Link} to={routes.combatLog} variant="contained">Combat log</Button></Grid>
-            <Grid item><Button component={Link} to={routes.buyShip} variant="contained">Nákup lodi</Button></Grid>
         </Grid>
     )
 
@@ -41,10 +42,12 @@ const GameOverview: React.FC = () => {
 
 
     return (
-        <Grid container spacing={3} direction="column">
+        <Grid container spacing={2} direction="column">
             <Grid item><TeamOverview team={myTeam} isCurrentTeam areShipsVisible={true}/></Grid>
+            <Grid item><Divider /></Grid>
             <Grid item>{controlPanel}</Grid>
-            <Box pb={2}/> {/* visual separator */}
+            <Grid item><ReadyCheck /></Grid>
+            <Grid item><Divider /></Grid>
             {otherTeams.map(t => (
                 <Grid item key={t.id}><TeamOverview team={t} areShipsVisible={teamEnlarged === t.id} onClick={() => clickHandler(t)}/></Grid>
             ))}

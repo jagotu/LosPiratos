@@ -18,6 +18,7 @@ export const endpoints = {
     planAndEvaluateModificationTransaction: (shipId: string) => addressPrefix + `/planActionAndCommit?ship=${shipId}&team=${teamId()}`, // POST method
     deleteActions: (shipId: string) => addressPrefix + `/deleteActions?ship=${shipId}&team=${teamId()}`, // POST method, screw REST
     createShip: () => addressPrefix + `/createShip?team=${teamId()}`, // POST method
+    teamReadyState: () => addressPrefix + `/teamIsReady?team=${teamId()}`, // POST or GET method - set or get value
     getAvailableEnhancements: (shipId : string) => addressPrefix + `/getAvailableEnhancements?ship=${shipId}&team=${teamId()}`,
     login: addressPrefix + "/login",
     combatLog: addressPrefix + "/log",
@@ -111,7 +112,6 @@ export default class ApiService {
             });
     }
 
-
     static getPossibleEnhancementsForPurchase(shipId: string): Promise<Array<Enhancement>> {
         console.log("service: get possible enhancements of ship", shipId);
         return axios.get(endpoints.getAvailableEnhancements(shipId), {withCredentials: true})
@@ -123,9 +123,7 @@ export default class ApiService {
 
     }
 
-
     static buyNewShip(shipName: string, port: string, type: ShipType): Promise<void> {
-
         return axios.post(endpoints.createShip(), {
             shipName,port,type}
             , {withCredentials: true})
@@ -133,6 +131,25 @@ export default class ApiService {
             })
             .catch(e => {
                 console.error("service error: buy ship", e);
+                throw e;
+            });
+    }
+
+    static setTeamReadyState(): Promise<void> {
+        console.log("service: set team is ready");
+        return axios.post(endpoints.teamReadyState())
+            .then(() => {})
+            .catch(e => {
+                console.error("service error: set team ready state", e);
+                throw e;
+            });
+    }
+
+    static getTeamReadyState(): Promise<boolean> {
+        return axios.post(endpoints.teamReadyState())
+            .then((response) => response.data.ready)
+            .catch(e => {
+                console.error("service error: get team ready state", e);
                 throw e;
             });
     }
