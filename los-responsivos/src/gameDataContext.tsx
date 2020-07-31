@@ -8,10 +8,12 @@ type MaybeData = { loaded: true, enrichedGame: EnrichedGame } | { loaded: false,
 export interface GameContext {
     data: MaybeData;
     invalidateData: () => void;
+    gameDataVersion: number;
 }
 
 const GameContext = React.createContext<GameContext>({
     data: {loaded: false, enrichedGame: undefined},
+    gameDataVersion: 0,
     invalidateData: () => ({})
 });
 
@@ -30,7 +32,8 @@ export const GameContextProvider: React.FC = ({children}) => {
     return (
         <GameContext.Provider value={{
             data,
-            invalidateData
+            invalidateData,
+            gameDataVersion: dataVersion
         }}>
             {children}
         </GameContext.Provider>

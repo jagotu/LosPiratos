@@ -36,23 +36,21 @@ const ShipDetail: React.FC<ShipDetailProps> = ({id}) => {
     const classes = useStyles();
     const {showErrorFromEvent} = useError();
     const game = useGameData().data.enrichedGame;
-    const {invalidateData} = useGameData();
+    const {invalidateData, gameDataVersion} = useGameData();
 
     const [data, setData] = useState<MaybeData>({loaded: false, ship: undefined});
-    const [dataVersion, setDataVersion] = useState(0);
 
     useEffect(() => {
         ApiService.getShipDetail(id)
             .then(ship => setData({loaded: true, ship}))
             .catch(showErrorFromEvent);
-    }, [id, dataVersion, showErrorFromEvent]);
+    }, [id, gameDataVersion, showErrorFromEvent]);
 
     if (!data.loaded)
         return <div style={{textAlign: "center"}}><CircularProgress/></div>;
     const shipDetail: ShipDetailModel = data.ship;
 
     const refreshData = () => {
-        setDataVersion(oldValue => oldValue + 1); // force React to recall the ApiService
         invalidateData();
     }
     const removeActions = () => {

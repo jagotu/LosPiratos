@@ -1,7 +1,7 @@
 import React, {useEffect, useMemo} from "react";
 import {Link, useHistory} from "react-router-dom";
 import {routes} from "../App";
-import {Button, CircularProgress, Grid, Typography} from "@material-ui/core";
+import {Box, Button, CircularProgress, Grid, Typography} from "@material-ui/core";
 import HexPosition, {positionsEqual} from "../models/HexPosition";
 import Position from "./Position";
 import TileProximityView from "./TileProximityView";
@@ -125,6 +125,10 @@ const TileDetail: React.FC<TileDetailProps> = ({coordinates, fullMap}) => {
                     </Grid>
                 }
             </Grid>
+            <Box paddingTop={1} paddingBottom={1} >
+                <Typography variant="caption">Mapu je třeba po skončení kola ručně obnovit. Doporučujeme počkat na konec animací.</Typography>
+            </Box>
+
             <TileProximityView
                 style={{paddingLeft: 0}}
                 onTileSelected={handleTileSelected}

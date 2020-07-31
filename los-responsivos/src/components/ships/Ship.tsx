@@ -84,17 +84,17 @@ const Ship: React.FC<ShipProps> = (props) => {
                 <Grid item>
                     <Grid container direction="row" spacing={2}>
                         <Grid item>
-                            <span className="icon">E</span> {shipExtendedDetails.cannonsCount}
+                            <span className="icon">E</span>&nbsp;{shipExtendedDetails.cannonsCount}
                         </Grid>
                         <Grid item>
-                            <span className="icon">F</span> {shipExtendedDetails.cargoCapacity}
+                            <span className="icon">F</span>&nbsp;{shipExtendedDetails.cargoCapacity}
                         </Grid>
                         <Grid item>
                             <span
                                 className="fa fa-flash"
                                 style={{fontSize: "18px", lineHeight: "17px", verticalAlign: "bottom"}}
                             />
-                            {shipExtendedDetails.speed}
+                            &nbsp;{shipExtendedDetails.speed}
                         </Grid>
                         <Box flexGrow={1}/>
                         <Grid item>

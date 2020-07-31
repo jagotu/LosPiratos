@@ -17,7 +17,6 @@ const Resources: React.FC<ResourcesProps> = (props) => {
     const r = props.resources;
     const hideZero = props.hideZero ?? false;
 
-    console.log(r);
     return (
         <Grid container spacing={1} direction="row">
 

@@ -12,6 +12,9 @@ import HexPosition from "./models/HexPosition";
 import BuyNewShip from "./components/BuyNewShip";
 import CombatLog from "./components/CombatLog";
 import Pexeso from "./components/edgeOfBreakfast/Pexeso";
+// @ts-ignore
+import Websocket from 'react-websocket';
+import {useGameData} from "./gameDataContext";
 
 export const routes = {
     overview: "/overview",
@@ -38,6 +41,13 @@ const EdgeOfBreakfast = false;
 
 function App() {
     const {user} = useUser();
+    const {invalidateData}= useGameData();
+
+    const handleWebsocketMessage = (message: string) => {
+        if(message === "refresh")
+            invalidateData();
+    }
+
     if(EdgeOfBreakfast){
         return (
             <Pexeso />
@@ -45,6 +55,7 @@ function App() {
     }
     else return (
         <Box paddingTop={3} paddingBottom={3}>
+            <Websocket url={process.env.REACT_APP_WEBSOCKET_URL} onMessage={handleWebsocketMessage} />
             <Container maxWidth={"sm"}>
                 <BrowserRouter>
                     <Switch>
