@@ -501,7 +501,7 @@ public class OrgStage {
 
         if(webAppServer.isRunning())
         {
-            webAppServer.stop(2);
+            webAppServer.stop(0);
         }
         if(roundTimer != null)
         {

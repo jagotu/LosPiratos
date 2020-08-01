@@ -1,1 +1,1 @@
-curl "localhost:8001/org/stopTimer?token=$TOKEN"
+curl "localhost:8001/org/stopTimer" -H "Cookie: teamToken=$TOKEN"

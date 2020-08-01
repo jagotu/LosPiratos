@@ -15,7 +15,7 @@ else
     echo ")"
 fi
 
-timerlength=$(curl -s "localhost:8001/org/timerLength?token=$TOKEN")
+timerlength=$(curl -s "localhost:8001/org/timerLength" -H "Cookie: teamToken=$TOKEN")
 echo -n "Délka kola: $timerlength ("
 date -u -d @"$timerlength" +'%-Mm %-Ss' | tr -d '\n'
 echo ")"

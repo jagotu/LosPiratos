@@ -152,12 +152,16 @@ public class WebAppServer implements HttpHandler {
             }
         }*/
 
-        Map<String, List<String>> urlParams = Helpers.splitQuery(exchange.getRequestURI());
-
-        if(Helpers.isPresentOnce(urlParams, "token"))
+        /*if(exchange.getRequestURI() != null)
         {
-            token = urlParams.get("token").get(0);
-        }
+            Map<String, List<String>> urlParams = Helpers.splitQuery(exchange.getRequestURI());
+
+            if(Helpers.isPresentOnce(urlParams, "token"))
+            {
+                token = urlParams.get("token").get(0);
+            }
+        }*/
+
 
         return token;
     }

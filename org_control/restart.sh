@@ -1,1 +1,1 @@
-curl "localhost:8001/org/restartTimer?token=$TOKEN"
+curl "localhost:8001/org/restartTimer" -H "Cookie: teamToken=$TOKEN"

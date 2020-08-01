@@ -1,1 +1,1 @@
-curl "localhost:8001/org/timerLength?token=$TOKEN" --data "$1"
+curl "localhost:8001/org/timerLength" --data "$1" -H "Cookie: teamToken=$TOKEN"
