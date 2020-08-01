@@ -10,9 +10,9 @@ interface ReadyCheckProps {
 const ReadyCheck: React.FC<ReadyCheckProps> = (props) => {
     const [showDialog, setShowDialog] = useState(false);
     const [checked, setChecked] = useState(false);
-    const [dataVersion, setDataVersion]= useState(0);
     const {showDefaultError} = useError();
     const game = useGameData().data.enrichedGame;
+    const {invalidateData, gameDataVersion} = useGameData();
 
     const handleCheckboxChange = () => {
         if (!checked) {
@@ -20,16 +20,18 @@ const ReadyCheck: React.FC<ReadyCheckProps> = (props) => {
         }
     }
 
+    useEffect(() => {setShowDialog(false)},[gameDataVersion]); // close on next round
+
     useEffect(() => {
         ApiService.getTeamReadyState()
             .then(setChecked);
-    },[dataVersion]);
+    },[gameDataVersion]);
 
     const onDialogClose = () => setShowDialog(false);
 
     const handleSubmit = () => {
         ApiService.setTeamReadyState(game?.roundNo ?? -1)
-            .then(() => setDataVersion(prev => prev+1))
+            .then(invalidateData)
             .catch(showDefaultError);
         onDialogClose();
     }
