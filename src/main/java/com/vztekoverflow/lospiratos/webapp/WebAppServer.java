@@ -19,6 +19,7 @@ import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import com.vztekoverflow.lospiratos.model.GameSerializer;
 import com.vztekoverflow.lospiratos.viewmodel.Game;
+import com.vztekoverflow.lospiratos.viewmodel.Team;
 import org.hildan.fxgson.FxGson;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -56,6 +57,10 @@ public class WebAppServer implements HttpHandler {
 
         game.addOnNextRoundStartedListener(roundNo -> {
             forceClientsRefresh();
+            synchronized (TeamIsReady.readyTeams)
+            {
+                TeamIsReady.readyTeams.clear();
+            }
         });
 
         running = true;
@@ -206,6 +211,12 @@ public class WebAppServer implements HttpHandler {
             } else if (loweredpath.startsWith("/createship") && exchange.getRequestMethod().equals("POST") )
             {
                 data = CreateShip.doit(exchange, game, teamToken, postData);
+            } else if (loweredpath.startsWith("/teamisready") && exchange.getRequestMethod().equals("GET") )
+            {
+                data = TeamIsReady.getJson(exchange, game, teamToken);
+            } else if (loweredpath.startsWith("/teamisready") && exchange.getRequestMethod().equals("POST") )
+            {
+                data = TeamIsReady.set(exchange, game, teamToken, postData);
             }
 
             else if (loweredpath.equals("/login") && exchange.getRequestMethod().equals("POST")) {

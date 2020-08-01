@@ -20,7 +20,7 @@ public class PiratosWebSocket extends WebSocketServer {
 
     @Override
     public void onOpen( WebSocket conn, ClientHandshake handshake ) {
-        
+
     }
 
     @Override

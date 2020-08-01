@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class EnrichedGame {
     public Game game;
     public List<ExtendedShipDetails> extendedShipDetails;
-
+    public int roundNo;
 
     public static class ExtendedShipDetails
     {
@@ -38,6 +38,7 @@ public class EnrichedGame {
         this.game = game.getGameModel();
 
         extendedShipDetails = game.getAllShips().stream().map(ExtendedShipDetails::new).collect(Collectors.toList());
+        this.roundNo = game.getRoundNo();
 
 
     }

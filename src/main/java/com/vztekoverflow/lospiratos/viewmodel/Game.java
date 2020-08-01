@@ -135,6 +135,10 @@ public class Game {
         return logger;
     }
 
+    public int getRoundNo() {
+        return roundNo;
+    }
+
     //region evaluate
     private int roundNo = 0;
     private GameEvaluator evaluator = GameEvaluator.createInstance(this);

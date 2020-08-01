@@ -12,4 +12,5 @@ export interface ExtendedShipDetail {
 export default interface EnrichedGame {
     game: Game;
     extendedShipDetails: Array<ExtendedShipDetail>;
+    roundNo: number;
 }

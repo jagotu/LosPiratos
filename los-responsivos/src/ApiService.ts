@@ -135,9 +135,9 @@ export default class ApiService {
             });
     }
 
-    static setTeamReadyState(): Promise<void> {
+    static setTeamReadyState(roundNo : number): Promise<void> {
         console.log("service: set team is ready");
-        return axios.post(endpoints.teamReadyState())
+        return axios.post(endpoints.teamReadyState(), roundNo, {withCredentials: true})
             .then(() => {})
             .catch(e => {
                 console.error("service error: set team ready state", e);
@@ -146,8 +146,8 @@ export default class ApiService {
     }
 
     static getTeamReadyState(): Promise<boolean> {
-        return axios.post(endpoints.teamReadyState())
-            .then((response) => response.data.ready)
+        return axios.get(endpoints.teamReadyState(), {withCredentials: true})
+            .then((response) => response.data)
             .catch(e => {
                 console.error("service error: get team ready state", e);
                 throw e;

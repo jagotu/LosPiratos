@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, Typography} from "@material-ui/core";
 import ApiService from "../ApiService";
 import useError from "../useError";
+import {useGameData} from "../gameDataContext";
 
 interface ReadyCheckProps {
 }
@@ -11,6 +12,7 @@ const ReadyCheck: React.FC<ReadyCheckProps> = (props) => {
     const [checked, setChecked] = useState(false);
     const [dataVersion, setDataVersion]= useState(0);
     const {showDefaultError} = useError();
+    const game = useGameData().data.enrichedGame;
 
     const handleCheckboxChange = () => {
         if (!checked) {
@@ -26,7 +28,7 @@ const ReadyCheck: React.FC<ReadyCheckProps> = (props) => {
     const onDialogClose = () => setShowDialog(false);
 
     const handleSubmit = () => {
-        ApiService.setTeamReadyState()
+        ApiService.setTeamReadyState(game?.roundNo ?? -1)
             .then(() => setDataVersion(prev => prev+1))
             .catch(showDefaultError);
         onDialogClose();
