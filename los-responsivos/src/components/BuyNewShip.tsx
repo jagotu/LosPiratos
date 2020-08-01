@@ -101,7 +101,7 @@ const BuyNewShip: React.FC<BuyNewShipProps> = (props) => {
                 </Grid>
                 <Grid item>
                     <Typography variant="body2">
-                        Loď bude k dispozici okamžitě. TODO pravidla možná nemůžete hrát rovnou s ní pls.
+                        Loď bude k dispozici okamžitě.
                     </Typography>
                 </Grid>
                 <Grid item>

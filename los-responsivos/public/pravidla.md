@@ -143,10 +143,10 @@ V každém tahu smí být nejvýše tolik manévrů, jako je rychlost lodě.
 Útoky označené slovem **BONUS** se zpřístupní až po zakoupení patříčného vylepšení v přístavu, viz tabulka vylepšení.
 
 * **salva děl na levoboku**
-  1. Způsobí zranění všem lodím, které se nachází na polích vlevo šikmo vpředu a vlevo šikmo vzadu (všem, tj. i přátelským).
-  2. Síla zranění je rovna počtu **děl útočící lodě**.
+  * Způsobí zranění všem lodím, které se nachází na polích vlevo šikmo vpředu a vlevo šikmo vzadu (všem, tj. i přátelským).
+  * Síla zranění je rovna počtu **děl útočící lodě**.
 * **salva děl na pravoboku**
-  1. (analogicky)
+  * (analogicky)
 * **čelní útok**
   * Je-li na poli před útočící lodí nepřátelská loď, je zasažena silou **10 bodů**.
   * Útočící loď sama utrpí zranění **5 bodů.**
@@ -154,13 +154,14 @@ V každém tahu smí být nejvýše tolik manévrů, jako je rychlost lodě.
   * Je-li tímto útokem soupeřova loď zničena, přesune se útočník na pole, na něž útočil.
   * Předchází-li v tahu této akci bezprostředně akce **pohyb kupředu** , přičítá se k síle zásahu bonus **5 bodů** (&quot;čelní útok s rozjezdem&quot;).
 * **BONUS: salva řetězovou střelou na levoboku/pravoboku **
-  1. Použití je jako v případě klasické salvy, efekt se však liší: zasažená loď nesmí v dalším tahu použít akci **pohyb kupředu** (jakoby si do příštího tahu s sebou nese &quot;zásah řetězem&quot;).
-  2. Vůbec nedochází k poškození zasažené lodi.
+  * Použití je jako v případě klasické salvy, efekt se však liší: zasažená loď nesmí v dalším tahu použít akci **pohyb kupředu** (jakoby si do příštího tahu s sebou nese &quot;zásah řetězem&quot;).
+  * Vůbec nedochází k poškození zasažené lodi.
+  * V dalším tahu je loď zařetězovaná proti tomuto efektu na jedno kolo imunní. TODO nezrušíme to?
 * **BONUS: střela z houfnice**
-  1. Střela s vysokou balistickou křivkou, která je dopadne až poté, co se vyhodnotí pohyby lodí v daném kole.
-  2. Síla houfnice je **12.**
-  3. Střela z houfnice se vždy bere z políčka, kde loď začínala (i kdyby byla naplánována až po pohybech, nesejde na tom).
-  3. Na typu lodě závisí **počet houfnic** _ . Ten udává počet střel, které lze zcela nezávisle na sobě zamířit a vystřelit. Maximální vzdálenost (jako počet políček) od lodě, na něž lze střelu zamířit je 2.
+  * Střela s vysokou balistickou křivkou, která je dopadne až poté, co se vyhodnotí pohyby lodí v daném kole.
+  * Síla houfnice je **12.**
+  * Střela z houfnice se vždy bere z políčka, kde loď začínala (i kdyby byla naplánována až po pohybech, nesejde na tom).
+  * Na typu lodě závisí **počet houfnic** _ . Ten udává počet střel, které lze zcela nezávisle na sobě zamířit a vystřelit. Maximální vzdálenost (jako počet políček) od lodě, na něž lze střelu zamířit je 2.
 * **BONUS: salva těžkou kulí na levoboku/pravoboku **
    * Funguje podobně jako klasická salva s těmito rozdíly:
      * uštědřený zásah se spočte jako **1.5**   **\***   **počet děl**
@@ -237,10 +238,7 @@ Opakuj, dokud existuje kolize:
 
 ## Zakoupení nové lodě
 
-**Kdykoliv během tahu** se tým může rozhodnout postavit novou loď. Loď se objeví ihned.
-
-TODO může se s ní hrát ihned nebo ne?
-
+**Kdykoliv během tahu** se tým může rozhodnout postavit novou loď. Loď se objeví ihned a je k dispozici.
 
 ## Povýšení stávající lodě
 
@@ -248,7 +246,7 @@ V přístavní fázi lze loď povýšit na lepší typ lodi. V takovém případ
 
 Současná loď se tímto přemění na loď vyššího typu, zůstávají ji současná vylepšení i věci ve skladu.
 
-Pokud byla poničená, tak bude mít nyní plné životy. TODO fakt?
+Pokud byla poničená, tak bude mít nyní plné životy.
 
 ## Opravení stávající lodě
 
