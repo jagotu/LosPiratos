@@ -1,13 +1,13 @@
 package com.vztekoverflow.lospiratos.viewmodel.actions;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.viewmodel.DamageSufferedResponse;
 import com.vztekoverflow.lospiratos.viewmodel.DamageableFigure;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipMechanics;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Generic abstract user action that may apply damage to other board figures.
@@ -41,8 +41,10 @@ public abstract class Attack extends Action {
      */
     protected final DamageSufferedResponse applyDamageTo(int damageValue, AxialCoordinate targetPosition) {
         DamageableFigure t = getRelatedShip().getTeam().getGame().getBoard().getDamageableFigure(targetPosition);
-        if (t == null) return null;
-        if (!(t instanceof Ship)) return null;
+        if ((t == null) || !(t instanceof Ship)){
+            getEventLogger().logAttackingEmptyTile(getRelatedShip(), this, targetPosition);
+            return null;
+        }
         Ship target = (Ship) t;
 
 

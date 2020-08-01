@@ -58,8 +58,8 @@ public class FrontalAssault extends Attack {
             damage += getRelatedShip().getEnhancement(Ram.class).getFrontalAssaultBonusDamage();
         }
 
-        applyDamageTo(damage, target.getPosition().getCoordinate());
-        getRelatedShip().takeDamage(selfDamage);
+        applyDamageTo(damage, target.getCoordinate());
+        applyDamageTo(selfDamage, getRelatedShip().getCoordinate());
     }
 
     @Override

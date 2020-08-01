@@ -96,6 +96,11 @@ public abstract class LogFormatter {
             }
 
             @Override
+            String const_Self() {
+                return "sebe";
+            }
+
+            @Override
             String const_CollisionOn() {
                 return "Kolize na";
             }
@@ -193,6 +198,11 @@ public abstract class LogFormatter {
             }
 
             @Override
+            String const_Self() {
+                return "self";
+            }
+
+            @Override
             String const_CollisionOn() {
                 return "\uD83D\uDCA5:";
             }
@@ -226,6 +236,8 @@ public abstract class LogFormatter {
     abstract String const_And();
 
     abstract String const_Dies();
+
+    abstract String const_Self();
 
     abstract String const_CollisionOn();
 

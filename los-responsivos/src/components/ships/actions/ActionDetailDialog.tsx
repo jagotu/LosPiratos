@@ -174,9 +174,9 @@ const ActionDetailDialog: React.FC<ActionDetailDialogProps> = ({openForAction, o
     )
 
     const immediateWarning = isModificationTransaction(action) ? (
-        <>
+        <Typography style={{paddingBottom: 8}}>
             Tato transakce bude ihned provedena. Už ji nepůjde vzít zpět a ostatní týmy budou moci vidět její výsledek.
-        </>) : null;
+        </Typography>) : null;
 
     const formId = "actionDetailDialog-" + action;
     return (

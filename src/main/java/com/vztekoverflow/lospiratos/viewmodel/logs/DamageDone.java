@@ -8,7 +8,8 @@ public class DamageDone extends LoggedEvent {
     @Override
     public String getTextualDescription(LogFormatter f) {
         String s = f.space();
-        return f.format(sender) + s + f.const_AttacksVia() + s + f.format(cause) + s + f.const_AttacksOn() + s + f.format(target)
+        String targetName = sender.equals(target) ? f.const_Self() : f.format(target);
+        return f.format(sender) + s + f.const_AttacksVia() + s + f.format(cause) + s + f.const_AttacksOn() + s + targetName
                 + f.const_And() + f.const_AttackCauses() + f.formatDamage(damageCaused);
     }
 
