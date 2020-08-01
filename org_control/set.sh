@@ -1,0 +1,1 @@
+curl "localhost:8001/org/timerLength?token=$TOKEN" --data "$1"

@@ -6,10 +6,14 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.InetSocketAddress;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -19,6 +23,7 @@ import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import com.vztekoverflow.lospiratos.model.GameSerializer;
 import com.vztekoverflow.lospiratos.viewmodel.Game;
+import com.vztekoverflow.lospiratos.viewmodel.RoundTimer;
 import com.vztekoverflow.lospiratos.viewmodel.Team;
 import org.hildan.fxgson.FxGson;
 
@@ -35,6 +40,7 @@ public class WebAppServer implements HttpHandler {
 
     private boolean running = false;
     PiratosWebSocket piratosocket = null;
+    private RoundTimer timer = null;
 
 
     public void start() throws IOException {
@@ -46,6 +52,12 @@ public class WebAppServer implements HttpHandler {
             throw new IllegalStateException("Server already running.");
         }
 
+        try {
+            System.out.println("org token: " + URLEncoder.encode(Auth.getSecretForTeam("org"), "UTF-8"));
+        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
+            e.printStackTrace();
+        }
+
         server = HttpServer.create(new InetSocketAddress(8001), 0);
         server.createContext("/", this);
         server.setExecutor(Executors.newFixedThreadPool(10));
@@ -54,6 +66,8 @@ public class WebAppServer implements HttpHandler {
 
         piratosocket = new PiratosWebSocket(4242);
         piratosocket.start();
+
+
 
         game.addOnNextRoundStartedListener(roundNo -> {
             forceClientsRefresh();
@@ -85,6 +99,11 @@ public class WebAppServer implements HttpHandler {
 
     public void setGame(Game g) {
         this.game = g;
+    }
+
+    public void setTimer(RoundTimer t)
+    {
+        timer = t;
     }
 
     public void stop(int delay) {
@@ -131,14 +150,14 @@ public class WebAppServer implements HttpHandler {
             } catch (IOException ignored) {
 
             }
-        }
+        }*/
 
         Map<String, List<String>> urlParams = Helpers.splitQuery(exchange.getRequestURI());
 
-        if(Helpers.isPresentOnce(urlParams, "teamToken"))
+        if(Helpers.isPresentOnce(urlParams, "token"))
         {
-            token = urlParams.get("teamToken").get(0);
-        }*/
+            token = urlParams.get("token").get(0);
+        }
 
         return token;
     }
@@ -217,7 +236,33 @@ public class WebAppServer implements HttpHandler {
             } else if (loweredpath.startsWith("/teamisready") && exchange.getRequestMethod().equals("POST") )
             {
                 data = TeamIsReady.set(exchange, game, teamToken, postData);
+            } else if (loweredpath.startsWith("/roundend"))
+            {
+                if( timer != null)
+                {
+                    data = Long.toString(timer.getEndTimestamp()).getBytes(UTF_8);
+                } else {
+                    data = new byte[0];
+                }
+
+            } else if (loweredpath.startsWith("/org/restarttimer"))
+            {
+                Auth.assertAuthTeam("org", teamToken);
+                timer.restartTimer();
+            } else if (loweredpath.startsWith("/org/stoptimer"))
+            {
+                Auth.assertAuthTeam("org", teamToken);
+                timer.stop();
+            }else if (loweredpath.startsWith("/org/timerlength") && exchange.getRequestMethod().equals("GET"))
+            {
+                Auth.assertAuthTeam("org", teamToken);
+                data = Integer.toString(timer.getNextRoundLength()).getBytes(UTF_8);
+            }else if (loweredpath.startsWith("/org/timerlength") && exchange.getRequestMethod().equals("POST"))
+            {
+                Auth.assertAuthTeam("org", teamToken);
+                timer.setNextRoundLength(Integer.parseInt(postData));
             }
+
 
             else if (loweredpath.equals("/login") && exchange.getRequestMethod().equals("POST")) {
 

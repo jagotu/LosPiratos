@@ -59,7 +59,7 @@ public class Helpers {
 
     public static Map<String, List<String>> splitQuery(URI uri) {
 
-        return splitUrlEncodedParams(uri.getQuery());
+        return splitUrlEncodedParams(uri.getRawQuery());
 
     }
 

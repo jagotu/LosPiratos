@@ -9,6 +9,7 @@ import com.vztekoverflow.lospiratos.view.layout.TeamsBox;
 import com.vztekoverflow.lospiratos.view.layout.VirtualizingHexGridPane;
 import com.vztekoverflow.lospiratos.viewmodel.Figure;
 import com.vztekoverflow.lospiratos.viewmodel.Game;
+import com.vztekoverflow.lospiratos.viewmodel.RoundTimer;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
 import com.vztekoverflow.lospiratos.viewmodel.actions.ActionsCatalog;
 import com.vztekoverflow.lospiratos.viewmodel.actions.ActivatePrivilegedMode;
@@ -19,6 +20,9 @@ import com.vztekoverflow.lospiratos.viewmodel.actions.transactions.ModifyShipTra
 import com.vztekoverflow.lospiratos.viewmodel.logs.LogFormatter;
 import com.vztekoverflow.lospiratos.viewmodel.logs.LoggedEvent;
 import com.vztekoverflow.lospiratos.webapp.WebAppServer;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -31,6 +35,7 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.geometry.Orientation;
 import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -47,6 +52,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
@@ -54,6 +60,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.util.Duration;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -61,6 +68,8 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 public class OrgStage {
 
@@ -108,6 +117,8 @@ public class OrgStage {
     private Button commitTransactions;
 
     private WebAppServer webAppServer;
+
+    private RoundTimer roundTimer;
 
 
     private ActionParametersPopOver parametersPopOver = new ActionParametersPopOver();
@@ -345,6 +356,7 @@ public class OrgStage {
     }
 
     private PiratosHexTileContentsFactory hexTileFactory;
+    private Label timeLabel;
 
     private void updatePublicMapStage() {
         if (publicMapStage == null) {
@@ -356,10 +368,40 @@ public class OrgStage {
 
         hexTileFactory = new PiratosHexTileContentsFactory(game.get().getBoard(), edgeLength, pointy);
 
+        StackPane sp = new StackPane();
         publicHexPane = new VirtualizingHexGridPane(edgeLength, pointy, hexTileFactory);
         publicHexPane.getStylesheets().add("/common.css");
         publicHexPane.setId("public-map");
-        publicMapStage.setScene(new Scene(publicHexPane, 800, 600));
+
+        sp.setAlignment(Pos.TOP_RIGHT);
+        sp.getChildren().add(publicHexPane);
+
+        timeLabel = new Label();
+        //timeLabel.setText("09:18");
+        timeLabel.setStyle("-fx-font-size: 100px;");
+
+        DateFormat timeFormat = new SimpleDateFormat( "mm:ss" );
+        final Timeline timeline = new Timeline(
+                new KeyFrame(
+                        Duration.millis( 500 ),
+                        event -> {
+                            long endTime = roundTimer.getEndTimestamp();
+                            final long diff = endTime - System.currentTimeMillis()/1000;
+                            if ( diff < 0 ) {
+                                //  timeLabel.setText( "00:00:00" );
+                                timeLabel.setText( timeFormat.format( 0 ) );
+                            } else {
+                                timeLabel.setText( timeFormat.format( diff*1000 ) );
+                            }
+                        }
+                )
+        );
+        timeline.setCycleCount( Animation.INDEFINITE );
+        timeline.play();
+
+        sp.getChildren().add(timeLabel);
+
+        publicMapStage.setScene(new Scene(sp, 800, 600));
         setCADBackground(publicHexPane);
         setHexPanePanAndZoom(publicHexPane, 1.001);
     }
@@ -461,8 +503,16 @@ public class OrgStage {
         {
             webAppServer.stop(2);
         }
+        if(roundTimer != null)
+        {
+            roundTimer.stop();
+        }
+
+        roundTimer = new RoundTimer(game.get());
+        roundTimer.setNextRoundLength(60);
 
         webAppServer.setGame(game.get());
+        webAppServer.setTimer(roundTimer);
         try {
             webAppServer.start();
         } catch (IOException e) {
