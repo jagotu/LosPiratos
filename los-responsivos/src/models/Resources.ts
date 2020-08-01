@@ -5,10 +5,10 @@ export default class Resources {
 
     constructor(
         readonly money: number,
-        readonly metal: number,
-        readonly wood: number,
         readonly cloth: number,
+        readonly metal: number,
         readonly rum: number,
+        readonly wood: number,
     ) {
     }
 

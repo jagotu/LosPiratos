@@ -11,8 +11,23 @@ import {Link, useHistory} from "react-router-dom";
 import {ShipType} from "../models/Ship";
 import translations from "../translations";
 import useError from "../useError";
+import ResourcesModel from "../models/Resources";
+import Resources from "./Resources";
+import TeamOverview from "./TeamOverview";
+import {teamId} from "../userContext";
+import {useGameData} from "../gameDataContext";
 
 interface BuyNewShipProps {
+}
+
+// Temporal workaround. Ship cost data is not fetched from BE but stored here.
+const ShipCosts: {
+    [key in ShipType]: ResourcesModel
+} = {
+    Brig: new ResourcesModel(2000, 150, 0, 0, 200),
+    Frigate: new ResourcesModel(4000,200, 130, 0, 300),
+    Galleon: new ResourcesModel(8000,250, 250, 0, 400),
+    Schooner: new ResourcesModel(1000, 100, 0, 0, 100)
 }
 
 const BuyNewShip: React.FC<BuyNewShipProps> = (props) => {
@@ -20,6 +35,7 @@ const BuyNewShip: React.FC<BuyNewShipProps> = (props) => {
     const [port, setPort] = useState("Port Royal");
     const [shipName, setShipName] = useState("");
     const [shipType, setShipType] = useState<ShipType>("Schooner");
+    const {data, invalidateData} = useGameData();
 
     const history = useHistory();
     const {showErrorFromEvent} = useError();
@@ -28,15 +44,19 @@ const BuyNewShip: React.FC<BuyNewShipProps> = (props) => {
         e.preventDefault();
         ApiService.buyNewShip(shipName, port, shipType)
             .then(() => {
-                enqueueSnackbar(`Loď ${shipName} byla zakoupena`,{variant: "success"});
+                enqueueSnackbar(`Loď ${shipName} byla zakoupena`, {variant: "success"});
+                invalidateData();
                 history.push(routes.overview);
             })
             .catch(showErrorFromEvent);
     };
 
+    const teamData = data.enrichedGame?.game.teams.find(t => t.id === teamId()) ?? null;
+
     return (
         <form onSubmit={handleFormSubmit}>
             <Grid container direction="column" spacing={3}>
+                <Grid item><TeamOverview team={teamData} createShips={false}/></Grid>
                 <Grid item>
                     <Typography variant="h4">Nákup lodi</Typography>
                 </Grid>
@@ -74,23 +94,26 @@ const BuyNewShip: React.FC<BuyNewShipProps> = (props) => {
                     </FormControl>
                 </Grid>
                 <Grid item>
-                    <PortSelect port={port} onPortSelected={port => setPort(port)} />
+                    <PortSelect port={port} onPortSelected={port => setPort(port)}/>
+                </Grid>
+                <Grid item>
+                    <Typography>cena: <Resources resources={ShipCosts[shipType]} hideZero /></Typography>
                 </Grid>
                 <Grid item>
                     <Typography variant="body2">
-                    Loď bude k dispozici okamžitě. TODO pravidla možná nemůžete hrát rovnou s ní pls.
+                        Loď bude k dispozici okamžitě. TODO pravidla možná nemůžete hrát rovnou s ní pls.
                     </Typography>
                 </Grid>
                 <Grid item>
-                    <Grid container direction="row" spacing={2}>
+                    <Grid container direction="row-reverse" spacing={2}>
                         <Grid item>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            type="submit"
-                        >
-                            Zakoupit loď
-                        </Button>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                type="submit"
+                            >
+                                Zakoupit loď
+                            </Button>
                         </Grid>
                         <Grid item>
                             <Button component={Link} to={routes.overview} variant="outlined">Zpět</Button>

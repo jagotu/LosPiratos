@@ -8,7 +8,7 @@ import getContrastColor from "../util/contrast";
 import AnimateHeight from 'react-animate-height';
 
 interface TeamOverviewProps {
-    team: Team;
+    team: Team | null;
     isCurrentTeam?: boolean;
     areShipsVisible?: boolean;
     onClick?: () => void;
@@ -38,6 +38,8 @@ const TeamOverview: React.FC<TeamOverviewProps> = (props) => {
     const isCurrentTeam = props.isCurrentTeam;
     const areShipsVisible = props.areShipsVisible ?? false;
     const createShips = props.createShips ?? true;
+
+    if(team === null) return null;
 
     const ships = (
         <AnimateHeight

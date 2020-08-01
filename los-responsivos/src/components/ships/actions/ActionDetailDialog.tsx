@@ -164,7 +164,7 @@ const ActionDetailDialog: React.FC<ActionDetailDialogProps> = ({openForAction, o
     let costStatus = (<>Neplatné parametry</>);
 
     if (maybeCost.loaded === "true") {
-        costStatus = (<Resources resources={maybeCost.cost.cost} hideZero={true}/>);
+        costStatus = (<Resources resources={maybeCost.cost.cost} hideZero />);
     } else if (maybeCost.loaded === "loading") {
         costStatus = (<>Načítání...</>);
     }

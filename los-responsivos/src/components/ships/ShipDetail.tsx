@@ -55,7 +55,7 @@ const ShipDetail: React.FC<ShipDetailProps> = ({id}) => {
             .catch(showErrorFromEvent);
     }
 
-    const shipTeam = game?.game.teams.filter(x => x.id === shipDetail.ship.teamId)[0];
+    const shipTeam = game?.game.teams.find(x => x.id === shipDetail.ship.teamId);
 
     return (
         <Grid container direction="column" spacing={2}>
@@ -83,8 +83,8 @@ const ShipDetail: React.FC<ShipDetailProps> = ({id}) => {
                     onActionPlannedOk={invalidateData}
                 />
             </Grid>
-            <Grid item>Aktuální cena vylepšení: <Resources resources={shipDetail.upgradeCost} hideZero={true}/></Grid>
-            <Grid item>Aktuální cena opravy: <Resources resources={shipDetail.repairCost} hideZero={true}/></Grid>
+            <Grid item>Aktuální cena vylepšení: <Resources resources={shipDetail.upgradeCost} hideZero /></Grid>
+            <Grid item>Aktuální cena opravy: <Resources resources={shipDetail.repairCost} hideZero /></Grid>
             <Grid item>
                 <Typography variant="h6">Okolí lodi</Typography>
                 <Link to={routes.factory.tileDetail(shipDetail.ship.position)}>
