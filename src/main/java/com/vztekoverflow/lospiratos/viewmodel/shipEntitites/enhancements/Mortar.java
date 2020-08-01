@@ -48,7 +48,7 @@ public final class Mortar extends ShipEnhancement {
             range = 2;
         } else if (ship.getShipType() instanceof Galleon) {
             mortarsCount = 4;
-            range = 3;
+            range = 2; // TODO range = 3 would be better for Galleon. Setting to 2 because FE for LTMF2020 does not handle other range values
         } else {
             Warnings.makeStrongWarning(toString() + "onShipTypeJustChanged()", "unknown ship type: " + ship.getShipType());
         }

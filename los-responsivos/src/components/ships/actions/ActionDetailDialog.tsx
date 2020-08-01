@@ -143,6 +143,7 @@ const ActionDetailDialog: React.FC<ActionDetailDialogProps> = ({openForAction, o
             <Typography component="span">Vyber cíl:</Typography>
             <TileProximityView
                 mortar
+                mortarTarget={actionParam.target}
                 center={sourceLocation}
                 style={{padding: 0}}
                 onTileSelected={handleTargetSelected}

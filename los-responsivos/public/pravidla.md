@@ -158,8 +158,9 @@ V každém tahu smí být nejvýše tolik manévrů, jako je rychlost lodě.
   2. Vůbec nedochází k poškození zasažené lodi.
 * **BONUS: střela z houfnice**
   1. Střela s vysokou balistickou křivkou, která je dopadne až poté, co se vyhodnotí pohyby lodí v daném kole.
-  2. Síla houfnice je **10.**
-  3. Na typu lodě závisí dva parametry:_ **počet houfnic** _ a _ **dostřel** _. První udává počet střel, které lze zcela nezávisle na sobě zamířit a vystřelit, druhý maximální vzdálenost (jako počet políček) od lodě, na něž lze střelu zamířit.
+  2. Síla houfnice je **12.**
+  3. Střela z houfnice se vždy bere z políčka, kde loď začínala (i kdyby byla naplánována až po pohybech, nesejde na tom).
+  3. Na typu lodě závisí **počet houfnic** _ . Ten udává počet střel, které lze zcela nezávisle na sobě zamířit a vystřelit. Maximální vzdálenost (jako počet políček) od lodě, na něž lze střelu zamířit je 2.
 * **BONUS: salva těžkou kulí na levoboku/pravoboku **
    * Funguje podobně jako klasická salva s těmito rozdíly:
      * uštědřený zásah se spočte jako **1.5**   **\***   **počet děl**
@@ -289,8 +290,8 @@ V přístavní fázi lze loď opravit. V takovém případě se za příslušnou
 | **Vyztužení trupu** | +5 odolnost | +10 odolnost | +15 odolnost | +20 odolnost |
 | **Řetězová střela** | zpřístupnění akcí **salva řetězovou střelou na levobok/pravobok** |
 | **Přídavná děla** | +2 počet děl | +3 počet děl | +5 počet děl | +7 počet děl |
-| **Houfnice** | x | zpřístupnění akce **střela z houfnice** s parametry: |
-| | | počet houfnic=1,dostřel=2 | počet houfnic=2,dostřel=2 | počet houfnic=4,dostřel=3 |
+| **Houfnice** | x | zpřístupnění akce **střela z houfnice** s dostřelem 2 a parametrem: |
+| | | počet houfnic=1 | počet houfnic=2 | počet houfnic=4 |
 | **Kloun** | x | x | při akci **čelní útok** se zvyšuje zásah o 5 a zároveň se redukuje utrpěné poškození na 0 | při akci **čelní útok** se zvyšuje zásah o 10 a zároveň se redukuje utrpěné poškození na 0 |
 | **Těžká kule** | x | x | x | zpřístupnění akcí **salva těžkou kulí na levobok/pravobok** |
 

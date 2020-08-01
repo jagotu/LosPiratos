@@ -1,5 +1,5 @@
- import React from "react";
-import HexPosition from "../models/HexPosition";
+import React from "react";
+import HexPosition, {positionMinus} from "../models/HexPosition";
 import {Coordinate2D, edgeLength, hexToPixel, mapImageHeight, mapImageWidth, pixelToHex, SQRT_3} from "../util/hexGridMapMath";
 import {makeStyles} from "@material-ui/core/styles";
 import clsx from "clsx";
@@ -23,6 +23,7 @@ interface GameTileProximityViewProps {
      * whether to display fog on tiles that are farther than 2 from center
      */
     mortar?: boolean;
+    mortarTarget?: HexPosition;
     fullMap?: boolean;
 }
 
@@ -32,10 +33,23 @@ const viewportWidth = tileWidth * 2;
 const viewportHeight = tileHeight * 2;
 
 const styles = {
-    mapImg: (cropCenter: Coordinate2D, fullMap: boolean) => ({
+    mapImg: (cropCenter: Coordinate2D, fullMap: boolean): React.CSSProperties => ({
         marginLeft: fullMap ? "unset" : -(mapImageWidth / 2 + cropCenter.x - tileWidth / 2.0) + viewportWidth,
         marginTop: fullMap ? "unset" : -(mapImageHeight / 2 + cropCenter.y - tileHeight / 2.0) + viewportHeight,
     }),
+    target: (relativeLocation: HexPosition | undefined): React.CSSProperties => {
+        if (relativeLocation === undefined) {
+            return {
+                visibility: "hidden",
+                position: "absolute",
+            };
+        } else return {
+            position: "absolute",
+            transition: "left ease .4s, top ease .4s",
+            left: 345 + hexToPixel(relativeLocation).x,
+            top: 423 + hexToPixel(relativeLocation).y
+        };
+    },
 }
 
 const useStyles = makeStyles(() => ({
@@ -95,6 +109,11 @@ const TileProximityView: React.FC<GameTileProximityViewProps> = (props) => {
         props.onTileSelected?.(position);
     }
 
+    let relativeTarget: HexPosition | undefined;
+    if (props.mortarTarget) {
+        relativeTarget = positionMinus(props.mortarTarget, props.center);
+    }
+
     return (
         <div style={{padding: paddingCoeff * 8, ...props?.style}}>
             <div className={clsx(classes.rootScaled, {[classes.sizeMaxContent]: fullMap})}>
@@ -112,6 +131,12 @@ const TileProximityView: React.FC<GameTileProximityViewProps> = (props) => {
                         className={clsx({[classes.hidden]: !props.mortar})}
                         style={{position: "absolute", pointerEvents: "none"}}
                         src={process.env.PUBLIC_URL + "/mortar_scope.png"}
+                        alt=""
+                    />
+                    <img
+                        className={clsx({[classes.hidden]: !props.mortar})}
+                        src={process.env.PUBLIC_URL + "/targetIcon.png"}
+                        style={styles.target(relativeTarget)}
                         alt=""
                     />
                     <img
