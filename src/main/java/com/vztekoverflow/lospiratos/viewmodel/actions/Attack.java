@@ -7,6 +7,7 @@ import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.viewmodel.DamageSufferedResponse;
 import com.vztekoverflow.lospiratos.viewmodel.DamageableFigure;
 import com.vztekoverflow.lospiratos.viewmodel.Ship;
+import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.CannonsAbstractVolley;
 import com.vztekoverflow.lospiratos.viewmodel.shipEntitites.ShipMechanics;
 
 /**
@@ -27,7 +28,8 @@ public abstract class Attack extends Action {
 
     protected final void applyMechanicsTo(ShipMechanics mechanics, AxialCoordinate targetPosition) {
         Ship target = getRelatedShip().getTeam().getGame().getBoard().getShip(targetPosition);
-        if (target == null) return;
+        if (target == null)
+            return;
         target.mechanicsProperty().add(mechanics);
     }
 
@@ -41,12 +43,13 @@ public abstract class Attack extends Action {
      */
     protected final DamageSufferedResponse applyDamageTo(int damageValue, AxialCoordinate targetPosition) {
         DamageableFigure t = getRelatedShip().getTeam().getGame().getBoard().getDamageableFigure(targetPosition);
-        if ((t == null) || !(t instanceof Ship)){
-            getEventLogger().logAttackingEmptyTile(getRelatedShip(), this, targetPosition);
+        if ((t == null) || !(t instanceof Ship)) {
+            if (!(this instanceof CannonsAbstractVolley)) { // Do not log empty volleys - those are too common
+                getEventLogger().logAttackingEmptyTile(getRelatedShip(), this, targetPosition);
+            }
             return null;
         }
         Ship target = (Ship) t;
-
 
         DamageSufferedResponse result = target.takeDamage(damageValue);
         for (OnDamageDoneListener l : onDamageDoneListeners) {

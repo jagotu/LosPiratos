@@ -1,10 +1,29 @@
 package com.vztekoverflow.lospiratos.evaluator;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+
 import com.vztekoverflow.lospiratos.util.AxialCoordinate;
 import com.vztekoverflow.lospiratos.util.RandomStatic;
 import com.vztekoverflow.lospiratos.util.Warnings;
-import com.vztekoverflow.lospiratos.viewmodel.*;
-import com.vztekoverflow.lospiratos.viewmodel.actions.*;
+import com.vztekoverflow.lospiratos.viewmodel.DamageSufferedResponse;
+import com.vztekoverflow.lospiratos.viewmodel.Game;
+import com.vztekoverflow.lospiratos.viewmodel.Plunderable;
+import com.vztekoverflow.lospiratos.viewmodel.Position;
+import com.vztekoverflow.lospiratos.viewmodel.ResourceReadOnly;
+import com.vztekoverflow.lospiratos.viewmodel.Ship;
+import com.vztekoverflow.lospiratos.viewmodel.actions.Action;
+import com.vztekoverflow.lospiratos.viewmodel.actions.Attack;
+import com.vztekoverflow.lospiratos.viewmodel.actions.Maneuver;
+import com.vztekoverflow.lospiratos.viewmodel.actions.OnDamageDoneListener;
+import com.vztekoverflow.lospiratos.viewmodel.actions.OnPlunderRequestedListener;
+import com.vztekoverflow.lospiratos.viewmodel.actions.PerformableAction;
 import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.CannonsAbstractVolley;
 import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.FrontalAssault;
 import com.vztekoverflow.lospiratos.viewmodel.actions.attacks.MortarShot;
@@ -14,11 +33,11 @@ import com.vztekoverflow.lospiratos.viewmodel.actions.maneuvers.TurnRight;
 import com.vztekoverflow.lospiratos.viewmodel.actions.transactions.ManeuverTransaction;
 import com.vztekoverflow.lospiratos.viewmodel.actions.transactions.Plunder;
 import com.vztekoverflow.lospiratos.viewmodel.boardTiles.Port;
-import com.vztekoverflow.lospiratos.viewmodel.transitions.*;
-
-import java.util.*;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
+import com.vztekoverflow.lospiratos.viewmodel.transitions.Bump;
+import com.vztekoverflow.lospiratos.viewmodel.transitions.Death;
+import com.vztekoverflow.lospiratos.viewmodel.transitions.Forward;
+import com.vztekoverflow.lospiratos.viewmodel.transitions.Rotate;
+import com.vztekoverflow.lospiratos.viewmodel.transitions.Transition;
 
 import static com.vztekoverflow.lospiratos.viewmodel.GameConstants.COLLISION_DAMAGE;
 import static com.vztekoverflow.lospiratos.viewmodel.GameConstants.SHIPS_COST_TO_WRECK_COEFF;
@@ -66,9 +85,10 @@ class StandardGameEvaluator extends GameEvaluator {
             if (a instanceof Attack) ((Attack) a).removeListener(onDamageDoneListener);
             if (a instanceof Plunder) ((Plunder) a).removeListener(onPlunderRequestedListener);
         });
-        destroyDamagedShips();
+        destroyKilledShips();
         solveCollisions(0);
         damageCollisionAttendees();
+        destroyShipsWithNegativeHP();
         return mergeTransitions(transitions, transitionsCausedByCollisions);
     }
 
@@ -201,7 +221,7 @@ class StandardGameEvaluator extends GameEvaluator {
         }
     }
 
-    private void destroyDamagedShips() {
+    private void destroyKilledShips() {
         for (Ship s : killedShips) {
             destroyShip(s, attackers.get(s));
             for (Ship a : attackers.get(s)) {
@@ -210,6 +230,18 @@ class StandardGameEvaluator extends GameEvaluator {
         }
         killedShips.clear();
         attackers.clear();
+    }
+
+    /**
+     * This is just a fallback. In case that a ship has reduced its HP below 0 without notifying its observers, kill it here.
+     */
+    private void destroyShipsWithNegativeHP() {
+        for (Ship s : g.getAllShips()) {
+            if(s.getCurrentHP() < 0){
+                destroyShip(s, null);
+                Warnings.makeStrongWarning("GameEvaluator","A ship has had negative HP but has not been reported killed. This suggests a bug in the implementation. Destroying the ship, the game continues unaffected. The ship: " + s.getName());
+            }
+        }
     }
 
     private void destroyShip(Ship s, Iterable<Ship> attackers) {
