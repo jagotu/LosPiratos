@@ -21,15 +21,16 @@ Pokud nevíte, co se v nějakém případě stane, je součástí hry to zjistit
 Pravidla nemusíte číst, můžete hrát hru intuitivně, podle toho, co vás nechá zadat. Nemusíte se učit, které kombinace tahů jsou povolené, hra to hlídá za vás.
 
 ## Výjímka
-následující si ohlídejte sami, spoleháme na vaše fair play:
+Následující si ohlídejte sami, spoleháme na vaše fair play:
 
-1. Nesnažte se vyhackovat plantáže pomocí opakovaného zadávání plundrování.
+1. Nesnažte se vyhackovat plantáže pomocí opakovaného zadávání Plundrování.
    * Formálně: Na každé plantáží / vraku smíte zadat Plundrování z každé lodi maximálně jednou za tah.
    * _ Poznámka: Hra vás nenechá vyplundrovat víc, než tam je. Ale šlo by takto předbíhat, kdyby plundrovalo více lodí současně. _  
+2. Pokud objevíte chování, které se dá intuicí považovat spíše za hack, tak ho nezneužívejte, ale domluvte se s ostatními, jak ho (ne)používat.   
 
 # Mapa
 
-Než toto budete číst, podívejte se na obrázek. TODO obrázek.
+![](plainMap.png)
 
 - typy polí:
   - **širé moře **
