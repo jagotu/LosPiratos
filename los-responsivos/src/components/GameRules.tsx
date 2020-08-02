@@ -20,7 +20,7 @@ const GameRules: React.FC = (props) => {
             <div style={{textAlign: "center", paddingTop: 32}}>
                 <Typography variant="h3">Los Piratos de la Casa</Typography>
                 <Typography>
-                    Interaktivní strategická počítačovo-mobilovo-desková hra<br/>
+                    Interaktivní strategická desková hra s telefonem a počítačem<br/>
                     Karibik, 17. století
                 </Typography>
             </div>

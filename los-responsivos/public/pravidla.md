@@ -4,9 +4,11 @@
 
 Týmy proti sobě. Týmy mají **lodě**. Na mapě jsou **přístavy** a **plantáže**, v přístavech se **obchoduje**, plantáže se **plundrují**. Lodě vezou náklad, **útočí** na sebe, lze je poškodit či zabít. Z mrtvé lodi se stane vrak, ten lze plundrovat.
 
-Cíl: Získat co nejvíc peněz. (A implicitně: mít nejepičtější flotilu v Karibiku.)
+**Cíl:** Získat co nejvíc peněz, a být nejmajetnější "obchodní" společností s největší flotilou v celém Karibiku.
 
-Jak: Tahová strategie. Každý tým zadá tahy svých lodí, na konci kola se všechny najednou vyhodnotí. 
+**Jak:** Tahová strategie. Každý tým zadá tahy svých lodí, na konci kola se všechny najednou vyhodnotí. 
+
+Toto není počítačová hra. Nečekejte počítačovou hru. Je to desková hra s telefonem a počítačem navíc. 
 
 <hr>
 
