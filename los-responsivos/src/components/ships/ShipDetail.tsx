@@ -83,7 +83,11 @@ const ShipDetail: React.FC<ShipDetailProps> = ({id}) => {
                     onActionPlannedOk={invalidateData}
                 />
             </Grid>
-            <Grid item>Aktuální cena vylepšení: <Resources resources={shipDetail.upgradeCost} hideZero /></Grid>
+            <Grid item>Aktuální cena vylepšení: {
+                shipDetail.ship.type === "Galleon" ?
+                    <div><i>Loď již nelze vylepšit</i></div> :
+                    <Resources resources={shipDetail.upgradeCost} hideZero/>
+            }</Grid>
             <Grid item>Aktuální cena opravy: <Resources resources={shipDetail.repairCost} hideZero /></Grid>
             <Grid item>
                 <Typography variant="h6">Okolí lodi</Typography>
