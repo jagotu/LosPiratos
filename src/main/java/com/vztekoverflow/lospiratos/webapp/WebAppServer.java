@@ -53,7 +53,7 @@ public class WebAppServer implements HttpHandler {
         }
 
         try {
-            System.out.println("org token: " + URLEncoder.encode(Auth.getSecretForTeam("org"), "UTF-8"));
+            System.out.println("org token: " + Auth.getSecretForTeam("org"));
         } catch (NoSuchAlgorithmException | InvalidKeyException e) {
             e.printStackTrace();
         }

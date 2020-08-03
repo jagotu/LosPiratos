@@ -75,54 +75,10 @@ public class GetActionCost {
         boolean satisfied = true;
 
         if (a instanceof ParameterizedAction) {
-            ParameterizedAction pa = (ParameterizedAction) a;
+            fillParams((ParameterizedAction) a, actionPayload);
 
-            Helpers.assertHasAll(actionPayload,
-                    StreamSupport.stream(pa.getAvailableParameters().spliterator(), false).map(ActionParameter::getJsonMapping).collect(Collectors.toList()));
 
-            for (ActionParameter ap : pa.getAvailableParameters()) {
-
-                JsonObject paramValue = actionPayload.getJsonObject(ap.getJsonMapping());
-
-                if (ap instanceof AxialCoordinateActionParameter) {
-                    Helpers.assertHasAll(paramValue, "Q", "R");
-                    ap.set(new AxialCoordinate(
-                            paramValue.getInt("Q"),
-                            paramValue.getInt("R")
-                    ));
-
-                } else if (ap instanceof ResourceActionParameter) {
-                    Resource r = ((ResourceActionParameter) ap).get();
-                    if (paramValue.containsKey("money")) {
-                        r.setMoney(paramValue.getInt("money"));
-                    }
-                    if (paramValue.containsKey("metal")) {
-                        r.setMetal(paramValue.getInt("metal"));
-                    }
-                    if (paramValue.containsKey("wood")) {
-                        r.setWood(paramValue.getInt("wood"));
-                    }
-                    if (paramValue.containsKey("cloth")) {
-                        r.setCloth(paramValue.getInt("cloth"));
-                    }
-                    if (paramValue.containsKey("rum")) {
-                        r.setRum(paramValue.getInt("rum"));
-                    }
-
-                } else if (ap instanceof EnhancementActionParameter) {
-                    Helpers.assertHasAll(paramValue, "enhancement");
-                    String enhancement = paramValue.getString("enhancement");
-                    Class<? extends ShipEnhancement> enhancementClass = EnhancementsCatalog.allPossibleEnhancements.stream()
-                            .filter(x -> EnhancementsCatalog.getPersistentName(x).equals(enhancement))
-                            .findFirst().orElseThrow(() -> new WebAppServer.FriendlyException("No such enhancement: " + enhancement));
-
-                    ap.set(enhancementClass);
-                }
-
-                //TODO others
-            }
-
-            if(!pa.isSatisfied())
+            if(!((ParameterizedAction)a).isSatisfied())
             {
                 satisfied = false;
             }
@@ -140,5 +96,53 @@ public class GetActionCost {
         return gson.toJson(response).getBytes(StandardCharsets.UTF_8);
 
 
+    }
+
+    public static void fillParams(ParameterizedAction pa, JsonObject actionPayload) {
+
+        Helpers.assertHasAll(actionPayload,
+                StreamSupport.stream(pa.getAvailableParameters().spliterator(), false).map(ActionParameter::getJsonMapping).collect(Collectors.toList()));
+
+        for (ActionParameter ap : pa.getAvailableParameters()) {
+
+            JsonObject paramValue = actionPayload.getJsonObject(ap.getJsonMapping());
+
+            if (ap instanceof AxialCoordinateActionParameter) {
+                Helpers.assertHasAll(paramValue, "Q", "R");
+                ap.set(new AxialCoordinate(
+                        paramValue.getInt("Q"),
+                        paramValue.getInt("R")
+                ));
+
+            } else if (ap instanceof ResourceActionParameter) {
+                Resource r = ((ResourceActionParameter) ap).get();
+                if (paramValue.containsKey("money")) {
+                    r.setMoney(paramValue.getInt("money", 0));
+                }
+                if (paramValue.containsKey("metal")) {
+                    r.setMetal(paramValue.getInt("metal", 0));
+                }
+                if (paramValue.containsKey("wood")) {
+                    r.setWood(paramValue.getInt("wood", 0));
+                }
+                if (paramValue.containsKey("cloth")) {
+                    r.setCloth(paramValue.getInt("cloth", 0));
+                }
+                if (paramValue.containsKey("rum")) {
+                    r.setRum(paramValue.getInt("rum", 0));
+                }
+
+            } else if (ap instanceof EnhancementActionParameter) {
+                Helpers.assertHasAll(paramValue, "enhancement");
+                String enhancement = paramValue.getString("enhancement");
+                Class<? extends ShipEnhancement> enhancementClass = EnhancementsCatalog.allPossibleEnhancements.stream()
+                        .filter(x -> EnhancementsCatalog.getPersistentName(x).equals(enhancement))
+                        .findFirst().orElseThrow(() -> new WebAppServer.FriendlyException("No such enhancement: " + enhancement));
+
+                ap.set(enhancementClass);
+            }
+
+            //TODO others
+        }
     }
 }
