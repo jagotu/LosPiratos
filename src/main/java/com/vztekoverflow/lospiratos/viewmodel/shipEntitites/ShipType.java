@@ -29,6 +29,8 @@ public abstract class ShipType extends ShipEntity {
      * Returns cost of upgrading to this ship type. The value should be same for all instances.
      */
     public ResourceReadOnly getUpgradeCost(){
+        Class<? extends ShipType> shipClass = increment(getClass());
+        if(shipClass == null) return  ResourceReadOnly.MAX;
         ShipType instance = createInstance(increment(getClass()));
         if(instance == null) return  ResourceReadOnly.MAX;
         return instance.getBuyingCost().times(1/2f);
