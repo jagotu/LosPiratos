@@ -22,9 +22,7 @@ export const endpoints = {
     getAvailableEnhancements: (shipId : string) => addressPrefix + `/getAvailableEnhancements?ship=${shipId}&team=${teamId()}`,
     login: addressPrefix + "/login",
     combatLog: addressPrefix + "/log",
-
-    possibleEnhancements: (shipId: string, action: ShipAction) => `/team/${teamId()}/ship/${shipId}/actions/${action}/plannable-enhancements`, // GET method
-
+    roundEnd: addressPrefix + "/roundEnd",
 }
 
 export default class ApiService {
@@ -37,6 +35,18 @@ export default class ApiService {
             .then(response => response.data)
             .catch(e => {
                 console.error("service error: login", e);
+                throw e;
+            });
+    }
+
+    /**
+     * In JavaScript timestamp, in milliseconds
+     */
+    static getRoundEndTime(): Promise<number> {
+        return axios.get(endpoints.roundEnd)
+            .then(response => response.data * 1000)
+            .catch(e => {
+                console.error("service error: get round end", e);
                 throw e;
             });
     }

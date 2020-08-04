@@ -16,7 +16,7 @@ Následují detailní pravidla.
 
 # Pravidla vs. implementace
 
-Tato pravidla mají orientační charakter. **Pravdu má vždy implementace**, tedy je to tak, jak se to ve výsledku stane.
+Tato pravidla mají orientační charakter. **Pravdu má vždy implementace**, tedy správně je to tak, jak se to ve výsledku stane.
 
 Pokud nevíte, co se v nějakém případě stane, je součástí hry to zjistit. Pokud z pravidel není jasná nějaká konstanta, je součástí hry na ni přijít (dle povahy konstanty může jít zjistit přímo přesnou hodnotu, nebo pouze její chování / intuici).
 
@@ -39,7 +39,7 @@ Následující si ohlídejte sami, spoleháme na vaše fair play:
   - **širá pevnina ** - na ni lodě vůbec nemůžou
   - **přístav **
   - **plantáž ** - dá se vyplundrovat a získat tak komodity. Je obecní (tj. nikomu nepatří).
-  - **vrak  -** zůstane po zničené lodi, dá se vyplundrovat. Občas se může objevit sám od sebe
+  - **vrak** - zůstane po zničené lodi, dá se vyplundrovat. Občas se může objevit sám od sebe
 - Loď je vždy orientována přídí směrem k nějakému sousednímu poli, tj. loď má pole před sebou, pole za sebou, pole vlevo šikmo vpředu, pole vlevo šikmo vzadu, pole vpravo šikmo vpředu, pole vpravo šikmo vzadu.
 
 - Na jednom poli nesmí stát více lodí současně. Výjimkou z tohoto pravidla je pole** _ **Přístav** _ **, kde může být libovolně mnoho lodí současně.
