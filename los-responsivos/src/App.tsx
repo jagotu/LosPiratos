@@ -45,7 +45,7 @@ const EdgeOfBreakfast = false;
 function App() {
     const {user} = useUser();
     const {invalidateData} = useGameData();
-    const {enqueueSnackbar} = useSnackbar();
+    const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
     const handleWebsocketMessage = (message: string) => {
         if (message === "refresh")
@@ -53,7 +53,8 @@ function App() {
         if (message.startsWith("B:")) {
             enqueueSnackbar(message.substr(2), {
                 variant: "info",
-                autoHideDuration: 10 * 1000
+                persist: true,
+                onClick: () => closeSnackbar()
             });
         }
     }
