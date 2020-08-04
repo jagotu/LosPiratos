@@ -16,6 +16,7 @@ import Pexeso from "./components/edgeOfBreakfast/Pexeso";
 import Websocket from 'react-websocket';
 import {useGameData} from "./gameDataContext";
 import GameRules from "./components/GameRules";
+import {useSnackbar} from "notistack";
 
 export const routes = {
     overview: "/overview",
@@ -43,21 +44,27 @@ const EdgeOfBreakfast = false;
 
 function App() {
     const {user} = useUser();
-    const {invalidateData}= useGameData();
+    const {invalidateData} = useGameData();
+    const {enqueueSnackbar} = useSnackbar();
 
     const handleWebsocketMessage = (message: string) => {
-        if(message === "refresh")
+        if (message === "refresh")
             invalidateData();
+        if (message.startsWith("B:")) {
+            enqueueSnackbar(message.substr(2), {
+                variant: "info",
+                autoHideDuration: 10 * 1000
+            });
+        }
     }
 
-    if(EdgeOfBreakfast){
+    if (EdgeOfBreakfast) {
         return (
-            <Pexeso />
+            <Pexeso/>
         )
-    }
-    else return (
+    } else return (
         <Box paddingTop={3} paddingBottom={3}>
-            <Websocket url={process.env.REACT_APP_WEBSOCKET_URL} onMessage={handleWebsocketMessage} />
+            <Websocket url={process.env.REACT_APP_WEBSOCKET_URL} onMessage={handleWebsocketMessage}/>
             <Container maxWidth={"sm"}>
                 <BrowserRouter>
                     <Switch>
