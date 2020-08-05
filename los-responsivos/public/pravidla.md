@@ -27,7 +27,8 @@ Následující si ohlídejte sami, spoleháme na vaše fair play:
 
 1. Nesnažte se vyhackovat plantáže pomocí opakovaného zadávání Plundrování.
    * Formálně: Na každé plantáží / vraku smíte zadat Plundrování z každé lodi maximálně jednou za tah.
-   * _ Poznámka: Hra vás nenechá vyplundrovat víc, než tam je. Ale šlo by takto předbíhat, kdyby plundrovalo více lodí současně. _  
+   * _ Poznámka: Hra vás nenechá vyplundrovat víc, než tam je. Ale šlo by takto předbíhat, kdyby plundrovalo více lodí současně. _
+2. Z políčka přístav se nesmí útočit - i když by vám to hra umožnila.     
 2. Pokud objevíte chování, které se dá intuicí považovat spíše za hack, tak ho nezneužívejte, ale domluvte se s ostatními, jak ho (ne)používat.   
 
 # Mapa
