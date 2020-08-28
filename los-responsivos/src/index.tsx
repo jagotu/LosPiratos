@@ -1,11 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
 import * as serviceWorker from './serviceWorker';
-import {UserProvider} from "./userContext";
 import {SnackbarProvider} from "notistack";
-import {GameContextProvider} from "./gameDataContext";
+import Pexeso from "./components/edgeOfBreakfast/Pexeso";
 
 ReactDOM.render(
     <React.StrictMode>
@@ -15,11 +13,7 @@ ReactDOM.render(
                 vertical: "top"
             }}
         >
-            <UserProvider>
-                <GameContextProvider>
-                    <App/>
-                </GameContextProvider>
-            </UserProvider>
+            <Pexeso />
         </SnackbarProvider>
     </React.StrictMode>,
     document.getElementById('root')

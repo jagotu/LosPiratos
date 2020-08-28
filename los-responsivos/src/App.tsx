@@ -40,7 +40,7 @@ const renderTileDetail: RouteProps["render"] = ({location, match}) => (
     />
 );
 
-const EdgeOfBreakfast = false;
+const EdgeOfBreakfast = true;
 
 function App() {
     const {user} = useUser();

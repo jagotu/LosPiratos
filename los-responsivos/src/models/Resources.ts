@@ -15,20 +15,20 @@ export default class Resources {
     static fromTeam(team: Team): Resources {
         return new Resources(
             team.money,
-            team.ownedMetal,
-            team.ownedWood,
             team.ownedCloth,
+            team.ownedMetal,
             team.ownedRum,
+            team.ownedWood,
         );
     }
 
     static fromShip(ship: Ship): Resources {
         return new Resources(
             ship.carriesMoney,
-            ship.carriesMetalUnits,
-            ship.carriesWoodUnits,
             ship.carriesClothUnits,
+            ship.carriesMetalUnits,
             ship.carriesRumUnits,
+            ship.carriesWoodUnits,
         );
     }
 

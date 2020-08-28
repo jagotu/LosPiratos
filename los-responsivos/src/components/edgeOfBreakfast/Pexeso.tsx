@@ -3,6 +3,9 @@ import {Box, Button, Container, Typography} from "@material-ui/core";
 import {useSnackbar} from "notistack";
 import {makeStyles} from "@material-ui/core/styles";
 import clsx from "clsx";
+// @ts-ignore
+import Websocket from 'react-websocket';
+import axios from "axios";
 
 interface PexesoProps {
 }
@@ -79,21 +82,27 @@ const Tile: React.FC<TileProps> = ({cell, imageVisible, onClick}) => {
     )
 }
 
+
 const Pexeso: React.FC<PexesoProps> = (props) => {
     const [tilesOpened, setTilesOpened] = useState<Array<PexesoTile>>([]);
     const [tilesCompleted, setTilesCompleted] = useState<Array<string>>([]);
     const {enqueueSnackbar} = useSnackbar();
     const classes = useStyles();
+    const [gamePaused, setGamePaused] = useState<boolean>(false);
 
     const handleClick = (cellClicked: PexesoTile) => {
+        if (gamePaused) {
+            return;
+        }
         if (!tilesOpened.includes(cellClicked)) {
             setTilesOpened([...tilesOpened, cellClicked]);
         }
     };
 
-    const resetGame = useCallback(() => {
+    const doFailGame = useCallback(() => {
         setTilesCompleted([]);
-        enqueueSnackbar("Špatně! Začni znovu.", {
+        setGamePaused(true);
+        enqueueSnackbar("Špatně!", {
             variant: "info",
             anchorOrigin: {
                 vertical: "top",
@@ -101,6 +110,41 @@ const Pexeso: React.FC<PexesoProps> = (props) => {
             }
         });
     }, [enqueueSnackbar]);
+
+    const doVictory = () => {
+        setTilesCompleted([1, 2, 3, 4, 5, 6, 7, 8].map(s => String(s)));
+    }
+    const doRestart = () => {
+        setTilesCompleted([]);
+        setGamePaused(false);
+        console.log("restart")
+    }
+
+    const handleWebsocketMessage = (message: any) => {
+        const parsed =  JSON.parse(message);
+        console.log(parsed);
+        console.log(parsed.type);
+        if (parsed.type == "failure") {
+            doFailGame();
+        }
+        if (parsed.type == "victory") {
+            doVictory();
+        }
+        if (parsed.type == "restart") {
+            doRestart();
+        }
+    }
+
+    const doFailGameAndNotify = useCallback(() => {
+        axios.post("/api/stanoviste/pexeso/fail")
+            .catch(console.error);
+        doFailGame();
+    }, [doFailGame]);
+
+    const onGameWon = useCallback(() => {
+        axios.post("/api/stanoviste/pexeso/finish")
+            .catch(console.error);
+    }, []);
 
     const markCompleted = useCallback((tupleId: string): void => {
         setTilesCompleted(prev => [...prev, tupleId]);
@@ -113,25 +157,37 @@ const Pexeso: React.FC<PexesoProps> = (props) => {
                 setTilesOpened([]);
             } else {
                 setTimeout(() => {
-                    resetGame();
+                    doFailGameAndNotify();
                     setTilesOpened([]);
                 }, 1000);
             }
         }
-    }, [tilesOpened, resetGame, markCompleted]);
+    }, [tilesOpened, doFailGameAndNotify, markCompleted]);
 
-    const gameWon = <Typography variant="h1" component="span" style={{color: "green"}}>Vyhráli jste!</Typography>;
+    useEffect(() => {
+        if (tilesCompleted.length === 8) {
+            onGameWon();
+        }
+    }, [tilesCompleted, onGameWon]);
+
+    const gameWonMessage = <Typography variant="h1" component="span" style={{color: "green"}}>Vyhráli jste.</Typography>;
+
+    const websocket = <Websocket
+        url={"wss://edge.ltmf2020.cz/ws/status"}
+        onMessage={handleWebsocketMessage}/>;
 
     if (tilesCompleted.length === 8) {
         return (
             <Box padding={8}>
+                {websocket}
                 <Container>
-                    {gameWon}
+                    {gameWonMessage}
                 </Container>
             </Box>
         );
     } else return (
         <Box padding={3}>
+            {websocket}
             <Container>
                 <table style={{width: "100%"}}>
                     <tbody>
